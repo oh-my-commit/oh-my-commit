@@ -163,7 +163,7 @@
       .amend-mode {
         position: relative;
       }
-      .amend-mode::before {
+      /* .amend-mode::before {
         content: "Amending Last Commit";
         position: absolute;
         top: -15px;
@@ -174,7 +174,7 @@
         padding: 2px 8px;
         border-radius: 3px;
         border: 1px solid var(--vscode-errorForeground);
-      }
+      } */
     </style>
   </head>
   <body>
@@ -222,6 +222,23 @@
     </div>
     <script>
       const vscode = acquireVsCodeApi();
+
+      // Override console.log to send logs to VSCode
+      const originalLog = console.log;
+      console.log = function (...args) {
+        originalLog.apply(console, args);
+        vscode.postMessage({
+          type: "log",
+          text: args
+            .map((arg) =>
+              typeof arg === "object"
+                ? JSON.stringify(arg, null, 2)
+                : String(arg)
+            )
+            .join(" "),
+        });
+      };
+
       const titleInput = document.getElementById("title");
       const descriptionInput = document.getElementById("description");
       const previewElement = document.getElementById("preview");
@@ -247,22 +264,23 @@
             // Render recent commits
             if (message.recentCommits) {
               recentCommitsList.innerHTML = message.recentCommits
-                .map(
-                  (commit) => `
-                                <li class="commit-item" onclick="useCommitMessage(this)" data-message="${
-                                  commit.message
-                                }">
+                .map((commit) => {
+                  console.log({ commit });
+                  const commitString = JSON.stringify(commit);
+
+                  return `
+                                <li class="commit-item" onclick="useCommitMessage(this)" data="${commitString}">
                                     <span class="commit-hash">${commit.hash.slice(
                                       0,
                                       7
                                     )}</span>
-                                    ${commit.message.split("\n")[0]}
+                                    ${commit.message}
                                     <span class="commit-date">${
                                       commit.date
                                     }</span>
                                 </li>
-                            `
-                )
+                            `;
+                })
                 .join("");
             }
             break;
@@ -270,8 +288,13 @@
       });
 
       function useCommitMessage(element) {
-        const message = element.getAttribute("data-message");
-        const lines = message.split("\n");
+        const dataString = element.getAttribute("data");
+        console.log({ dataString });
+
+        const data = JSON.parse(dataString); // DefaultLogFields
+        console.log({ data });
+
+        const lines = data.body.split("\n");
         titleInput.value = lines[0];
         descriptionInput.value = lines.slice(1).join("\n").trim();
       }
@@ -305,11 +328,14 @@
 
       commitButton.addEventListener("click", () => {
         const title = titleInput.value.trim();
-        const description = descriptionInput.value.trim();
+        const descriptionRaw = descriptionInput.value.trim();
+        // commit 的时候需要把换行符替换成两个换行符
+        const description = descriptionRaw.replace(/\n/g, "\n\n");
+        console.log({ descriptionRaw, description });
 
         vscode.postMessage({
           type: "commit",
-          message: description ? `${title}\n\n${description}` : title,
+          message: { title, description },
         });
       });
 

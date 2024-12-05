@@ -10,6 +10,7 @@ export class QuickCommitCommand implements VscodeCommand {
   private gitService: VscodeGitService;
   private solutionManager: SolutionManager;
   private context: vscode.ExtensionContext;
+  private outputChannel: vscode.OutputChannel;
 
   constructor(
     gitService: VscodeGitService,
@@ -19,6 +20,7 @@ export class QuickCommitCommand implements VscodeCommand {
     this.gitService = gitService;
     this.solutionManager = solutionManager;
     this.context = context;
+    this.outputChannel = vscode.window.createOutputChannel("YAAC");
   }
 
   get config() {
@@ -71,7 +73,11 @@ export class QuickCommitCommand implements VscodeCommand {
     }
 
     // Success notification
-    vscode.window.showInformationMessage("Changes committed successfully");
+    vscode.window.showInformationMessage(
+      isAmendMode
+        ? "Last commit amended successfully"
+        : "Changes committed successfully"
+    );
   }
 
   private async handleQuickInput(
@@ -118,12 +124,13 @@ export class QuickCommitCommand implements VscodeCommand {
       vscode.ViewColumn.Beside,
       {
         enableScripts: true,
-        retainContextWhenHidden: true,
-        localResourceRoots: [
-          vscode.Uri.file(
-            path.join(this.context.extensionPath, "src", "webviews")
-          ),
-        ],
+        enableFindWidget: true,
+        // 在开发模式下启用开发者工具
+        ...(process.env.NODE_ENV === "development"
+          ? {
+              devTools: true,
+            }
+          : {}),
       }
     );
 
@@ -142,6 +149,18 @@ export class QuickCommitCommand implements VscodeCommand {
     const recentCommits = await this.gitService.getRecentCommits(n);
 
     panel.webview.html = Buffer.from(html).toString("utf-8");
+
+    // Enable console.log in WebView
+    panel.webview.onDidReceiveMessage(
+      (message) => {
+        if (message.type === "log") {
+          this.outputChannel.appendLine(`[WebView] ${message.text}`);
+        }
+      },
+      undefined,
+      this.context.subscriptions
+    );
+
     panel.webview.postMessage({
       type: "init",
       commitMessage: initialMessage,
@@ -152,18 +171,27 @@ export class QuickCommitCommand implements VscodeCommand {
     return new Promise<void>((resolve, reject) => {
       panel.webview.onDidReceiveMessage(
         async (message) => {
+          console.log({ message });
+          this.outputChannel.appendLine(
+            `[QuickCommit] Received message: ${JSON.stringify(
+              message,
+              null,
+              2
+            )}`
+          );
+
           try {
             switch (message.type) {
               case "commit":
-                const { title, description } = message;
-                const commitMessage = description
+                const { title, description } = message.message;
+                const finalMessage = description
                   ? `${title}\n\n${description}`
                   : title;
                 if (isAmendMode) {
-                  await this.gitService.amendCommit(commitMessage);
+                  await this.gitService.amendCommit(finalMessage);
                 } else {
                   await this.gitService.stageAll();
-                  await this.gitService.commit(commitMessage);
+                  await this.gitService.commit(finalMessage);
                 }
                 panel.dispose();
                 resolve();
