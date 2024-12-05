@@ -66,8 +66,7 @@ export class GcopService implements CommitService {
     }
 
     const apiBase =
-      process.env[ModelAdapter.getApiBaseName(provider)] ||
-      ModelAdapter.getDefaultBase(provider);
+      process.env[ModelAdapter.getApiBaseName(provider)];
 
     return {
       model: {

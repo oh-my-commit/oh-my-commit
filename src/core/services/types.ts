@@ -1,4 +1,4 @@
-import { Uri } from 'vscode';
+import {Uri} from 'vscode';
 
 export interface CommitChanges {
   files: Uri[];
@@ -15,6 +15,20 @@ export interface CommitMessage {
   breaking?: boolean;
 }
 
+export interface SolutionMetrics {
+  cost: number; // 1-10
+  performance: number; // 1-10
+  quality: number; // 1-10
+}
+
+export interface Solution {
+  id: string;
+  name: string;
+  provider: string;
+  description: string;
+  metrics: SolutionMetrics
+}
+
 export interface CommitService {
   /**
    * 服务名称，用于在配置和UI中显示
@@ -29,11 +43,7 @@ export interface CommitService {
   /**
    * 性能指标
    */
-  readonly metrics: {
-    speed: number;    // 1-5, 5最快
-    cost: number;     // 1-5, 1最便宜
-    quality: number;  // 1-5, 5最好
-  };
+  readonly metrics: SolutionMetrics
 
   /**
    * 分析代码变更并生成提交信息
@@ -49,3 +59,4 @@ export interface CommitService {
    */
   validateConfig(): Promise<boolean>;
 }
+
