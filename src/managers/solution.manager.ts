@@ -75,7 +75,7 @@ export class SolutionManager {
       );
 
       if (response === configureNow) {
-        await openPreferences();
+        await openPreferences("yaac.apiKeys");
       }
     }
 
