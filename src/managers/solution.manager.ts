@@ -73,7 +73,7 @@ export class SolutionManager {
         if (response === configureNow) {
           await vscode.commands.executeCommand(
               "workbench.action.openSettings",
-              "yaac.apiKeys"
+              "yaac"
           );
         }
       }

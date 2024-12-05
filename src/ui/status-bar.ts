@@ -57,11 +57,13 @@ export class StatusBarManager {
       }
 
       const solution = await this.solutionManager.getCurrentSolution();
+      this.statusBarItem.text = "$(git-commit) YAAC";
       if (!solution) {
-        this.statusBarItem.text = "$(git-commit) YAAC";
+        this.statusBarItem.text = "$(git-commit) YAAC (No Solution)";
         this.statusBarItem.tooltip = "Click to select a commit solution";
       } else {
         this.statusBarItem.command = "yaac.manageSolutions";
+        this.statusBarItem.text = `$(git-commit) YAAC (${solution.name})`;
         this.statusBarItem.tooltip =
           `Current solution: ${solution.name}\n` +
           `Accuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\n` +
