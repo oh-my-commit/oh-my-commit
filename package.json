@@ -66,7 +66,10 @@
         "yaac.currentSolution": {
           "type": "string",
           "description": "当前使用的 Solution（默认使用第一个可用的 solution）",
-          "enum": ["openai-gpt4", "openai-gpt35"],
+          "enum": [
+            "openai-gpt4",
+            "openai-gpt35"
+          ],
           "enumDescriptions": [
             "OpenAI GPT-4（高准确度）",
             "OpenAI GPT-3.5（快速响应）"
@@ -116,7 +119,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "yaml": "^2.6.1"
+    "yaml": "^2.6.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",

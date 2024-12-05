@@ -62,19 +62,8 @@ export class StatusBarManager {
         this.statusBarItem.tooltip = "Click to select a commit solution";
       } else {
         this.statusBarItem.command = "yaac.manageSolutions";
-
-        const isValid = await this.solutionManager.getSolutionValidationStatus(
-          solution
-        );
-
-        // 更新状态栏图标和工具提示
-        this.statusBarItem.text = `$(git-commit) YAAC (${solution.name}) ${
-          isValid ? "$(pass)" : "$(warning)"
-        }`;
-
         this.statusBarItem.tooltip =
           `Current solution: ${solution.name}\n` +
-          `Status: ${isValid ? "Validated" : "Not Validated"}\n` +
           `Accuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\n` +
           `Click to change solution`;
       }
