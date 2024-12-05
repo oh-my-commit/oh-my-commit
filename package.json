@@ -50,6 +50,35 @@
           "type": "object",
           "default": {},
           "description": "Available commit solutions"
+        },
+        "yaac.gcop.modelName": {
+          "type": "string",
+          "enum": [
+            "openai/gpt-4",
+            "openai/gpt-4-turbo",
+            "deepseek/deepseek-chat",
+            "zhipu/glm-4",
+            "ollama/llama2",
+            "groq/llama-3.1-70b-versatile",
+            "anthropic/claude-3-sonnet"
+          ],
+          "default": "openai/gpt-4",
+          "description": "The AI model to use for commit message generation"
+        },
+        "yaac.gcop.includeGitHistory": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to include git history in the prompt"
+        },
+        "yaac.gcop.enableDataImprovement": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to enable data improvement (experimental)"
+        },
+        "yaac.gcop.commitTemplate": {
+          "type": "string",
+          "default": "",
+          "description": "Custom commit message template"
         }
       }
     }
@@ -60,6 +89,9 @@
     "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "lint": "eslint src --ext ts",
     "test": "vitest"
+  },
+  "dependencies": {
+    "yaml": "^2.6.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
