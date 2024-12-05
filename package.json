@@ -15,8 +15,7 @@
     "workspaceContains:.git",
     "onCommand:yaac.quickCommit",
     "onCommand:yaac.selectSolution",
-    "onCommand:yaac.openPreferences",
-    "onCommand:yaac.addModelSetting"
+    "onCommand:yaac.openPreferences"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -32,10 +31,6 @@
       {
         "command": "yaac.openPreferences",
         "title": "YAAC: Open Prefernces"
-      },
-      {
-        "command": "yaac.addModelSetting",
-        "title": "YAAC: Add Model Setting"
       }
     ],
     "configuration": {

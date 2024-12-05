@@ -1,4 +1,4 @@
-import { ManageSolutionsCommand } from "@/commands/manage-solutions.command";
+import { SelectSolutionCommand } from "@/commands/select-solution.command";
 import { OpenPreferencesCommand } from "@/commands/open-preferences.command";
 import { QuickCommitCommand } from "@/commands/quick-commit.command";
 import fs from "fs";
@@ -84,7 +84,7 @@ export class AppManager {
       new QuickCommitCommand(this.gitManager, this.solutionManager)
     );
     this.commandManager.register(
-      new ManageSolutionsCommand(this.solutionManager)
+      new SelectSolutionCommand(this.solutionManager)
     );
     this.commandManager.register(new OpenPreferencesCommand());
   }
