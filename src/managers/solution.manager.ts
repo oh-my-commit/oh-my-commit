@@ -1,9 +1,11 @@
-import {Solution} from "@/types/solution";
+import { Solution } from "@/types/solution";
+import {openPreferences} from "@/utils/open-preference";
 import * as vscode from "vscode";
-import {OpenAIProvider} from "../providers/open-ai.provider";
-import {presetAiProviders, Provider} from "../types/provider";
+import { OpenAIProvider } from "../providers/open-ai.provider";
+import { presetAiProviders, Provider } from "../types/provider";
 
-export const getWorkspaceConfig = () => vscode.workspace.getConfiguration('yaac');
+export const getWorkspaceConfig = () =>
+  vscode.workspace.getConfiguration("yaac");
 
 export class SolutionManager {
   private currentSolutionId: string | undefined;
@@ -44,7 +46,7 @@ export class SolutionManager {
     return solutions.find((s) => s.id === this.currentSolutionId);
   }
 
-  public async switchSolution(solutionId: string): Promise<boolean> {
+  public async selectSolution(solutionId: string): Promise<boolean> {
     const solutions = await this.getAvailableSolutions();
     const solution = solutions.find((s) => s.id === solutionId);
 
@@ -59,28 +61,24 @@ export class SolutionManager {
     // 保存到配置
     await getWorkspaceConfig().update("currentSolution", solutionId, true);
 
-      const aiProviderId = solution.aiProviderId as string
-      if(presetAiProviders.includes(aiProviderId)){
-        // todo: 检查是否有 yaac.apiKeys.${aiProviderId}，没有的话就引导用户去填写
-        const configureNow = "Configure Now";
-        const configureLater = "Configure Later";
-        const response = await vscode.window.showErrorMessage(
-            `使用该解决方案需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
-            configureNow,
-            configureLater
-        );
+    const aiProviderId = solution.aiProviderId as string;
+    if (presetAiProviders.includes(aiProviderId)) {
+      // todo: 检查是否有 yaac.apiKeys.${aiProviderId}，没有的话就引导用户去填写
+      const configureNow = "Configure Now";
+      const configureLater = "Configure Later";
+      const response = await vscode.window.showErrorMessage(
+        `使用该解决方案需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
+        configureNow,
+        configureLater
+      );
 
-        if (response === configureNow) {
-          await vscode.commands.executeCommand(
-              "workbench.action.openSettings",
-              "yaac"
-          );
-        }
+      if (response === configureNow) {
+        await openPreferences();
       }
+    }
 
     return true;
   }
-
 
   public async generateCommit(
     diff: string
@@ -100,7 +98,6 @@ export class SolutionManager {
     return provider.generateCommit(diff, currentSolution);
   }
 
-
   private loadConfig() {
     // 加载 provider 状态
     const config = getWorkspaceConfig();
@@ -113,5 +110,4 @@ export class SolutionManager {
     // 加载当前 solution
     this.currentSolutionId = config.get<string>("currentSolution");
   }
-
 }
