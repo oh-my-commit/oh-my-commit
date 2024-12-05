@@ -116,6 +116,7 @@
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
+    "simple-git": "^3.27.0",
     "yaml": "^2.6.1",
     "zod": "^3.23.8"
   },

@@ -42,18 +42,42 @@ export class QuickCommitCommand implements VscodeCommand {
       );
       console.log(`Generated commit message: ${commitMessage}`);
 
-      const confirmed = await vscode.window.showInputBox({
-        prompt: "Review and edit commit message if needed",
-        value: commitMessage,
-        validateInput: (value) =>
-          value ? null : "Commit message cannot be empty",
+      // 创建输入选项
+      const result = await vscode.window.showQuickPick([
+        {
+          label: "$(edit) Edit Commit Message",
+          detail: commitMessage,
+          alwaysShow: true,
+          buttons: [
+            {
+              iconPath: new vscode.ThemeIcon("check"),
+              tooltip: "Commit with this message",
+            },
+          ],
+        },
+      ], {
+        title: "Review Commit Message (Press 'Enter' to edit, click ✓ to commit)",
+        placeHolder: "Loading...",
+        ignoreFocusOut: true,
       });
 
-      if (confirmed) {
-        console.log("Committing changes...");
-        await this.gitService.stageAll();
-        await this.gitService.commit(confirmed);
-        vscode.window.showInformationMessage("Changes committed successfully");
+      // 如果用户选择了编辑
+      if (result) {
+        const input = await vscode.window.showInputBox({
+          prompt: "Edit commit message (Ctrl+Enter/Cmd+Enter to confirm)",
+          value: result.detail,
+          ignoreFocusOut: true,
+          validateInput: (value) => value ? null : "Commit message cannot be empty",
+        });
+
+        if (input?.trim()) {
+          console.log("Committing changes...");
+          await this.gitService.stageAll();
+          await this.gitService.commit(input);
+          vscode.window.showInformationMessage(
+            "Changes committed successfully"
+          );
+        }
       }
     } catch (error: unknown) {
       console.error("Error during quick commit:", error);
