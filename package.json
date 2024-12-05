@@ -11,8 +11,11 @@
     "Other"
   ],
   "activationEvents": [
+    "workspaceContains:.git",
     "onCommand:yaac.quickCommit",
-    "onCommand:yaac.switchSolution"
+    "onCommand:yaac.switchSolution",
+    "onCommand:yaac.configureApi",
+    "onCommand:yaac.manageSolutions"
   ],
   "main": "./dist/extension.js",
   "contributes": {
