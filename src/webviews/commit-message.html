@@ -4,500 +4,302 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Commit Message</title>
-    <style>
-      body {
-        font-family: var(--vscode-font-family);
-        font-size: var(--vscode-font-size);
-        color: var(--vscode-foreground);
-        padding: 12px;
-        line-height: 1.4;
-        margin: 0;
-      }
-
-      .container {
-        max-width: 700px;
-        margin: 0 auto;
-        display: grid;
-        gap: 12px;
-      }
-
-      .input-section {
-        margin-bottom: 12px;
-      }
-
-      .input-group {
-        margin-bottom: 12px;
-      }
-
-      .input-group:last-child {
-        margin-bottom: 0;
-      }
-
-      label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 4px;
-        color: var(--vscode-input-foreground);
-        font-size: 12px;
-      }
-
-      .label-text {
-        flex: 1;
-      }
-
-      .shortcut {
-        font-size: 11px;
-        opacity: 0.7;
-        padding: 1px 4px;
-        background: var(--vscode-badge-background);
-        border-radius: 2px;
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        padding: 6px 8px;
-        border: 1px solid var(--vscode-input-border);
-        background: var(--vscode-input-background);
-        color: var(--vscode-input-foreground);
-        border-radius: 3px;
-        font-family: var(--vscode-editor-font-family);
-        font-size: var(--vscode-editor-font-size);
-        line-height: 1.4;
-      }
-
-      textarea {
-        min-height: 80px;
-        resize: vertical;
-      }
-
-      input:focus,
-      textarea:focus {
-        outline: none;
-        border-color: var(--vscode-focusBorder);
-      }
-
-      .commit-list {
-        display: grid;
-        gap: 8px;
-      }
-
-      .commit-list h3 {
-        margin: 0 0 8px;
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--vscode-foreground);
-        opacity: 0.8;
-      }
-
-      .commit-items {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        gap: 8px;
-      }
-
-      .commit-item {
-        padding: 8px 10px;
-        background: var(--vscode-editor-background);
-        border: 1px solid var(--vscode-panel-border);
-        border-radius: 3px;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        font-size: 12px;
-      }
-
-      .commit-item:hover {
-        transform: translateX(2px);
-        border-color: var(--vscode-focusBorder);
-      }
-
-      .commit-item.preview {
-        border-color: #4CAF50;
-        border-width: 1px;
-      }
-
-      .commit-item.to-be-amended {
-        border-color: #f44336;
-        border-width: 1px;
-      }
-
-      .commit-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4px;
-        font-size: 11px;
-      }
-
-      .commit-hash {
-        color: var(--vscode-textPreformat-foreground);
-        font-family: var(--vscode-editor-font-family);
-        padding: 1px 4px;
-        background: var(--vscode-badge-background);
-        border-radius: 2px;
-      }
-
-      .commit-date {
-        color: var(--vscode-descriptionForeground);
-      }
-
-      .commit-message {
-        color: var(--vscode-foreground);
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-
-      .amend-indicator {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-bottom: 4px;
-        color: #f44336;
-        font-size: 11px;
-        font-weight: 500;
-      }
-
-      .preview-indicator {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-bottom: 4px;
-        color: #4CAF50;
-        font-size: 11px;
-        font-weight: 500;
-      }
-
-      .amend-indicator::before {
-        content: "↺";
-        font-size: 1.1em;
-      }
-
-      .preview-indicator::before {
-        content: "✓";
-        font-size: 1.1em;
-      }
-
-      .button-group {
-        display: flex;
-        gap: 8px;
-        justify-content: flex-end;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid var(--vscode-panel-border);
-      }
-
-      button {
-        padding: 4px 12px;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.15s ease;
-        height: 24px;
-      }
-
-      button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      #commitButton {
-        background: var(--vscode-button-background);
-        color: var(--vscode-button-foreground);
-      }
-
-      #commitButton:hover:not(:disabled) {
-        background: var(--vscode-button-hoverBackground);
-      }
-
-      #cancelButton {
-        background: var(--vscode-button-secondaryBackground);
-        color: var(--vscode-button-secondaryForeground);
-      }
-
-      #cancelButton:hover {
-        background: var(--vscode-button-secondaryHoverBackground);
-      }
-    </style>
+    <link rel="stylesheet" href="./index.css" />
   </head>
   <body>
     <div class="container">
       <div class="input-section">
         <div class="input-group">
           <label>
-            <span class="label-text">Commit Message</span>
+            <span class="label-text">Summary (required)</span>
+            <span class="shortcut">⌘Enter to commit</span>
           </label>
-          <input
-            type="text"
-            id="titleInput"
-            placeholder="Enter a concise description"
-          />
+          <input type="text" id="summary" placeholder="Summary of changes" />
         </div>
         <div class="input-group">
           <label>
-            <span class="label-text">Extended Description</span>
-            <span class="shortcut">(optional)</span>
+            <span class="label-text">Description</span>
+            <span class="shortcut">⇧Enter for new line</span>
           </label>
           <textarea
-            id="descriptionInput"
-            placeholder="Enter a detailed description"
+            id="description"
+            placeholder="Detailed description of changes"
           ></textarea>
         </div>
       </div>
 
       <div class="commit-list">
-        <h3>Commit Preview & History</h3>
-        <ul class="commit-items"></ul>
+        <h3>Recent Commits</h3>
+        <ul class="commit-items" id="commitList"></ul>
       </div>
 
       <div class="button-group">
-        <button id="cancelButton">
-          Cancel <span class="shortcut">Esc</span>
-        </button>
-        <button id="commitButton" disabled>
-          Commit Changes <span class="shortcut">⌘↵</span>
-        </button>
+        <button id="cancelButton">Cancel</button>
+        <button id="commitButton" disabled>Commit</button>
       </div>
     </div>
+
     <script>
       const vscode = acquireVsCodeApi();
+      let commits = [];
+      let isAmendMode = false;
+      let activePopover = null;
 
-      // 处理换行符，确保统一使用 \n
-      function normalizeLineEndings(text) {
-        return text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-      }
-
-      // 格式化提交消息
-      function formatCommitMessage(title, description) {
-        title = normalizeLineEndings(title || '');
-        description = normalizeLineEndings(description || '');
-        
-        if (!description) {
-          return title;
-        }
-        
-        // 确保标题和描述之间有一个空行
-        return `${title}\n\n${description}`;
-      }
-
-      // 解析提交消息
-      function parseCommitMessage(message) {
-        message = normalizeLineEndings(message || '');
-        const lines = message.split('\n');
-        
-        // 第一行作为标题
-        const title = lines[0] || '';
-        
-        // 跳过第一行和任何空行，其余作为描述
-        let description = '';
-        let foundNonEmpty = false;
-        
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i];
-          if (line.trim() || foundNonEmpty) {
-            foundNonEmpty = true;
-            description += (description ? '\n' : '') + line;
-          }
-        }
-        
-        return { title, description };
-      }
-
-      // 简单的时间格式化函数
-      function formatTimeAgo(date) {
-        if (!date) return "";
-
+      function formatDate(date) {
         const now = new Date();
-        const past = new Date(date);
-        const diffMs = now - past;
+        const inputDate = new Date(date);
+        const diff = now - inputDate;
 
-        // 转换为各种时间单位
-        const diffSecs = Math.floor(diffMs / 1000);
-        const diffMins = Math.floor(diffSecs / 60);
-        const diffHours = Math.floor(diffMins / 60);
-        const diffDays = Math.floor(diffHours / 24);
-        const diffMonths = Math.floor(diffDays / 30);
-        const diffYears = Math.floor(diffDays / 365);
+        // Less than a minute
+        if (diff < 60000) {
+          return "just now";
+        }
 
-        // 返回最适合的时间格式
-        if (diffSecs < 60) return "just now";
-        if (diffMins < 60) return `${diffMins} minutes ago`;
-        if (diffHours < 24) return `${diffHours} hours ago`;
-        if (diffDays < 30) return `${diffDays} days ago`;
-        if (diffMonths < 12) return `${diffMonths} months ago`;
-        return `${diffYears} years ago`;
+        // Less than an hour
+        if (diff < 3600000) {
+          const minutes = Math.floor(diff / 60000);
+          return `${minutes}m ago`;
+        }
+
+        // Less than a day
+        if (diff < 86400000) {
+          const hours = Math.floor(diff / 3600000);
+          return `${hours}h ago`;
+        }
+
+        // Less than a week
+        if (diff < 604800000) {
+          const days = Math.floor(diff / 86400000);
+          return `${days}d ago`;
+        }
+
+        // Format as date
+        return inputDate.toLocaleDateString();
       }
 
-      let state = {
-        isAmend: false,
-        message: "",
-        commits: [],
-        title: "",
-        description: "",
-      };
+      function normalizeLineEndings(text) {
+        return text.replace(/\r\n|\r|\n/g, "\n");
+      }
 
-      // 更新整个 UI 的函数
-      function updateUI() {
-        const commitList = document.querySelector(".commit-items");
-        const titleInput = document.querySelector("#titleInput");
-        const descriptionInput = document.querySelector("#descriptionInput");
+      function formatCommitMessage(summary, description) {
+        let message = summary;
+        if (description) {
+          message += "\n\n" + description;
+        }
+        return normalizeLineEndings(message);
+      }
 
-        if (commitList) {
-          commitList.innerHTML = updateCommitList(state.commits);
+      function parseCommitMessage(message) {
+        const lines = normalizeLineEndings(message).split("\n");
+        const summary = lines[0];
+        const description = lines.slice(2).join("\n").trim();
+        return { summary, description };
+      }
+
+      function showPopover(element, content, position) {
+        if (activePopover) {
+          activePopover.remove();
         }
 
-        if (titleInput) {
-          titleInput.value = state.title;
+        const popover = document.createElement("div");
+        popover.className = "commit-popover show";
+        popover.textContent = content;
+
+        // 计算位置
+        const rect = element.getBoundingClientRect();
+        const spaceAbove = rect.top;
+        const spaceBelow = window.innerHeight - rect.bottom;
+
+        // 默认显示在下方
+        let top = rect.bottom + 8;
+
+        // 如果下方空间不足且上方空间较多，则显示在上方
+        if (spaceBelow < 100 && spaceAbove > spaceBelow) {
+          top = rect.top - 8 - popover.offsetHeight;
         }
 
-        if (descriptionInput) {
-          descriptionInput.value = state.description;
-        }
+        popover.style.left = `${rect.left}px`;
+        popover.style.top = `${top}px`;
 
-        // 更新按钮状态
-        const commitButton = document.querySelector("#commitButton");
-        if (commitButton) {
-          commitButton.disabled = !state.title.trim();
-          if (state.isAmend) {
-            commitButton.textContent = "Amend Commit";
-          }
+        document.body.appendChild(popover);
+        activePopover = popover;
+      }
+
+      function hidePopover() {
+        if (activePopover) {
+          activePopover.remove();
+          activePopover = null;
         }
       }
 
-      // 更新预览的函数
-      function updatePreview() {
-        const titleInput = document.querySelector("#titleInput");
-        const descriptionInput = document.querySelector("#descriptionInput");
-
-        if (titleInput && descriptionInput) {
-          state.title = normalizeLineEndings(titleInput.value);
-          state.description = normalizeLineEndings(descriptionInput.value);
-          updateUI();
+      function createCommitElement(
+        commit,
+        isPreview = false,
+        isToBeAmended = false
+      ) {
+        const li = document.createElement("li");
+        li.className = "commit-item";
+        if (isPreview) {
+          li.classList.add("preview");
         }
-      }
-
-      function isAmendMode() {
-        return state.isAmend;
-      }
-
-      function updateCommitList(commits) {
-        if (!commits || !Array.isArray(commits)) return "";
-
-        // 添加预览卡片
-        const previewMessage = formatCommitMessage(state.title, state.description);
-        let html = `
-          <li class="commit-item preview">
-            <div class="preview-indicator">Current Commit</div>
-            <div class="commit-message">${previewMessage || "No commit message yet"}</div>
-          </li>
-        `;
-
-        // 添加历史提交记录
-        html += commits
-          .map(
-            (commit, index) => `
-            <li class="commit-item${
-              index === 0 && state.isAmend ? " to-be-amended" : ""
-            }" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
-              commit
-            ).replace(/'/g, "&apos;")}'>
-            ${
-              index === 0 && state.isAmend
-                ? '<div class="amend-indicator">This commit will be amended</div>'
-                : ""
-            }
-            <div class="commit-header">
-              <span class="commit-hash">${commit.hash.slice(0, 7)}</span>
-              <span class="commit-date">${formatTimeAgo(
-                new Date(commit.date)
-              )}</span>
-            </div>
-            <div class="commit-message">${formatCommitMessage(commit.message, commit.body)}</div>
-          </li>`
-          )
-          .join("");
-
-        return html;
-      }
-
-      function useCommitMessage(element) {
-        const commit = JSON.parse(element.getAttribute("data-commit"));
-        const message = formatCommitMessage(commit.message, commit.body);
-        const { title, description } = parseCommitMessage(message);
-        
-        state.title = title;
-        state.description = description;
-        updateUI();
-      }
-
-      // 初始化
-      document.addEventListener("DOMContentLoaded", () => {
-        const titleInput = document.querySelector("#titleInput");
-        const descriptionInput = document.querySelector("#descriptionInput");
-        const commitButton = document.querySelector("#commitButton");
-        const cancelButton = document.querySelector("#cancelButton");
-
-        if (titleInput) {
-          titleInput.addEventListener("input", updatePreview);
-        }
-        if (descriptionInput) {
-          descriptionInput.addEventListener("input", updatePreview);
+        if (isToBeAmended) {
+          li.classList.add("to-be-amended");
         }
 
-        if (commitButton) {
-          commitButton.addEventListener("click", () => {
-            const message = formatCommitMessage(state.title, state.description);
-            vscode.postMessage({
-              type: "commit",
-              message: {
-                title: state.title,
-                description: state.description
-              },
-            });
+        const { summary, description } = parseCommitMessage(commit.message);
+
+        const content = document.createElement("div");
+        content.className = "commit-item-content";
+
+        // Column 1: Indicator
+        const indicator = document.createElement("div");
+        indicator.className = `commit-indicator ${
+          isPreview
+            ? "preview-indicator"
+            : isToBeAmended
+            ? "amend-indicator"
+            : ""
+        }`;
+
+        // Column 2: Message
+        const message = document.createElement("div");
+        message.className = "commit-message";
+        if (description) {
+          message.classList.add("has-body");
+          // Add hover handlers for popover
+          message.addEventListener("mouseenter", () => {
+            showPopover(message, commit.message);
+          });
+          message.addEventListener("mouseleave", () => {
+            hidePopover();
+          });
+        }
+        message.textContent = summary;
+
+        // Column 3: Date
+        const date = document.createElement("span");
+        date.className = "commit-date";
+        date.textContent = formatDate(commit.date);
+
+        // Column 4: Hash
+        const hash = document.createElement("span");
+        hash.className = "commit-hash";
+        hash.textContent = commit.hash.substring(0, 7);
+        hash.title = `Click to copy full hash: ${commit.hash}`;
+        hash.addEventListener("click", (e) => {
+          e.stopPropagation();
+          navigator.clipboard.writeText(commit.hash);
+          vscode.postMessage({
+            command: "showInfo",
+            text: "Commit hash copied to clipboard",
+          });
+        });
+
+        content.appendChild(indicator);
+        content.appendChild(message);
+        content.appendChild(date);
+        content.appendChild(hash);
+        li.appendChild(content);
+
+        if (!isPreview) {
+          li.addEventListener("click", () => {
+            const { summary, description } = parseCommitMessage(commit.message);
+            document.getElementById("summary").value = summary;
+            document.getElementById("description").value = description || "";
+            updateCommitButton();
           });
         }
 
-        if (cancelButton) {
-          cancelButton.addEventListener("click", () => {
-            vscode.postMessage({ type: "cancel" });
-          });
+        return li;
+      }
+
+      function updateCommitList() {
+        const list = document.getElementById("commitList");
+        list.innerHTML = "";
+
+        // Add preview if there's input
+        const summary = document.getElementById("summary").value.trim();
+        const description = document.getElementById("description").value.trim();
+        if (summary) {
+          const previewCommit = {
+            hash: "preview",
+            date: new Date().toISOString(),
+            message: formatCommitMessage(summary, description),
+          };
+          list.appendChild(createCommitElement(previewCommit, true));
         }
 
-        // 键盘快捷键
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") {
-            vscode.postMessage({ type: "cancel" });
-          } else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-            if (!commitButton.disabled) {
-              commitButton.click();
-            }
-          }
+        // Add commit to be amended if in amend mode
+        if (isAmendMode && commits.length > 0) {
+          list.appendChild(createCommitElement(commits[0], false, true));
+        }
+
+        // Add recent commits
+        commits.slice(isAmendMode ? 1 : 0).forEach((commit) => {
+          list.appendChild(createCommitElement(commit));
+        });
+      }
+
+      function updateCommitButton() {
+        const summary = document.getElementById("summary").value.trim();
+        document.getElementById("commitButton").disabled = !summary;
+      }
+
+      // Handle input events
+      document.getElementById("summary").addEventListener("input", () => {
+        updateCommitButton();
+        updateCommitList();
+      });
+
+      document.getElementById("description").addEventListener("input", () => {
+        updateCommitList();
+      });
+
+      // Handle button clicks
+      document.getElementById("commitButton").addEventListener("click", () => {
+        const summary = document.getElementById("summary").value.trim();
+        const description = document.getElementById("description").value.trim();
+        vscode.postMessage({
+          command: "commit",
+          message: formatCommitMessage(summary, description),
         });
       });
 
-      // 处理来自 VSCode 的消息
+      document.getElementById("cancelButton").addEventListener("click", () => {
+        vscode.postMessage({ command: "cancel" });
+      });
+
+      // Handle keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !e.shiftKey) {
+          const commitButton = document.getElementById("commitButton");
+          if (!commitButton.disabled) {
+            commitButton.click();
+          }
+          e.preventDefault();
+        }
+      });
+
+      // Handle messages from extension
       window.addEventListener("message", (event) => {
         const message = event.data;
-
-        switch (message.type) {
-          case "init":
-            const lines = message.commitMessage.split("\n");
-            state.title = lines[0];
-            state.description = lines.slice(1).join("\n").trim();
-            state.isAmend = message.isAmendMode;
-            state.commits = message.recentCommits || [];
-            updateUI();
+        switch (message.command) {
+          case "setCommits":
+            commits = message.commits;
+            updateCommitList();
             break;
-
-          case "update":
-            state = { ...state, ...message.state };
-            updateUI();
+          case "setInitialMessage":
+            const { summary, description } = parseCommitMessage(
+              message.message
+            );
+            document.getElementById("summary").value = summary;
+            document.getElementById("description").value = description || "";
+            updateCommitButton();
+            updateCommitList();
+            break;
+          case "setAmendMode":
+            isAmendMode = message.isAmendMode;
+            updateCommitList();
             break;
         }
       });
