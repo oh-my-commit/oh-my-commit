@@ -6,15 +6,29 @@ import { Provider, Solution } from "../types/provider";
 export class SolutionManager {
   private currentSolutionId: string | undefined;
   private providers: Provider[] = [];
-
-  private _onSolutionSwitching = new vscode.EventEmitter<void>();
-  private _onSolutionSwitched = new vscode.EventEmitter<void>();
-
-  public readonly onSolutionSwitching = this._onSolutionSwitching.event;
-  public readonly onSolutionSwitched = this._onSolutionSwitched.event;
+  private subscribers: ((solutionId: string | undefined) => void)[] = [];
 
   constructor() {
     this.initialize();
+  }
+
+  // 订阅 solution 变化
+  public subscribe(callback: (solutionId: string | undefined) => void) {
+    this.subscribers.push(callback);
+    // 立即通知当前状态
+    callback(this.currentSolutionId);
+    return () => {
+      const index = this.subscribers.indexOf(callback);
+      if (index > -1) {
+        this.subscribers.splice(index, 1);
+      }
+    };
+  }
+
+  private notifySubscribers() {
+    for (const callback of this.subscribers) {
+      callback(this.currentSolutionId);
+    }
   }
 
   public async getAvailableSolutions(): Promise<Solution[]> {
@@ -54,22 +68,15 @@ export class SolutionManager {
       return false;
     }
 
-    // 发出切换开始事件
-    this._onSolutionSwitching.fire();
-
-    // 先验证 solution
-    if (!(await this.validateSolution(solution))) {
-      // 验证失败也要发出事件
-      this._onSolutionSwitched.fire();
-      return false;
-    }
-
-    // 验证成功后再更新 currentSolutionId
+    // 立即更新 currentSolutionId 并通知订阅者
     this.currentSolutionId = solutionId;
+    this.notifySubscribers();
+
+    // 验证 solution 并显示配置提示（如果需要）
+    await this.validateSolution(solution);
+
+    // 保存到配置
     await getWorkspaceConfig().update("currentSolution", solutionId, true);
-    
-    // 发出切换完成事件
-    this._onSolutionSwitched.fire();
     return true;
   }
 
@@ -98,6 +105,13 @@ export class SolutionManager {
     }
 
     return provider.generateCommit(diff, currentSolution);
+  }
+
+  public async getSolutionValidationStatus(
+    solution: Solution
+  ): Promise<boolean> {
+    const validationResult = await solution.validate();
+    return validationResult.valid;
   }
 
   private async initialize() {
@@ -140,19 +154,25 @@ export class SolutionManager {
 
       if (validationResult.requiredConfig?.length) {
         const configureNow = "Configure Now";
+        const configureLater = "Configure Later";
         const response = await vscode.window.showErrorMessage(
           message,
-          configureNow
+          configureNow,
+          configureLater
         );
 
         if (response === configureNow) {
-          // TODO: 打开配置界面
+          await vscode.commands.executeCommand(
+            "workbench.action.openSettings",
+            "yaac.apiKeys"
+          );
         }
+        // 无论是现在配置还是稍后配置，都允许切换
+        return true;
       } else {
         vscode.window.showErrorMessage(message);
+        return false;
       }
-
-      return false;
     }
 
     return true;

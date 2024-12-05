@@ -5,10 +5,9 @@ import { GitManager } from "@/managers/git.manager";
 export class StatusBarManager {
   private statusBarItem: vscode.StatusBarItem;
   private gitManager: GitManager;
-  private switching = false;
+  private disposables: vscode.Disposable[] = [];
 
   constructor(private solutionManager: SolutionManager) {
-    console.log("Initializing StatusBarManager");
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
       100
@@ -16,20 +15,30 @@ export class StatusBarManager {
     this.statusBarItem.name = "YAAC";
     this.gitManager = new GitManager();
 
-    // 监听 solution 切换事件
-    this.solutionManager.onSolutionSwitching(() => {
-      this.switching = true;
-      this.update();
-    });
+    // 监听配置变化
+    this.disposables.push(
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("yaac")) {
+          this.update();
+        }
+      })
+    );
 
-    this.solutionManager.onSolutionSwitched(() => {
-      this.switching = false;
+    // 监听工作区变化（可能影响 git 状态）
+    this.disposables.push(
+      vscode.workspace.onDidChangeWorkspaceFolders(() => {
+        this.update();
+      })
+    );
+
+    // 订阅 solution 变化
+    const unsubscribe = this.solutionManager.subscribe(() => {
       this.update();
     });
+    this.disposables.push({ dispose: unsubscribe });
   }
 
   public async initialize() {
-    console.log("Setting up status bar item");
     await this.update();
   }
 
@@ -43,40 +52,39 @@ export class StatusBarManager {
 
   public async update() {
     try {
-      // 检查是否在 Git 仓库中
       const isGitRepo = await this.gitManager.isGitRepository();
 
       if (!isGitRepo) {
-        console.log("Not in a Git repository");
         this.statusBarItem.text = "$(git-commit) YAAC (No Git)";
         this.statusBarItem.tooltip =
-          "YAAC requires a Git repository to function. \nInitialize a Git repository to enable all features.";
+          "YAAC requires a Git repository to function.\nInitialize a Git repository to enable all features.";
         this.statusBarItem.command = undefined;
         return;
       }
 
-      // 如果正在切换，显示加载状态
-      if (this.switching) {
-        this.statusBarItem.text = "$(sync~spin) YAAC (Switching...)";
-        this.statusBarItem.tooltip = undefined // "Switching solution...";
-        this.statusBarItem.command = undefined;
-        return;
-      }
-
-      // 获取当前方案
       const solution = await this.solutionManager.getCurrentSolution();
       if (!solution) {
         this.statusBarItem.text = "$(git-commit) YAAC";
         this.statusBarItem.tooltip = "Click to select a commit solution";
       } else {
-        this.statusBarItem.text = `$(git-commit) YAAC (${solution.name})`;
-        this.statusBarItem.tooltip = `Current solution: ${solution.name}\nAccuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\nClick to change solution`;
+        const isValid = await this.solutionManager.getSolutionValidationStatus(
+          solution
+        );
+
+        // 更新状态栏图标和工具提示
+        this.statusBarItem.text = `$(git-commit) YAAC (${solution.name}) ${
+          isValid ? "$(pass)" : "$(warning)"
+        }`;
+
+        this.statusBarItem.tooltip =
+          `Current solution: ${solution.name}\n` +
+          `Status: ${isValid ? "Validated" : "Not Validated"}\n` +
+          `Accuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\n` +
+          `Click to change solution`;
       }
 
       this.statusBarItem.command = "yaac.manageSolutions";
-      console.log("Status bar updated successfully");
     } catch (error) {
-      console.error("Error updating status bar:", error);
       this.statusBarItem.text = "$(warning) YAAC";
       this.statusBarItem.tooltip = "Error updating YAAC. Click for details.";
       this.statusBarItem.command = {
@@ -87,7 +95,8 @@ export class StatusBarManager {
     }
   }
 
-  dispose() {
+  public dispose() {
     this.statusBarItem.dispose();
+    this.disposables.forEach((d) => d.dispose());
   }
 }
