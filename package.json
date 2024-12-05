@@ -11,6 +11,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "workspaceContains:.git",
     "onCommand:yaac.quickCommit",
     "onCommand:yaac.switchSolution",
