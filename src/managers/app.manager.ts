@@ -81,7 +81,11 @@ export class AppManager {
 
   private registerCommands(): void {
     this.commandManager.register(
-      new QuickCommitCommand(this.gitService, this.solutionManager)
+      new QuickCommitCommand(
+        this.gitService,
+        this.solutionManager,
+        this.context
+      )
     );
     this.commandManager.register(
       new SelectSolutionCommand(this.solutionManager)

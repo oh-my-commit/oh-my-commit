@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commit Message</title>
+    <style>
+        body {
+            padding: 10px;
+            font-family: var(--vscode-font-family);
+            color: var(--vscode-editor-foreground);
+            background-color: var(--vscode-editor-background);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-input-foreground);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--vscode-input-border);
+            background: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            border-radius: 2px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            background: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+        }
+        button:hover {
+            background: var(--vscode-button-hoverBackground);
+        }
+        button.secondary {
+            background: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+        button.secondary:hover {
+            background: var(--vscode-button-secondaryHoverBackground);
+        }
+        .preview {
+            margin-top: 20px;
+            padding: 10px;
+            background: var(--vscode-textBlockQuote-background);
+            border-left: 4px solid var(--vscode-textBlockQuote-border);
+        }
+        .preview pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <label for="title">Commit Title (required)</label>
+            <input type="text" id="title" placeholder="Enter commit title">
+        </div>
+        <div class="input-group">
+            <label for="description">Description (optional)</label>
+            <textarea id="description" placeholder="Enter commit description"></textarea>
+        </div>
+        <div class="preview">
+            <h4>Preview:</h4>
+            <pre id="preview"></pre>
+        </div>
+        <div class="button-group">
+            <button class="secondary" id="cancel">Cancel</button>
+            <button id="commit" disabled>Commit Changes</button>
+        </div>
+    </div>
+    <script>
+        const vscode = acquireVsCodeApi();
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const previewElement = document.getElementById('preview');
+        const commitButton = document.getElementById('commit');
+        const cancelButton = document.getElementById('cancel');
+
+        // Initialize with the provided commit message
+        window.addEventListener('message', event => {
+            const message = event.data;
+            switch (message.type) {
+                case 'init':
+                    const [title, ...bodyLines] = message.commitMessage.split('\n');
+                    titleInput.value = title;
+                    descriptionInput.value = bodyLines.join('\n').trim();
+                    updatePreview();
+                    break;
+            }
+        });
+
+        function updatePreview() {
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+            
+            let preview = title;
+            if (description) {
+                preview += '\n\n' + description;
+            }
+            
+            previewElement.textContent = preview;
+            commitButton.disabled = !title;
+        }
+
+        titleInput.addEventListener('input', updatePreview);
+        descriptionInput.addEventListener('input', updatePreview);
+
+        commitButton.addEventListener('click', () => {
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+            
+            vscode.postMessage({
+                type: 'commit',
+                message: description ? `${title}\n\n${description}` : title
+            });
+        });
+
+        cancelButton.addEventListener('click', () => {
+            vscode.postMessage({ type: 'cancel' });
+        });
+
+        // Initial preview update
+        updatePreview();
+    </script>
+</body>
+</html>
