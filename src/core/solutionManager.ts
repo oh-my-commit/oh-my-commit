@@ -30,7 +30,7 @@ export class SolutionManager {
 
     public async getAvailableSolutions(): Promise<Solution[]> {
         // 这里先返回一些示例方案，后续可以从配置或远程加载
-        return [
+        const solutions = [
             {
                 id: 'official_recommend',
                 name: 'Official Recommend',
@@ -53,6 +53,18 @@ export class SolutionManager {
                 metrics: { cost: 8, performance: 6, quality: 9 }
             }
         ];
+
+        // 检查每个方案的 API 配置是否有效
+        return await Promise.all(solutions.map(async solution => {
+            const apiConfig = await this.configManager.getApiConfig(solution.provider);
+            if (apiConfig) {
+                return {
+                    ...solution,
+                    description: `${solution.description} (API Configured)`
+                };
+            }
+            return solution;
+        }));
     }
 
     public async getCurrentSolution(): Promise<Solution | undefined> {
@@ -70,6 +82,20 @@ export class SolutionManager {
         
         if (!solution) {
             throw new Error(`Solution ${solutionId} not found`);
+        }
+
+        // 检查是否需要配置 API
+        const apiConfig = await this.configManager.getApiConfig(solution.provider);
+        if (!apiConfig) {
+            const shouldConfigure = await vscode.window.showInformationMessage(
+                `${solution.name} requires API configuration for ${solution.provider}. Configure now?`,
+                'Yes', 'No'
+            );
+            
+            if (shouldConfigure === 'Yes') {
+                vscode.commands.executeCommand('yaac.configureApi');
+                return;
+            }
         }
 
         this.currentSolutionId = solutionId;
