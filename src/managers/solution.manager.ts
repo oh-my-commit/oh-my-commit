@@ -6,29 +6,9 @@ import { Provider, Solution } from "../types/provider";
 export class SolutionManager {
   private currentSolutionId: string | undefined;
   private providers: Provider[] = [];
-  private subscribers: ((solutionId: string | undefined) => void)[] = [];
 
   constructor() {
     this.initialize();
-  }
-
-  // 订阅 solution 变化
-  public subscribe(callback: (solutionId: string | undefined) => void) {
-    this.subscribers.push(callback);
-    // 立即通知当前状态
-    callback(this.currentSolutionId);
-    return () => {
-      const index = this.subscribers.indexOf(callback);
-      if (index > -1) {
-        this.subscribers.splice(index, 1);
-      }
-    };
-  }
-
-  private notifySubscribers() {
-    for (const callback of this.subscribers) {
-      callback(this.currentSolutionId);
-    }
   }
 
   public async getAvailableSolutions(): Promise<Solution[]> {
@@ -70,13 +50,13 @@ export class SolutionManager {
 
     // 立即更新 currentSolutionId 并通知订阅者
     this.currentSolutionId = solutionId;
-    this.notifySubscribers();
+
+    // 保存到配置
+    await getWorkspaceConfig().update("currentSolution", solutionId, true);
 
     // 验证 solution 并显示配置提示（如果需要）
     await this.validateSolution(solution);
 
-    // 保存到配置
-    await getWorkspaceConfig().update("currentSolution", solutionId, true);
     return true;
   }
 

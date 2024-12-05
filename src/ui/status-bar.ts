@@ -30,12 +30,6 @@ export class StatusBarManager {
         this.update();
       })
     );
-
-    // 订阅 solution 变化
-    const unsubscribe = this.solutionManager.subscribe(() => {
-      this.update();
-    });
-    this.disposables.push({ dispose: unsubscribe });
   }
 
   public async initialize() {
@@ -67,6 +61,8 @@ export class StatusBarManager {
         this.statusBarItem.text = "$(git-commit) YAAC";
         this.statusBarItem.tooltip = "Click to select a commit solution";
       } else {
+        this.statusBarItem.command = "yaac.manageSolutions";
+
         const isValid = await this.solutionManager.getSolutionValidationStatus(
           solution
         );
@@ -82,8 +78,6 @@ export class StatusBarManager {
           `Accuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\n` +
           `Click to change solution`;
       }
-
-      this.statusBarItem.command = "yaac.manageSolutions";
     } catch (error) {
       this.statusBarItem.text = "$(warning) YAAC";
       this.statusBarItem.tooltip = "Error updating YAAC. Click for details.";
