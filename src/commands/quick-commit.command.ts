@@ -1,5 +1,5 @@
 import { VscodeCommand } from "@/commands/types";
-import { GitManager } from "@/managers/git.manager";
+import { VscodeGitService } from "@/services/vscode-git.service";
 import { SolutionManager } from "@/managers/solution.manager";
 import { generateCommitMessage } from "@/utils/generate-commit-message";
 import * as vscode from "vscode";
@@ -7,18 +7,18 @@ import * as vscode from "vscode";
 export class QuickCommitCommand implements VscodeCommand {
   public id = "yaac.quickCommit";
 
-  private gitManager: GitManager;
+  private gitService: VscodeGitService;
   private solutionManager: SolutionManager;
 
-  constructor(gitManager: GitManager, solutionManager: SolutionManager) {
-    this.gitManager = gitManager;
+  constructor(gitService: VscodeGitService, solutionManager: SolutionManager) {
+    this.gitService = gitService;
     this.solutionManager = solutionManager;
   }
 
   async execute(): Promise<void> {
     console.log("Quick commit command triggered");
 
-    if (!(await this.gitManager.isGitRepository())) {
+    if (!(await this.gitService.isGitRepository())) {
       console.log("Not a git repository");
       return;
     }
@@ -29,7 +29,7 @@ export class QuickCommitCommand implements VscodeCommand {
       return;
     }
 
-    if (!(await this.gitManager.hasChanges())) {
+    if (!(await this.gitService.hasChanges())) {
       console.log("No changes detected");
       vscode.window.showInformationMessage("No changes to commit");
       return;
@@ -37,7 +37,7 @@ export class QuickCommitCommand implements VscodeCommand {
 
     try {
       const commitMessage = await generateCommitMessage(
-        this.gitManager,
+        this.gitService,
         this.solutionManager
       );
       console.log(`Generated commit message: ${commitMessage}`);
@@ -51,8 +51,8 @@ export class QuickCommitCommand implements VscodeCommand {
 
       if (confirmed) {
         console.log("Committing changes...");
-        await this.gitManager.stageAll();
-        await this.gitManager.commit(confirmed);
+        await this.gitService.stageAll();
+        await this.gitService.commit(confirmed);
         vscode.window.showInformationMessage("Changes committed successfully");
       }
     } catch (error: unknown) {

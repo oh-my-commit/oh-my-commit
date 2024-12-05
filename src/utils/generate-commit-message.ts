@@ -1,14 +1,14 @@
 // 生成提交消息
-import {GitManager} from "@/managers/git.manager";
-import {SolutionManager} from "@/managers/solution.manager";
+import { VscodeGitService } from "@/services/vscode-git.service";
+import { SolutionManager } from "@/managers/solution.manager";
 
 export async function generateCommitMessage(
-    gitManager: GitManager,
+    gitService: VscodeGitService,
     solutionManager: SolutionManager
 ): Promise<string> {
     try {
         // 获取完整的 git diff
-        const diff = await gitManager.getDiff();
+        const diff = await gitService.getDiff();
         const result = await solutionManager.generateCommit(diff);
         if (result.error) {
             throw new Error(result.error);
