@@ -8,13 +8,15 @@ export class VscodeGitService extends GitCore {
 
   constructor() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
-    const workspaceRoot = workspaceFolders ? workspaceFolders[0].uri.fsPath : "";
-    
+    const workspaceRoot = workspaceFolders
+      ? workspaceFolders[0].uri.fsPath
+      : "";
+
     super(workspaceRoot);
-    
+
     this._onGitStatusChanged = new vscode.EventEmitter<boolean>();
     this.onGitStatusChanged = this._onGitStatusChanged.event;
-    
+
     this.setupFileSystemWatcher(workspaceRoot);
   }
 
@@ -38,16 +40,14 @@ export class VscodeGitService extends GitCore {
     this._onGitStatusChanged.dispose();
   }
 
-  public async getRecentCommits(count: number = 5): Promise<Array<{ hash: string; message: string; date: string }>> {
+  public async getRecentCommits(count: number = 5) {
     try {
       const logs = await this.git.log({ maxCount: count });
-      return logs.all.map(log => ({
-        hash: log.hash,
-        message: log.message,
-        date: new Date(log.date).toLocaleDateString()
-      }));
+      console.log({ logs });
+
+      return logs.all;
     } catch (error) {
-      console.error('Failed to get recent commits:', error);
+      console.error("Failed to get recent commits:", error);
       return [];
     }
   }

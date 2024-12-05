@@ -33,10 +33,14 @@ export class GitCore {
   }
 
   public async getDiff(): Promise<string> {
+    console.log("[GitCore] Getting diff");
     try {
-      return await this.git.diff(["--staged"]);
+      const result = await this.git.diff(["--staged"]);
+      console.log("[GitCore] Got diff, length:", result?.length || 0);
+      return result;
     } catch (error) {
-      throw new Error(`Failed to get git diff: ${error}`);
+      console.error("[GitCore] Failed to get diff:", error);
+      throw error;
     }
   }
 
@@ -57,10 +61,13 @@ export class GitCore {
   }
 
   public async commit(message: string): Promise<void> {
+    console.log("[GitCore] Committing changes");
     try {
       await this.git.commit(message);
+      console.log("[GitCore] Changes committed successfully");
     } catch (error) {
-      throw new Error(`Failed to commit: ${error}`);
+      console.error("[GitCore] Failed to commit changes:", error);
+      throw error;
     }
   }
 
@@ -102,26 +109,25 @@ export class GitCore {
   }
 
   public async getLastCommitMessage(): Promise<string> {
+    console.log("[GitCore] Getting last commit message");
     try {
-      const log = await this.git.log({ maxCount: 1 });
-      return log.latest?.message || "";
+      const result = await this.git.log(["-1"]);
+      console.log("[GitCore] Last commit message:", result.latest?.hash);
+      return result.latest?.message || "";
     } catch (error) {
-      throw new Error(`Failed to get last commit message: ${error}`);
+      console.error("[GitCore] Failed to get last commit message:", error);
+      return "";
     }
   }
 
   public async amendCommit(message: string): Promise<void> {
+    console.log("[GitCore] Amending last commit");
     try {
-      // First reset any staged changes to ensure clean amend
-      const status = await this.git.status();
-      if (status.staged.length > 0) {
-        await this.git.reset();
-      }
-
-      // Then amend with the new message
-      await this.git.raw(["commit", "--amend", "-m", message, "--no-verify"]);
+      await this.git.commit(message, ["--amend"]);
+      console.log("[GitCore] Last commit amended successfully");
     } catch (error) {
-      throw new Error(`Failed to amend commit: ${error}`);
+      console.error("[GitCore] Failed to amend last commit:", error);
+      throw error;
     }
   }
 }
