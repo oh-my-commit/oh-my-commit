@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { SolutionManager } from "@/managers/solution.manager";
-import { GitManager } from "@/managers/git.manager";
+import { VscodeGitService } from "@/services/vscode-git.service";
 
 export class StatusBarManager {
   private statusBarItem: vscode.StatusBarItem;
-  private gitManager: GitManager;
+  private gitService: VscodeGitService;
   private disposables: vscode.Disposable[] = [];
 
   constructor(private solutionManager: SolutionManager) {
@@ -13,7 +13,7 @@ export class StatusBarManager {
       100
     );
     this.statusBarItem.name = "YAAC";
-    this.gitManager = new GitManager();
+    this.gitService = new VscodeGitService();
 
     // 监听配置变化
     this.disposables.push(
@@ -27,6 +27,13 @@ export class StatusBarManager {
     // 监听工作区变化（可能影响 git 状态）
     this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
+        this.update();
+      })
+    );
+
+    // 监听 Git 状态变化
+    this.disposables.push(
+      this.gitService.onGitStatusChanged(() => {
         this.update();
       })
     );
@@ -46,7 +53,7 @@ export class StatusBarManager {
 
   public async update() {
     try {
-      const isGitRepo = await this.gitManager.isGitRepository();
+      const isGitRepo = await this.gitService.isGitRepository();
 
       if (!isGitRepo) {
         this.statusBarItem.text = "$(git-commit) YAAC (No Git)";

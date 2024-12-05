@@ -5,21 +5,21 @@ import fs from "fs";
 import path from "path";
 import * as vscode from "vscode";
 import { CommandManager } from "./command.manager";
-import { GitManager } from "./git.manager";
+import { VscodeGitService } from "@/services/vscode-git.service";
 import { SolutionManager } from "./solution.manager";
 import { StatusBarManager } from "./status-bar.manager";
 import { isEqual, pick } from "lodash-es";
 
 export class AppManager {
   private context: vscode.ExtensionContext;
-  private gitManager: GitManager;
+  private gitService: VscodeGitService;
   private solutionManager: SolutionManager;
   private commandManager: CommandManager;
   private statusBarManager: StatusBarManager;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
-    this.gitManager = new GitManager();
+    this.gitService = new VscodeGitService();
     this.solutionManager = new SolutionManager();
     this.commandManager = new CommandManager(context);
     this.statusBarManager = new StatusBarManager(this.solutionManager);
@@ -81,7 +81,7 @@ export class AppManager {
 
   private registerCommands(): void {
     this.commandManager.register(
-      new QuickCommitCommand(this.gitManager, this.solutionManager)
+      new QuickCommitCommand(this.gitService, this.solutionManager)
     );
     this.commandManager.register(
       new SelectSolutionCommand(this.solutionManager)
@@ -90,32 +90,9 @@ export class AppManager {
   }
 
   private async setupGitIntegration(): Promise<void> {
-    // Setup Git status listener
-    this.gitManager.onGitStatusChanged(async (isGit) => {
-      console.log(`Git status changed: ${isGit ? "initialized" : "removed"}`);
-      await this.updateGitStatus(isGit);
-    });
-
-    // Initial Git check
-    const isGit = await this.gitManager.isGitRepository();
-    await this.updateGitStatus(isGit);
-  }
-
-  private async updateGitStatus(isGit: boolean): Promise<void> {
-    if (isGit) {
-      this.statusBarManager.show();
-      await vscode.commands.executeCommand(
-        "setContext",
-        "yaac.isGitRepository",
-        true
-      );
-    } else {
-      this.statusBarManager.hide();
-      await vscode.commands.executeCommand(
-        "setContext",
-        "yaac.isGitRepository",
-        false
-      );
+    const isGitRepo = await this.gitService.isGitRepository();
+    if (!isGitRepo) {
+      throw new Error("Not a git repository");
     }
   }
 
