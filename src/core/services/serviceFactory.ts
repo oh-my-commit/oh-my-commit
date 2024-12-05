@@ -1,5 +1,6 @@
 import { CommitService } from './types';
-import { GcopService } from './gcopService';
+import { GcopService, SUPPORTED_MODELS, SupportedModel } from './providers/gcop';
+import { workspace } from 'vscode';
 
 export class ServiceFactory {
   private static instance: ServiceFactory;
@@ -17,10 +18,20 @@ export class ServiceFactory {
     return ServiceFactory.instance;
   }
 
-  private registerDefaultServices() {
-    // 注册 gcop 服务
-    this.services.set('gcop_fast', new GcopService());
-    // TODO: 注册其他服务
+  public registerDefaultServices() {
+    // 获取配置的模型
+    const config = workspace.getConfiguration('yaac.gcop');
+    const modelName = config.get<SupportedModel>('model') || 'openai/gpt-4';
+
+    // 为每个支持的模型创建一个服务实例
+    Object.entries(SUPPORTED_MODELS).forEach(([name, info]) => {
+      const serviceId = `gcop_${info.provider}_${name.split('/')[1]}`;
+      this.services.set(serviceId, new GcopService(name as SupportedModel));
+    });
+
+    // 设置默认服务
+    const defaultServiceId = `gcop_${modelName.split('/')[0]}_${modelName.split('/')[1]}`;
+    this.services.set('default', this.services.get(defaultServiceId)!);
   }
 
   public getService(solutionId: string): CommitService | undefined {
@@ -29,5 +40,15 @@ export class ServiceFactory {
 
   public getAllServices(): CommitService[] {
     return Array.from(this.services.values());
+  }
+
+  public getServicesByProvider(provider: string): CommitService[] {
+    return Array.from(this.services.entries())
+      .filter(([id]) => id.startsWith(`gcop_${provider}_`))
+      .map(([_, service]) => service);
+  }
+
+  public getDefaultService(): CommitService {
+    return this.services.get('default')!;
   }
 }

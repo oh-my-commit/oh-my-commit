@@ -8,6 +8,9 @@ const execAsync = promisify(exec);
 
 export class GitManager {
     private workspaceRoot: string;
+    private _onGitStatusChanged: vscode.EventEmitter<boolean> = new vscode.EventEmitter<boolean>();
+    readonly onGitStatusChanged: vscode.Event<boolean> = this._onGitStatusChanged.event;
+    private fsWatcher: vscode.FileSystemWatcher | undefined;
 
     constructor() {
         const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -16,6 +19,38 @@ export class GitManager {
         } else {
             this.workspaceRoot = workspaceFolders[0].uri.fsPath;
         }
+        this.setupFileSystemWatcher();
+    }
+
+    private setupFileSystemWatcher() {
+        if (!this.workspaceRoot) {
+            return;
+        }
+
+        // 监听 .git 目录的创建和删除
+        this.fsWatcher = vscode.workspace.createFileSystemWatcher(
+            new vscode.RelativePattern(this.workspaceRoot, '.git/**')
+        );
+
+        this.fsWatcher.onDidCreate(async () => {
+            const isGit = await this.isGitRepository();
+            this._onGitStatusChanged.fire(isGit);
+        });
+
+        this.fsWatcher.onDidDelete(async () => {
+            const isGit = await this.isGitRepository();
+            this._onGitStatusChanged.fire(isGit);
+        });
+
+        // 初始检查
+        this.isGitRepository().then(isGit => {
+            this._onGitStatusChanged.fire(isGit);
+        });
+    }
+
+    public dispose() {
+        this.fsWatcher?.dispose();
+        this._onGitStatusChanged.dispose();
     }
 
     public async isGitRepository(): Promise<boolean> {
@@ -75,4 +110,51 @@ export class GitManager {
             throw new Error(`Failed to check git status: ${error}`);
         }
     }
+
+    public async getChanges(): Promise<CommitChanges> {
+        if (!this.workspaceRoot) {
+            throw new Error('No workspace root found');
+        }
+
+        try {
+            // Get status of files
+            const { stdout: statusOutput } = await execAsync('git status --porcelain', { cwd: this.workspaceRoot });
+            const files = statusOutput.trim().split('\n')
+                .filter(line => line.length > 0)
+                .map(line => {
+                    const file = line.substring(3);
+                    return vscode.Uri.file(path.join(this.workspaceRoot, file));
+                });
+
+            // Get diff stats
+            const { stdout: diffOutput } = await execAsync('git diff --numstat', { cwd: this.workspaceRoot });
+            let additions = 0;
+            let deletions = 0;
+            
+            diffOutput.trim().split('\n').forEach(line => {
+                if (line.trim()) {
+                    const [add, del] = line.split('\t').map(n => parseInt(n) || 0);
+                    additions += add;
+                    deletions += del;
+                }
+            });
+
+            return {
+                files,
+                additions,
+                deletions,
+                summary: `Changed ${files.length} files (+${additions}, -${deletions})`
+            };
+        } catch (error) {
+            console.error('Error getting git changes:', error);
+            throw error;
+        }
+    }
+}
+
+interface CommitChanges {
+    files: vscode.Uri[];
+    additions: number;
+    deletions: number;
+    summary: string;
 }

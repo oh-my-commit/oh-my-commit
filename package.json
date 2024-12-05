@@ -49,36 +49,41 @@
         "yaac.solutions": {
           "type": "object",
           "default": {},
-          "description": "Available commit solutions"
+          "description": "Custom commit solutions configuration"
         },
-        "yaac.gcop.modelName": {
-          "type": "string",
-          "enum": [
-            "openai/gpt-4",
-            "openai/gpt-4-turbo",
-            "deepseek/deepseek-chat",
-            "zhipu/glm-4",
-            "ollama/llama2",
-            "groq/llama-3.1-70b-versatile",
-            "anthropic/claude-3-sonnet"
-          ],
-          "default": "openai/gpt-4",
-          "description": "The AI model to use for commit message generation"
-        },
-        "yaac.gcop.includeGitHistory": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether to include git history in the prompt"
-        },
-        "yaac.gcop.enableDataImprovement": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether to enable data improvement (experimental)"
-        },
-        "yaac.gcop.commitTemplate": {
-          "type": "string",
-          "default": "",
-          "description": "Custom commit message template"
+        "yaac.gcop": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": [
+                "openai/gpt-4",
+                "openai/gpt-4-turbo",
+                "deepseek/deepseek-chat",
+                "zhipu/glm-4",
+                "ollama/llama2",
+                "groq/llama-3.1-70b-versatile",
+                "anthropic/claude-3-sonnet"
+              ],
+              "default": "openai/gpt-4",
+              "description": "选择要使用的 AI 模型"
+            },
+            "includeGitHistory": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否包含 Git 历史记录以提高生成质量"
+            },
+            "enableDataImprovement": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否允许收集数据用于改进服务质量"
+            },
+            "commitTemplate": {
+              "type": "string",
+              "default": "",
+              "description": "自定义提交信息模板"
+            }
+          }
         }
       }
     }

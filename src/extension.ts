@@ -3,6 +3,8 @@ import { StatusBarManager } from './ui/statusBar';
 import { SolutionManager } from './core/solutionManager';
 import { ConfigManager } from './core/configManager';
 import { GitManager } from './core/gitManager';
+import { ServiceFactory } from './core/services/serviceFactory';
+import { SUPPORTED_MODELS } from './core/services/providers/gcop';
 
 export async function activate(context: vscode.ExtensionContext) {
     // 添加激活日志
@@ -25,11 +27,30 @@ export async function activate(context: vscode.ExtensionContext) {
 
     console.log('Core managers initialized');
 
+    // 监听 Git 状态变化
+    gitManager.onGitStatusChanged(async isGit => {
+        console.log(`Git status changed: ${isGit ? 'initialized' : 'removed'}`);
+        if (isGit) {
+            statusBar.show();
+            vscode.commands.executeCommand('setContext', 'yaac.isGitRepository', true);
+        } else {
+            statusBar.hide();
+            vscode.commands.executeCommand('setContext', 'yaac.isGitRepository', false);
+        }
+    });
+
     // 注册命令
     let disposables = [
         vscode.commands.registerCommand('yaac.quickCommit', async () => {
             console.log('Quick commit command triggered');
             try {
+                // 检查是否是 Git 仓库
+                if (!await gitManager.isGitRepository()) {
+                    console.log('Not a git repository');
+                    vscode.window.showErrorMessage('This workspace is not a git repository');
+                    return;
+                }
+
                 // 检查是否有更改
                 if (!await gitManager.hasChanges()) {
                     console.log('No changes detected');
@@ -46,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 }
                 console.log(`Using solution: ${solution.name}`);
 
-                // 暂时使用模拟的提交消息生成
+                // 生成提交消息
                 const commitMessage = await generateCommitMessage(solution.id);
                 console.log(`Generated commit message: ${commitMessage}`);
                 
@@ -75,58 +96,116 @@ export async function activate(context: vscode.ExtensionContext) {
 
         vscode.commands.registerCommand('yaac.switchSolution', async () => {
             console.log('Switch solution command triggered');
-            const solutions = await solutionManager.getAvailableSolutions();
-            console.log(`Available solutions: ${solutions.map(s => s.name).join(', ')}`);
+            const factory = ServiceFactory.getInstance();
+            const services = factory.getAllServices();
+            
+            const items = services.map(service => ({
+                label: service.name,
+                description: service.description,
+                detail: `Speed: ${service.metrics.speed}/5 | Cost: ${service.metrics.cost}/5 | Quality: ${service.metrics.quality}/5`,
+                service
+            }));
 
-            const selected = await vscode.window.showQuickPick(
-                solutions.map(s => ({
-                    label: s.name,
-                    description: `Cost: ${s.metrics.cost}, Performance: ${s.metrics.performance}, Quality: ${s.metrics.quality}`,
-                    solution: s
-                }))
-            );
+            const selected = await vscode.window.showQuickPick(items, {
+                placeHolder: '选择 AI 提交助手',
+                matchOnDescription: true,
+                matchOnDetail: true
+            });
 
             if (selected) {
-                console.log(`Switching to solution: ${selected.solution.name}`);
-                await solutionManager.switchSolution(selected.solution.id);
-                statusBar.update();
-                vscode.window.showInformationMessage(`Switched to ${selected.solution.name}`);
-            } else {
-                console.log('Solution switch cancelled by user');
+                await solutionManager.setCurrentSolution({
+                    id: selected.service.name.toLowerCase(),
+                    name: selected.service.name,
+                    provider: 'gcop',
+                    description: selected.service.description,
+                    metrics: {
+                        cost: 5,
+                        performance: 8,
+                        quality: 8
+                    }
+                });
+                console.log(`Switched to solution: ${selected.service.name}`);
+                vscode.window.showInformationMessage(`已切换到 ${selected.service.name}`);
             }
         }),
 
         vscode.commands.registerCommand('yaac.configureApi', async () => {
             console.log('Configure API command triggered');
-            // 实现 API 配置逻辑
+            const config = vscode.workspace.getConfiguration('yaac.gcop');
+            const currentModel = config.get<string>('model') || 'openai/gpt-4';
+            const provider = currentModel.split('/')[0];
+
+            // 打开设置
+            await vscode.commands.executeCommand('workbench.action.openSettings', `@ext:cs-magic.yaac gcop`);
+            
+            // 提示设置环境变量
+            const envVarName = `${provider.toUpperCase()}_API_KEY`;
+            vscode.window.showInformationMessage(
+                `请确保已设置 ${envVarName} 环境变量`,
+                '了解更多'
+            ).then(selection => {
+                if (selection === '了解更多') {
+                    vscode.env.openExternal(vscode.Uri.parse('https://github.com/cs-magic/yaac#configuration'));
+                }
+            });
         }),
 
         vscode.commands.registerCommand('yaac.manageSolutions', async () => {
             console.log('Manage solutions command triggered');
-            // 实现方案管理逻辑
+            const config = vscode.workspace.getConfiguration('yaac.gcop');
+            
+            const items = Object.entries(SUPPORTED_MODELS).map(([id, info]) => ({
+                label: info.displayName,
+                description: info.description,
+                detail: `速度: ${info.metrics.speed}/5 | 成本: ${info.metrics.cost}/5 | 质量: ${info.metrics.quality}/5`,
+                id
+            }));
+
+            const selected = await vscode.window.showQuickPick(items, {
+                placeHolder: '选择要使用的 AI 模型',
+                matchOnDescription: true,
+                matchOnDetail: true
+            });
+
+            if (selected) {
+                await config.update('model', selected.id, true);
+                console.log(`Updated model to: ${selected.id}`);
+                
+                // 重新初始化服务
+                ServiceFactory.getInstance().registerDefaultServices();
+                vscode.window.showInformationMessage(`已切换到 ${selected.label}`);
+            }
         })
     ];
 
     context.subscriptions.push(...disposables);
-    
-    // 初始化状态栏
-    statusBar.initialize();
-    console.log('YAAC initialization completed');
+    console.log('Commands registered');
 
-    // 显示欢迎消息
-    vscode.window.showInformationMessage('YAAC is ready to help with your commits!');
+    // 初始检查 Git 状态
+    const isGit = await gitManager.isGitRepository();
+    if (isGit) {
+        statusBar.show();
+        vscode.commands.executeCommand('setContext', 'yaac.isGitRepository', true);
+    }
 }
 
-// 临时的提交消息生成函数
+// 生成提交消息
 async function generateCommitMessage(solutionId: string): Promise<string> {
-    console.log(`Generating commit message for solution: ${solutionId}`);
-    // 这里暂时返回一个模拟的提交消息，后续会替换为真实的实现
-    const messages = {
-        'official_recommend': 'feat: implement core functionality',
-        'gcop_fast': 'update: quick changes',
-        'premium_quality': 'feat(core): implement comprehensive solution with detailed documentation'
-    };
-    return messages[solutionId as keyof typeof messages] || 'chore: update code';
+    try {
+        const service = ServiceFactory.getInstance().getService(solutionId);
+        if (!service) {
+            throw new Error('No commit service available');
+        }
+
+        const gitManager = new GitManager();
+        const changes = await gitManager.getChanges();
+        const message = await service.generateCommitMessage(changes);
+        
+        return `${message.type}: ${message.subject}\n\n${message.body}`;
+    } catch (error) {
+        console.error('Failed to generate commit message:', error);
+        throw error;
+    }
 }
 
 export function deactivate() {

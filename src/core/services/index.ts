@@ -1,3 +1,3 @@
-export * from './types';
-export * from './gcopService';
-export * from './serviceFactory';
+export * from "./types";
+export * from "./providers/gcop/service";
+export * from "./serviceFactory";
