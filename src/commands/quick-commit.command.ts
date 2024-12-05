@@ -1,7 +1,6 @@
 import { VscodeCommand } from "@/commands/types";
 import { VscodeGitService } from "@/services/vscode-git.service";
 import { SolutionManager } from "@/managers/solution.manager";
-import { generateCommitMessage } from "@/utils/generate-commit-message";
 import * as vscode from "vscode";
 import * as path from "path";
 
@@ -22,178 +21,167 @@ export class QuickCommitCommand implements VscodeCommand {
     this.context = context;
   }
 
+  /**
+   * 无需 handle error，因为最外层 @command.manager.ts 会处理
+   */
   async execute(): Promise<void> {
-    try {
-      // Check if there are any changes to commit
-      const hasChanges = await this.gitService.hasChanges();
-      if (!hasChanges) throw new Error("No changes to commit");
+    // Check if there are any changes to commit
+    const hasChanges = await this.gitService.hasChanges();
+    if (!hasChanges) throw new Error("No changes to commit");
 
-      // Get the changes for generating commit message
-      const changes = await this.gitService.getUnstagedChanges();
-      if (!changes) throw new Error("Failed to get unstaged changes");
+    // Get the changes for generating commit message
+    const changes = await this.gitService.getUnstagedChanges();
+    if (!changes) throw new Error("Failed to get unstaged changes");
 
-      // Get solution for commit message
-      const solution = await this.solutionManager.generateCommit(changes);
+    // Get solution for commit message
+    const solution = await this.solutionManager.generateCommit(changes);
+    if (solution.error) throw new Error(solution.error);
 
-      if (solution.error) throw new Error(solution.error);
+    const commitMessage = solution.message;
+    console.log(`Generated commit message: ${commitMessage}`);
 
-      const commitMessage = solution.message;
-      console.log(`Generated commit message: ${commitMessage}`);
+    // Get user preference for commit message input
+    const config = vscode.workspace.getConfiguration("yaac");
+    const inputMode = config.get<string>("inputAppearence", "webview");
 
-      // Get user preference for commit message input
-      const config = vscode.workspace.getConfiguration("yaac");
-      const inputMode = config.get<string>("inputAppearence", "webview");
+    // Handle commit based on input mode
+    if (inputMode === "quickInput") {
+      await this.handleQuickInput(commitMessage);
+    } else {
+      await this.handleWebView(commitMessage);
+    }
 
-      if (inputMode === "quickInput") {
-        // Use quick input for simple commit messages
-        const result = await vscode.window.showInputBox({
-          prompt: "Review and edit commit message",
-          value: commitMessage.split("\n")[0], // Use first line as initial value
-          ignoreFocusOut: true,
-          placeHolder: "Enter commit message",
-        });
+    // Success notification
+    vscode.window.showInformationMessage("Changes committed successfully");
+  }
 
-        if (result === undefined || result.trim() === "")
-          throw new Error("Commit cancelled");
+  private async handleQuickInput(initialMessage: string): Promise<void> {
+    const result = await vscode.window.showInputBox({
+      prompt: "Review and edit commit message",
+      value: initialMessage.split("\n")[0],
+      ignoreFocusOut: true,
+      placeHolder: "Enter commit message",
+    });
 
-        vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Notification,
-            title: "Committing changes...",
-            cancellable: false,
+    if (!result?.trim()) throw new Error("Commit cancelled");
+
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Committing changes...",
+        cancellable: false,
+      },
+      async () => {
+        await this.gitService.stageAll();
+        await this.gitService.commit(result);
+      }
+    );
+  }
+
+  private async handleWebView(initialMessage: string): Promise<void> {
+    const panel = vscode.window.createWebviewPanel(
+      "commitMessage",
+      "Commit Message",
+      vscode.ViewColumn.Beside,
+      {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+        localResourceRoots: [
+          vscode.Uri.file(
+            path.join(this.context.extensionPath, "src", "webviews")
+          ),
+        ],
+      }
+    );
+
+    // Get recent commits
+    const recentCommits = await this.getRecentCommits();
+
+    // Get and validate HTML content
+    const htmlContent = await this.getWebViewHtml();
+    panel.webview.html = htmlContent;
+
+    // Initialize with generated commit message
+    panel.webview.postMessage({
+      type: "init",
+      commitMessage: initialMessage,
+      recentCommits,
+    });
+
+    // Handle WebView interaction
+    return new Promise<void>((resolve, reject) => {
+      const disposables: vscode.Disposable[] = [];
+
+      // Handle messages from WebView
+      disposables.push(
+        panel.webview.onDidReceiveMessage(
+          async (message) => {
+            try {
+              switch (message.type) {
+                case "commit":
+                  await vscode.window.withProgress(
+                    {
+                      location: vscode.ProgressLocation.Notification,
+                      title: "Committing changes...",
+                      cancellable: false,
+                    },
+                    async () => {
+                      await this.gitService.stageAll();
+                      await this.gitService.commit(message.message);
+                    }
+                  );
+                  panel.dispose();
+                  resolve();
+                  break;
+                case "cancel":
+                  throw new Error("Commit cancelled");
+              }
+            } catch (error) {
+              panel.dispose();
+              reject(error);
+            }
           },
-          async () => {
-            await this.gitService.stageAll();
-            await this.gitService.commit(result);
-          }
-        );
-        vscode.window.showInformationMessage("Changes committed successfully");
-        return;
-      }
-
-      // Create and show WebView in split window
-      const panel = vscode.window.createWebviewPanel(
-        "commitMessage",
-        "Commit Message",
-        vscode.ViewColumn.Beside,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: true,
-          localResourceRoots: [
-            vscode.Uri.file(
-              path.join(this.context.extensionPath, "src", "webviews")
-            ),
-          ],
-        }
-      );
-
-      // Get recent commits
-      let recentCommits: Array<{
-        hash: string;
-        message: string;
-        date: string;
-      }> = [];
-      try {
-        recentCommits = await this.gitService.getRecentCommits(5);
-      } catch (error) {
-        console.error("Failed to get recent commits:", error);
-        // Don't block the commit process if getting recent commits fails
-      }
-
-      // Get path to webview html
-      const htmlPath = vscode.Uri.file(
-        path.join(
-          this.context.extensionPath,
-          "src",
-          "webviews",
-          "commit-message.html"
+          undefined,
+          disposables
         )
       );
 
-      let htmlContent: Uint8Array;
-      try {
-        htmlContent = await vscode.workspace.fs.readFile(htmlPath);
-      } catch (error) {
-        console.error("Failed to read webview HTML:", error);
-        vscode.window.showErrorMessage("Failed to load commit message editor");
-        return;
-      }
+      // Clean up on panel close
+      disposables.push(
+        panel.onDidDispose(() => {
+          disposables.forEach((d) => d.dispose());
+          resolve();
+        })
+      );
+    });
+  }
 
-      // Set WebView content
-      panel.webview.html = htmlContent.toString();
+  private async getRecentCommits(): Promise<
+    Array<{ hash: string; message: string; date: string }>
+  > {
+    try {
+      return await this.gitService.getRecentCommits(5);
+    } catch (error) {
+      console.error("Failed to get recent commits:", error);
+      return []; // Non-critical error, return empty array
+    }
+  }
 
-      // Initialize with generated commit message
-      panel.webview.postMessage({
-        type: "init",
-        commitMessage,
-        recentCommits,
-      });
+  private async getWebViewHtml(): Promise<string> {
+    const htmlPath = vscode.Uri.file(
+      path.join(
+        this.context.extensionPath,
+        "src",
+        "webviews",
+        "commit-message.html"
+      )
+    );
 
-      // Handle messages from WebView
-      return new Promise<void>((resolve, reject) => {
-        const disposables: vscode.Disposable[] = [];
-
-        disposables.push(
-          panel.webview.onDidReceiveMessage(
-            async (message) => {
-              try {
-                switch (message.type) {
-                  case "commit":
-                    await vscode.window.withProgress(
-                      {
-                        location: vscode.ProgressLocation.Notification,
-                        title: "Committing changes...",
-                        cancellable: false,
-                      },
-                      async () => {
-                        await this.gitService.stageAll();
-                        await this.gitService.commit(message.message);
-                      }
-                    );
-                    vscode.window.showInformationMessage(
-                      "Changes committed successfully"
-                    );
-                    panel.dispose();
-                    resolve();
-                    break;
-                  case "cancel":
-                    vscode.window.showInformationMessage("Commit cancelled");
-                    panel.dispose();
-                    resolve();
-                    break;
-                }
-              } catch (error: unknown) {
-                console.error("Error during commit:", error);
-                const errorMessage =
-                  error instanceof Error
-                    ? error.message
-                    : "Unknown error occurred";
-                vscode.window.showErrorMessage(
-                  `Failed to commit: ${errorMessage}`
-                );
-                panel.dispose();
-                reject(error);
-              }
-            },
-            undefined,
-            disposables
-          )
-        );
-
-        // Handle panel close
-        disposables.push(
-          panel.onDidDispose(() => {
-            disposables.forEach((d) => d.dispose());
-            resolve();
-          })
-        );
-      });
-    } catch (error: unknown) {
-      console.error("Error in quick commit command:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      vscode.window.showErrorMessage(`Error: ${errorMessage}`);
-      throw error;
+    try {
+      const content = await vscode.workspace.fs.readFile(htmlPath);
+      return content.toString();
+    } catch (error) {
+      throw new Error("Failed to load commit message editor");
     }
   }
 }
