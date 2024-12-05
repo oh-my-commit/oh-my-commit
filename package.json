@@ -50,6 +50,19 @@
           "default": "zh_CN",
           "description": "提交信息的语言"
         },
+        "yaac.noDiffBehavior": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "revise"
+          ],
+          "enumDescriptions": [
+            "忽略",
+            "修改上次提交"
+          ],
+          "default": "ignore",
+          "description": "当没有文件变更时的行为"
+        },
         "yaac.providers": {
           "type": "object",
           "description": "Provider 启用状态配置",
