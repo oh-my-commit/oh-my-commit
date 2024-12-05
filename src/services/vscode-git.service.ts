@@ -75,4 +75,12 @@ export class VscodeGitService {
   public async getChangedFiles() {
     return this.gitCore.getChangedFiles();
   }
+
+  public async getLastCommitMessage(): Promise<string> {
+    return this.gitCore.getLastCommitMessage();
+  }
+
+  public async amendCommit(message: string): Promise<void> {
+    await this.gitCore.amendCommit(message);
+  }
 }

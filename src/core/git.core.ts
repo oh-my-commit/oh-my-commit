@@ -100,4 +100,28 @@ export class GitCore {
       throw new Error(`Failed to get changed files: ${error}`);
     }
   }
+
+  public async getLastCommitMessage(): Promise<string> {
+    try {
+      const log = await this.git.log({ maxCount: 1 });
+      return log.latest?.message || "";
+    } catch (error) {
+      throw new Error(`Failed to get last commit message: ${error}`);
+    }
+  }
+
+  public async amendCommit(message: string): Promise<void> {
+    try {
+      // First reset any staged changes to ensure clean amend
+      const status = await this.git.status();
+      if (status.staged.length > 0) {
+        await this.git.reset();
+      }
+
+      // Then amend with the new message
+      await this.git.raw(["commit", "--amend", "-m", message, "--no-verify"]);
+    } catch (error) {
+      throw new Error(`Failed to amend commit: ${error}`);
+    }
+  }
 }
