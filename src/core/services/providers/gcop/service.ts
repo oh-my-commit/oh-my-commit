@@ -1,11 +1,8 @@
-import { CommitService, CommitChanges, CommitMessage } from "./types";
+import { CommitService, CommitChanges, CommitMessage } from "../../types";
 import { workspace } from "vscode";
 import * as path from "path";
-import {
-  GcopConfig,
-  SupportedModel,
-  DEFAULT_COMMIT_TEMPLATE,
-} from "./gcopConfig";
+import { GcopConfig } from "./types";
+import { SUPPORTED_MODELS, SupportedModel } from "./models";
 import { ModelAdapter } from "./modelAdapter";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -15,13 +12,19 @@ import * as fs from "fs/promises";
 const execAsync = promisify(exec);
 
 export class GcopService implements CommitService {
-  readonly name = "gcop_fast";
+  readonly name = "GCOP";
   readonly description = "基于 Python 的高性能提交信息生成服务";
-  readonly metrics = {
-    speed: 5, // 最快
-    cost: 4, // 较贵
-    quality: 3, // 中等质量
-  };
+
+  constructor(private modelName: SupportedModel) {
+    const model = SUPPORTED_MODELS[modelName];
+    if (!model) {
+      throw new Error(`Unsupported model: ${modelName}`);
+    }
+  }
+
+  get metrics() {
+    return SUPPORTED_MODELS[this.modelName].metrics;
+  }
 
   private async ensureGcopInstalled(): Promise<void> {
     try {
@@ -52,12 +55,11 @@ export class GcopService implements CommitService {
 
   private async getConfig(): Promise<GcopConfig> {
     const config = workspace.getConfiguration("yaac.gcop");
-    const modelName = config.get<string>("modelName") as SupportedModel;
-    const provider = ModelAdapter.getProviderFromModelName(modelName);
+    const provider = ModelAdapter.getProviderFromModelName(this.modelName);
 
     // 从环境变量获取 API 密钥和基础 URL
     const apiKey = process.env[ModelAdapter.getApiKeyName(provider)];
-    if (!apiKey) {
+    if (!apiKey && provider !== "ollama") {
       throw new Error(
         `Environment variable ${ModelAdapter.getApiKeyName(provider)} not set`
       );
@@ -69,15 +71,14 @@ export class GcopService implements CommitService {
 
     return {
       model: {
-        model_name: ModelAdapter.adaptModelName(modelName),
-        api_key: apiKey,
+        model_name: ModelAdapter.adaptModelName(this.modelName),
+        api_key: apiKey || "",
         api_base: apiBase,
       },
       include_git_history: config.get<boolean>("includeGitHistory") || false,
       enable_data_improvement:
         config.get<boolean>("enableDataImprovement") || false,
-      commit_template:
-        config.get<string>("commitTemplate") || DEFAULT_COMMIT_TEMPLATE,
+      commit_template: config.get<string>("commitTemplate") || "",
     };
   }
 
