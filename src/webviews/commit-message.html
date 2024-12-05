@@ -115,6 +115,49 @@
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
+        .recent-commits {
+            margin-top: 20px;
+            border-top: 1px solid var(--vscode-textBlockQuote-border);
+            padding-top: 15px;
+        }
+        .recent-commits h3 {
+            margin: 0 0 10px 0;
+            color: var(--vscode-editor-foreground);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        .recent-commits h3::before {
+            content: "↺";
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        .commit-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 12px;
+        }
+        .commit-item {
+            padding: 8px;
+            margin-bottom: 4px;
+            background: var(--vscode-textBlockQuote-background);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .commit-item:hover {
+            background: var(--vscode-list-hoverBackground);
+        }
+        .commit-hash {
+            color: var(--vscode-textPreformat-foreground);
+            font-family: var(--vscode-editor-font-family);
+            margin-right: 8px;
+        }
+        .commit-date {
+            float: right;
+            color: var(--vscode-descriptionForeground);
+        }
     </style>
 </head>
 <body>
@@ -133,6 +176,10 @@
             </label>
             <textarea id="description" placeholder="Enter a detailed description"></textarea>
         </div>
+        <div class="recent-commits">
+            <h3>Recent Commits</h3>
+            <ul class="commit-list" id="recentCommits"></ul>
+        </div>
         <div class="preview">
             <h4>Preview</h4>
             <pre id="preview"></pre>
@@ -149,22 +196,38 @@
         const previewElement = document.getElementById('preview');
         const commitButton = document.getElementById('commit');
         const cancelButton = document.getElementById('cancel');
+        const recentCommitsList = document.getElementById('recentCommits');
 
-        // Initialize with the provided commit message
+        // Handle messages from extension
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.type) {
                 case 'init':
-                    const [title, ...bodyLines] = message.commitMessage.split('\n');
-                    titleInput.value = title;
-                    descriptionInput.value = bodyLines.join('\n').trim();
-                    updatePreview();
-                    // Focus title input on start
-                    titleInput.focus();
-                    titleInput.setSelectionRange(0, title.length);
+                    const lines = message.commitMessage.split('\n');
+                    titleInput.value = lines[0];
+                    descriptionInput.value = lines.slice(1).join('\n').trim();
+
+                    // Render recent commits
+                    if (message.recentCommits) {
+                        recentCommitsList.innerHTML = message.recentCommits
+                            .map(commit => `
+                                <li class="commit-item" onclick="useCommitMessage(this)" data-message="${commit.message}">
+                                    <span class="commit-hash">${commit.hash.slice(0, 7)}</span>
+                                    ${commit.message.split('\n')[0]}
+                                    <span class="commit-date">${commit.date}</span>
+                                </li>
+                            `).join('');
+                    }
                     break;
             }
         });
+
+        function useCommitMessage(element) {
+            const message = element.getAttribute('data-message');
+            const lines = message.split('\n');
+            titleInput.value = lines[0];
+            descriptionInput.value = lines.slice(1).join('\n').trim();
+        }
 
         function updatePreview() {
             const title = titleInput.value.trim();

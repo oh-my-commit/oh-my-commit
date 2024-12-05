@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { GitCore } from "@/core/git.core";
 
-export class VscodeGitService {
-  private gitCore: GitCore;
+export class VscodeGitService extends GitCore {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>;
   readonly onGitStatusChanged: vscode.Event<boolean>;
   private fsWatcher: vscode.FileSystemWatcher | undefined;
@@ -11,7 +10,8 @@ export class VscodeGitService {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     const workspaceRoot = workspaceFolders ? workspaceFolders[0].uri.fsPath : "";
     
-    this.gitCore = new GitCore(workspaceRoot);
+    super(workspaceRoot);
+    
     this._onGitStatusChanged = new vscode.EventEmitter<boolean>();
     this.onGitStatusChanged = this._onGitStatusChanged.event;
     
@@ -19,68 +19,36 @@ export class VscodeGitService {
   }
 
   private setupFileSystemWatcher(workspaceRoot: string) {
-    if (!workspaceRoot) {
-      return;
-    }
-
+    this.fsWatcher?.dispose();
     this.fsWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, ".git/**")
+      new vscode.RelativePattern(workspaceRoot, "**/.git/**")
     );
 
-    this.fsWatcher.onDidCreate(async () => {
-      const isGit = await this.gitCore.isGitRepository();
-      this._onGitStatusChanged.fire(isGit);
-    });
+    const handleGitChange = () => {
+      this._onGitStatusChanged.fire(true);
+    };
 
-    this.fsWatcher.onDidDelete(async () => {
-      const isGit = await this.gitCore.isGitRepository();
-      this._onGitStatusChanged.fire(isGit);
-    });
-
-    this.gitCore.isGitRepository().then((isGit) => {
-      this._onGitStatusChanged.fire(isGit);
-    });
+    this.fsWatcher.onDidChange(handleGitChange);
+    this.fsWatcher.onDidCreate(handleGitChange);
+    this.fsWatcher.onDidDelete(handleGitChange);
   }
 
-  public dispose() {
+  dispose() {
     this.fsWatcher?.dispose();
     this._onGitStatusChanged.dispose();
   }
 
-  // Delegate methods to GitCore
-  public async isGitRepository(): Promise<boolean> {
-    return this.gitCore.isGitRepository();
-  }
-
-  public async getDiff(): Promise<string> {
-    return this.gitCore.getDiff();
-  }
-
-  public async getUnstagedChanges(): Promise<string> {
-    return this.gitCore.getUnstagedChanges();
-  }
-
-  public async stageAll(): Promise<void> {
-    return this.gitCore.stageAll();
-  }
-
-  public async commit(message: string): Promise<void> {
-    return this.gitCore.commit(message);
-  }
-
-  public async hasChanges(): Promise<boolean> {
-    return this.gitCore.hasChanges();
-  }
-
-  public async getChangedFiles() {
-    return this.gitCore.getChangedFiles();
-  }
-
-  public async getLastCommitMessage(): Promise<string> {
-    return this.gitCore.getLastCommitMessage();
-  }
-
-  public async amendCommit(message: string): Promise<void> {
-    await this.gitCore.amendCommit(message);
+  public async getRecentCommits(count: number = 5): Promise<Array<{ hash: string; message: string; date: string }>> {
+    try {
+      const logs = await this.git.log({ maxCount: count });
+      return logs.all.map(log => ({
+        hash: log.hash,
+        message: log.message,
+        date: new Date(log.date).toLocaleDateString()
+      }));
+    } catch (error) {
+      console.error('Failed to get recent commits:', error);
+      return [];
+    }
   }
 }
