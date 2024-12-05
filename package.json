@@ -14,9 +14,8 @@
     "onStartupFinished",
     "workspaceContains:.git",
     "onCommand:yaac.quickCommit",
-    "onCommand:yaac.switchSolution",
-    "onCommand:yaac.configureApi",
-    "onCommand:yaac.manageSolutions"
+    "onCommand:yaac.selectSolution",
+    "onCommand:yaac.openPreferences"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -26,16 +25,12 @@
         "title": "YAAC: Quick Commit"
       },
       {
-        "command": "yaac.switchSolution",
-        "title": "YAAC: Switch Solution"
+        "command": "yaac.selectSolution",
+        "title": "YAAC: Select Solution"
       },
       {
-        "command": "yaac.configureApi",
-        "title": "YAAC: Configure API Keys"
-      },
-      {
-        "command": "yaac.manageSolutions",
-        "title": "YAAC: Manage Solutions"
+        "command": "yaac.openPreferences",
+        "title": "YAAC: Open Prefernces"
       }
     ],
     "configuration": {

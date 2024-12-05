@@ -37,7 +37,7 @@ export class ManageSolutionsCommand extends BaseCommand {
 
       if (selected) {
         console.log(`Switched to solution: ${selected.id}`);
-        await this.solutionManager.switchSolution(selected.id);
+        await this.solutionManager.selectSolution(selected.id);
       }
     } catch (error: unknown) {
       console.error("Error in manage solutions command:", error);
