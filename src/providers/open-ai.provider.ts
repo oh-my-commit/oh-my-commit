@@ -1,8 +1,8 @@
+import {Solution, ValidationResult} from "@/types/solution";
 import {
   Provider,
-  Solution,
   CommitGenerationResult,
-  ValidationResult,
+
 } from "../types/provider";
 import * as vscode from "vscode";
 

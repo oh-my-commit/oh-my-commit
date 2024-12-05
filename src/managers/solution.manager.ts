@@ -1,7 +1,8 @@
 import { getWorkspaceConfig } from "@/types/config";
+import {Solution} from "@/types/solution";
 import * as vscode from "vscode";
 import { OpenAIProvider } from "../providers/open-ai.provider";
-import { Provider, Solution } from "../types/provider";
+import { Provider } from "../types/provider";
 
 export class SolutionManager {
   private currentSolutionId: string | undefined;
