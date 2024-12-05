@@ -21,42 +21,67 @@ export class QuickCommitCommand implements VscodeCommand {
     this.context = context;
   }
 
+  get config() {
+    return vscode.workspace.getConfiguration("yaac");
+  }
+
+  get inputMode() {
+    return this.config.get<string>("inputAppearence", "webview");
+  }
+
+  get noDiffBehavior() {
+    return this.config.get<string>("noDiffBehavior", "ignore");
+  }
+
   /**
    * 无需 handle error，因为最外层 @command.manager.ts 会处理
    */
   async execute(): Promise<void> {
-    const config = vscode.workspace.getConfiguration("yaac");
-    const inputMode = config.get<string>("inputAppearence", "webview");
+    let commitMessage = "";
 
-    // Check if there are any changes to commit
-    const hasChanges = await this.gitService.hasChanges();
-    if (!hasChanges) throw new Error("No changes to commit");
+    const diff = await this.gitService.getDiff();
 
-    // Get the changes for generating commit message
-    const changes = await this.gitService.getUnstagedChanges();
-    if (!changes) throw new Error("Failed to get unstaged changes");
+    // 仅在未改变且在修改模式下才执行 amend
+    const isAmendMode = !diff && this.noDiffBehavior === "revise";
 
-    // Get solution for commit message
-    const solution = await this.solutionManager.generateCommit(changes);
-    if (solution.error) throw new Error(solution.error);
+    if (!diff) {
+      if (this.noDiffBehavior === "ignore") {
+        throw new Error("No changes to commit");
+      }
 
-    const commitMessage = solution.message;
-    console.log(`Generated commit message: ${commitMessage}`);
+      // Amend mode - allow editing last commit
+      commitMessage = await this.gitService.getLastCommitMessage();
+      if (!commitMessage) {
+        throw new Error("No previous commit found to amend");
+      }
+    } else {
+      // Get solution for commit message
+      const solution = await this.solutionManager.generateCommit(diff);
+      if (solution.error) throw new Error(solution.error);
+
+      const commitMessage = solution.message;
+      console.log(`Generated commit message: ${commitMessage}`);
+    }
 
     // Handle commit based on input mode
-    if (inputMode === "quickInput") {
-      await this.handleQuickInput(commitMessage);
+    if (this.inputMode === "quickInput") {
+      await this.handleQuickInput(commitMessage, isAmendMode);
     } else {
-      await this.handleWebView(commitMessage);
+      await this.handleWebView(commitMessage, isAmendMode);
     }
 
     // Success notification
     vscode.window.showInformationMessage("Changes committed successfully");
   }
 
-  private async handleQuickInput(initialMessage: string): Promise<void> {
+  private async handleQuickInput(
+    initialMessage: string,
+    isAmendMode: boolean
+  ): Promise<void> {
     const result = await vscode.window.showInputBox({
-      prompt: "Review and edit commit message",
+      prompt: isAmendMode
+        ? "Edit previous commit message"
+        : "Review and edit commit message",
       value: initialMessage.split("\n")[0],
       ignoreFocusOut: true,
       placeHolder: "Enter commit message",
@@ -67,20 +92,29 @@ export class QuickCommitCommand implements VscodeCommand {
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: "Committing changes...",
+        title: isAmendMode
+          ? "Amending last commit..."
+          : "Committing changes...",
         cancellable: false,
       },
       async () => {
-        await this.gitService.stageAll();
-        await this.gitService.commit(result);
+        if (isAmendMode) {
+          await this.gitService.amendCommit(result);
+        } else {
+          await this.gitService.stageAll();
+          await this.gitService.commit(result);
+        }
       }
     );
   }
 
-  private async handleWebView(initialMessage: string): Promise<void> {
+  private async handleWebView(
+    initialMessage: string,
+    isAmendMode: boolean
+  ): Promise<void> {
     const panel = vscode.window.createWebviewPanel(
       "commitMessage",
-      "Commit Message",
+      isAmendMode ? "Amend Last Commit" : "Commit Message",
       vscode.ViewColumn.Beside,
       {
         enableScripts: true,
@@ -93,80 +127,6 @@ export class QuickCommitCommand implements VscodeCommand {
       }
     );
 
-    // Get recent commits
-    const recentCommits = await this.getRecentCommits();
-
-    // Get and validate HTML content
-    const htmlContent = await this.getWebViewHtml();
-    panel.webview.html = htmlContent;
-
-    // Initialize with generated commit message
-    panel.webview.postMessage({
-      type: "init",
-      commitMessage: initialMessage,
-      recentCommits,
-    });
-
-    // Handle WebView interaction
-    return new Promise<void>((resolve, reject) => {
-      const disposables: vscode.Disposable[] = [];
-
-      // Handle messages from WebView
-      disposables.push(
-        panel.webview.onDidReceiveMessage(
-          async (message) => {
-            try {
-              switch (message.type) {
-                case "commit":
-                  await vscode.window.withProgress(
-                    {
-                      location: vscode.ProgressLocation.Notification,
-                      title: "Committing changes...",
-                      cancellable: false,
-                    },
-                    async () => {
-                      await this.gitService.stageAll();
-                      await this.gitService.commit(message.message);
-                    }
-                  );
-                  panel.dispose();
-                  resolve();
-                  break;
-                case "cancel":
-                  throw new Error("Commit cancelled");
-              }
-            } catch (error) {
-              panel.dispose();
-              reject(error);
-            }
-          },
-          undefined,
-          disposables
-        )
-      );
-
-      // Clean up on panel close
-      disposables.push(
-        panel.onDidDispose(() => {
-          disposables.forEach((d) => d.dispose());
-          resolve();
-        })
-      );
-    });
-  }
-
-  private async getRecentCommits(): Promise<
-    Array<{ hash: string; message: string; date: string }>
-  > {
-    try {
-      return await this.gitService.getRecentCommits(5);
-    } catch (error) {
-      console.error("Failed to get recent commits:", error);
-      return []; // Non-critical error, return empty array
-    }
-  }
-
-  private async getWebViewHtml(): Promise<string> {
     const htmlPath = vscode.Uri.file(
       path.join(
         this.context.extensionPath,
@@ -175,12 +135,55 @@ export class QuickCommitCommand implements VscodeCommand {
         "commit-message.html"
       )
     );
+    const html = await vscode.workspace.fs.readFile(htmlPath);
 
-    try {
-      const content = await vscode.workspace.fs.readFile(htmlPath);
-      return content.toString();
-    } catch (error) {
-      throw new Error("Failed to load commit message editor");
-    }
+    // Get recent commits
+    const n = 5;
+    const recentCommits = await this.gitService.getRecentCommits(n);
+
+    panel.webview.html = Buffer.from(html).toString("utf-8");
+    panel.webview.postMessage({
+      type: "init",
+      commitMessage: initialMessage,
+      recentCommits,
+      isAmendMode,
+    });
+
+    return new Promise<void>((resolve, reject) => {
+      panel.webview.onDidReceiveMessage(
+        async (message) => {
+          try {
+            switch (message.type) {
+              case "commit":
+                const { title, description } = message;
+                const commitMessage = description
+                  ? `${title}\n\n${description}`
+                  : title;
+                if (isAmendMode) {
+                  await this.gitService.amendCommit(commitMessage);
+                } else {
+                  await this.gitService.stageAll();
+                  await this.gitService.commit(commitMessage);
+                }
+                panel.dispose();
+                resolve();
+                break;
+              case "cancel":
+                throw new Error("Commit cancelled");
+            }
+          } catch (error) {
+            panel.dispose();
+            reject(error);
+          }
+        },
+        undefined,
+        []
+      );
+
+      // Clean up on panel close
+      panel.onDidDispose(() => {
+        resolve();
+      });
+    });
   }
 }

@@ -160,6 +160,21 @@
         float: right;
         color: var(--vscode-descriptionForeground);
       }
+      .amend-mode {
+        position: relative;
+      }
+      .amend-mode::before {
+        content: "Amending Last Commit";
+        position: absolute;
+        top: -15px;
+        right: 0;
+        font-size: 12px;
+        color: var(--vscode-errorForeground);
+        background: var(--vscode-editor-background);
+        padding: 2px 8px;
+        border-radius: 3px;
+        border: 1px solid var(--vscode-errorForeground);
+      }
     </style>
   </head>
   <body>
@@ -222,6 +237,12 @@
             const lines = message.commitMessage.split("\n");
             titleInput.value = lines[0];
             descriptionInput.value = lines.slice(1).join("\n").trim();
+
+            // Update UI for amend mode
+            if (message.isAmendMode) {
+              document.querySelector(".container").classList.add("amend-mode");
+              commitButton.textContent = "Amend Commit";
+            }
 
             // Render recent commits
             if (message.recentCommits) {
