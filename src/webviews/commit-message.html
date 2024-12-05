@@ -269,7 +269,9 @@
                   const commitString = JSON.stringify(commit);
 
                   return `
-                                <li class="commit-item" onclick="useCommitMessage(this)" data="${commitString}">
+                                <li class="commit-item" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
+                                  commit
+                                ).replace(/'/g, "&apos;")}'>
                                     <span class="commit-hash">${commit.hash.slice(
                                       0,
                                       7
@@ -288,15 +290,14 @@
       });
 
       function useCommitMessage(element) {
-        const dataString = element.getAttribute("data");
+        const dataString = element.getAttribute("data-commit");
         console.log({ dataString });
 
         const data = JSON.parse(dataString); // DefaultLogFields
         console.log({ data });
 
-        const lines = data.body.split("\n");
-        titleInput.value = lines[0];
-        descriptionInput.value = lines.slice(1).join("\n").trim();
+        titleInput.value = data.message;
+        descriptionInput.value = data.body || "";
       }
 
       function updatePreview() {
