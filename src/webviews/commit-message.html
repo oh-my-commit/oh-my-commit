@@ -39,42 +39,41 @@
       </div>
     </div>
 
-    <script>
+    <script type="module" src="./components/CommitItem.js"></script>
+    <script type="module">
+      {
+        {
+          inject: "components";
+        }
+      }
       const vscode = acquireVsCodeApi();
       let commits = [];
       let isAmendMode = false;
       let activePopover = null;
 
-      function formatDate(date) {
-        const now = new Date();
-        const inputDate = new Date(date);
-        const diff = now - inputDate;
-
-        // Less than a minute
-        if (diff < 60000) {
-          return "just now";
+      function showPopover(element, content, position) {
+        if (activePopover) {
+          activePopover.remove();
         }
 
-        // Less than an hour
-        if (diff < 3600000) {
-          const minutes = Math.floor(diff / 60000);
-          return `${minutes}m ago`;
-        }
+        const popover = document.createElement("div");
+        popover.className = "popover";
+        popover.textContent = content;
 
-        // Less than a day
-        if (diff < 86400000) {
-          const hours = Math.floor(diff / 3600000);
-          return `${hours}h ago`;
-        }
+        // Position the popover
+        const rect = element.getBoundingClientRect();
+        popover.style.top = `${rect.bottom + 5}px`;
+        popover.style.left = `${rect.left}px`;
 
-        // Less than a week
-        if (diff < 604800000) {
-          const days = Math.floor(diff / 86400000);
-          return `${days}d ago`;
-        }
+        document.body.appendChild(popover);
+        activePopover = popover;
+      }
 
-        // Format as date
-        return inputDate.toLocaleDateString();
+      function hidePopover() {
+        if (activePopover) {
+          activePopover.remove();
+          activePopover = null;
+        }
       }
 
       function normalizeLineEndings(text) {
@@ -96,123 +95,6 @@
         return { summary, description };
       }
 
-      function showPopover(element, content, position) {
-        if (activePopover) {
-          activePopover.remove();
-        }
-
-        const popover = document.createElement("div");
-        popover.className = "commit-popover show";
-        popover.textContent = content;
-
-        // 计算位置
-        const rect = element.getBoundingClientRect();
-        const spaceAbove = rect.top;
-        const spaceBelow = window.innerHeight - rect.bottom;
-
-        // 默认显示在下方
-        let top = rect.bottom + 8;
-
-        // 如果下方空间不足且上方空间较多，则显示在上方
-        if (spaceBelow < 100 && spaceAbove > spaceBelow) {
-          top = rect.top - 8 - popover.offsetHeight;
-        }
-
-        popover.style.left = `${rect.left}px`;
-        popover.style.top = `${top}px`;
-
-        document.body.appendChild(popover);
-        activePopover = popover;
-      }
-
-      function hidePopover() {
-        if (activePopover) {
-          activePopover.remove();
-          activePopover = null;
-        }
-      }
-
-      function createCommitElement(
-        commit,
-        isPreview = false,
-        isToBeAmended = false
-      ) {
-        const li = document.createElement("li");
-        li.className = "commit-item";
-        if (isPreview) {
-          li.classList.add("preview");
-        }
-        if (isToBeAmended) {
-          li.classList.add("to-be-amended");
-        }
-
-        const { summary, description } = parseCommitMessage(commit.message);
-
-        const content = document.createElement("div");
-        content.className = "commit-item-content";
-
-        // Column 1: Indicator
-        const indicator = document.createElement("div");
-        indicator.className = `commit-indicator ${
-          isPreview
-            ? "preview-indicator"
-            : isToBeAmended
-            ? "amend-indicator"
-            : ""
-        }`;
-
-        // Column 2: Message
-        const message = document.createElement("div");
-        message.className = "commit-message";
-        if (description) {
-          message.classList.add("has-body");
-          // Add hover handlers for popover
-          message.addEventListener("mouseenter", () => {
-            showPopover(message, commit.message);
-          });
-          message.addEventListener("mouseleave", () => {
-            hidePopover();
-          });
-        }
-        message.textContent = summary;
-
-        // Column 3: Date
-        const date = document.createElement("span");
-        date.className = "commit-date";
-        date.textContent = formatDate(commit.date);
-
-        // Column 4: Hash
-        const hash = document.createElement("span");
-        hash.className = "commit-hash";
-        hash.textContent = commit.hash.substring(0, 7);
-        hash.title = `Click to copy full hash: ${commit.hash}`;
-        hash.addEventListener("click", (e) => {
-          e.stopPropagation();
-          navigator.clipboard.writeText(commit.hash);
-          vscode.postMessage({
-            command: "showInfo",
-            text: "Commit hash copied to clipboard",
-          });
-        });
-
-        content.appendChild(indicator);
-        content.appendChild(message);
-        content.appendChild(date);
-        content.appendChild(hash);
-        li.appendChild(content);
-
-        if (!isPreview) {
-          li.addEventListener("click", () => {
-            const { summary, description } = parseCommitMessage(commit.message);
-            document.getElementById("summary").value = summary;
-            document.getElementById("description").value = description || "";
-            updateCommitButton();
-          });
-        }
-
-        return li;
-      }
-
       function updateCommitList() {
         const list = document.getElementById("commitList");
         list.innerHTML = "";
@@ -223,20 +105,46 @@
         if (summary) {
           const previewCommit = {
             hash: "preview",
-            date: new Date().toISOString(),
             message: formatCommitMessage(summary, description),
+            date: new Date().toISOString(),
           };
-          list.appendChild(createCommitElement(previewCommit, true));
+
+          const previewItem = document.createElement("commit-item");
+          previewItem.setAttribute("hash", previewCommit.hash);
+          previewItem.setAttribute("message", previewCommit.message);
+          previewItem.setAttribute("date", previewCommit.date);
+          previewItem.setAttribute("is-preview", "");
+          list.appendChild(previewItem);
         }
 
-        // Add commit to be amended if in amend mode
-        if (isAmendMode && commits.length > 0) {
-          list.appendChild(createCommitElement(commits[0], false, true));
-        }
+        // Add actual commits
+        commits.forEach((commit, index) => {
+          const commitItem = document.createElement("commit-item");
+          commitItem.setAttribute("hash", commit.hash);
+          commitItem.setAttribute("message", commit.message);
+          commitItem.setAttribute("date", commit.date);
+          if (isAmendMode && index === 0) {
+            commitItem.setAttribute("is-amend", "");
+          }
 
-        // Add recent commits
-        commits.slice(isAmendMode ? 1 : 0).forEach((commit) => {
-          list.appendChild(createCommitElement(commit));
+          commitItem.addEventListener("showPopover", (e) => {
+            showPopover(e.target, e.detail.message);
+          });
+
+          commitItem.addEventListener("hidePopover", () => {
+            hidePopover();
+          });
+
+          commitItem.addEventListener("commitSelect", (e) => {
+            const { summary, description } = parseCommitMessage(
+              e.detail.message
+            );
+            document.getElementById("summary").value = summary;
+            document.getElementById("description").value = description || "";
+            updateCommitButton();
+          });
+
+          list.appendChild(commitItem);
         });
       }
 
@@ -269,32 +177,12 @@
         vscode.postMessage({ command: "cancel" });
       });
 
-      // Handle keyboard shortcuts
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !e.shiftKey) {
-          const commitButton = document.getElementById("commitButton");
-          if (!commitButton.disabled) {
-            commitButton.click();
-          }
-          e.preventDefault();
-        }
-      });
-
       // Handle messages from extension
       window.addEventListener("message", (event) => {
         const message = event.data;
         switch (message.command) {
           case "setCommits":
             commits = message.commits;
-            updateCommitList();
-            break;
-          case "setInitialMessage":
-            const { summary, description } = parseCommitMessage(
-              message.message
-            );
-            document.getElementById("summary").value = summary;
-            document.getElementById("description").value = description || "";
-            updateCommitButton();
             updateCommitList();
             break;
           case "setAmendMode":

@@ -2,7 +2,6 @@ import { VscodeCommand } from "@/commands/types";
 import { VscodeGitService } from "@/services/vscode-git.service";
 import { SolutionManager } from "@/managers/solution.manager";
 import * as vscode from "vscode";
-import * as path from "path";
 
 export class QuickCommitCommand implements VscodeCommand {
   public id = "yaac.quickCommit";
@@ -137,7 +136,7 @@ export class QuickCommitCommand implements VscodeCommand {
       }
     );
 
-    // 获取 HTML 和 CSS 文件的 URI
+    // 获取文件的 URI
     const htmlPath = vscode.Uri.joinPath(
       this.context.extensionUri,
       "src",
@@ -154,36 +153,47 @@ export class QuickCommitCommand implements VscodeCommand {
       )
     );
 
-    // 读取 HTML 内容
-    const htmlContent = await vscode.workspace.fs.readFile(htmlPath);
-    let html = Buffer.from(htmlContent).toString("utf-8");
-    
-    // 替换 CSS 路径
-    html = html.replace(
-      './index.css',
-      cssPath.toString()
+    const componentPath = vscode.Uri.joinPath(
+      this.context.extensionUri,
+      "src",
+      "webviews",
+      "components",
+      "CommitItem.js"
     );
 
-    // Get recent commits
-    const n = 5;
-    const recentCommits = await this.gitService.getRecentCommits(n);
+    // 读取文件内容
+    const [htmlContent, componentContent] = await Promise.all([
+      vscode.workspace.fs.readFile(htmlPath),
+      vscode.workspace.fs.readFile(componentPath)
+    ]);
+
+    let html = Buffer.from(htmlContent).toString("utf-8");
+    const component = Buffer.from(componentContent).toString("utf-8");
+    
+    // 替换资源路径和注入组件代码
+    html = html
+      .replace('./index.css', cssPath.toString())
+      .replace(
+        '<script type="module" src="./components/CommitItem.js"></script>',
+        `<script type="module">\n${component}\n</script>`
+      );
 
     panel.webview.html = html;
 
     // Send initial data to webview
     panel.webview.postMessage({
-      command: 'setInitialMessage',
-      message: initialMessage
+      command: "setInitialMessage",
+      message: initialMessage,
     });
 
     panel.webview.postMessage({
-      command: 'setCommits',
-      commits: recentCommits
+      command: "setCommits",
+      commits: await this.gitService.getRecentCommits(5),
     });
 
     panel.webview.postMessage({
-      command: 'setAmendMode',
-      isAmendMode
+      command: "setAmendMode",
+      isAmendMode,
     });
 
     return new Promise<void>((resolve, reject) => {
