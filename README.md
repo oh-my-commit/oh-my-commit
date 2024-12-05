@@ -13,10 +13,13 @@
 
 ## 安装
 
-1. 打开 VSCode
-2. 转到扩展商店
-3. 搜索 "YAAC"
-4. 点击安装
+请查看我们的 [详细安装指南](docs/INSTALLATION.md) 了解完整的安装和配置步骤。
+
+简要步骤：
+1. 安装 VSCode 扩展 "YAAC"
+2. 安装 Python 依赖：`pip install gcop`
+3. 配置所需的环境变量
+4. 开始使用！
 
 ## 使用方法
 
