@@ -9,28 +9,24 @@
         font-family: var(--vscode-font-family);
         font-size: var(--vscode-font-size);
         color: var(--vscode-foreground);
-        padding: 20px;
-        line-height: 1.5;
+        padding: 12px;
+        line-height: 1.4;
         margin: 0;
       }
 
       .container {
-        max-width: 800px;
+        max-width: 700px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 12px;
       }
 
       .input-section {
-        background: var(--vscode-editor-background);
-        border: 1px solid var(--vscode-panel-border);
-        border-radius: 6px;
-        padding: 16px;
+        margin-bottom: 12px;
       }
 
       .input-group {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
 
       .input-group:last-child {
@@ -40,9 +36,9 @@
       label {
         display: flex;
         align-items: center;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         color: var(--vscode-input-foreground);
-        font-weight: 500;
+        font-size: 12px;
       }
 
       .label-text {
@@ -50,29 +46,28 @@
       }
 
       .shortcut {
-        font-size: 12px;
+        font-size: 11px;
         opacity: 0.7;
-        padding: 2px 6px;
+        padding: 1px 4px;
         background: var(--vscode-badge-background);
-        border-radius: 3px;
-        margin-left: 8px;
+        border-radius: 2px;
       }
 
       input,
       textarea {
         width: 100%;
-        padding: 8px 12px;
+        padding: 6px 8px;
         border: 1px solid var(--vscode-input-border);
         background: var(--vscode-input-background);
         color: var(--vscode-input-foreground);
-        border-radius: 4px;
+        border-radius: 3px;
         font-family: var(--vscode-editor-font-family);
         font-size: var(--vscode-editor-font-size);
         line-height: 1.4;
       }
 
       textarea {
-        min-height: 100px;
+        min-height: 80px;
         resize: vertical;
       }
 
@@ -82,56 +77,17 @@
         border-color: var(--vscode-focusBorder);
       }
 
-      .preview-section {
-        background: var(--vscode-editor-background);
-        border: 1px solid var(--vscode-panel-border);
-        border-radius: 6px;
-        padding: 16px;
-      }
-
-      .preview-section.amend-mode {
-        border: 2px solid #ffa500;
-        position: relative;
-      }
-
-      .preview-section.amend-mode::before {
-        content: "Amend Mode";
-        position: absolute;
-        top: -12px;
-        left: 16px;
-        background: var(--vscode-editor-background);
-        padding: 0 8px;
-        color: #ffa500;
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 3px;
-      }
-
-      .preview-content {
-        font-family: var(--vscode-editor-font-family);
-        white-space: pre-wrap;
-        word-break: break-word;
-        padding: 12px;
-        background: var(--vscode-textBlockQuote-background);
-        border-left: 4px solid var(--vscode-textBlockQuote-border);
-        border-radius: 4px;
-        margin-top: 8px;
-      }
-
       .commit-list {
-        margin-top: 20px;
-      }
-
-      .commit-list h3 {
-        margin: 0 0 12px 0;
-        display: flex;
-        align-items: center;
+        display: grid;
         gap: 8px;
       }
 
-      .commit-list h3::before {
-        content: "↺";
-        font-size: 1.2em;
+      .commit-list h3 {
+        margin: 0 0 8px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--vscode-foreground);
+        opacity: 0.8;
       }
 
       .commit-items {
@@ -143,42 +99,44 @@
       }
 
       .commit-item {
-        padding: 12px;
+        padding: 8px 10px;
         background: var(--vscode-editor-background);
         border: 1px solid var(--vscode-panel-border);
-        border-radius: 6px;
+        border-radius: 3px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
+        font-size: 12px;
       }
 
       .commit-item:hover {
-        transform: translateX(4px);
+        transform: translateX(2px);
         border-color: var(--vscode-focusBorder);
       }
 
+      .commit-item.preview {
+        border-color: #4CAF50;
+        border-width: 1px;
+      }
+
       .commit-item.to-be-amended {
-        border: 2px solid #ffa500;
-        background: color-mix(
-          in srgb,
-          var(--vscode-editor-background) 95%,
-          #ffa500
-        );
+        border-color: #f44336;
+        border-width: 1px;
       }
 
       .commit-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
-        font-size: 0.9em;
+        margin-bottom: 4px;
+        font-size: 11px;
       }
 
       .commit-hash {
         color: var(--vscode-textPreformat-foreground);
         font-family: var(--vscode-editor-font-family);
-        padding: 2px 6px;
+        padding: 1px 4px;
         background: var(--vscode-badge-background);
-        border-radius: 3px;
+        border-radius: 2px;
       }
 
       .commit-date {
@@ -187,44 +145,61 @@
 
       .commit-message {
         color: var(--vscode-foreground);
-        line-height: 1.4;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
 
       .amend-indicator {
         display: flex;
         align-items: center;
-        gap: 6px;
-        margin-bottom: 8px;
-        color: #ffa500;
-        font-size: 0.9em;
+        gap: 4px;
+        margin-bottom: 4px;
+        color: #f44336;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .preview-indicator {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 4px;
+        color: #4CAF50;
+        font-size: 11px;
         font-weight: 500;
       }
 
       .amend-indicator::before {
         content: "↺";
-        font-size: 1.2em;
+        font-size: 1.1em;
+      }
+
+      .preview-indicator::before {
+        content: "✓";
+        font-size: 1.1em;
       }
 
       .button-group {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         justify-content: flex-end;
-        margin-top: 20px;
-        padding-top: 20px;
+        margin-top: 12px;
+        padding-top: 12px;
         border-top: 1px solid var(--vscode-panel-border);
       }
 
       button {
-        padding: 8px 16px;
+        padding: 4px 12px;
         border: none;
-        border-radius: 4px;
+        border-radius: 3px;
         cursor: pointer;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
         display: flex;
         align-items: center;
-        gap: 8px;
-        transition: all 0.2s ease;
+        gap: 6px;
+        transition: all 0.15s ease;
+        height: 24px;
       }
 
       button:disabled {
@@ -248,42 +223,6 @@
 
       #cancelButton:hover {
         background: var(--vscode-button-secondaryHoverBackground);
-      }
-
-      @keyframes pulse {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.7;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
-
-      .amend-mode .preview-content {
-        animation: pulse 2s infinite;
-      }
-
-      /* 响应式设计 */
-      @media (min-width: 768px) {
-        .container {
-          grid-template-columns: 3fr 2fr;
-        }
-
-        .input-section {
-          grid-column: 1;
-        }
-
-        .preview-section,
-        .commit-list {
-          grid-column: 2;
-        }
-
-        .button-group {
-          grid-column: 1 / -1;
-        }
       }
     </style>
   </head>
@@ -312,13 +251,8 @@
         </div>
       </div>
 
-      <div class="preview-section">
-        <h3>Commit Preview</h3>
-        <div class="preview-content">No commit message yet</div>
-      </div>
-
       <div class="commit-list">
-        <h3>Recent Commits</h3>
+        <h3>Commit Preview & History</h3>
         <ul class="commit-items"></ul>
       </div>
 
@@ -333,6 +267,47 @@
     </div>
     <script>
       const vscode = acquireVsCodeApi();
+
+      // 处理换行符，确保统一使用 \n
+      function normalizeLineEndings(text) {
+        return text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      }
+
+      // 格式化提交消息
+      function formatCommitMessage(title, description) {
+        title = normalizeLineEndings(title || '');
+        description = normalizeLineEndings(description || '');
+        
+        if (!description) {
+          return title;
+        }
+        
+        // 确保标题和描述之间有一个空行
+        return `${title}\n\n${description}`;
+      }
+
+      // 解析提交消息
+      function parseCommitMessage(message) {
+        message = normalizeLineEndings(message || '');
+        const lines = message.split('\n');
+        
+        // 第一行作为标题
+        const title = lines[0] || '';
+        
+        // 跳过第一行和任何空行，其余作为描述
+        let description = '';
+        let foundNonEmpty = false;
+        
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+          if (line.trim() || foundNonEmpty) {
+            foundNonEmpty = true;
+            description += (description ? '\n' : '') + line;
+          }
+        }
+        
+        return { title, description };
+      }
 
       // 简单的时间格式化函数
       function formatTimeAgo(date) {
@@ -369,22 +344,9 @@
 
       // 更新整个 UI 的函数
       function updateUI() {
-        const previewSection = document.querySelector(".preview-section");
-        const previewContent = document.querySelector(".preview-content");
         const commitList = document.querySelector(".commit-items");
         const titleInput = document.querySelector("#titleInput");
         const descriptionInput = document.querySelector("#descriptionInput");
-
-        if (previewSection) {
-          previewSection.className =
-            "preview-section" + (state.isAmend ? " amend-mode" : "");
-        }
-
-        if (previewContent) {
-          const message =
-            state.title + (state.description ? "\n\n" + state.description : "");
-          previewContent.textContent = message || "No commit message yet";
-        }
 
         if (commitList) {
           commitList.innerHTML = updateCommitList(state.commits);
@@ -414,8 +376,8 @@
         const descriptionInput = document.querySelector("#descriptionInput");
 
         if (titleInput && descriptionInput) {
-          state.title = titleInput.value.trim();
-          state.description = descriptionInput.value.trim();
+          state.title = normalizeLineEndings(titleInput.value);
+          state.description = normalizeLineEndings(descriptionInput.value);
           updateUI();
         }
       }
@@ -427,36 +389,50 @@
       function updateCommitList(commits) {
         if (!commits || !Array.isArray(commits)) return "";
 
-        return commits
+        // 添加预览卡片
+        const previewMessage = formatCommitMessage(state.title, state.description);
+        let html = `
+          <li class="commit-item preview">
+            <div class="preview-indicator">Current Commit</div>
+            <div class="commit-message">${previewMessage || "No commit message yet"}</div>
+          </li>
+        `;
+
+        // 添加历史提交记录
+        html += commits
           .map(
             (commit, index) => `
-          <li class="commit-item ${
-            index === 0 && isAmendMode() ? "to-be-amended" : ""
-          }" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
+            <li class="commit-item${
+              index === 0 && state.isAmend ? " to-be-amended" : ""
+            }" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
               commit
             ).replace(/'/g, "&apos;")}'>
             ${
-              index === 0 && isAmendMode()
+              index === 0 && state.isAmend
                 ? '<div class="amend-indicator">This commit will be amended</div>'
                 : ""
             }
             <div class="commit-header">
-              <span class="commit-hash">${commit.hash.substring(0, 7)}</span>
-              <span class="commit-date" data-date="${
-                commit.date
-              }">${formatTimeAgo(commit.date)}</span>
+              <span class="commit-hash">${commit.hash.slice(0, 7)}</span>
+              <span class="commit-date">${formatTimeAgo(
+                new Date(commit.date)
+              )}</span>
             </div>
-            <div class="commit-message">${commit.message}</div>
-          </li>
-        `
+            <div class="commit-message">${formatCommitMessage(commit.message, commit.body)}</div>
+          </li>`
           )
           .join("");
+
+        return html;
       }
 
       function useCommitMessage(element) {
         const commit = JSON.parse(element.getAttribute("data-commit"));
-        state.title = commit.message;
-        state.description = commit.body || "";
+        const message = formatCommitMessage(commit.message, commit.body);
+        const { title, description } = parseCommitMessage(message);
+        
+        state.title = title;
+        state.description = description;
         updateUI();
       }
 
@@ -476,12 +452,12 @@
 
         if (commitButton) {
           commitButton.addEventListener("click", () => {
-            const description = state.description.replace(/\n/g, "\n\n");
+            const message = formatCommitMessage(state.title, state.description);
             vscode.postMessage({
               type: "commit",
               message: {
                 title: state.title,
-                description,
+                description: state.description
               },
             });
           });
