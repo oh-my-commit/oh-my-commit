@@ -1,0 +1,79 @@
+{
+  "name": "yaac",
+  "displayName": "YAAC - Yet Another Auto Commit",
+  "version": "0.1.0",
+  "description": "An elegant AI-powered commit message generator for VSCode",
+  "publisher": "cs-magic",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:yaac.quickCommit",
+    "onCommand:yaac.switchSolution"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "yaac.quickCommit",
+        "title": "YAAC: Quick Commit"
+      },
+      {
+        "command": "yaac.switchSolution",
+        "title": "YAAC: Switch Solution"
+      },
+      {
+        "command": "yaac.configureApi",
+        "title": "YAAC: Configure API Keys"
+      },
+      {
+        "command": "yaac.manageSolutions",
+        "title": "YAAC: Manage Solutions"
+      }
+    ],
+    "configuration": {
+      "title": "YAAC",
+      "properties": {
+        "yaac.defaultSolution": {
+          "type": "string",
+          "default": "official_recommend",
+          "description": "Default commit solution to use"
+        },
+        "yaac.solutions": {
+          "type": "object",
+          "default": {},
+          "description": "Available commit solutions"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run build",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "lint": "eslint src --ext ts",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/vscode": "^1.95.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cs-magic/yaac"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "vscode",
+    "productivity"
+  ],
+  "author": "cs-magic",
+  "license": "MIT"
+}
