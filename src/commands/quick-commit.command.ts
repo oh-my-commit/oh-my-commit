@@ -25,6 +25,9 @@ export class QuickCommitCommand implements VscodeCommand {
    * 无需 handle error，因为最外层 @command.manager.ts 会处理
    */
   async execute(): Promise<void> {
+    const config = vscode.workspace.getConfiguration("yaac");
+    const inputMode = config.get<string>("inputAppearence", "webview");
+
     // Check if there are any changes to commit
     const hasChanges = await this.gitService.hasChanges();
     if (!hasChanges) throw new Error("No changes to commit");
@@ -39,10 +42,6 @@ export class QuickCommitCommand implements VscodeCommand {
 
     const commitMessage = solution.message;
     console.log(`Generated commit message: ${commitMessage}`);
-
-    // Get user preference for commit message input
-    const config = vscode.workspace.getConfiguration("yaac");
-    const inputMode = config.get<string>("inputAppearence", "webview");
 
     // Handle commit based on input mode
     if (inputMode === "quickInput") {
