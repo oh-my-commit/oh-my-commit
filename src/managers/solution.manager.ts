@@ -1,5 +1,5 @@
 import { Solution } from "@/types/solution";
-import {openPreferences} from "@/utils/open-preference";
+import { openPreferences } from "@/utils/open-preference";
 import * as vscode from "vscode";
 import { OpenAIProvider } from "../providers/open-ai.provider";
 import { presetAiProviders, Provider } from "../types/provider";
@@ -16,6 +16,8 @@ export class SolutionManager {
   constructor() {
     // 从配置中加载provider状态和当前solution
     this.loadConfig();
+    // 初始化时更新配置
+    this.updateConfiguration();
   }
 
   public async getAvailableSolutions(): Promise<Solution[]> {
@@ -96,6 +98,43 @@ export class SolutionManager {
     }
 
     return provider.generateCommit(diff, currentSolution);
+  }
+
+  public registerProvider(provider: Provider) {
+    if (!this.providers.find((p) => p.id === provider.id)) {
+      this.providers.push(provider);
+      this.updateConfiguration();
+    }
+  }
+
+  public removeProvider(providerId: string) {
+    const index = this.providers.findIndex((p) => p.id === providerId);
+    if (index !== -1) {
+      this.providers.splice(index, 1);
+      this.updateConfiguration();
+    }
+  }
+
+  // 更新 VSCode 配置
+  private async updateConfiguration() {
+    const config = getWorkspaceConfig();
+
+    // 更新 providers 配置
+    const providersConfig: Record<string, boolean> = {};
+    for (const provider of this.providers) {
+      providersConfig[provider.id] = provider.enabled;
+    }
+    await config.update("providers", providersConfig, true);
+
+    // 更新可用的 solutions
+    const solutions = await this.getAvailableSolutions();
+    const currentSolution = solutions.length > 0 ? solutions[0].id : undefined;
+
+    // 更新当前 solution（如果未设置）
+    if (!this.currentSolutionId && currentSolution) {
+      await config.update("currentSolution", currentSolution, true);
+      this.currentSolutionId = currentSolution;
+    }
   }
 
   private loadConfig() {
