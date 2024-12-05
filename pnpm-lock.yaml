@@ -11,6 +11,9 @@ importers:
       yaml:
         specifier: ^2.6.1
         version: 2.6.1
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/node':
         specifier: ^22.10.1
@@ -195,6 +198,9 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
 snapshots:
 
   '@esbuild/aix-ppc64@0.24.0':
@@ -307,3 +313,5 @@ snapshots:
   undici-types@6.20.0: {}
 
   yaml@2.6.1: {}
+
+  zod@3.23.8: {}

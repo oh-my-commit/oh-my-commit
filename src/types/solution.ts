@@ -24,6 +24,8 @@ export interface Solution {
     providerId: string; // 提供者ID
     metrics: SolutionMetrics;
 
-    // 验证 solution 是否满足使用条件
-    validate(): Promise<ValidationResult>;
+    aiProviderId?: string
+    // 目前通过 preset ai provider的 apikey 确定前置条件
+    // todo: 验证 solution 是否满足使用条件
+    validate?: () => Promise<ValidationResult>;
 }

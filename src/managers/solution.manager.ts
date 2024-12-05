@@ -1,15 +1,19 @@
-import { getWorkspaceConfig } from "@/types/config";
 import {Solution} from "@/types/solution";
 import * as vscode from "vscode";
-import { OpenAIProvider } from "../providers/open-ai.provider";
-import { Provider } from "../types/provider";
+import {OpenAIProvider} from "../providers/open-ai.provider";
+import {presetAiProviders, Provider} from "../types/provider";
+
+export const getWorkspaceConfig = () => vscode.workspace.getConfiguration('yaac');
 
 export class SolutionManager {
   private currentSolutionId: string | undefined;
-  private providers: Provider[] = [];
+  private providers: Provider[] = [
+    new OpenAIProvider(), // 添加更多providers
+  ];
 
   constructor() {
-    this.initialize();
+    // 从配置中加载provider状态和当前solution
+    this.loadConfig();
   }
 
   public async getAvailableSolutions(): Promise<Solution[]> {
@@ -55,11 +59,28 @@ export class SolutionManager {
     // 保存到配置
     await getWorkspaceConfig().update("currentSolution", solutionId, true);
 
-    // 验证 solution 并显示配置提示（如果需要）
-    await this.validateSolution(solution);
+      const aiProviderId = solution.aiProviderId as string
+      if(presetAiProviders.includes(aiProviderId)){
+        // todo: 检查是否有 yaac.apiKeys.${aiProviderId}，没有的话就引导用户去填写
+        const configureNow = "Configure Now";
+        const configureLater = "Configure Later";
+        const response = await vscode.window.showErrorMessage(
+            `使用该解决方案需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
+            configureNow,
+            configureLater
+        );
+
+        if (response === configureNow) {
+          await vscode.commands.executeCommand(
+              "workbench.action.openSettings",
+              "yaac.apiKeys"
+          );
+        }
+      }
 
     return true;
   }
+
 
   public async generateCommit(
     diff: string
@@ -76,45 +97,11 @@ export class SolutionManager {
       throw new Error(`Provider ${currentSolution.providerId} not found`);
     }
 
-    // 生成之前先验证
-    const validationResult = await currentSolution.validate();
-    if (!validationResult.valid) {
-      return {
-        message: "",
-        error: validationResult.error || "Solution validation failed",
-      };
-    }
-
     return provider.generateCommit(diff, currentSolution);
   }
 
-  public async getSolutionValidationStatus(
-    solution: Solution
-  ): Promise<boolean> {
-    const validationResult = await solution.validate();
-    return validationResult.valid;
-  }
 
-  private async initialize() {
-    // 注册所有providers
-    this.registerProviders();
-
-    // 从配置中加载provider状态和当前solution
-    await this.loadConfig();
-
-    // 如果没有当前solution或它不可用，使用第一个可用的
-    if (!this.currentSolutionId) {
-      await this.switchToFirstAvailableSolution();
-    }
-  }
-
-  private registerProviders() {
-    this.providers = [
-      new OpenAIProvider(), // 添加更多providers
-    ];
-  }
-
-  private async loadConfig() {
+  private loadConfig() {
     // 加载 provider 状态
     const config = getWorkspaceConfig();
     const providerStates = config.get<Record<string, boolean>>("providers", {});
@@ -127,44 +114,4 @@ export class SolutionManager {
     this.currentSolutionId = config.get<string>("currentSolution");
   }
 
-  private async validateSolution(solution: Solution): Promise<boolean> {
-    const validationResult = await solution.validate();
-
-    if (!validationResult.valid) {
-      const message = validationResult.error || "Solution validation failed";
-
-      if (validationResult.requiredConfig?.length) {
-        const configureNow = "Configure Now";
-        const configureLater = "Configure Later";
-        const response = await vscode.window.showErrorMessage(
-          message,
-          configureNow,
-          configureLater
-        );
-
-        if (response === configureNow) {
-          await vscode.commands.executeCommand(
-            "workbench.action.openSettings",
-            "yaac.apiKeys"
-          );
-        }
-        // 无论是现在配置还是稍后配置，都允许切换
-        return true;
-      } else {
-        vscode.window.showErrorMessage(message);
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private async switchToFirstAvailableSolution(): Promise<boolean> {
-    const solutions = await this.getAvailableSolutions();
-    if (solutions.length === 0) {
-      return false;
-    }
-
-    return this.switchSolution(solutions[0].id);
-  }
 }
