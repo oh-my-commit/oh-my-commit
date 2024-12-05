@@ -6,22 +6,42 @@
     <title>Commit Message</title>
     <style>
         body {
-            padding: 10px;
+            padding: 20px;
             font-family: var(--vscode-font-family);
             color: var(--vscode-editor-foreground);
             background-color: var(--vscode-editor-background);
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 10px;
         }
         .input-group {
             margin-bottom: 15px;
         }
         label {
-            display: block;
+            display: flex;
+            align-items: center;
             margin-bottom: 5px;
             color: var(--vscode-input-foreground);
+            font-weight: 500;
+        }
+        .label-text {
+            flex: 1;
+        }
+        .shortcut {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-left: 8px;
+            padding: 2px 6px;
+            background: var(--vscode-textBlockQuote-background);
+            border-radius: 3px;
         }
         input, textarea {
             width: 100%;
@@ -30,27 +50,40 @@
             background: var(--vscode-input-background);
             color: var(--vscode-input-foreground);
             border-radius: 2px;
+            font-family: var(--vscode-editor-font-family);
+            font-size: var(--vscode-editor-font-size);
         }
         textarea {
-            min-height: 100px;
+            min-height: 200px;
             resize: vertical;
+            font-family: var(--vscode-editor-font-family);
+            font-size: var(--vscode-editor-font-size);
+            line-height: 1.4;
         }
         .button-group {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
-            margin-top: 20px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--vscode-input-border);
         }
         button {
-            padding: 8px 16px;
+            padding: 6px 14px;
             border: none;
             border-radius: 2px;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
             background: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
         }
         button:hover {
             background: var(--vscode-button-hoverBackground);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         button.secondary {
             background: var(--vscode-button-secondaryBackground);
@@ -60,35 +93,53 @@
             background: var(--vscode-button-secondaryHoverBackground);
         }
         .preview {
-            margin-top: 20px;
+            margin: 15px 0;
             padding: 10px;
             background: var(--vscode-textBlockQuote-background);
             border-left: 4px solid var(--vscode-textBlockQuote-border);
+            font-family: var(--vscode-editor-font-family);
+            font-size: var(--vscode-editor-font-size);
+        }
+        .preview h4 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: var(--vscode-foreground);
+            opacity: 0.8;
         }
         .preview pre {
             margin: 0;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--vscode-focusBorder);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="input-group">
-            <label for="title">Commit Title (required)</label>
-            <input type="text" id="title" placeholder="Enter commit title">
+            <label for="title">
+                <span class="label-text">Commit Title</span>
+                <span class="shortcut">(required)</span>
+            </label>
+            <input type="text" id="title" placeholder="Enter a concise description">
         </div>
         <div class="input-group">
-            <label for="description">Description (optional)</label>
-            <textarea id="description" placeholder="Enter commit description"></textarea>
+            <label for="description">
+                <span class="label-text">Description</span>
+                <span class="shortcut">(optional)</span>
+            </label>
+            <textarea id="description" placeholder="Enter a detailed description"></textarea>
         </div>
         <div class="preview">
-            <h4>Preview:</h4>
+            <h4>Preview</h4>
             <pre id="preview"></pre>
         </div>
         <div class="button-group">
-            <button class="secondary" id="cancel">Cancel</button>
-            <button id="commit" disabled>Commit Changes</button>
+            <button class="secondary" id="cancel">Cancel <span class="shortcut">Esc</span></button>
+            <button id="commit" disabled>Commit Changes <span class="shortcut">⌘↵</span></button>
         </div>
     </div>
     <script>
@@ -108,6 +159,9 @@
                     titleInput.value = title;
                     descriptionInput.value = bodyLines.join('\n').trim();
                     updatePreview();
+                    // Focus title input on start
+                    titleInput.focus();
+                    titleInput.setSelectionRange(0, title.length);
                     break;
             }
         });
@@ -127,6 +181,17 @@
 
         titleInput.addEventListener('input', updatePreview);
         descriptionInput.addEventListener('input', updatePreview);
+
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                vscode.postMessage({ type: 'cancel' });
+            } else if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                if (!commitButton.disabled) {
+                    commitButton.click();
+                }
+            }
+        });
 
         commitButton.addEventListener('click', () => {
             const title = titleInput.value.trim();

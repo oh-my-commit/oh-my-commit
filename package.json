@@ -34,7 +34,7 @@
       }
     ],
     "configuration": {
-      "title": "YAAC",
+      "title": "Yet Another Auto Commit",
       "properties": {
         "yaac.enabled": {
           "type": "boolean",
@@ -115,6 +115,19 @@
           "additionalProperties": false,
           "default": {},
           "description": "各 AI 服务商的 API 密钥配置"
+        },
+        "yaac.inputAppearence": {
+          "type": "string",
+          "default": "webview",
+          "enum": [
+            "quickInput",
+            "webview"
+          ],
+          "enumDescriptions": [
+            "⚡️ Quick & Simple: Single-line input box for fast commits",
+            "📝 Professional: Split-window editor with preview and formatting"
+          ],
+          "markdownDescription": "Choose how to input commit messages:\n\n### Quick Input Mode (`quickInput`)\n- ✨ **Best for**: Quick, simple commits\n- ⚡️ **Pros**: Faster, lightweight\n- 🤔 **Cons**: Limited to single line\n\n### WebView Mode (`webview`)\n- ✨ **Best for**: Detailed commit messages\n- 💪 **Pros**: Multi-line support, live preview, better formatting\n- 🤔 **Cons**: Takes more screen space\n\n[Learn more about Git commit messages](https://cbea.ms/git-commit/)"
         }
       }
     }

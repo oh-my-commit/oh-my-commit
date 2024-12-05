@@ -12,7 +12,11 @@ export class QuickCommitCommand implements VscodeCommand {
   private solutionManager: SolutionManager;
   private context: vscode.ExtensionContext;
 
-  constructor(gitService: VscodeGitService, solutionManager: SolutionManager, context: vscode.ExtensionContext) {
+  constructor(
+    gitService: VscodeGitService,
+    solutionManager: SolutionManager,
+    context: vscode.ExtensionContext
+  ) {
     this.gitService = gitService;
     this.solutionManager = solutionManager;
     this.context = context;
@@ -73,30 +77,74 @@ export class QuickCommitCommand implements VscodeCommand {
       );
       console.log(`Generated commit message: ${commitMessage}`);
 
-      // Create and show WebView
+      // Get user preference for commit message input
+      const config = vscode.workspace.getConfiguration("yaac");
+      const inputMode = config.get<string>("inputAppearence", "webview");
+
+      if (inputMode === "quickInput") {
+        // Use quick input for simple commit messages
+        const result = await vscode.window.showInputBox({
+          prompt: "Review and edit commit message",
+          value: commitMessage.split("\n")[0], // Use first line as initial value
+          ignoreFocusOut: true,
+          placeHolder: "Enter commit message",
+        });
+
+        if (result === undefined) {
+          return; // User cancelled
+        }
+
+        try {
+          console.log("Committing changes...");
+          await this.gitService.stageAll();
+          await this.gitService.commit(result);
+          vscode.window.showInformationMessage(
+            "Changes committed successfully"
+          );
+        } catch (error: unknown) {
+          console.error("Error during quick commit:", error);
+          const errorMessage =
+            error instanceof Error ? error.message : "Unknown error occurred";
+          vscode.window.showErrorMessage(`Failed to commit: ${errorMessage}`);
+          throw error;
+        }
+        return;
+      }
+
+      // Create and show WebView in split window
       const panel = vscode.window.createWebviewPanel(
-        'commitMessage',
-        'Commit Message',
-        vscode.ViewColumn.Active,
+        "commitMessage",
+        "Commit Message",
+        vscode.ViewColumn.Beside,
         {
           enableScripts: true,
           retainContextWhenHidden: true,
+          localResourceRoots: [
+            vscode.Uri.file(
+              path.join(this.context.extensionPath, "src", "webviews")
+            ),
+          ],
         }
       );
 
       // Get path to webview html
       const htmlPath = vscode.Uri.file(
-        path.join(this.context.extensionPath, 'src', 'webviews', 'commit-message.html')
+        path.join(
+          this.context.extensionPath,
+          "src",
+          "webviews",
+          "commit-message.html"
+        )
       );
       const htmlContent = await vscode.workspace.fs.readFile(htmlPath);
-      
+
       // Set WebView content
       panel.webview.html = htmlContent.toString();
 
       // Initialize with generated commit message
       panel.webview.postMessage({
-        type: 'init',
-        commitMessage
+        type: "init",
+        commitMessage,
       });
 
       // Handle messages from WebView
@@ -104,23 +152,29 @@ export class QuickCommitCommand implements VscodeCommand {
         panel.webview.onDidReceiveMessage(
           async (message) => {
             switch (message.type) {
-              case 'commit':
+              case "commit":
                 try {
                   console.log("Committing changes...");
                   await this.gitService.stageAll();
                   await this.gitService.commit(message.message);
-                  vscode.window.showInformationMessage("Changes committed successfully");
+                  vscode.window.showInformationMessage(
+                    "Changes committed successfully"
+                  );
                   panel.dispose();
                   resolve();
                 } catch (error: unknown) {
                   console.error("Error during quick commit:", error);
                   const errorMessage =
-                    error instanceof Error ? error.message : "Unknown error occurred";
-                  vscode.window.showErrorMessage(`Failed to commit: ${errorMessage}`);
+                    error instanceof Error
+                      ? error.message
+                      : "Unknown error occurred";
+                  vscode.window.showErrorMessage(
+                    `Failed to commit: ${errorMessage}`
+                  );
                   reject(error);
                 }
                 break;
-              case 'cancel':
+              case "cancel":
                 panel.dispose();
                 resolve();
                 break;
