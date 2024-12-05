@@ -4,6 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Commit Message</title>
+    <script>
+      // 简单的时间格式化函数
+      function formatTimeAgo(date) {
+        if (!date) return "";
+
+        const now = new Date();
+        const past = new Date(date);
+        const diffMs = now - past;
+
+        // 转换为各种时间单位
+        const diffSecs = Math.floor(diffMs / 1000);
+        const diffMins = Math.floor(diffSecs / 60);
+        const diffHours = Math.floor(diffMins / 60);
+        const diffDays = Math.floor(diffHours / 24);
+        const diffMonths = Math.floor(diffDays / 30);
+        const diffYears = Math.floor(diffDays / 365);
+
+        // 返回最适合的时间格式
+        if (diffSecs < 60) return "just now";
+        if (diffMins < 60) return `${diffMins} minutes ago`;
+        if (diffHours < 24) return `${diffHours} hours ago`;
+        if (diffDays < 30) return `${diffDays} days ago`;
+        if (diffMonths < 12) return `${diffMonths} months ago`;
+        return `${diffYears} years ago`;
+      }
+    </script>
     <style>
       body {
         padding: 20px;
@@ -141,24 +167,42 @@
         font-size: 12px;
       }
       .commit-item {
-        padding: 8px;
-        margin-bottom: 4px;
+        padding: 12px;
+        margin-bottom: 8px;
         background: var(--vscode-textBlockQuote-background);
         border-radius: 4px;
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
       }
       .commit-item:hover {
         background: var(--vscode-list-hoverBackground);
+        transform: translateX(2px);
+      }
+      .commit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
       }
       .commit-hash {
         color: var(--vscode-textPreformat-foreground);
         font-family: var(--vscode-editor-font-family);
-        margin-right: 8px;
+        padding: 2px 6px;
+        background: var(--vscode-badge-background);
+        border-radius: 3px;
+        font-size: 11px;
       }
       .commit-date {
-        float: right;
         color: var(--vscode-descriptionForeground);
+        font-size: 11px;
+      }
+      .commit-message {
+        color: var(--vscode-foreground);
+        line-height: 1.4;
+        word-break: break-word;
       }
       .amend-mode {
         position: relative;
@@ -223,6 +267,23 @@
     <script>
       const vscode = acquireVsCodeApi();
 
+      function formatDate(date) {
+        // Add a small delay to ensure dayjs is initialized
+        if (!window.dayjs) {
+          setTimeout(() => {
+            const commits = document.querySelectorAll(".commit-date");
+            commits.forEach((commit) => {
+              const dateStr = commit.getAttribute("data-date");
+              if (dateStr) {
+                commit.textContent = window.dayjs(dateStr).fromNow();
+              }
+            });
+          }, 100);
+          return date;
+        }
+        return window.dayjs(date).fromNow();
+      }
+
       // Override console.log to send logs to VSCode
       const originalLog = console.log;
       console.log = function (...args) {
@@ -264,25 +325,39 @@
             // Render recent commits
             if (message.recentCommits) {
               recentCommitsList.innerHTML = message.recentCommits
-                .map((commit) => {
-                  console.log({ commit });
-                  const commitString = JSON.stringify(commit);
-
-                  return `
-                                <li class="commit-item" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
-                                  commit
-                                ).replace(/'/g, "&apos;")}'>
-                                    <span class="commit-hash">${commit.hash.slice(
-                                      0,
-                                      7
-                                    )}</span>
-                                    ${commit.message}
-                                    <span class="commit-date">${
-                                      commit.date
-                                    }</span>
-                                </li>
-                            `;
-                })
+                .map(
+                  /**
+                   * commit example:
+                   * {
+    "hash": "224cee5d3cc4a78c09002cf785137201e81d4d31",
+    "date": "2024-12-06T02:21:17+08:00",
+    "message": "xxx6",
+    "refs": "HEAD -> main",
+    "body": "1\n\n2 4\n\n4 5 6\n",
+    "author_name": "markshawn2020",
+    "author_email": "shawninjuly@gmail.com"
+}
+                   */
+                  (commit) => {
+                    console.log({ commit });
+                    return `
+                    <li class="commit-item" onclick="useCommitMessage(this)" data-commit='${JSON.stringify(
+                      commit
+                    ).replace(/'/g, "&apos;")}'>
+                      <div class="commit-header">
+                        <span class="commit-hash">${commit.hash.slice(
+                          0,
+                          7
+                        )}</span>
+                        <span class="commit-date" data-date="${
+                          commit.date
+                        }">${formatTimeAgo(commit.date)}</span>
+                      </div>
+                      <div class="commit-message">${commit.message}</div>
+                    </li>
+                  `;
+                  }
+                )
                 .join("");
             }
             break;
