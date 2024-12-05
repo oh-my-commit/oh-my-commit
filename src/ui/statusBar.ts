@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { SolutionManager } from "../core/solutionManager";
-import { GitManager } from "../core/gitManager";
+import { SolutionManager } from "@/managers/solution.manager";
+import { GitManager } from "@/managers/git.manager";
 
 export class StatusBarManager {
   private statusBarItem: vscode.StatusBarItem;
@@ -50,7 +50,7 @@ export class StatusBarManager {
         this.statusBarItem.tooltip = "Click to select a commit solution";
       } else {
         this.statusBarItem.text = `$(git-commit) YAAC (${solution.name})`;
-        this.statusBarItem.tooltip = `Current solution: ${solution.name}\nCost: ${solution.metrics.cost}, Performance: ${solution.metrics.performance}, Quality: ${solution.metrics.quality}\nClick to change solution`;
+        this.statusBarItem.tooltip = `Current solution: ${solution.name}\nAccuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\nClick to change solution`;
       }
 
       this.statusBarItem.command = "yaac.manageSolutions";
