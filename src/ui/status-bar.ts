@@ -5,6 +5,7 @@ import { GitManager } from "@/managers/git.manager";
 export class StatusBarManager {
   private statusBarItem: vscode.StatusBarItem;
   private gitManager: GitManager;
+  private switching = false;
 
   constructor(private solutionManager: SolutionManager) {
     console.log("Initializing StatusBarManager");
@@ -14,6 +15,17 @@ export class StatusBarManager {
     );
     this.statusBarItem.name = "YAAC";
     this.gitManager = new GitManager();
+
+    // 监听 solution 切换事件
+    this.solutionManager.onSolutionSwitching(() => {
+      this.switching = true;
+      this.update();
+    });
+
+    this.solutionManager.onSolutionSwitched(() => {
+      this.switching = false;
+      this.update();
+    });
   }
 
   public async initialize() {
@@ -39,6 +51,14 @@ export class StatusBarManager {
         this.statusBarItem.text = "$(git-commit) YAAC (No Git)";
         this.statusBarItem.tooltip =
           "YAAC requires a Git repository to function. \nInitialize a Git repository to enable all features.";
+        this.statusBarItem.command = undefined;
+        return;
+      }
+
+      // 如果正在切换，显示加载状态
+      if (this.switching) {
+        this.statusBarItem.text = "$(sync~spin) YAAC (Switching...)";
+        this.statusBarItem.tooltip = undefined // "Switching solution...";
         this.statusBarItem.command = undefined;
         return;
       }

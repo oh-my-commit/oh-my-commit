@@ -7,6 +7,12 @@ export class SolutionManager {
   private currentSolutionId: string | undefined;
   private providers: Provider[] = [];
 
+  private _onSolutionSwitching = new vscode.EventEmitter<void>();
+  private _onSolutionSwitched = new vscode.EventEmitter<void>();
+
+  public readonly onSolutionSwitching = this._onSolutionSwitching.event;
+  public readonly onSolutionSwitched = this._onSolutionSwitched.event;
+
   constructor() {
     this.initialize();
   }
@@ -48,12 +54,22 @@ export class SolutionManager {
       return false;
     }
 
+    // 发出切换开始事件
+    this._onSolutionSwitching.fire();
+
+    // 先验证 solution
     if (!(await this.validateSolution(solution))) {
+      // 验证失败也要发出事件
+      this._onSolutionSwitched.fire();
       return false;
     }
 
+    // 验证成功后再更新 currentSolutionId
     this.currentSolutionId = solutionId;
     await getWorkspaceConfig().update("currentSolution", solutionId, true);
+    
+    // 发出切换完成事件
+    this._onSolutionSwitched.fire();
     return true;
   }
 
