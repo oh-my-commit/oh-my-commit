@@ -1,11 +1,36 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import * as path from 'path';
+import * as fs from 'fs';
 
 const execAsync = promisify(exec);
 
 export class GitManager {
-    constructor(private workspaceRoot: string) {}
+    private workspaceRoot: string;
+
+    constructor() {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+            this.workspaceRoot = '';
+        } else {
+            this.workspaceRoot = workspaceFolders[0].uri.fsPath;
+        }
+    }
+
+    public async isGitRepository(): Promise<boolean> {
+        if (!this.workspaceRoot) {
+            return false;
+        }
+
+        const gitDir = path.join(this.workspaceRoot, '.git');
+        try {
+            const stats = await fs.promises.stat(gitDir);
+            return stats.isDirectory();
+        } catch (error) {
+            return false;
+        }
+    }
 
     public async getDiff(): Promise<string> {
         try {

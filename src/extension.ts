@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const configManager = new ConfigManager(context);
     const solutionManager = new SolutionManager(configManager);
     const statusBar = new StatusBarManager(solutionManager);
-    const gitManager = new GitManager(workspaceRoot);
+    const gitManager = new GitManager();
 
     console.log('Core managers initialized');
 
