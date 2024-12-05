@@ -41,49 +41,173 @@
     "configuration": {
       "title": "YAAC",
       "properties": {
-        "yaac.defaultSolution": {
+        "yaac.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否启用 YAAC"
+        },
+        "yaac.language": {
           "type": "string",
-          "default": "official_recommend",
-          "description": "Default commit solution to use"
+          "enum": [
+            "zh_CN",
+            "en_US"
+          ],
+          "default": "zh_CN",
+          "description": "提交信息的语言"
         },
-        "yaac.solutions": {
-          "type": "object",
-          "default": {},
-          "description": "Custom commit solutions configuration"
+        "yaac.provider": {
+          "type": "string",
+          "enum": ["gcop"],
+          "default": "gcop",
+          "description": "选择提交消息生成服务提供商"
         },
-        "yaac.gcop": {
+        "yaac.model": {
+          "type": "string",
+          "enum": [
+            "openai/gpt-4",
+            "openai/gpt-4-turbo",
+            "deepseek/deepseek-chat",
+            "zhipu/glm-4",
+            "ollama/llama2",
+            "groq/llama-3.1-70b-versatile",
+            "anthropic/claude-3-sonnet"
+          ],
+          "default": "openai/gpt-4",
+          "description": "选择要使用的 AI 模型"
+        },
+        "yaac.apiKeys": {
           "type": "object",
           "properties": {
-            "model": {
-              "type": "string",
-              "enum": [
-                "openai/gpt-4",
-                "openai/gpt-4-turbo",
-                "deepseek/deepseek-chat",
-                "zhipu/glm-4",
-                "ollama/llama2",
-                "groq/llama-3.1-70b-versatile",
-                "anthropic/claude-3-sonnet"
-              ],
-              "default": "openai/gpt-4",
-              "description": "选择要使用的 AI 模型"
-            },
-            "includeGitHistory": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否包含 Git 历史记录以提高生成质量"
-            },
-            "enableDataImprovement": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否允许收集数据用于改进服务质量"
-            },
-            "commitTemplate": {
+            "openai": {
               "type": "string",
               "default": "",
-              "description": "自定义提交信息模板"
+              "description": "OpenAI API 密钥"
+            },
+            "anthropic": {
+              "type": "string",
+              "default": "",
+              "description": "Anthropic API 密钥"
+            },
+            "deepseek": {
+              "type": "string",
+              "default": "",
+              "description": "Deepseek API 密钥"
+            },
+            "zhipu": {
+              "type": "string",
+              "default": "",
+              "description": "智谱 AI API 密钥"
+            },
+            "groq": {
+              "type": "string",
+              "default": "",
+              "description": "Groq API 密钥"
             }
-          }
+          },
+          "additionalProperties": false,
+          "default": {},
+          "description": "各 AI 服务商的 API 密钥配置"
+        },
+        "yaac.plugins": {
+          "type": "object",
+          "properties": {
+            "gcop": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "是否启用 gcop 插件"
+                }
+              }
+            }
+          },
+          "default": {
+            "gcop": {
+              "enabled": true
+            }
+          },
+          "description": "插件配置"
+        },
+        "yaac.style.conventional": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否使用 Conventional Commits 规范"
+        },
+        "yaac.style.maxLength": {
+          "type": "number",
+          "default": 72,
+          "description": "提交信息的最大长度"
+        },
+        "yaac.style.types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "feat",
+            "fix",
+            "docs",
+            "style",
+            "refactor",
+            "perf",
+            "test",
+            "build",
+            "ci",
+            "chore",
+            "revert"
+          ],
+          "description": "允许的提交类型"
+        },
+        "yaac.analysis.includeTests": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否分析测试文件"
+        },
+        "yaac.analysis.includeDocs": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否分析文档文件"
+        },
+        "yaac.analysis.maxFilesToAnalyze": {
+          "type": "number",
+          "default": 10,
+          "description": "单次分析的最大文件数"
+        },
+        "yaac.output.addCoAuthors": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否添加协作者信息"
+        },
+        "yaac.output.includeStats": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否包含统计信息"
+        },
+        "yaac.cache.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否启用缓存"
+        },
+        "yaac.cache.maxSize": {
+          "type": "number",
+          "default": 100,
+          "description": "最大缓存条目数"
+        },
+        "yaac.includeGitHistory": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否包含 Git 历史记录以提高生成质量"
+        },
+        "yaac.enableDataImprovement": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否允许收集数据用于改进服务质量"
+        },
+        "yaac.commitTemplate": {
+          "type": "string",
+          "default": "",
+          "description": "自定义提交信息模板"
         }
       }
     }

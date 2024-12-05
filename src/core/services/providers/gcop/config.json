@@ -1,0 +1,37 @@
+{
+  "gcop": {
+    "enabled": true,
+    "language": "zh_CN",
+    "style": {
+      "conventional": true,
+      "maxLength": 72,
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert"
+      ]
+    },
+    "analysis": {
+      "includeTests": true,
+      "includeDocs": true,
+      "maxFilesToAnalyze": 10
+    },
+    "output": {
+      "format": "conventional",
+      "addCoAuthors": true,
+      "includeStats": true
+    },
+    "cache": {
+      "enabled": true,
+      "maxSize": 100
+    }
+  }
+}
