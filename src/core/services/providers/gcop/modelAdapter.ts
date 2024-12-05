@@ -25,12 +25,6 @@ export class ModelAdapter {
     return `${provider.toUpperCase()}_API_BASE`;
   }
 
-  static getDefaultBase(provider: GcopModelProvider): string {
-    const model = Object.entries(SUPPORTED_MODELS).find(
-      ([_, info]) => info.provider === provider
-    );
-    return model ? model[1].defaultBase : '';
-  }
 
   static adaptModelName(modelName: string): string {
     const provider = this.getProviderFromModelName(modelName);

@@ -1,17 +1,7 @@
+import {Solution} from "@/core/services";
+import {SUPPORTED_MODELS} from "@/core/services/providers/gcop";
 import * as vscode from "vscode";
-import { ConfigManager } from "./configManager";
-
-export interface Solution {
-  id: string;
-  name: string;
-  provider: string;
-  description: string;
-  metrics: {
-    cost: number; // 1-10
-    performance: number; // 1-10
-    quality: number; // 1-10
-  };
-}
+import {ConfigManager} from "./configManager";
 
 export class SolutionManager {
   private currentSolutionId: string | undefined;
@@ -32,33 +22,11 @@ export class SolutionManager {
 
   public async getAvailableSolutions(): Promise<Solution[]> {
     // 这里先返回一些示例方案，后续可以从配置或远程加载
-    const solutions = [
-      {
-        id: "official_recommend",
-        name: "Official Recommend",
-        provider: "yaac",
-        description: "Balanced performance and quality",
-        metrics: { cost: 5, performance: 8, quality: 8 },
-      },
-      {
-        id: "gcop_fast",
-        name: "GCOP Fast",
-        provider: "gcop",
-        description: "Optimized for speed",
-        metrics: { cost: 3, performance: 9, quality: 6 },
-      },
-      {
-        id: "premium_quality",
-        name: "Premium Quality",
-        provider: "yaac",
-        description: "Best quality output",
-        metrics: { cost: 8, performance: 6, quality: 9 },
-      },
-    ];
+    const solutions = SUPPORTED_MODELS
 
     // 检查每个方案的 API 配置是否有效
     return await Promise.all(
-      solutions.map(async (solution) => {
+      Object.entries(solutions).map(async ([_key , solution]) => {
         const apiConfig = await this.configManager.getApiConfig(
           solution.provider
         );

@@ -4,7 +4,6 @@ import { SolutionManager } from "./core/solutionManager";
 import { ConfigManager } from "./core/configManager";
 import { GitManager } from "./core/gitManager";
 import { ServiceFactory } from "./core/services/serviceFactory";
-import { SUPPORTED_MODELS } from "./core/services/providers/gcop";
 
 export async function activate(context: vscode.ExtensionContext) {
   // 添加激活日志
@@ -138,27 +137,19 @@ export async function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand("yaac.manageSolutions", async () => {
       console.log("Manage solutions command triggered");
-      const config = vscode.workspace.getConfiguration("yaac.gcop");
 
-      const items = Object.entries(SUPPORTED_MODELS).map(([id, info]) => ({
-        label: info.displayName,
-        description: info.description,
-        detail: `速度: ${info.metrics.speed}/5 | 成本: ${info.metrics.cost}/5 | 质量: ${info.metrics.quality}/5`,
-        id,
-      }));
+      const solutions = await solutionManager.getAvailableSolutions()
 
-      const selected = await vscode.window.showQuickPick(items, {
+      const selected = await vscode.window.showQuickPick(solutions.map((s) => ({...s, label: s.name})), {
         placeHolder: "选择要使用的 AI 模型",
         matchOnDescription: true,
         matchOnDetail: true,
       });
 
       if (selected) {
-        await config.update("model", selected.id, true);
+        await solutionManager.setCurrentSolution(solutions.find((s) => s.id === selected.id)!)
         console.log(`Updated model to: ${selected.id}`);
 
-        // 重新初始化服务
-        ServiceFactory.getInstance().registerDefaultServices();
         vscode.window.showInformationMessage(`已切换到 ${selected.label}`);
       }
     }),
