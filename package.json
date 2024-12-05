@@ -67,14 +67,13 @@
           "type": "string",
           "description": "Current Solution",
           "enum": [
-            "openai-gpt4",
-            "openai-gpt35"
+            "OpenAI / GPT 4",
+            "OpenAI / GPT 3.5 Turbo"
           ],
           "enumDescriptions": [
-            "GPT-4",
-            "GPT-3.5 Turbo"
-          ],
-          "default": "openai-gpt4"
+            "High accuracy commit messages using GPT-4 (API Required)",
+            "Fast and efficient commit messages using GPT-3.5 (API Required)"
+          ]
         },
         "yaac.apiKeys": {
           "type": "object",

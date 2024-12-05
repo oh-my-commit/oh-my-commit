@@ -1,9 +1,9 @@
-import {Solution} from "@/types/solution";
-import { CommitGenerationResult, Provider,} from "../types/provider";
+import { Solution } from "@/types/solution";
+import { CommitGenerationResult, Provider } from "../types/provider";
 
 class OpenAIGPT4Solution implements Solution {
-  id = "openai-gpt4";
-  name = "GPT-4";
+  id = "openai/gpt-4";
+  name = "OpenAI / GPT 4";
   description = "High accuracy commit messages using GPT-4";
   providerId = "openai";
   metrics = {
@@ -11,12 +11,12 @@ class OpenAIGPT4Solution implements Solution {
     speed: 0.7,
     cost: 0.8,
   };
-  aiProviderId = "openai" ;
+  aiProviderId = "openai";
 }
 
 class OpenAIGPT35Solution implements Solution {
-  id = "openai-gpt35";
-  name = "GPT-3.5 Turbo";
+  id = "openai/gpt-3.5";
+  name = "OpenAI / GPT 3.5 Turbo";
   description = "Fast and efficient commit messages using GPT-3.5";
   providerId = "openai";
   metrics = {
@@ -24,7 +24,7 @@ class OpenAIGPT35Solution implements Solution {
     speed: 0.9,
     cost: 0.4,
   };
-  aiProviderId = "openai"
+  aiProviderId = "openai";
 }
 
 export class OpenAIProvider implements Provider {
@@ -39,7 +39,6 @@ export class OpenAIProvider implements Provider {
     diff: string,
     solution: Solution
   ): Promise<CommitGenerationResult> {
-
     try {
       console.log(
         `Generating commit message using ${
