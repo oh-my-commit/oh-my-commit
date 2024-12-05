@@ -10,8 +10,8 @@ export interface CommitChanges {
 }
 
 export class GitCore {
-  private git: SimpleGit;
-  private workspaceRoot: string;
+  protected git: SimpleGit;
+  protected workspaceRoot: string;
 
   constructor(workspaceRoot: string) {
     this.workspaceRoot = workspaceRoot;
