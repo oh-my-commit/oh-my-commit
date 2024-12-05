@@ -42,7 +42,7 @@ export class ConfigManager {
         await this.context.secrets.store('yaac.apiConfigs', JSON.stringify(parsedConfigs));
     }
 
-    public async validateApiConfig(config: ApiConfig): Promise<boolean> {
+    public async validateApiConfig(_config: ApiConfig): Promise<boolean> {
         // TODO: 实现 API 配置验证逻辑
         return true;
     }
