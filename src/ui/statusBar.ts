@@ -9,7 +9,7 @@ export class StatusBarManager {
   constructor(private solutionManager: SolutionManager) {
     console.log("Initializing StatusBarManager");
     this.statusBarItem = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Right,
+      vscode.StatusBarAlignment.Left,
       100
     );
     this.statusBarItem.name = "YAAC";
@@ -53,7 +53,7 @@ export class StatusBarManager {
         this.statusBarItem.tooltip = `Current solution: ${solution.name}\nCost: ${solution.metrics.cost}, Performance: ${solution.metrics.performance}, Quality: ${solution.metrics.quality}\nClick to change solution`;
       }
 
-      this.statusBarItem.command = "yaac.switchSolution";
+      this.statusBarItem.command = "yaac.manageSolutions";
       console.log("Status bar updated successfully");
     } catch (error) {
       console.error("Error updating status bar:", error);
@@ -62,9 +62,7 @@ export class StatusBarManager {
       this.statusBarItem.command = {
         title: "Show Error",
         command: "vscode.showErrorMessage",
-        arguments: [
-          `Failed to update YAAC status: ${error}`,
-        ],
+        arguments: [`Failed to update YAAC status: ${error}`],
       };
     }
   }
