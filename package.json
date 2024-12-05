@@ -55,6 +55,23 @@
           "default": "zh_CN",
           "description": "提交信息的语言"
         },
+        "yaac.providers": {
+          "type": "object",
+          "description": "Provider 启用状态配置",
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "default": {}
+        },
+        "yaac.currentSolution": {
+          "type": "string",
+          "description": "当前使用的 Solution（默认使用第一个可用的 solution）",
+          "enum": ["openai-gpt4", "openai-gpt35"],
+          "enumDescriptions": [
+            "OpenAI GPT-4（高准确度）",
+            "OpenAI GPT-3.5（快速响应）"
+          ]
+        },
         "yaac.apiKeys": {
           "type": "object",
           "properties": {
@@ -87,78 +104,6 @@
           "additionalProperties": false,
           "default": {},
           "description": "各 AI 服务商的 API 密钥配置"
-        },
-        "yaac.providers": {
-          "type": "object",
-          "properties": {
-            "gcop": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "是否启用 gcop 提供商"
-                }
-              }
-            }
-          },
-          "default": {
-            "gcop": {
-              "enabled": true
-            }
-          },
-          "description": "提交消息生成服务提供商配置"
-        },
-        "yaac.solution": {
-          "type": "string",
-          "enum": [
-            "gcop/basic",
-            "gcop/advanced",
-            "gcop/team"
-          ],
-          "enumDescriptions": [
-            "基础解决方案：适用于个人开发者",
-            "高级解决方案：包含更多上下文分析",
-            "团队解决方案：适用于团队协作场景"
-          ],
-          "default": "gcop/basic",
-          "description": "选择 AI 提供商的解决方案（每个提供商可能提供多种不同的解决方案）"
-        },
-        "yaac.style": {
-          "type": "string",
-          "enum": [
-            "conventional",
-            "gitmoji",
-            "angular",
-            "semantic",
-            "custom"
-          ],
-          "enumDescriptions": [
-            "Conventional Commits 风格 (type: description)",
-            "Gitmoji 风格 (emoji type: description)",
-            "Angular 风格 (type(scope): description)",
-            "语义化版本风格 (type(scope): description [BREAKING CHANGE])",
-            "自定义风格"
-          ],
-          "default": "conventional",
-          "description": "期望的提交信息风格（注意：实际输出风格取决于所选解决方案的支持情况）"
-        },
-        "yaac.telemetry": {
-          "type": "string",
-          "enum": [
-            "off",
-            "basic",
-            "enhanced",
-            "full"
-          ],
-          "enumDescriptions": [
-            "完全关闭数据收集",
-            "仅收集提交是否被接受的信息",
-            "收集提交信息及其生成过程",
-            "收集完整信息（包含文件差异，不建议在私密项目中使用）"
-          ],
-          "default": "basic",
-          "description": "数据收集级别，用于改进服务质量"
         }
       }
     }
