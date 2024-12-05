@@ -15,7 +15,8 @@
     "workspaceContains:.git",
     "onCommand:yaac.quickCommit",
     "onCommand:yaac.selectSolution",
-    "onCommand:yaac.openPreferences"
+    "onCommand:yaac.openPreferences",
+    "onCommand:yaac.addModelSetting"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -31,6 +32,10 @@
       {
         "command": "yaac.openPreferences",
         "title": "YAAC: Open Prefernces"
+      },
+      {
+        "command": "yaac.addModelSetting",
+        "title": "添加模型设置"
       }
     ],
     "configuration": {
@@ -60,11 +65,45 @@
         },
         "yaac.currentSolution": {
           "type": "string",
-          "description": "当前使用的 Solution",
-          "enum": []
+          "description": "当前模型",
+          "enum": [
+            "openai-gpt4",
+            "openai-gpt35"
+          ],
+          "enumDescriptions": [
+            "OpenAI GPT-4（高准确度）",
+            "OpenAI GPT-3.5（快速响应）"
+          ]
         },
         "yaac.apiKeys": {
           "type": "object",
+          "properties": {
+            "openai": {
+              "type": "string",
+              "default": "",
+              "description": "OpenAI API 密钥"
+            },
+            "anthropic": {
+              "type": "string",
+              "default": "",
+              "description": "Anthropic API 密钥"
+            },
+            "deepseek": {
+              "type": "string",
+              "default": "",
+              "description": "Deepseek API 密钥"
+            },
+            "zhipu": {
+              "type": "string",
+              "default": "",
+              "description": "智谱 AI API 密钥"
+            },
+            "groq": {
+              "type": "string",
+              "default": "",
+              "description": "Groq API 密钥"
+            }
+          },
           "additionalProperties": false,
           "default": {},
           "description": "各 AI 服务商的 API 密钥配置"

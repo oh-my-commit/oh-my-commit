@@ -54,9 +54,9 @@ export class AppManager {
     }
 
     private registerCommands(): void {
-        [QuickCommitCommand, ManageSolutionsCommand, OpenPreferencesCommand].forEach((command) => {
-            this.commandManager.register(new command(this.gitManager, this.solutionManager))
-        })
+        this.commandManager.register(new QuickCommitCommand(this.gitManager, this.solutionManager))
+        this.commandManager.register(new ManageSolutionsCommand(this.solutionManager))
+        this.commandManager.register(new OpenPreferencesCommand())
     }
 
     private async setupGitIntegration(): Promise<void> {

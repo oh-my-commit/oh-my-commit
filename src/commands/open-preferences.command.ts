@@ -1,16 +1,12 @@
-import {GitManager} from "@/managers/git.manager";
-import {SolutionManager} from "@/managers/solution.manager";
+import {VscodeCommand} from "@/commands/types";
 import {openPreferences} from "@/utils/open-preference";
-import {BaseCommand} from "./base.command";
 
-export class OpenPreferencesCommand extends BaseCommand {
-  constructor(gitManager: GitManager, solutionManager: SolutionManager) {
-    super("yaac.openPreferences", gitManager, solutionManager);
-  }
+export class OpenPreferencesCommand implements VscodeCommand {
+    public id = "yaac.openPreferences"
 
-  async execute(): Promise<void> {
-    console.log("Open preferences command triggered");
+    async execute(): Promise<void> {
+        console.log("Open preferences command triggered");
 
-    await openPreferences();
-  }
+        await openPreferences();
+    }
 }
