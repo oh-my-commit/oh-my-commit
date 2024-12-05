@@ -69,7 +69,7 @@ export class SolutionManager {
       const configureNow = "Configure Now";
       const configureLater = "Configure Later";
       const response = await vscode.window.showErrorMessage(
-        `使用该解决方案需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
+        `使用该模型需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
         configureNow,
         configureLater
       );
@@ -126,25 +126,22 @@ export class SolutionManager {
     }
     await config.update("providers", providersConfig, true);
 
-    // 更新可用的 solutions
-    const solutions = await this.getAvailableSolutions();
-    const currentSolution = solutions.length > 0 ? solutions[0].id : undefined;
-
-    // 更新当前 solution（如果未设置）
-    if (!this.currentSolutionId && currentSolution) {
-      await config.update("currentSolution", currentSolution, true);
-      this.currentSolutionId = currentSolution;
-    }
+    // 更新可用的 solutions 到配置的 enum 中
+    // const solutions = await this.getAvailableSolutions();
   }
 
   private loadConfig() {
     // 加载 provider 状态
     const config = getWorkspaceConfig();
-    const providerStates = config.get<Record<string, boolean>>("providers", {});
+    const providersConfig = config.get<Record<string, boolean>>(
+      "providers",
+      {}
+    );
 
-    this.providers.forEach((provider) => {
-      provider.enabled = providerStates[provider.id] ?? true;
-    });
+    // 设置 providers 的启用状态
+    for (const provider of this.providers) {
+      provider.enabled = providersConfig[provider.id] ?? true;
+    }
 
     // 加载当前 solution
     this.currentSolutionId = config.get<string>("currentSolution");

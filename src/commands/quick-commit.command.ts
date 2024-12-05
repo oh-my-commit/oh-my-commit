@@ -1,18 +1,31 @@
+import {VscodeCommand} from "@/commands/types";
+import {GitManager} from '@/managers/git.manager';
+import {SolutionManager} from '@/managers/solution.manager';
+import {generateCommitMessage} from '@/utils/generate-commit-message';
 import * as vscode from 'vscode';
-import { BaseCommand } from './base.command';
-import { generateCommitMessage } from '@/utils/generate-commit-message';
-import { GitManager } from '@/managers/git.manager';
-import { SolutionManager } from '@/managers/solution.manager';
 
-export class QuickCommitCommand extends BaseCommand {
+export class QuickCommitCommand implements VscodeCommand {
+    public id = "yaac.quickCommit"
+
+    private gitManager: GitManager
+    private solutionManager: SolutionManager
+
     constructor(gitManager: GitManager, solutionManager: SolutionManager) {
-        super('yaac.quickCommit', gitManager, solutionManager);
+        this.gitManager = gitManager
+        this.solutionManager = solutionManager
     }
 
     async execute(): Promise<void> {
         console.log('Quick commit command triggered');
 
-        if (!(await this.validateGitRepository()) || !(await this.validateSolution())) {
+        if (!(await this.gitManager.isGitRepository())) {
+            console.log('Not a git repository');
+            return;
+        }
+
+        const solution = await this.solutionManager.getCurrentSolution();
+        if (!solution) {
+            console.log('No solution selected');
             return;
         }
 

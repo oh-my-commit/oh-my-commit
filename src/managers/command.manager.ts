@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
 
-import { BaseCommand } from "@/commands/base.command";
+import { VscodeCommand } from "@/commands/types";
 
 export class CommandManager {
-  private commands: Map<string, BaseCommand> = new Map();
+  private commands: Map<string, VscodeCommand> = new Map();
   private context: vscode.ExtensionContext
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context
   }
 
-  register(command: BaseCommand): void {
+  register(command: VscodeCommand): void {
     const disposable = vscode.commands.registerCommand(command.id, async () => {
       console.log(`Command triggered: ${command.id}`);
       try {
@@ -30,7 +30,7 @@ export class CommandManager {
     console.log(`Registered command: ${command.id}`);
   }
 
-  getCommand(id: string): BaseCommand | undefined {
+  getCommand(id: string): VscodeCommand | undefined {
     return this.commands.get(id);
   }
 
