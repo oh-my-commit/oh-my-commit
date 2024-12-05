@@ -1,0 +1,265 @@
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  padding: 12px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+}
+
+.input-section {
+  margin-bottom: 12px;
+}
+
+.input-group {
+  margin-bottom: 12px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  color: var(--vscode-input-foreground);
+  font-size: 12px;
+}
+
+.label-text {
+  flex: 1;
+}
+
+.shortcut {
+  font-size: 11px;
+  opacity: 0.7;
+  padding: 1px 4px;
+  background: var(--vscode-badge-background);
+  border-radius: 2px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border-radius: 3px;
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  line-height: 1.4;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--vscode-focusBorder);
+}
+
+.commit-list {
+  display: grid;
+  gap: 8px;
+}
+
+.commit-list h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vscode-foreground);
+  opacity: 0.8;
+}
+
+.commit-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.commit-item {
+  padding: 6px 10px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 12px;
+  position: relative;
+}
+
+.commit-item:hover {
+  transform: translateX(2px);
+  border-color: var(--vscode-focusBorder);
+}
+
+.commit-item.preview {
+  border-color: #4caf50;
+  border-width: 1px;
+}
+
+.commit-item.to-be-amended {
+  border-color: #f44336;
+  border-width: 1px;
+}
+
+.commit-item-content {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 80px 85px;
+  gap: 8px;
+  align-items: center;
+}
+
+.commit-indicator {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: inherit;
+}
+
+.preview-indicator {
+  color: #4caf50;
+}
+
+.preview-indicator::before {
+  content: "✓";
+}
+
+.amend-indicator {
+  color: #f44336;
+}
+
+.amend-indicator::before {
+  content: "↺";
+}
+
+.commit-message {
+  color: var(--vscode-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-message.has-body {
+  cursor: help;
+}
+
+.commit-message.has-body::after {
+  content: "···";
+  display: inline;
+  margin-left: 4px;
+  opacity: 0.5;
+}
+
+.commit-date {
+  color: var(--vscode-descriptionForeground);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.commit-hash {
+  font-family: var(--vscode-editor-font-family);
+  font-size: 11px;
+  padding: 2px 4px;
+  background: var(--vscode-badge-background);
+  border-radius: 3px;
+  user-select: all;
+  text-align: center;
+  cursor: copy;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.commit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.commit-popover {
+  position: fixed;
+  z-index: 1000;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 3px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: max-content;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.4;
+  display: none;
+}
+
+.commit-popover.show {
+  display: block;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vscode-panel-border);
+}
+
+button {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  height: 24px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#commitButton {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
+#commitButton:hover:not(:disabled) {
+  background: var(--vscode-button-hoverBackground);
+}
+
+#cancelButton {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+}
+
+#cancelButton:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
