@@ -1,9 +1,6 @@
-import { exec } from "child_process";
-import { promisify } from "util";
+import simpleGit, { SimpleGit } from "simple-git";
 import * as path from "path";
 import * as fs from "fs";
-
-const execAsync = promisify(exec);
 
 export interface CommitChanges {
   files: string[];
@@ -13,10 +10,12 @@ export interface CommitChanges {
 }
 
 export class GitCore {
+  private git: SimpleGit;
   private workspaceRoot: string;
 
   constructor(workspaceRoot: string) {
     this.workspaceRoot = workspaceRoot;
+    this.git = simpleGit(workspaceRoot);
   }
 
   public async isGitRepository(): Promise<boolean> {
@@ -35,10 +34,7 @@ export class GitCore {
 
   public async getDiff(): Promise<string> {
     try {
-      const { stdout } = await execAsync("git diff --staged", {
-        cwd: this.workspaceRoot,
-      });
-      return stdout;
+      return await this.git.diff(["--staged"]);
     } catch (error) {
       throw new Error(`Failed to get git diff: ${error}`);
     }
@@ -46,10 +42,7 @@ export class GitCore {
 
   public async getUnstagedChanges(): Promise<string> {
     try {
-      const { stdout } = await execAsync("git diff", {
-        cwd: this.workspaceRoot,
-      });
-      return stdout;
+      return await this.git.diff();
     } catch (error) {
       throw new Error(`Failed to get unstaged changes: ${error}`);
     }
@@ -57,7 +50,7 @@ export class GitCore {
 
   public async stageAll(): Promise<void> {
     try {
-      await execAsync("git add -A", { cwd: this.workspaceRoot });
+      await this.git.add("-A");
     } catch (error) {
       throw new Error(`Failed to stage changes: ${error}`);
     }
@@ -65,9 +58,7 @@ export class GitCore {
 
   public async commit(message: string): Promise<void> {
     try {
-      await execAsync(`git commit -m "${message}"`, {
-        cwd: this.workspaceRoot,
-      });
+      await this.git.commit(message);
     } catch (error) {
       throw new Error(`Failed to commit: ${error}`);
     }
@@ -75,11 +66,8 @@ export class GitCore {
 
   public async hasChanges(): Promise<boolean> {
     try {
-      const { stdout } = await execAsync(
-        "git status --porcelain",
-        { cwd: this.workspaceRoot }
-      );
-      return stdout.length > 0;
+      const status = await this.git.status();
+      return !status.isClean();
     } catch (error) {
       throw new Error(`Failed to check changes: ${error}`);
     }
@@ -87,35 +75,26 @@ export class GitCore {
 
   public async getChangedFiles(): Promise<CommitChanges> {
     try {
-      const { stdout: diffStats } = await execAsync(
-        "git diff --staged --numstat",
-        { cwd: this.workspaceRoot }
-      );
-
-      const files: string[] = [];
-      let additions = 0;
-      let deletions = 0;
-
-      diffStats.split("\n").forEach((line) => {
-        if (!line) return;
-        const [add, del, file] = line.split("\t");
-        if (file) {
-          files.push(file);
-          additions += parseInt(add) || 0;
-          deletions += parseInt(del) || 0;
-        }
-      });
-
-      const { stdout: summary } = await execAsync(
-        "git diff --staged --compact-summary",
-        { cwd: this.workspaceRoot }
-      );
+      const status = await this.git.status();
+      const diffSummary = await this.git.diffSummary(["--staged"]);
 
       return {
-        files,
-        additions,
-        deletions,
-        summary: summary.trim(),
+        files: status.staged,
+        additions: diffSummary.insertions,
+        deletions: diffSummary.deletions,
+        summary: diffSummary.files
+          .map((file) => {
+            if ("insertions" in file && "deletions" in file) {
+              return `${file.file} | +${file.insertions} -${file.deletions}`;
+            } else if ("insertions" in file) {
+              return `${file.file} | +${file.insertions}`;
+            } else if ("deletions" in file) {
+              return `${file.file} | -${file.deletions}`;
+            } else {
+              return `${file.file}`;
+            }
+          })
+          .join("\n"),
       };
     } catch (error) {
       throw new Error(`Failed to get changed files: ${error}`);
