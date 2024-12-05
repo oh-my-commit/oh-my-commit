@@ -3,12 +3,12 @@ import {SolutionManager} from "@/managers/solution.manager";
 import * as vscode from "vscode";
 
 export class ManageSolutionsCommand implements VscodeCommand {
-    public id = "yaac.manageSolutions"
+    public id = "yaac.manageSolutions";
 
-    private solutionManager: SolutionManager
+    private solutionManager: SolutionManager;
 
-    constructor(solutionManager: SolutionManager) {
-        this.solutionManager = solutionManager
+    constructor(solutionManager: SolutionManager,) {
+        this.solutionManager = solutionManager;
     }
 
     async execute(): Promise<void> {
@@ -23,6 +23,7 @@ export class ManageSolutionsCommand implements VscodeCommand {
 
         try {
             const currentSolution = await this.solutionManager.getCurrentSolution();
+
             const selected = await vscode.window.showQuickPick(solutions.map((s) => ({
                 ...s,
                 label: s.name,

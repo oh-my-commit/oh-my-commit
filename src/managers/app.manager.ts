@@ -1,19 +1,24 @@
 import {ManageSolutionsCommand} from "@/commands/manage-solutions.command";
 import {OpenPreferencesCommand} from "@/commands/open-preferences.command";
 import {QuickCommitCommand} from "@/commands/quick-commit.command";
+import fs from "fs";
+import {isEqual} from "lodash-es";
+import path from "path";
 import * as vscode from "vscode";
-import {StatusBarManager} from "../ui/status-bar";
 import {CommandManager} from "./command.manager";
 import {GitManager} from "./git.manager";
 import {SolutionManager} from "./solution.manager";
+import {StatusBarManager} from "./status-bar.manager";
 
 export class AppManager {
+    private context: vscode.ExtensionContext;
     private gitManager: GitManager;
     private solutionManager: SolutionManager;
     private commandManager: CommandManager;
     private statusBarManager: StatusBarManager;
 
     constructor(context: vscode.ExtensionContext) {
+        this.context = context;
         this.gitManager = new GitManager();
         this.solutionManager = new SolutionManager();
         this.commandManager = new CommandManager(context);
@@ -41,6 +46,17 @@ export class AppManager {
             await this.setupGitIntegration();
             console.log("Git integration setup completed");
 
+            // update solutions
+            const solutions = await this.solutionManager.getAvailableSolutions();
+            const currentSolution = await this.solutionManager.getCurrentSolution();
+            await this.updateConfiguration("yaac.currentSolution", {
+                type: "string",
+                description: "Current Solution",
+                enum: solutions.map((s) => s.id),
+                enumDescriptions: solutions.map((s) => s.name),
+                default: currentSolution?.id,
+            }, (raw, target) => isEqual(raw.enum, target.enum));
+
             console.log("YAAC initialization completed");
         } catch (error) {
             console.error("Failed to initialize app:", error);
@@ -54,9 +70,9 @@ export class AppManager {
     }
 
     private registerCommands(): void {
-        this.commandManager.register(new QuickCommitCommand(this.gitManager, this.solutionManager))
-        this.commandManager.register(new ManageSolutionsCommand(this.solutionManager))
-        this.commandManager.register(new OpenPreferencesCommand())
+        this.commandManager.register(new QuickCommitCommand(this.gitManager, this.solutionManager));
+        this.commandManager.register(new ManageSolutionsCommand(this.solutionManager,));
+        this.commandManager.register(new OpenPreferencesCommand());
     }
 
     private async setupGitIntegration(): Promise<void> {
@@ -78,6 +94,48 @@ export class AppManager {
         } else {
             this.statusBarManager.hide();
             await vscode.commands.executeCommand("setContext", "yaac.isGitRepository", false);
+        }
+    }
+
+    private async updateConfiguration(key: string, target: any, skip: (raw: any, target: any) => boolean) {
+        try {
+            // 获取扩展的 package.json 路径
+            const packageJsonPath = path.join(this.context.extensionPath, "package.json");
+
+            // 读取当前的 package.json
+            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+
+            // 确保必要的结构存在
+            if (!packageJson.contributes) {
+                packageJson.contributes = {};
+            }
+            if (!packageJson.contributes.configuration) {
+                packageJson.contributes.configuration = {
+                    title: "YAAC", properties: {},
+                };
+            }
+
+            const raw = packageJson.contributes.configuration.properties[key];
+
+            if (skip(raw, target)) {
+                return;
+            }
+
+            // 添加新的设置定义
+            packageJson.contributes.configuration.properties[key] = target;
+
+            // 写回 package.json
+            fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+            // 提示用户重新加载窗口
+            const reload = await vscode.window.showInformationMessage("设置定义已更新，需要重新加载窗口使其生效。", "重新加载");
+
+            if (reload === "重新加载") {
+                await vscode.commands.executeCommand("workbench.action.reloadWindow");
+            }
+        } catch (error) {
+            // @ts-ignore
+            vscode.window.showErrorMessage(`添加设置定义失败: ${error.message}`);
         }
     }
 }
