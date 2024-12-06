@@ -1,43 +1,71 @@
 .detailed-description {
   width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .detailed-description .w-md-editor {
   border: 1px solid var(--vscode-input-border);
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: var(--vscode-editor-background);
-  height: 100%;
+  flex: 1;
+  min-height: 200px;
+  transition: border-color 0.2s ease;
+}
+
+.detailed-description .w-md-editor:focus-within {
+  border-color: var(--vscode-focusBorder);
 }
 
 .detailed-description .w-md-editor-text-input {
   color: var(--vscode-input-foreground);
-  font-family: var(--vscode-font-family);
-  font-size: var(--vscode-font-size);
+  font-family: var(--vscode-editor-font-family, var(--vscode-font-family));
+  font-size: var(--vscode-editor-font-size);
+  line-height: 1.5;
+  padding: 8px 12px;
+  resize: vertical;
+  min-height: 100px;
 }
 
 .detailed-description .w-md-editor-preview {
   color: var(--vscode-input-foreground);
   background-color: var(--vscode-editor-background) !important;
+  padding: 8px 12px;
 }
 
 .detailed-description .w-md-editor-text {
   color: var(--vscode-input-foreground);
   height: 100%;
+  min-height: 150px;
 }
 
 /* Customize toolbar */
 .detailed-description .w-md-editor-toolbar {
   background: var(--vscode-editor-background);
   border-bottom: 1px solid var(--vscode-input-border);
+  padding: 6px 8px;
+}
+
+.detailed-description .w-md-editor-toolbar ul {
+  gap: 4px;
 }
 
 .detailed-description .w-md-editor-toolbar li > button {
-  color: var(--vscode-input-foreground);
+  color: var(--vscode-icon-foreground);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .detailed-description .w-md-editor-toolbar li > button:hover {
-  color: var(--vscode-input-foreground);
-  background-color: var(--vscode-input-border);
+  color: var(--vscode-icon-foreground);
+  opacity: 1;
+  background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+.detailed-description .w-md-editor-toolbar li.active > button {
+  color: var(--vscode-icon-foreground);
+  opacity: 1;
 }
 
 /* Fix preview styles */
@@ -59,4 +87,9 @@
 /* Fix preview container */
 .detailed-description .w-md-editor-preview-renderer {
   background-color: var(--vscode-editor-background) !important;
+}
+
+.detailed-description textarea::placeholder {
+  color: var(--vscode-input-placeholderForeground);
+  opacity: 0.7;
 }
