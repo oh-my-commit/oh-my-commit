@@ -3,85 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src ${webview.cspSource} 'nonce-${nonce}';" />
     <title>Commit Message</title>
-    <link rel="stylesheet" href="./index.css" />
+    <style>
+      :root {
+        --vscode-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        --vscode-font-size: 13px;
+        --vscode-font-weight: normal;
+        --vscode-editor-background: var(--vscode-background);
+        --vscode-foreground: var(--vscode-foreground);
+        --vscode-input-background: var(--vscode-input-background);
+        --vscode-input-foreground: var(--vscode-input-foreground);
+        --vscode-input-border: var(--vscode-input-border);
+        --vscode-button-background: var(--vscode-button-background);
+        --vscode-button-foreground: var(--vscode-button-foreground);
+        --vscode-button-hoverBackground: var(--vscode-button-hoverBackground);
+        --vscode-list-hoverBackground: var(--vscode-list-hoverBackground);
+        --vscode-widget-border: var(--vscode-widget-border);
+        --vscode-descriptionForeground: var(--vscode-descriptionForeground);
+        --vscode-focusBorder: var(--vscode-focusBorder);
+        --vscode-diffEditor-insertedTextBackground: var(--vscode-diffEditor-insertedTextBackground);
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      .container {
+        padding: var(--spacing-lg);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <div class="input-section">
-        <div class="input-group">
-          <label>
-            <span class="label-text">Summary (required)</span>
-            <span class="shortcut">⌘Enter to commit</span>
-          </label>
-          <input type="text" id="summary" placeholder="Summary of changes" />
-        </div>
-        <div class="input-group">
-          <label>
-            <span class="label-text">Description</span>
-            <span class="shortcut">⇧Enter for new line</span>
-          </label>
-          <textarea
-            id="description"
-            placeholder="Detailed description of changes"
-          ></textarea>
-        </div>
-      </div>
-
-      <div class="commit-list">
-        <h3>Recent Commits</h3>
-        <ul class="commit-items" id="commitList"></ul>
-      </div>
-
-      <div class="button-group">
-        <button id="cancelButton">Cancel</button>
-        <button id="commitButton" disabled>Commit</button>
-      </div>
+      <commit-input css-uri="%webview.cspSource%/components/CommitInput.css"></commit-input>
+      <commit-list 
+        css-uri="%webview.cspSource%/components/CommitList.css" 
+        item-css-uri="%webview.cspSource%/components/CommitItem.css">
+      </commit-list>
+      <action-buttons css-uri="%webview.cspSource%/components/ActionButtons.css" disabled></action-buttons>
     </div>
 
-    <script type="module" src="./components/CommitItem.js"></script>
-    <script type="module">
-      {
-        {
-          inject: "components";
-        }
-      }
+    <script nonce="${nonce}" type="module">
       const vscode = acquireVsCodeApi();
-      let commits = [];
-      let isAmendMode = false;
-      let activePopover = null;
 
-      function showPopover(element, content, position) {
-        if (activePopover) {
-          activePopover.remove();
-        }
-
-        const popover = document.createElement("div");
-        popover.className = "popover";
-        popover.textContent = content;
-
-        // Position the popover
-        const rect = element.getBoundingClientRect();
-        popover.style.top = `${rect.bottom + 5}px`;
-        popover.style.left = `${rect.left}px`;
-
-        document.body.appendChild(popover);
-        activePopover = popover;
-      }
-
-      function hidePopover() {
-        if (activePopover) {
-          activePopover.remove();
-          activePopover = null;
-        }
-      }
-
+      // Utils
       function normalizeLineEndings(text) {
-        return text.replace(/\r\n|\r|\n/g, "\n");
+        return text?.replace(/\r\n|\r|\n/g, "\n") || "";
       }
 
       function formatCommitMessage(summary, description) {
-        let message = summary;
+        let message = summary || "";
         if (description) {
           message += "\n\n" + description;
         }
@@ -89,91 +64,43 @@
       }
 
       function parseCommitMessage(message) {
+        if (!message) return { summary: "", description: "" };
+        
         const lines = normalizeLineEndings(message).split("\n");
-        const summary = lines[0];
+        const summary = lines[0] || "";
         const description = lines.slice(2).join("\n").trim();
         return { summary, description };
       }
 
-      function updateCommitList() {
-        const list = document.getElementById("commitList");
-        list.innerHTML = "";
+      // UI Components
+      const commitInput = document.querySelector("commit-input");
+      const commitList = document.querySelector("commit-list");
+      const actionButtons = document.querySelector("action-buttons");
 
-        // Add preview if there's input
-        const summary = document.getElementById("summary").value.trim();
-        const description = document.getElementById("description").value.trim();
-        if (summary) {
-          const previewCommit = {
-            hash: "preview",
-            message: formatCommitMessage(summary, description),
-            date: new Date().toISOString(),
-          };
-
-          const previewItem = document.createElement("commit-item");
-          previewItem.setAttribute("hash", previewCommit.hash);
-          previewItem.setAttribute("message", previewCommit.message);
-          previewItem.setAttribute("date", previewCommit.date);
-          previewItem.setAttribute("is-preview", "");
-          list.appendChild(previewItem);
-        }
-
-        // Add actual commits
-        commits.forEach((commit, index) => {
-          const commitItem = document.createElement("commit-item");
-          commitItem.setAttribute("hash", commit.hash);
-          commitItem.setAttribute("message", commit.message);
-          commitItem.setAttribute("date", commit.date);
-          if (isAmendMode && index === 0) {
-            commitItem.setAttribute("is-amend", "");
-          }
-
-          commitItem.addEventListener("showPopover", (e) => {
-            showPopover(e.target, e.detail.message);
-          });
-
-          commitItem.addEventListener("hidePopover", () => {
-            hidePopover();
-          });
-
-          commitItem.addEventListener("commitSelect", (e) => {
-            const { summary, description } = parseCommitMessage(
-              e.detail.message
-            );
-            document.getElementById("summary").value = summary;
-            document.getElementById("description").value = description || "";
-            updateCommitButton();
-          });
-
-          list.appendChild(commitItem);
-        });
+      // Event Handlers
+      function handleInputChange(e) {
+        const { summary, description } = e.detail;
+        const hasInput = summary.trim().length > 0;
+        actionButtons.setDisabled(!hasInput);
       }
 
-      function updateCommitButton() {
-        const summary = document.getElementById("summary").value.trim();
-        document.getElementById("commitButton").disabled = !summary;
-      }
+      // Event Listeners
+      commitInput.addEventListener("input", handleInputChange);
 
-      // Handle input events
-      document.getElementById("summary").addEventListener("input", () => {
-        updateCommitButton();
-        updateCommitList();
+      commitList.addEventListener("commitSelect", (e) => {
+        const { summary, description } = parseCommitMessage(e.detail.message);
+        commitInput.setValue(summary, description);
       });
 
-      document.getElementById("description").addEventListener("input", () => {
-        updateCommitList();
-      });
-
-      // Handle button clicks
-      document.getElementById("commitButton").addEventListener("click", () => {
-        const summary = document.getElementById("summary").value.trim();
-        const description = document.getElementById("description").value.trim();
+      actionButtons.addEventListener("commit", () => {
+        const { summary, description } = commitInput.getValue();
         vscode.postMessage({
           command: "commit",
-          message: formatCommitMessage(summary, description),
+          message: formatCommitMessage(summary.trim(), description.trim()),
         });
       });
 
-      document.getElementById("cancelButton").addEventListener("click", () => {
+      actionButtons.addEventListener("cancel", () => {
         vscode.postMessage({ command: "cancel" });
       });
 
@@ -182,15 +109,22 @@
         const message = event.data;
         switch (message.command) {
           case "setCommits":
-            commits = message.commits;
-            updateCommitList();
+            commitList.setCommits(message.commits);
             break;
           case "setAmendMode":
-            isAmendMode = message.isAmendMode;
-            updateCommitList();
+            commitList.setAttribute("is-amend-mode", message.isAmendMode);
+            break;
+          case "setInitialMessage":
+            const { summary, description } = parseCommitMessage(message.message);
+            commitInput.setValue(summary, description);
             break;
         }
       });
     </script>
+
+    <script nonce="${nonce}" type="module" src="%webview.cspSource%/components/CommitItem.js"></script>
+    <script nonce="${nonce}" type="module" src="%webview.cspSource%/components/CommitInput.js"></script>
+    <script nonce="${nonce}" type="module" src="%webview.cspSource%/components/CommitList.js"></script>
+    <script nonce="${nonce}" type="module" src="%webview.cspSource%/components/ActionButtons.js"></script>
   </body>
 </html>

@@ -1,0 +1,156 @@
+/* Import component-specific styles */
+@import url('../components/CommitInput.css');
+@import url('../components/CommitList.css');
+@import url('../components/CommitItem.css');
+@import url('../components/ActionButtons.css');
+
+/* Base Component Styles */
+:root {
+  --component-spacing: var(--spacing-lg);
+  --component-border-radius: var(--border-radius);
+  --component-transition: var(--transition-fast);
+  --component-shadow: var(--shadow-sm);
+}
+
+/* CommitInput Component */
+commit-input {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--component-spacing);
+  background: var(--input-bg);
+  border-radius: var(--component-border-radius);
+  box-shadow: var(--component-shadow);
+}
+
+/* CommitList Component */
+commit-list {
+  display: block;
+  width: 100%;
+  margin: var(--component-spacing) 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--component-border-radius);
+  overflow: hidden;
+  background: var(--app-bg);
+  box-shadow: var(--component-shadow);
+}
+
+commit-list:empty {
+  display: none;
+}
+
+commit-list h3 {
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: 500;
+  font-size: var(--font-size-md);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--app-bg);
+  letter-spacing: 0.5px;
+}
+
+/* ActionButtons Component */
+action-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  width: 100%;
+  margin-top: var(--component-spacing);
+}
+
+/* Commit Item Styles */
+.commit-item {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--component-transition);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.commit-item:last-child {
+  border-bottom: none;
+}
+
+.commit-item:hover {
+  background-color: var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31));
+}
+
+.commit-item.preview {
+  background-color: var(--app-bg);
+  border-left: 4px solid var(--button-bg);
+  padding-left: calc(var(--spacing-lg) - 4px);
+}
+
+.commit-item.to-be-amended {
+  background-color: var(--vscode-diffEditor-insertedTextBackground, rgba(155, 185, 85, 0.2));
+  border-left: 4px solid var(--vscode-diffEditor-insertedTextBackground, rgba(155, 185, 85, 0.4));
+  padding-left: calc(var(--spacing-lg) - 4px);
+}
+
+/* Shared component styles */
+.container {
+  padding: var(--spacing-lg);
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  background: var(--app-bg);
+}
+
+/* Popover Styles */
+.popover {
+  position: absolute;
+  background: var(--app-bg);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-md);
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  border-radius: var(--component-border-radius);
+  color: var(--text-color);
+}
+
+/* Input and Button Base Styles */
+input, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* Animation Styles */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-normal) ease-in;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  action-buttons {
+    flex-direction: column;
+  }
+
+  .commit-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* Focus States */
+*:focus {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: -1px;
+}
+
+/* Disabled States */
+*:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

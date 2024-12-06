@@ -125,7 +125,7 @@ export class QuickCommitCommand implements VscodeCommand {
         enableScripts: true,
         enableFindWidget: true,
         localResourceRoots: [
-          vscode.Uri.joinPath(this.context.extensionUri, 'src', 'webviews')
+          vscode.Uri.joinPath(this.context.extensionUri, "src", "webviews"),
         ],
         // 在开发模式下启用开发者工具
         ...(process.env.NODE_ENV === "development"
@@ -136,49 +136,32 @@ export class QuickCommitCommand implements VscodeCommand {
       }
     );
 
-    // 获取文件的 URI
+    // Generate nonce
+    const nonce = this.getNonce();
+
+    // Read HTML content
     const htmlPath = vscode.Uri.joinPath(
       this.context.extensionUri,
       "src",
       "webviews",
       "commit-message.html"
     );
-    
-    const cssPath = panel.webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.context.extensionUri,
-        "src",
-        "webviews",
-        "index.css"
-      )
-    );
 
-    const componentPath = vscode.Uri.joinPath(
-      this.context.extensionUri,
-      "src",
-      "webviews",
-      "components",
-      "CommitItem.js"
-    );
+    // Get webview URIs for all resources
+    const webviewUri = panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, "src", "webviews")
+    ).toString();
 
-    // 读取文件内容
-    const [htmlContent, componentContent] = await Promise.all([
-      vscode.workspace.fs.readFile(htmlPath),
-      vscode.workspace.fs.readFile(componentPath)
-    ]);
+    const htmlContent = await vscode.workspace.fs.readFile(htmlPath);
+    let htmlString = htmlContent.toString();
 
-    let html = Buffer.from(htmlContent).toString("utf-8");
-    const component = Buffer.from(componentContent).toString("utf-8");
-    
-    // 替换资源路径和注入组件代码
-    html = html
-      .replace('./index.css', cssPath.toString())
-      .replace(
-        '<script type="module" src="./components/CommitItem.js"></script>',
-        `<script type="module">\n${component}\n</script>`
-      );
+    // Replace placeholders with actual values
+    htmlString = htmlString
+      .replace(/\${nonce}/g, nonce)
+      .replace(/\${webview\.cspSource}/g, panel.webview.cspSource)
+      .replace(/%webview\.cspSource%/g, webviewUri);
 
-    panel.webview.html = html;
+    panel.webview.html = htmlString;
 
     // Send initial data to webview
     panel.webview.postMessage({
@@ -187,21 +170,31 @@ export class QuickCommitCommand implements VscodeCommand {
     });
 
     panel.webview.postMessage({
-      command: "setCommits",
-      commits: await this.gitService.getRecentCommits(5),
-    });
-
-    panel.webview.postMessage({
       command: "setAmendMode",
       isAmendMode,
     });
 
-    return new Promise<void>((resolve, reject) => {
-      panel.webview.onDidReceiveMessage(
-        async (message) => {
-          try {
-            switch (message.command) {
-              case "commit":
+    // Get recent commits for the list
+    const recentCommits = await this.gitService.getRecentCommits(5);
+    panel.webview.postMessage({
+      command: "setCommits",
+      commits: recentCommits,
+    });
+
+    // Handle messages from webview
+    panel.webview.onDidReceiveMessage(
+      async (message) => {
+        switch (message.command) {
+          case "commit":
+            await vscode.window.withProgress(
+              {
+                location: vscode.ProgressLocation.Notification,
+                title: isAmendMode
+                  ? "Amending last commit..."
+                  : "Committing changes...",
+                cancellable: false,
+              },
+              async () => {
                 if (isAmendMode) {
                   await this.gitService.amendCommit(message.message);
                 } else {
@@ -209,25 +202,25 @@ export class QuickCommitCommand implements VscodeCommand {
                   await this.gitService.commit(message.message);
                 }
                 panel.dispose();
-                resolve();
-                break;
-              case "cancel":
-                panel.dispose();
-                throw new Error("Commit cancelled");
-            }
-          } catch (error) {
+              }
+            );
+            break;
+          case "cancel":
             panel.dispose();
-            reject(error);
-          }
-        },
-        undefined,
-        []
-      );
+            break;
+        }
+      },
+      undefined,
+      this.context.subscriptions
+    );
+  }
 
-      // Clean up on panel close
-      panel.onDidDispose(() => {
-        reject(new Error("Panel closed"));
-      });
-    });
+  private getNonce() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 32; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
   }
 }
