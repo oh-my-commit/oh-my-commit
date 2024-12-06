@@ -1,110 +1,45 @@
-/* 最外层容器 */
 .detailed-description {
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-/* 编辑器容器 */
+.detailed-description .view-toggles {
+  display: flex;
+  gap: 4px;
+}
+
+.detailed-description .view-toggle {
+  padding: 4px 8px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: var(--vscode-font-size);
+}
+
+.detailed-description .view-toggle:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+.detailed-description .view-toggle.active {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
 .detailed-description .editor-container {
   display: flex;
-  position: relative;
   border: 1px solid var(--vscode-input-border);
   border-radius: 4px;
   background: var(--vscode-editor-background);
   min-height: 120px;
-  max-height: 480px;
-  height: auto;
-  overflow: auto;
 }
 
-/* 视图切换按钮 */
-.detailed-description .view-toggles {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: var(--vscode-editor-background);
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 4px;
-  padding: 4px;
-  z-index: 10;
-}
-
-.detailed-description .view-toggles button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--vscode-foreground);
-  cursor: pointer;
-  border-radius: 3px;
-  opacity: 0.6;
-}
-
-.detailed-description .view-toggles button:hover {
-  background: var(--vscode-toolbar-hoverBackground);
-  opacity: 0.8;
-}
-
-.detailed-description .view-toggles button.active {
-  background: var(--vscode-toolbar-activeBackground);
-  opacity: 1;
-}
-
-.detailed-description .view-toggles button i {
-  font-size: 16px;
-}
-
-/* 视图模式样式 */
-.detailed-description .editor-container.split {
-  display: flex;
-}
-
-.detailed-description .editor-container.plain .preview-area,
-.detailed-description .editor-container.preview .input-area {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.detailed-description .editor-container.plain .input-area {
-  width: 100%;
-  padding-right: 40px;
-  overflow: auto;
-}
-
-.detailed-description .editor-container.split .input-area {
-  width: 50%;
-  border-right: 1px solid var(--vscode-input-border);
-  padding-right: 40px;
-  overflow: auto;
-}
-
-.detailed-description .editor-container.split .preview-area {
-  width: 50%;
-  padding-right: 40px;
-  overflow: auto;
-}
-
-.detailed-description .editor-container.preview .preview-area {
-  width: 100%;
-  padding-right: 40px;
-  overflow: auto;
-}
-
-/* 输入区域 */
 .detailed-description .input-area {
-  display: flex;
-  flex-direction: column;
   flex: 1;
+  width: 100%;
 }
 
 .detailed-description .text-input {
@@ -112,15 +47,18 @@
   height: 100%;
   min-height: 120px;
   padding: 8px 12px;
-  margin: 0;
   border: none;
   background: transparent;
   color: var(--vscode-input-foreground);
-  font-family: var(--vscode-editor-font-family, var(--vscode-font-family));
+  font-family: var(--vscode-editor-font-family);
   font-size: var(--vscode-editor-font-size);
   line-height: 1.5;
   resize: none;
   outline: none;
+}
+
+.detailed-description .text-input:focus {
+  background: color-mix(in srgb, var(--vscode-editor-background) 96%, white);
 }
 
 .detailed-description .text-input::placeholder {
@@ -128,15 +66,48 @@
   opacity: 0.5;
 }
 
-/* 预览区域 */
 .detailed-description .preview-area {
+  flex: 1;
+  width: 100%;
   padding: 8px 12px;
   overflow-y: auto;
   color: var(--vscode-input-foreground);
   border-left: 1px solid var(--vscode-input-border);
 }
 
-/* Markdown preview styles */
+/* Split mode */
+.detailed-description .editor-container.split {
+  overflow: hidden;
+}
+
+.detailed-description .editor-container.split .input-area,
+.detailed-description .editor-container.split .preview-area {
+  flex: 0 0 50%;
+  width: 50%;
+}
+
+/* Plain mode */
+.detailed-description .editor-container.plain .preview-area {
+  display: none;
+}
+
+.detailed-description .editor-container.plain .input-area {
+  flex: 1;
+  width: 100%;
+}
+
+/* Preview mode */
+.detailed-description .editor-container.preview .input-area {
+  display: none;
+}
+
+.detailed-description .editor-container.preview .preview-area {
+  flex: 1;
+  width: 100%;
+  border-left: none;
+}
+
+/* Markdown styles */
 .detailed-description .preview-area h1,
 .detailed-description .preview-area h2,
 .detailed-description .preview-area h3,
@@ -148,6 +119,13 @@
   font-weight: 600;
   line-height: 1.25;
 }
+
+.detailed-description .preview-area h1 { font-size: 2em; }
+.detailed-description .preview-area h2 { font-size: 1.5em; }
+.detailed-description .preview-area h3 { font-size: 1.25em; }
+.detailed-description .preview-area h4 { font-size: 1em; }
+.detailed-description .preview-area h5 { font-size: 0.875em; }
+.detailed-description .preview-area h6 { font-size: 0.85em; }
 
 .detailed-description .preview-area p {
   margin-top: 0;

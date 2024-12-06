@@ -1,9 +1,7 @@
-import React from "react";
-import "./detailed-description.css";
-import { marked } from "marked";
+import React, { useEffect, useRef, useState } from "react";
 import classnames from "classnames";
-
-type ViewMode = "plain" | "split" | "preview";
+import { marked } from "marked";
+import "./detailed-description.css";
 
 interface DetailedDescriptionProps {
   value: string;
@@ -11,43 +9,123 @@ interface DetailedDescriptionProps {
   placeholder?: string;
 }
 
+type ViewMode = "plain" | "preview" | "split";
+
 export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
   value,
   onChange,
-  placeholder = "Detailed description (optional)",
+  placeholder,
 }) => {
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [internalValue, setInternalValue] = React.useState(value);
-  const [viewMode, setViewMode] = React.useState<ViewMode>("split");
+  const [viewMode, setViewMode] = useState<ViewMode>("plain");
+  const [internalValue, setInternalValue] = useState(value);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setInternalValue(value);
   }, [value]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    onChange(internalValue);
+  }, [internalValue, onChange]);
+
+  const calculateHeight = () => {
     const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    const preview = previewRef.current;
+    const container = containerRef.current;
+    
+    if (!textarea || !preview || !container) return;
+
+    // 重置容器高度以便准确计算
+    container.style.height = "auto";
+    textarea.style.height = "auto";
+
+    // 计算文本输入区域所需的高度
+    const textHeight = Math.max(120, textarea.scrollHeight);
+    textarea.style.height = `${textHeight}px`;
+
+    // 根据不同模式设置容器高度
+    switch (viewMode) {
+      case "plain":
+        // plain 模式：容器高度自适应输入所需高度
+        container.style.height = `${textHeight}px`;
+        break;
+        
+      case "preview":
+        // preview 模式：容器高度自适应渲染所需高度
+        const previewHeight = Math.max(120, preview.scrollHeight);
+        container.style.height = `${previewHeight}px`;
+        break;
+        
+      case "split":
+        // split 模式：容器高度适应输入所需高度，右边如果溢出再滚动
+        container.style.height = `${textHeight}px`;
+        break;
     }
-  }, [internalValue]);
+  };
+
+  useEffect(() => {
+    // 在内容或视图模式改变时重新计算高度
+    calculateHeight();
+    
+    // 使用 ResizeObserver 监听预览区域的内容变化
+    const observer = new ResizeObserver(() => {
+      if (viewMode === "preview") {
+        calculateHeight();
+      }
+    });
+
+    if (previewRef.current) {
+      observer.observe(previewRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [internalValue, viewMode]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setInternalValue(newValue);
-    onChange(newValue);
+    setInternalValue(e.target.value);
+  };
+
+  const handleViewChange = (mode: ViewMode) => {
+    if (mode === viewMode) return;
+    setViewMode(mode);
   };
 
   return (
     <div className="detailed-description">
-      <div className={`editor-container ${viewMode}`}>
-        <div
-          className="input-area"
-          style={{
-            display: viewMode === "preview" ? "none" : "flex",
-            width: viewMode === "split" ? "50%" : "100%",
-          }}
+      <div className="view-toggles">
+        <button
+          className={classnames("view-toggle", {
+            active: viewMode === "plain",
+          })}
+          onClick={() => handleViewChange("plain")}
+          title="Plain text"
         >
+          Plain
+        </button>
+        <button
+          className={classnames("view-toggle", {
+            active: viewMode === "preview",
+          })}
+          onClick={() => handleViewChange("preview")}
+          title="Preview"
+        >
+          Preview
+        </button>
+        <button
+          className={classnames("view-toggle", {
+            active: viewMode === "split",
+          })}
+          onClick={() => handleViewChange("split")}
+          title="Split view"
+        >
+          Split
+        </button>
+      </div>
+
+      <div ref={containerRef} className={`editor-container ${viewMode}`}>
+        <div className="input-area">
           <textarea
             ref={textareaRef}
             value={internalValue}
@@ -56,39 +134,11 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
             className="text-input"
           />
         </div>
-
         <div
-          className={classnames("preview-area")}
-          style={{ 
-            display: viewMode === "plain" ? "none" : "block",
-            width: viewMode === "split" ? "50%" : "100%",
-          }}
+          ref={previewRef}
+          className="preview-area"
           dangerouslySetInnerHTML={{ __html: marked(internalValue) }}
         />
-
-        <div className="view-toggles">
-          <button
-            className={viewMode === "plain" ? "active" : ""}
-            onClick={() => setViewMode("plain")}
-            title="Plain text"
-          >
-            <i className="codicon codicon-file-text"></i>
-          </button>
-          <button
-            className={viewMode === "split" ? "active" : ""}
-            onClick={() => setViewMode("split")}
-            title="Split view"
-          >
-            <i className="codicon codicon-split-horizontal"></i>
-          </button>
-          <button
-            className={viewMode === "preview" ? "active" : ""}
-            onClick={() => setViewMode("preview")}
-            title="Preview"
-          >
-            <i className="codicon codicon-preview"></i>
-          </button>
-        </div>
       </div>
     </div>
   );
