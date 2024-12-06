@@ -34,44 +34,52 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
     const textarea = textareaRef.current;
     const preview = previewRef.current;
     const container = containerRef.current;
-    
-    if (!textarea || !preview || !container) return;
 
-    // 重置容器高度以便准确计算
-    container.style.height = "auto";
+    if (!textarea || !container) return;
+
+    // 重置文本区域高度以获取准确的 scrollHeight
     textarea.style.height = "auto";
+    
+    // 确保在下一帧获取正确的 scrollHeight
+    requestAnimationFrame(() => {
+      const textHeight = Math.max(150, textarea.scrollHeight);
 
-    // 计算文本输入区域所需的高度
-    const textHeight = Math.max(120, textarea.scrollHeight);
-    textarea.style.height = `${textHeight}px`;
-
-    // 根据不同模式设置容器高度
-    switch (viewMode) {
-      case "plain":
-        // plain 模式：容器高度自适应输入所需高度
-        container.style.height = `${textHeight}px`;
-        break;
-        
-      case "preview":
-        // preview 模式：容器高度自适应渲染所需高度
-        const previewHeight = Math.max(120, preview.scrollHeight);
+      if (viewMode === "plain") {
+        textarea.style.height = `${textHeight}px`;
+      } else if (viewMode === "preview" && preview) {
+        const previewHeight = Math.max(150, preview.scrollHeight);
         container.style.height = `${previewHeight}px`;
-        break;
-        
-      case "split":
-        // split 模式：容器高度适应输入所需高度，右边如果溢出再滚动
-        container.style.height = `${textHeight}px`;
-        break;
-    }
+      } else if (viewMode === "split" && preview) {
+        textarea.style.height = `${textHeight}px`;
+        const previewHeight = Math.max(150, preview.scrollHeight);
+        container.style.height = `${Math.max(textHeight, previewHeight)}px`;
+      }
+    });
   };
 
+  // 在组件挂载和内容变化时重新计算高度
   useEffect(() => {
-    // 在内容或视图模式改变时重新计算高度
     calculateHeight();
-    
-    // 使用 ResizeObserver 监听预览区域的内容变化
+  }, [internalValue]);
+
+  // 在视图模式变化时重新计算高度
+  useEffect(() => {
+    // 等待 DOM 完全更新后再计算高度
+    const timer = setTimeout(() => {
+      calculateHeight();
+      // 再次计算以确保获取正确高度（处理一些边缘情况）
+      requestAnimationFrame(() => {
+        calculateHeight();
+      });
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [viewMode]);
+
+  // 监听预览区域的内容变化
+  useEffect(() => {
     const observer = new ResizeObserver(() => {
-      if (viewMode === "preview") {
+      if (viewMode === "preview" || viewMode === "split") {
         calculateHeight();
       }
     });
@@ -81,64 +89,66 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
     }
 
     return () => observer.disconnect();
-  }, [internalValue, viewMode]);
+  }, [viewMode]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInternalValue(e.target.value);
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    calculateHeight();
   };
 
   const handleViewChange = (mode: ViewMode) => {
     if (mode === viewMode) return;
+    
+    // 在模式切换前重置容器高度
+    const container = containerRef.current;
+    if (container) {
+      container.style.height = "auto";
+    }
+    
     setViewMode(mode);
   };
 
   return (
     <div className="detailed-description">
-      <div className="view-toggles">
-        <button
-          className={classnames("view-toggle", {
-            active: viewMode === "plain",
-          })}
-          onClick={() => handleViewChange("plain")}
-          title="Plain text"
-        >
-          Plain
-        </button>
-        <button
-          className={classnames("view-toggle", {
-            active: viewMode === "preview",
-          })}
-          onClick={() => handleViewChange("preview")}
-          title="Preview"
-        >
-          Preview
-        </button>
-        <button
-          className={classnames("view-toggle", {
-            active: viewMode === "split",
-          })}
-          onClick={() => handleViewChange("split")}
-          title="Split view"
-        >
-          Split
-        </button>
-      </div>
-
-      <div ref={containerRef} className={`editor-container ${viewMode}`}>
-        <div className="input-area">
+      <div ref={containerRef} className={classnames("editor-container", viewMode)}>
+        {(viewMode === "plain" || viewMode === "split") && (
           <textarea
             ref={textareaRef}
             value={internalValue}
             onChange={handleChange}
             placeholder={placeholder}
-            className="text-input"
           />
-        </div>
-        <div
-          ref={previewRef}
-          className="preview-area"
-          dangerouslySetInnerHTML={{ __html: marked(internalValue) }}
-        />
+        )}
+        {(viewMode === "preview" || viewMode === "split") && (
+          <div
+            ref={previewRef}
+            className="preview-content"
+            dangerouslySetInnerHTML={{
+              __html: marked(internalValue),
+            }}
+          />
+        )}
+      </div>
+      <div className="mode-selector">
+        <button
+          className={classnames({ active: viewMode === "plain" })}
+          onClick={() => handleViewChange("plain")}
+        >
+          Plain
+        </button>
+        <button
+          className={classnames({ active: viewMode === "preview" })}
+          onClick={() => handleViewChange("preview")}
+        >
+          Preview
+        </button>
+        <button
+          className={classnames({ active: viewMode === "split" })}
+          onClick={() => handleViewChange("split")}
+        >
+          Split
+        </button>
       </div>
     </div>
   );

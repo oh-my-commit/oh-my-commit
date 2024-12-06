@@ -1,206 +1,59 @@
 .detailed-description {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  width: 100%;
 }
 
-.detailed-description .view-toggles {
+.editor-container {
+  min-height: 150px;
   display: flex;
-  gap: 4px;
+  gap: 1rem;
+  width: 100%;
 }
 
-.detailed-description .view-toggle {
-  padding: 4px 8px;
-  background: var(--vscode-button-secondaryBackground);
-  color: var(--vscode-button-secondaryForeground);
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: var(--vscode-font-size);
-}
-
-.detailed-description .view-toggle:hover {
-  background: var(--vscode-button-secondaryHoverBackground);
-}
-
-.detailed-description .view-toggle.active {
-  background: var(--vscode-button-background);
-  color: var(--vscode-button-foreground);
-}
-
-.detailed-description .editor-container {
-  display: flex;
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 4px;
-  background: var(--vscode-editor-background);
-  min-height: 120px;
-}
-
-.detailed-description .input-area {
+.editor-container textarea {
   flex: 1;
   width: 100%;
-}
-
-.detailed-description .text-input {
-  width: 100%;
-  height: 100%;
-  min-height: 120px;
-  padding: 8px 12px;
-  border: none;
-  background: transparent;
-  color: var(--vscode-input-foreground);
-  font-family: var(--vscode-editor-font-family);
-  font-size: var(--vscode-editor-font-size);
-  line-height: 1.5;
+  min-height: 150px;
   resize: none;
-  outline: none;
-}
-
-.detailed-description .text-input:focus {
-  background: color-mix(in srgb, var(--vscode-editor-background) 96%, white);
-}
-
-.detailed-description .text-input::placeholder {
-  color: var(--vscode-input-placeholderForeground);
-  opacity: 0.5;
-}
-
-.detailed-description .preview-area {
-  flex: 1;
-  width: 100%;
-  padding: 8px 12px;
-  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
-  border-left: 1px solid var(--vscode-input-border);
+  box-sizing: border-box;
+  overflow-y: hidden;
 }
 
-/* Split mode */
-.detailed-description .editor-container.split {
-  overflow: hidden;
+.editor-container.plain {
+  height: fit-content;
 }
 
-.detailed-description .editor-container.split .input-area,
-.detailed-description .editor-container.split .preview-area {
-  flex: 0 0 50%;
-  width: 50%;
+.editor-container.plain textarea {
+  height: 100%;
+  overflow-y: hidden;
 }
 
-/* Plain mode */
-.detailed-description .editor-container.plain .preview-area {
-  display: none;
-}
-
-.detailed-description .editor-container.plain .input-area {
-  flex: 1;
+.editor-container.preview .preview-content {
   width: 100%;
-}
-
-/* Preview mode */
-.detailed-description .editor-container.preview .input-area {
-  display: none;
-}
-
-.detailed-description .editor-container.preview .preview-area {
-  flex: 1;
-  width: 100%;
-  border-left: none;
-}
-
-/* Markdown styles */
-.detailed-description .preview-area h1,
-.detailed-description .preview-area h2,
-.detailed-description .preview-area h3,
-.detailed-description .preview-area h4,
-.detailed-description .preview-area h5,
-.detailed-description .preview-area h6 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.detailed-description .preview-area h1 { font-size: 2em; }
-.detailed-description .preview-area h2 { font-size: 1.5em; }
-.detailed-description .preview-area h3 { font-size: 1.25em; }
-.detailed-description .preview-area h4 { font-size: 1em; }
-.detailed-description .preview-area h5 { font-size: 0.875em; }
-.detailed-description .preview-area h6 { font-size: 0.85em; }
-
-.detailed-description .preview-area p {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.detailed-description .preview-area a {
-  color: var(--vscode-textLink-foreground);
-  text-decoration: none;
-}
-
-.detailed-description .preview-area a:hover {
-  text-decoration: underline;
-}
-
-.detailed-description .preview-area code {
-  padding: 0.2em 0.4em;
-  margin: 0;
-  font-size: 85%;
-  background-color: var(--vscode-textBlockQuote-background);
-  border-radius: 3px;
-}
-
-.detailed-description .preview-area pre {
-  padding: 16px;
-  overflow: auto;
-  font-size: 85%;
-  line-height: 1.45;
-  background-color: var(--vscode-textBlockQuote-background);
-  border-radius: 3px;
-}
-
-.detailed-description .preview-area pre code {
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-  border: 0;
-}
-
-.detailed-description .preview-area blockquote {
-  padding: 0 1em;
-  color: var(--vscode-textBlockQuote-foreground);
-  border-left: 0.25em solid var(--vscode-textBlockQuote-border);
-  margin: 0 0 16px 0;
-}
-
-.detailed-description .preview-area ul,
-.detailed-description .preview-area ol {
-  padding-left: 2em;
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.detailed-description .preview-area table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-}
-
-.detailed-description .preview-area table th,
-.detailed-description .preview-area table td {
-  padding: 6px 13px;
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--vscode-editor-background);
   border: 1px solid var(--vscode-input-border);
 }
 
-.detailed-description .preview-area table tr {
-  background-color: var(--vscode-editor-background);
-  border-top: 1px solid var(--vscode-input-border);
+.editor-container.split {
+  gap: 1rem;
 }
 
-.detailed-description .preview-area table tr:nth-child(2n) {
-  background-color: var(--vscode-textBlockQuote-background);
+.editor-container.split textarea,
+.editor-container.split .preview-content {
+  width: 50%;
+  box-sizing: border-box;
 }
 
-.detailed-description .preview-area img {
-  max-width: 100%;
-  box-sizing: content-box;
+.editor-container.split .preview-content {
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-input-border);
 }
