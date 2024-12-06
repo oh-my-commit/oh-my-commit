@@ -1,14 +1,29 @@
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  font-family: var(--vscode-font-family);
+}
+
 .container {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 320px;
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+vscode-text-area {
+  width: 100%;
+  min-height: 200px;
 }
 
 .button-container {
-  width: 100%;
   display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 8px;
+  justify-content: flex-end;
 }

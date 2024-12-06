@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   provideVSCodeDesignSystem,
   vsCodeButton,
@@ -8,39 +8,60 @@ import {
 // 注册 VSCode Design System
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeTextArea());
 
-// 获取 VSCode API
-const vscode = acquireVsCodeApi();
+// 在开发环境中模拟 VSCode API
+const mockVsCodeApi = {
+  postMessage: (message: any) => {
+    console.log("Development mode - Message posted:", message);
+  },
+  getState: () => {
+    return {};
+  },
+  setState: (state: any) => {
+    console.log("Development mode - State updated:", state);
+  },
+};
 
-export const CommitMessage: React.FC = () => {
-  const [message, setMessage] = useState("");
+// 获取真实或模拟的 VSCode API
+const getVsCodeApi = () => {
+  if (typeof acquireVsCodeApi === "function") {
+    return acquireVsCodeApi();
+  }
+  console.log("Development mode - Using mock VSCode API");
+  return mockVsCodeApi;
+};
 
-  const handleSubmit = () => {
+const CommitMessage = () => {
+  const [message, setMessage] = React.useState("");
+  const vscode = React.useMemo(() => getVsCodeApi(), []);
+
+  const handleSubmit = React.useCallback(() => {
     vscode.postMessage({
       command: "submit",
       text: message,
     });
-  };
+  }, [message, vscode]);
 
-  const handleCancel = () => {
+  const handleCancel = React.useCallback(() => {
     vscode.postMessage({
       command: "cancel",
     });
-  };
+  }, [vscode]);
 
   return (
     <div className="container">
       <vscode-text-area
         value={message}
         onChange={(e: any) => setMessage(e.target.value)}
-        placeholder="Enter commit message..."
-        rows={5}
+        placeholder="Enter your commit message..."
       />
       <div className="button-container">
-        <vscode-button onClick={handleSubmit}>Commit 2 </vscode-button>
         <vscode-button appearance="secondary" onClick={handleCancel}>
           Cancel
         </vscode-button>
+        <vscode-button onClick={handleSubmit}>Commit</vscode-button>
       </div>
     </div>
   );
 };
+
+export { CommitMessage };

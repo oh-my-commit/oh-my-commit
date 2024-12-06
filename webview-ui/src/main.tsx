@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { CommitMessage } from './CommitMessage';
 import './styles.css';

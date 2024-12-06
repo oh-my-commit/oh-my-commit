@@ -1,28 +1,37 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { resolve } from "path";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxRuntime: "automatic",
+      jsxImportSource: "react",
+      babel: {
+        plugins: ["@babel/plugin-transform-react-jsx"],
+      },
+    }),
+  ],
   build: {
-    outDir: '../dist/webview',
+    outDir: "../dist/webview",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/main.tsx'),
+        main: resolve(__dirname, "src/main.tsx"),
       },
       output: {
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].[hash].js',
-        assetFileNames: '[name].[ext]',
-        format: 'es',
-        inlineDynamicImports: true
-      }
+        entryFileNames: "[name].js",
+        chunkFileNames: "[name].[hash].js",
+        assetFileNames: "[name].[ext]",
+        format: "es",
+        inlineDynamicImports: true,
+      },
     },
-    target: 'esnext',
+    target: "esnext",
     emptyOutDir: true,
     sourcemap: true,
   },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-  }
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+    force: true,
+  },
 });

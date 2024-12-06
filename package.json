@@ -135,7 +135,7 @@
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "lint": "eslint src --ext ts",
     "test": "vitest"
   },
@@ -149,6 +149,7 @@
   "devDependencies": {
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
     "typescript": "^5.7.2"
   },
