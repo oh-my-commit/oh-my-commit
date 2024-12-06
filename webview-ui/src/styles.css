@@ -36,22 +36,3 @@ vscode-text-area::part(control) {
 vscode-button {
   min-width: 80px;
 }
-
-.commit-container {
-  padding: var(--vscode-layout-gap);
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  padding-top: 20px;
-  gap: 10px;
-  width: 360px;
-  height: 480px;
-  box-sizing: border-box;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: calc(var(--vscode-layout-gap) / 2);
-  gap: 10px;
-}
