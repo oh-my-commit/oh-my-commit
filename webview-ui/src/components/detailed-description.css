@@ -1,52 +1,97 @@
+/* 最外层容器 */
 .detailed-description {
   width: 100%;
-  min-height: 200px;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
+  resize: vertical;
+  overflow: hidden;
 }
 
+/* 编辑器容器 */
 .detailed-description .w-md-editor {
   border: 1px solid var(--vscode-input-border);
   border-radius: 4px;
   background-color: var(--vscode-editor-background);
-  flex: 1;
-  min-height: 200px;
-  transition: border-color 0.2s ease;
   display: flex;
   flex-direction: row;
+  flex: 1;
+  min-height: 120px;
+  overflow: hidden;
 }
 
-.detailed-description .w-md-editor:focus-within {
-  border-color: var(--vscode-focusBorder);
+/* 内容区容器 */
+.detailed-description .w-md-editor-content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
 }
 
+/* 输入区域容器 */
+.detailed-description .w-md-editor-input {
+  width: 50%;
+  overflow: hidden;
+  background: var(--vscode-editor-background);
+}
+
+/* 清除输入区域内部的预览样式 */
+.detailed-description .w-md-editor-input .w-md-editor-text-pre {
+  display: none !important;
+}
+
+/* 输入框样式 */
 .detailed-description .w-md-editor-text-input {
-  color: var(--vscode-input-foreground);
-  font-family: var(--vscode-editor-font-family, var(--vscode-font-family));
-  font-size: var(--vscode-editor-font-size);
-  line-height: 1.5;
-  padding: 8px 12px;
-  resize: vertical;
+  width: 100%;
+  height: 100%;
   min-height: 100px;
+  padding: 8px 12px;
+  margin: 0;
+  border: 0;
+  resize: none;
+  color: var(--vscode-input-foreground) !important;
+  caret-color: var(--vscode-input-foreground) !important;
+  -webkit-text-fill-color: var(--vscode-input-foreground) !important;
+  background: transparent !important;
+  font-family: var(--vscode-editor-font-family, var(--vscode-font-family)) !important;
+  font-size: var(--vscode-editor-font-size) !important;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-sizing: border-box;
+  outline: none !important;
+  opacity: 1 !important;
 }
 
-.detailed-description .w-md-editor-preview {
-  color: var(--vscode-input-foreground);
-  background-color: var(--vscode-editor-background) !important;
-  padding: 8px 12px;
+/* 移除任何可能影响文字显示的样式 */
+.detailed-description .w-md-editor-text-input::selection {
+  background-color: var(--vscode-editor-selectionBackground) !important;
+  color: var(--vscode-editor-foreground) !important;
 }
 
 .detailed-description .w-md-editor-text {
-  color: var(--vscode-input-foreground);
-  height: 100%;
-  min-height: 150px;
+  background: none !important;
 }
 
-/* Customize toolbar */
+.detailed-description .w-md-editor-text * {
+  background: none !important;
+}
+
+/* 预览区域 */
+.detailed-description .w-md-editor-preview {
+  width: 50%;
+  padding: 8px 12px;
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-editor-background) !important;
+  border-left: 1px solid var(--vscode-input-border);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* 工具栏样式 */
 .detailed-description .w-md-editor-toolbar {
   background: var(--vscode-editor-background);
   border-left: 1px solid var(--vscode-input-border);
-  border-bottom: none;
   padding: 8px 6px;
   width: auto;
   order: 2;
@@ -75,24 +120,9 @@
   opacity: 1;
 }
 
-.detailed-description .w-md-editor-content {
-  flex: 1;
-  order: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.detailed-description .w-md-editor-input {
-  flex: 1;
-  height: 100%;
-}
-
-.detailed-description .w-md-editor-text-pre,
-.detailed-description .w-md-editor-text-input,
-.detailed-description .w-md-editor-text {
-  height: 100% !important;
-  min-height: 100% !important;
+/* 隐藏底部拖动条 */
+.detailed-description .w-md-editor-bar {
+  display: none;
 }
 
 /* Fix preview styles */

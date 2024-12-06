@@ -311,7 +311,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         textareaProps={{
           placeholder,
           // onKeyDown 检测不到 Tab 键
-          onKeyDownCapture: handleKeyDown,
+          // onKeyDownCapture: handleKeyDown,
         }}
         height={150}
       />
