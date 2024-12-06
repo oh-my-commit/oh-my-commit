@@ -23,7 +23,10 @@ module.exports = (env, argv) => {
     },
     devtool: isDevelopment ? "inline-source-map" : "source-map",
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx"],
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
+      alias: {
+        "@": path.resolve(__dirname, "src"),
+      },
     },
     module: {
       rules: [
