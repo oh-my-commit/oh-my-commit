@@ -66,22 +66,26 @@
 .detailed-description .editor-container.plain .input-area {
   width: 100%;
   padding-right: 40px;
+  overflow: auto;
 }
 
 .detailed-description .editor-container.split .input-area {
   width: 50%;
   border-right: 1px solid var(--vscode-input-border);
   padding-right: 40px;
+  overflow: auto;
 }
 
 .detailed-description .editor-container.split .preview-area {
   width: 50%;
   padding-right: 40px;
+  overflow: auto;
 }
 
 .detailed-description .editor-container.preview .preview-area {
   width: 100%;
   padding-right: 40px;
+  overflow: auto;
 }
 
 /* 输入区域 */

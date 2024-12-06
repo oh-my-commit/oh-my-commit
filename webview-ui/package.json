@@ -10,6 +10,7 @@
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.4",
     "@vscode/webview-ui-toolkit": "^1.4.0",
+    "classnames": "^2.5.1",
     "marked": "^15.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -18,6 +19,7 @@
     "@babel/core": "^7.23.0",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.0",
+    "@types/classnames": "^2.3.4",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
     "babel-loader": "^9.1.3",

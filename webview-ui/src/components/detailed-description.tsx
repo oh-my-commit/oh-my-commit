@@ -1,8 +1,9 @@
 import React from "react";
 import "./detailed-description.css";
 import { marked } from "marked";
+import classnames from "classnames";
 
-type ViewMode = 'plain' | 'split' | 'preview';
+type ViewMode = "plain" | "split" | "preview";
 
 interface DetailedDescriptionProps {
   value: string;
@@ -17,7 +18,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
 }) => {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const [internalValue, setInternalValue] = React.useState(value);
-  const [viewMode, setViewMode] = React.useState<ViewMode>('split');
+  const [viewMode, setViewMode] = React.useState<ViewMode>("split");
 
   React.useEffect(() => {
     setInternalValue(value);
@@ -26,7 +27,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
   React.useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   }, [internalValue]);
@@ -40,41 +41,45 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
   return (
     <div className="detailed-description">
       <div className={`editor-container ${viewMode}`}>
-        {viewMode !== 'preview' && (
-          <div className="input-area">
-            <textarea
-              ref={textareaRef}
-              value={internalValue}
-              onChange={handleChange}
-              placeholder={placeholder}
-              className="text-input"
-            />
-          </div>
-        )}
-        {(viewMode === 'split' || viewMode === 'preview') && (
-          <div 
-            className="preview-area"
-            dangerouslySetInnerHTML={{ __html: marked(internalValue) }}
+        <div
+          className="input-area"
+          style={{
+            display: viewMode === "preview" ? "none" : "block",
+          }}
+        >
+          <textarea
+            ref={textareaRef}
+            value={internalValue}
+            onChange={handleChange}
+            placeholder={placeholder}
+            className="text-input"
           />
-        )}
+        </div>
+
+        <div
+          className={classnames("preview-area")}
+          style={{ display: viewMode === "plain" ? "none" : "block" }}
+          dangerouslySetInnerHTML={{ __html: marked(internalValue) }}
+        />
+
         <div className="view-toggles">
           <button
-            className={viewMode === 'plain' ? 'active' : ''}
-            onClick={() => setViewMode('plain')}
+            className={viewMode === "plain" ? "active" : ""}
+            onClick={() => setViewMode("plain")}
             title="Plain text"
           >
             <i className="codicon codicon-file-text"></i>
           </button>
           <button
-            className={viewMode === 'split' ? 'active' : ''}
-            onClick={() => setViewMode('split')}
+            className={viewMode === "split" ? "active" : ""}
+            onClick={() => setViewMode("split")}
             title="Split view"
           >
             <i className="codicon codicon-split-horizontal"></i>
           </button>
           <button
-            className={viewMode === 'preview' ? 'active' : ''}
-            onClick={() => setViewMode('preview')}
+            className={viewMode === "preview" ? "active" : ""}
+            onClick={() => setViewMode("preview")}
             title="Preview"
           >
             <i className="codicon codicon-preview"></i>
