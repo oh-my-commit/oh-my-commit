@@ -1,13 +1,43 @@
 declare const acquireVsCodeApi: () => { postMessage: (message: any) => void };
-declare function acquireVsCodeApi(): {
-  postMessage: (message: any) => void;
-  getState: () => any;
-  setState: (state: any) => void;
-};
 
-declare namespace JSX {
+namespace JSX {
   interface IntrinsicElements {
-    "vscode-text-area": any; // You can replace 'any' with a more specific type if known
-    "vscode-button": any; // You can replace 'any' with a more specific type if you have one.
+    "vscode-divider": React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLElement>,
+      HTMLElement
+    >;
+    "vscode-button": React.DetailedHTMLProps<
+      React.ButtonHTMLAttributes<HTMLElement> & {
+        appearance?: "primary" | "secondary";
+      },
+      HTMLElement
+    >;
+    "vscode-text-area": React.DetailedHTMLProps<
+      React.TextareaHTMLAttributes<HTMLElement> & {
+        value?: string;
+        onChange?: (event: any) => void;
+        resize?: "vertical" | "horizontal" | "both" | "none";
+        autofocus?: boolean;
+      },
+      HTMLElement
+    >;
+    "vscode-dropdown": React.DetailedHTMLProps<
+      React.SelectHTMLAttributes<HTMLElement> & {
+        value?: string;
+        onChange?: (event: any) => void;
+      },
+      HTMLElement
+    >;
+    "vscode-option": React.DetailedHTMLProps<
+      React.OptionHTMLAttributes<HTMLElement>,
+      HTMLElement
+    >;
+    "vscode-checkbox": React.DetailedHTMLProps<
+      React.InputHTMLAttributes<HTMLElement> & {
+        checked?: boolean;
+        onChange?: (event: any) => void;
+      },
+      HTMLElement
+    >;
   }
 }
