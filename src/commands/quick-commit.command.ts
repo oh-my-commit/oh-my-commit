@@ -132,7 +132,7 @@ export class QuickCommitCommand implements VscodeCommand {
     initialMessage: string,
     isAmendMode: boolean
   ): Promise<void> {
-    const panel = this.webviewManager.createOrShowWebview({
+    const panel = this.webviewManager.show({
       enableScripts: true,
       retainContextWhenHidden: true,
     });
