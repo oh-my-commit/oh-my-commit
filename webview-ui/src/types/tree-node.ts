@@ -1,5 +1,6 @@
 export interface TreeNode {
     path: string;
+    displayName: string;
     type: "file" | "directory";
     children?: TreeNode[];
     fileInfo?: {

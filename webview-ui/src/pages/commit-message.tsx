@@ -43,15 +43,18 @@ const CommitMessage = () => {
       const message = event.data;
       switch (message.type) {
         case "init":
-          setState((prev) => ({
-            ...prev,
-            isAmendMode: message.isAmendMode,
-            diff: message.diff || "",
-            title: message.initialMessage?.split("\\n")[0] || "",
-            body:
-              message.initialMessage?.split("\\n").slice(1).join("\\n") || "",
-            filesChanged: message.filesChanged || [],
-          }));
+          setState((prev) => {
+            const filesChanged = message.filesChanged || [];
+            return {
+              ...prev,
+              isAmendMode: message.isAmendMode,
+              diff: message.diff || "",
+              title: message.initialMessage?.split("\\n")[0] || "",
+              body: message.initialMessage?.split("\\n").slice(1).join("\\n") || "",
+              filesChanged,
+              selectedFiles: new Set(filesChanged.map((f) => f.path)), // 更新选中的文件
+            };
+          });
           break;
       }
     };
@@ -154,9 +157,10 @@ const CommitMessage = () => {
 
           <vscode-text-area
             value={state.body}
-            onChange={(e: any) =>
-              setState((prev) => ({ ...prev, body: e.target.value }))
-            }
+            onChange={(e: any) => {
+              console.log(e);
+              setState((prev) => ({ ...prev, body: e.target.value }));
+            }}
             placeholder="Detailed description (optional)"
             resize="vertical"
             rows={3}
@@ -204,8 +208,9 @@ const CommitMessage = () => {
               <div
                 key={commit.hash}
                 className="commit-item"
-                onMouseEnter={() => setHoveredCommit(commit.hash)}
-                onMouseLeave={() => setHoveredCommit(null)}
+                // todo
+                // onMouseEnter={() => setHoveredCommit(commit.hash)}
+                // onMouseLeave={() => setHoveredCommit(null)}
               >
                 <span className="commit-hash">{commit.hash.slice(0, 7)}</span>
                 <span className="commit-message">{commit.message}</span>
