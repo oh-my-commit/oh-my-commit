@@ -63,6 +63,18 @@
 }
 
 /* 视图模式样式 */
+.detailed-description .editor-container.split {
+  display: flex;
+}
+
+.detailed-description .editor-container.plain .preview-area,
+.detailed-description .editor-container.preview .input-area {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .detailed-description .editor-container.plain .input-area {
   width: 100%;
   padding-right: 40px;
@@ -92,7 +104,7 @@
 .detailed-description .input-area {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
 }
 
 .detailed-description .text-input {
@@ -121,7 +133,7 @@
   padding: 8px 12px;
   overflow-y: auto;
   color: var(--vscode-input-foreground);
-  height: 100%;
+  border-left: 1px solid var(--vscode-input-border);
 }
 
 /* Markdown preview styles */

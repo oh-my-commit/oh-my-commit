@@ -44,7 +44,8 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         <div
           className="input-area"
           style={{
-            display: viewMode === "preview" ? "none" : "block",
+            display: viewMode === "preview" ? "none" : "flex",
+            width: viewMode === "split" ? "50%" : "100%",
           }}
         >
           <textarea
@@ -58,7 +59,10 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
 
         <div
           className={classnames("preview-area")}
-          style={{ display: viewMode === "plain" ? "none" : "block" }}
+          style={{ 
+            display: viewMode === "plain" ? "none" : "block",
+            width: viewMode === "split" ? "50%" : "100%",
+          }}
           dangerouslySetInnerHTML={{ __html: marked(internalValue) }}
         />
 

@@ -141,6 +141,12 @@ const CommitMessage = () => {
     setExpandedCommit(expandedCommit === hash ? null : hash);
   };
 
+  const handleCopyHash = (hash: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(hash);
+    // 可以添加一个提示，但VS Code环境下可能不需要
+  };
+
   return (
     <div className="commit-container">
       <div className="commit-form">
@@ -221,9 +227,15 @@ const CommitMessage = () => {
                   >
                     <span className={`expand-icon ${expandedCommit === commit.hash ? 'expanded' : ''}`}>▶</span>
                   </button>
-                  <span className="commit-hash">{commit.hash.slice(0, 7)}</span>
                   <span className="commit-message">{commit.message}</span>
                   <span className="commit-date">{commit.date}</span>
+                  <button 
+                    className="hash-button" 
+                    onClick={(e) => handleCopyHash(commit.hash, e)}
+                    title="Click to copy commit hash"
+                  >
+                    {commit.hash.slice(0, 7)}
+                  </button>
                 </div>
                 <div className="commit-details">
                   <div className="commit-author">{commit.author}</div>
