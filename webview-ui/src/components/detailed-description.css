@@ -1,67 +1,72 @@
+.detailed-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.view-mode-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.mode-button {
+  padding: 4px 12px;
+  border: 1px solid var(--vscode-button-border);
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.mode-button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.mode-button.active {
+  background: var(--vscode-button-secondaryBackground);
+  border-color: var(--vscode-button-secondaryHoverBackground);
+}
+
 .editor-container {
   display: flex;
   width: 100%;
-  min-height: 150px;
-  position: relative;
   background: var(--vscode-input-background);
 }
 
 .editor-container textarea {
-  width: var(--split-ratio, 50%);
   min-height: 150px;
+  width: 50%;
   resize: none;
   padding: 8px;
-  background: var(--vscode-input-background);
+  background: transparent;
   border: none;
   color: var(--vscode-input-foreground);
   box-sizing: border-box;
-  overflow-y: hidden;
-  display: block;
-  outline: none; /* 移除聚焦时的轮廓 */
+  outline: none;
 }
 
-.editor-container textarea:focus {
-  border: none;
-  outline: none;
-  box-shadow: none;
+.editor-container.mode-plain textarea {
+  width: 100%;
+}
+
+.editor-container.mode-preview textarea {
+  display: none;
 }
 
 .editor-container .preview-content {
-  width: calc(100% - var(--split-ratio, 50%));
+  flex: 1;
   min-height: 150px;
-  height: auto;
   padding: 8px;
-  background: var(--vscode-editor-background);
-  border: 1px solid var(--vscode-input-border);
   box-sizing: border-box;
-  overflow-y: visible;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background: transparent;
 }
 
-.editor-container .divider {
-  width: 5px;
-  background-color: var(--vscode-editor-background);
-  cursor: col-resize;
-  position: relative;
-  flex-shrink: 0;
-  z-index: 1;
+.editor-container.mode-plain .preview-content {
+  display: none;
 }
 
-.editor-container .divider::after {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: var(--vscode-input-border);
-}
-
-.editor-container.dragging {
-  cursor: col-resize;
-  user-select: none;
-}
-
-.editor-container.dragging .divider {
-  background-color: var(--vscode-focusBorder);
+.editor-container.mode-preview .preview-content {
+  flex: 1;
 }
