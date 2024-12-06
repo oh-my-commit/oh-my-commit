@@ -12,12 +12,18 @@
   resize: none;
   padding: 8px;
   background: var(--vscode-input-background);
-  /* border: 1px solid var(--vscode-input-border); */
   border: none;
   color: var(--vscode-input-foreground);
   box-sizing: border-box;
   overflow-y: hidden;
   display: block;
+  outline: none; /* 移除聚焦时的轮廓 */
+}
+
+.editor-container textarea:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .editor-container .preview-content {
