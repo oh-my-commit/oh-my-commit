@@ -37,8 +37,8 @@ export class QuickCommitCommand implements VscodeCommand {
     return vscode.workspace.getConfiguration("yaac");
   }
 
-  get noDiffBehavior() {
-    return this.config.get<string>("noDiffBehavior", "ignore");
+  get emptyChangeBehavior() {
+    return this.config.get<string>("emptyChangeBehavior", "skip");
   }
 
   /**
@@ -49,8 +49,8 @@ export class QuickCommitCommand implements VscodeCommand {
     await this.gitService.stageAll();
     const diff = await this.gitService.getStagedDiff();
 
-    // 仅在未改变且在修改模式下才执行 amend
-    const isAmendMode = !diff && this.noDiffBehavior === "revise";
+    // 仅在未改变且在 amend 模式下才执行 amend
+    const isAmendMode = !diff && this.emptyChangeBehavior === "amend";
     console.log({ diff, isAmendMode });
 
     if (!diff && !isAmendMode) {
