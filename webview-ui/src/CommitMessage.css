@@ -12,38 +12,65 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+  gap: 16px;
+  padding: 16px;
   overflow: auto;
 }
 
-.commit-input {
-  height: 24px;
-  padding: 3px 6px;
+.commit-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.ai-badge {
+  background: var(--vscode-statusBarItem-remoteBackground);
+  color: var(--vscode-statusBarItem-remoteForeground);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+
+.commit-title {
+  height: 28px;
+  padding: 4px 8px;
   border: 1px solid var(--vscode-input-border);
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
   font-family: var(--vscode-font-family);
   font-size: 13px;
+  border-radius: 2px;
   outline: none;
 }
 
-.commit-input:focus {
+.commit-title:focus {
   border-color: var(--vscode-focusBorder);
 }
 
-.commit-input::placeholder {
+.commit-title::placeholder {
   color: var(--vscode-input-placeholderForeground);
 }
 
 vscode-text-area {
-  margin-top: 4px;
+  width: 100%;
 }
 
-.files-section {
-  margin-top: 8px;
+.changes-section {
   border-top: 1px solid var(--vscode-panel-border);
-  padding-top: 8px;
+  padding-top: 16px;
 }
 
 .section-header {
@@ -56,6 +83,19 @@ vscode-text-area {
   font-weight: 600;
   text-transform: uppercase;
   color: var(--vscode-sideBarSectionHeader-foreground);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-badge {
+  display: flex;
+  gap: 4px;
+  font-size: 11px;
+  opacity: 0.8;
 }
 
 .file-count {
@@ -74,6 +114,8 @@ vscode-text-area {
   gap: 6px;
   padding: 0 8px;
   height: 22px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .file-item:hover {
@@ -110,9 +152,9 @@ vscode-text-area {
 .additions { color: var(--vscode-gitDecoration-addedResourceForeground); }
 .deletions { color: var(--vscode-gitDecoration-deletedResourceForeground); }
 
-.diff-preview {
-  margin-top: 8px;
+.file-diff {
   padding: 8px;
+  margin: 0 8px;
   background: var(--vscode-textBlockQuote-background);
   border-radius: 3px;
   font-family: var(--vscode-editor-font-family);
@@ -121,25 +163,83 @@ vscode-text-area {
   overflow: auto;
 }
 
+.recent-commits-section {
+  border-top: 1px solid var(--vscode-panel-border);
+  padding-top: 16px;
+}
+
+.commits-list {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.commit-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.commit-item:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.commit-hash {
+  font-family: var(--vscode-editor-font-family);
+  color: var(--vscode-textPreformat-foreground);
+  font-size: 12px;
+}
+
+.commit-message {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.commit-date {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.commit-details {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  padding: 8px;
+  background: var(--vscode-editorHoverWidget-background);
+  border: 1px solid var(--vscode-editorHoverWidget-border);
+  box-shadow: var(--vscode-widget-shadow);
+  z-index: 1;
+}
+
+.commit-author {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.commit-description {
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
 .button-container {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 8px;
+  padding: 12px;
   border-top: 1px solid var(--vscode-panel-border);
   background: var(--vscode-sideBar-background);
 }
 
 @media (max-width: 600px) {
-  .commit-container {
+  .commit-form {
     padding: 12px;
-  }
-  
-  .button-container {
-    flex-direction: column;
-  }
-  
-  vscode-button {
-    width: 100%;
   }
 }
