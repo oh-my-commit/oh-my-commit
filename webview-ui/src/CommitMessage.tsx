@@ -4,6 +4,7 @@ import {
   vsCodeButton,
   vsCodeTextArea,
   vsCodeDivider,
+  vsCodeCheckbox,
 } from "@vscode/webview-ui-toolkit";
 import { getVsCodeApi } from "./vscode";
 import "./CommitMessage.css";
@@ -11,7 +12,8 @@ import "./CommitMessage.css";
 provideVSCodeDesignSystem().register(
   vsCodeButton(),
   vsCodeTextArea(),
-  vsCodeDivider()
+  vsCodeDivider(),
+  vsCodeCheckbox()
 );
 
 interface CommitState {
@@ -26,6 +28,7 @@ interface CommitState {
     deletions: number;
     diff: string;
   }>;
+  selectedFiles: Set<string>;
 }
 
 // Mock data for recent commits
@@ -149,13 +152,177 @@ const mockFileChanges = [
   }
 ];
 
+interface TreeNode {
+  path: string;
+  type: 'file' | 'directory';
+  children?: TreeNode[];
+  fileInfo?: {
+    status: string;
+    additions: number;
+    deletions: number;
+    diff: string;
+  };
+}
+
+const buildFileTree = (files: CommitState['filesChanged']): TreeNode[] => {
+  const root: { [key: string]: TreeNode } = {};
+
+  files.forEach(file => {
+    const parts = file.path.split('/');
+    let current = root;
+
+    parts.forEach((part, index) => {
+      const currentPath = parts.slice(0, index + 1).join('/');
+      if (!current[currentPath]) {
+        current[currentPath] = {
+          path: part,
+          type: index === parts.length - 1 ? 'file' : 'directory',
+          children: index === parts.length - 1 ? undefined : {},
+          fileInfo: index === parts.length - 1 ? file : undefined
+        };
+      }
+      if (index < parts.length - 1) {
+        current = current[currentPath].children as { [key: string]: TreeNode };
+      }
+    });
+  });
+
+  const convertToArray = (node: { [key: string]: TreeNode }): TreeNode[] => {
+    return Object.values(node).map(n => ({
+      ...n,
+      children: n.children ? convertToArray(n.children as { [key: string]: TreeNode }) : undefined
+    }));
+  };
+
+  return convertToArray(root);
+};
+
+const FileTreeNode: React.FC<{
+  node: TreeNode;
+  level: number;
+  onToggle: (path: string) => void;
+  expandedFile: string | null;
+  selectedFiles: Set<string>;
+  onSelectionChange: (path: string, selected: boolean) => void;
+}> = ({ node, level, onToggle, expandedFile, selectedFiles, onSelectionChange }) => {
+  const [expanded, setExpanded] = React.useState(true);
+  const indent = level * 16;
+
+  // 计算目录的选中状态
+  const getDirectoryCheckState = (node: TreeNode): 'checked' | 'unchecked' | 'indeterminate' => {
+    if (!node.children) return 'unchecked';
+    
+    const allFiles = getAllFiles(node);
+    const selectedCount = allFiles.filter(f => selectedFiles.has(f)).length;
+    
+    if (selectedCount === 0) return 'unchecked';
+    if (selectedCount === allFiles.length) return 'checked';
+    return 'indeterminate';
+  };
+
+  // 获取目录下所有文件路径
+  const getAllFiles = (node: TreeNode): string[] => {
+    if (node.type === 'file') return [node.fileInfo!.path];
+    return node.children?.flatMap(getAllFiles) || [];
+  };
+
+  // 处理目录选中状态变化
+  const handleDirectorySelect = (checked: boolean) => {
+    const files = getAllFiles(node);
+    files.forEach(file => {
+      onSelectionChange(file, checked);
+    });
+  };
+
+  if (node.type === 'directory') {
+    const checkState = getDirectoryCheckState(node);
+    
+    return (
+      <div>
+        <div 
+          className="directory-item"
+          style={{ paddingLeft: `${indent}px` }}
+        >
+          <vsCodeCheckbox
+            checked={checkState === 'checked'}
+            indeterminate={checkState === 'indeterminate'}
+            onChange={(e: any) => handleDirectorySelect(e.target.checked)}
+          />
+          <span className="directory-icon" onClick={() => setExpanded(!expanded)}>
+            {expanded ? '▼' : '▶'}
+          </span>
+          <span className="directory-name" onClick={() => setExpanded(!expanded)}>
+            {node.path}
+          </span>
+        </div>
+        {expanded && node.children && (
+          <div className="directory-children">
+            {node.children.map((child, index) => (
+              <FileTreeNode
+                key={child.path + index}
+                node={child}
+                level={level + 1}
+                onToggle={onToggle}
+                expandedFile={expandedFile}
+                selectedFiles={selectedFiles}
+                onSelectionChange={onSelectionChange}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const fileInfo = node.fileInfo!;
+  return (
+    <div>
+      <div 
+        className={`file-item ${expandedFile === fileInfo.path ? 'expanded' : ''}`}
+        style={{ paddingLeft: `${indent}px` }}
+      >
+        <vsCodeCheckbox
+          checked={selectedFiles.has(fileInfo.path)}
+          onChange={(e: any) => onSelectionChange(fileInfo.path, e.target.checked)}
+        />
+        <span 
+          className={`file-status status-${fileInfo.status}`}
+          onClick={() => onToggle(fileInfo.path)}
+        >
+          {fileInfo.status}
+        </span>
+        <span 
+          className="file-name"
+          onClick={() => onToggle(fileInfo.path)}
+        >
+          {node.path}
+        </span>
+        <div className="file-stats">
+          {fileInfo.additions > 0 && (
+            <span className="additions">+{fileInfo.additions}</span>
+          )}
+          {fileInfo.deletions > 0 && (
+            <span className="deletions">-{fileInfo.deletions}</span>
+          )}
+        </div>
+      </div>
+      {expandedFile === fileInfo.path && (
+        <div className="file-diff" style={{ paddingLeft: `${indent + 16}px` }}>
+          <pre>{fileInfo.diff}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const CommitMessage = () => {
   const [state, setState] = React.useState<CommitState>({
     title: "",
     body: "",
     isAmendMode: false,
     diff: "",
-    filesChanged: mockFileChanges,  // 使用 mock 数据
+    filesChanged: mockFileChanges,
+    selectedFiles: new Set(mockFileChanges.map(f => f.path))  // 默认全选
   });
 
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
@@ -218,15 +385,34 @@ const CommitMessage = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  // 计算文件变更统计
-  const stats = state.filesChanged.reduce(
-    (acc, file) => {
-      acc.additions += file.additions;
-      acc.deletions += file.deletions;
-      return acc;
-    },
-    { additions: 0, deletions: 0 }
+  // 处理文件选择变化
+  const handleFileSelection = (path: string, selected: boolean) => {
+    setState(prev => {
+      const newSelected = new Set(prev.selectedFiles);
+      if (selected) {
+        newSelected.add(path);
+      } else {
+        newSelected.delete(path);
+      }
+      return { ...prev, selectedFiles: newSelected };
+    });
+  };
+
+  // 只计算选中文件的统计信息
+  const stats = React.useMemo(() => 
+    state.filesChanged
+      .filter(file => state.selectedFiles.has(file.path))
+      .reduce(
+        (acc, file) => ({
+          additions: acc.additions + file.additions,
+          deletions: acc.deletions + file.deletions,
+        }),
+        { additions: 0, deletions: 0 }
+      ),
+    [state.filesChanged, state.selectedFiles]
   );
+
+  const fileTree = React.useMemo(() => buildFileTree(state.filesChanged), [state.filesChanged]);
 
   return (
     <div className="commit-container">
@@ -249,7 +435,7 @@ const CommitMessage = () => {
             autoFocus
           />
 
-          <vscode-text-area
+          <vsCodeTextArea
             value={state.body}
             onChange={(e: any) =>
               setState((prev) => ({ ...prev, body: e.target.value }))
@@ -272,34 +458,17 @@ const CommitMessage = () => {
             <span className="file-count">{state.filesChanged.length} files</span>
           </div>
 
-          <div className="files-list">
-            {state.filesChanged.map((file) => (
-              <React.Fragment key={file.path}>
-                <div 
-                  className="file-item"
-                  onClick={() => setExpandedFile(
-                    expandedFile === file.path ? null : file.path
-                  )}
-                >
-                  <span className={`file-status status-${file.status}`}>
-                    {file.status}
-                  </span>
-                  <span className="file-path">{file.path}</span>
-                  <div className="file-stats">
-                    {file.additions > 0 && (
-                      <span className="additions">+{file.additions}</span>
-                    )}
-                    {file.deletions > 0 && (
-                      <span className="deletions">-{file.deletions}</span>
-                    )}
-                  </div>
-                </div>
-                {expandedFile === file.path && (
-                  <div className="file-diff">
-                    <pre>{file.diff}</pre>
-                  </div>
-                )}
-              </React.Fragment>
+          <div className="files-tree">
+            {fileTree.map((node, index) => (
+              <FileTreeNode
+                key={node.path + index}
+                node={node}
+                level={0}
+                onToggle={setExpandedFile}
+                expandedFile={expandedFile}
+                selectedFiles={state.selectedFiles}
+                onSelectionChange={handleFileSelection}
+              />
             ))}
           </div>
         </div>
@@ -333,12 +502,12 @@ const CommitMessage = () => {
       </div>
 
       <footer className="button-container">
-        <vscode-button appearance="secondary" onClick={handleCancel}>
+        <vsCodeButton appearance="secondary" onClick={handleCancel}>
           Cancel
-        </vscode-button>
-        <vscode-button onClick={handleSubmit} disabled={!state.title.trim()}>
+        </vsCodeButton>
+        <vsCodeButton onClick={handleSubmit} disabled={!state.title.trim()}>
           {state.isAmendMode ? "Amend Commit" : "Commit Changes"}
-        </vscode-button>
+        </vsCodeButton>
       </footer>
     </div>
   );

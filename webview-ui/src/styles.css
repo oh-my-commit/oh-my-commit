@@ -36,3 +36,80 @@ vscode-text-area::part(control) {
 vscode-button {
   min-width: 80px;
 }
+
+.files-tree {
+  margin-top: 8px;
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 4px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.directory-item vscode-checkbox,
+.file-item vscode-checkbox {
+  margin-right: 6px;
+}
+
+.directory-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.directory-item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.directory-item .directory-icon {
+  margin-right: 6px;
+  font-size: 10px;
+  color: var(--vscode-foreground);
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.directory-item .directory-name {
+  color: var(--vscode-foreground);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.file-item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.file-item.expanded {
+  background-color: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.file-item .file-name {
+  flex: 1;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.file-diff {
+  padding: 8px;
+  background-color: var(--vscode-editor-background);
+  border-top: 1px solid var(--vscode-widget-border);
+  border-bottom: 1px solid var(--vscode-widget-border);
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.file-diff pre {
+  margin: 0;
+}
