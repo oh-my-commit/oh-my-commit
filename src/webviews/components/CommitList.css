@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  margin: var(--spacing-lg) 0;
+}
+
+.commit-list-container {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--app-bg);
+  margin: var(--spacing-lg) 0;
+  box-shadow: var(--component-shadow);
+}
+
+.commit-list-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--input-bg);
+}
+
+.commit-list-header h3 {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.commit-items {
+  overflow-y: auto;
+  padding: var(--spacing-sm) 0;
+}
+
+.commit-item {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.commit-item:last-child {
+  border-bottom: none;
+}
+
+.commit-item:hover {
+  background: var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.1));
+}
+
+.commit-item.selected {
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.commit-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.commit-item-title {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.commit-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.commit-hash {
+  font-family: var(--vscode-editor-font-family, monospace);
+  padding: 2px 6px;
+  background: var(--input-bg);
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+}
+
+.commit-time {
+  color: var(--text-muted);
+}
+
+/* Empty State */
+.commit-list-empty {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Scrollbar Styles */
+.commit-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.commit-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.commit-items::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.commit-items::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

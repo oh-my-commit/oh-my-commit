@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.commit-item {
+  padding: 12px;
+  border: 1px solid var(--vscode-widget-border);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.commit-item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.commit-item.preview {
+  border-color: var(--vscode-focusBorder);
+  background-color: var(--vscode-diffEditor-insertedTextBackground);
+}
+
+.commit-item.to-be-amended {
+  border-style: dashed;
+  border-color: var(--vscode-focusBorder);
+}
+
+.commit-summary {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--vscode-foreground);
+}
+
+.commit-description {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+
+.commit-date {
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+}
