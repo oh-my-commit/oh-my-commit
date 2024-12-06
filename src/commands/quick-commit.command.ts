@@ -117,51 +117,7 @@ export class QuickCommitCommand implements VscodeCommand {
     initialMessage: string,
     isAmendMode: boolean
   ): Promise<void> {
-    const panel = vscode.window.createWebviewPanel(
-      "commitMessage",
-      isAmendMode ? "Amend Last Commit" : "Commit Message",
-      vscode.ViewColumn.Beside,
-      {
-        enableScripts: true,
-        enableFindWidget: true,
-        localResourceRoots: [
-          vscode.Uri.joinPath(this.context.extensionUri, "src", "webviews"),
-        ],
-        // 在开发模式下启用开发者工具
-        ...(process.env.NODE_ENV === "development"
-          ? {
-              devTools: true,
-            }
-          : {}),
-      }
-    );
-
-    // Generate nonce
-    const nonce = this.getNonce();
-
-    // Read HTML content
-    const htmlPath = vscode.Uri.joinPath(
-      this.context.extensionUri,
-      "src",
-      "webviews",
-      "commit-message.html"
-    );
-
-    // Get webview URIs for all resources
-    const webviewUri = panel.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "src", "webviews")
-    ).toString();
-
-    const htmlContent = await vscode.workspace.fs.readFile(htmlPath);
-    let htmlString = htmlContent.toString();
-
-    // Replace placeholders with actual values
-    htmlString = htmlString
-      .replace(/\${nonce}/g, nonce)
-      .replace(/\${webview\.cspSource}/g, panel.webview.cspSource)
-      .replace(/%webview\.cspSource%/g, webviewUri);
-
-    panel.webview.html = htmlString;
+    const panel = this.createWebviewPanel();
 
     // Send initial data to webview
     panel.webview.postMessage({
@@ -215,9 +171,66 @@ export class QuickCommitCommand implements VscodeCommand {
     );
   }
 
+  private createWebviewPanel() {
+    const panel = vscode.window.createWebviewPanel(
+      "yaacCommit",
+      "Quick Commit",
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true,
+        localResourceRoots: [
+          vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview"),
+        ],
+        retainContextWhenHidden: true,
+      }
+    );
+
+    // 设置 CSP
+    const nonce = this.getNonce();
+    const csp = `default-src 'none';
+      style-src ${panel.webview.cspSource} 'unsafe-inline';
+      script-src ${panel.webview.cspSource} 'nonce-${nonce}';
+      font-src ${panel.webview.cspSource};`;
+
+    const scriptUri = panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "dist",
+        "webview",
+        "main.js"
+      )
+    );
+    const styleUri = panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "dist",
+        "webview",
+        "main.css"
+      )
+    );
+
+    panel.webview.html = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="Content-Security-Policy" content="${csp}">
+          <link href="${styleUri}" rel="stylesheet">
+          <title>Quick Commit</title>
+        </head>
+        <body>
+          <div id="root"></div>
+          <script nonce="${nonce}" type="module" src="${scriptUri}"></script>
+        </body>
+      </html>`;
+
+    return panel;
+  }
+
   private getNonce() {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = "";
+    const possible =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < 32; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
