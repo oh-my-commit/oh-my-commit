@@ -1,29 +1,53 @@
 body {
   padding: 0;
   margin: 0;
-  width: 100vw;
-  height: 100vh;
   background: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
   font-family: var(--vscode-font-family);
-}
-
-.container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 800px;
-  margin: 0 auto;
+  font-size: var(--vscode-font-size);
+  font-weight: var(--vscode-font-weight);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 vscode-text-area {
   width: 100%;
   min-height: 200px;
+  flex: 1;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: var(--vscode-panel-border-radius);
+}
+
+vscode-text-area::part(control) {
+  height: 100%;
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+}
+
+vscode-button {
+  min-width: 80px;
+}
+
+.commit-container {
+  padding: var(--vscode-layout-gap);
+  display: flex;
+  flex-direction: column;
+  /* width: 100%; */
+  margin: auto;
+  margin-top: 20px;
+  /* gap: var(--vscode-layout-gap); */
+  gap: 10px;
+  width: 360px;
+  height: 480px;
 }
 
 .button-container {
   display: flex;
-  gap: 8px;
   justify-content: flex-end;
+  padding: calc(var(--vscode-layout-gap) / 2);
+  /* gap: var(--vscode-layout-gap); */
+  gap: 10px;
 }
