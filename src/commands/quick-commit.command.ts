@@ -11,6 +11,8 @@ export class QuickCommitCommand implements VscodeCommand {
   private context: vscode.ExtensionContext;
   private outputChannel: vscode.OutputChannel;
   private webviewPanel: vscode.WebviewPanel | undefined;
+  private fileWatcher: vscode.FileSystemWatcher | undefined;
+  private lastUpdate: number = 0;
 
   constructor(
     gitService: VscodeGitService,
@@ -21,6 +23,132 @@ export class QuickCommitCommand implements VscodeCommand {
     this.solutionManager = solutionManager;
     this.context = context;
     this.outputChannel = vscode.window.createOutputChannel("YAAC");
+
+    // Set up file watching for the webview UI
+    this.setupFileWatcher();
+
+    // Clean up file watcher when extension is deactivated
+    context.subscriptions.push(this);
+  }
+
+  private setupFileWatcher() {
+    try {
+      // Create a workspace folder for the extension
+      const extensionWorkspaceFolder = { 
+        uri: this.context.extensionUri,
+        name: 'YAAC Extension',
+        index: 0
+      };
+
+      const pattern = new vscode.RelativePattern(
+        extensionWorkspaceFolder,
+        'dist/webview-ui/**'
+      );
+
+      this.outputChannel.appendLine(`Setting up file watcher with pattern: ${pattern.pattern}`);
+      
+      // Create the file watcher
+      this.fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
+
+      // Log when watcher is created
+      this.outputChannel.appendLine('File watcher created successfully');
+
+      // Watch for all file system events
+      this.fileWatcher.onDidChange((uri) => {
+        this.outputChannel.appendLine(`File changed: ${uri.fsPath}`);
+        this.refreshWebview();
+      });
+
+      this.fileWatcher.onDidCreate((uri) => {
+        this.outputChannel.appendLine(`File created: ${uri.fsPath}`);
+        this.refreshWebview();
+      });
+
+      this.fileWatcher.onDidDelete((uri) => {
+        this.outputChannel.appendLine(`File deleted: ${uri.fsPath}`);
+        this.refreshWebview();
+      });
+
+      // Also watch the main.js file directly
+      const mainJsPath = vscode.Uri.joinPath(
+        this.context.extensionUri,
+        'dist',
+        'webview-ui',
+        'main.js'
+      );
+
+      // Set up fs.watch as a backup
+      const fs = require('fs');
+      const path = require('path');
+      
+      fs.watch(path.dirname(mainJsPath.fsPath), (eventType: string, filename: string) => {
+        if (filename === 'main.js') {
+          this.outputChannel.appendLine(`File system event: ${eventType} - ${filename}`);
+          this.refreshWebview();
+        }
+      });
+
+    } catch (error) {
+      this.outputChannel.appendLine(`Error setting up file watcher: ${error}`);
+    }
+  }
+
+  public dispose(): void {
+    this.fileWatcher?.dispose();
+    this.webviewPanel?.dispose();
+  }
+
+  private refreshWebview() {
+    const now = Date.now();
+    // Debounce updates to prevent multiple refreshes
+    if (now - this.lastUpdate < 100) {
+      return;
+    }
+    this.lastUpdate = now;
+
+    if (this.webviewPanel) {
+      this.outputChannel.appendLine("Refreshing webview content");
+      try {
+        this.updateWebview(this.webviewPanel.webview);
+        this.outputChannel.appendLine("Webview content updated successfully");
+      } catch (error) {
+        this.outputChannel.appendLine(`Error updating webview: ${error}`);
+      }
+    }
+  }
+
+  private updateWebview(webview: vscode.Webview) {
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "dist",
+        "webview-ui",
+        "main.js"
+      )
+    );
+
+    // Add cache-busting query parameter
+    const scriptSrc = `${scriptUri}?v=${Date.now()}`;
+
+    const csp = `default-src 'none';
+      style-src ${webview.cspSource} 'unsafe-inline';
+      script-src ${webview.cspSource} 'unsafe-inline';
+      img-src ${webview.cspSource} https: data:;
+      connect-src ${webview.cspSource} https:;`;
+
+    webview.html = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="Content-Security-Policy" content="${csp}">
+          <title>Quick Commit</title>
+        </head>
+        <body>
+          <div id="root"></div>
+          <script type="module" src="${scriptSrc}"></script>
+        </body>
+      </html>`;
   }
 
   get config() {
@@ -200,37 +328,13 @@ export class QuickCommitCommand implements VscodeCommand {
       }
     );
 
-    const nonce = this.getNonce();
-    const webview = panel.webview;
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.context.extensionUri,
-        "dist",
-        "webview-ui",
-        "main.js"
-      )
-    );
+    this.updateWebview(panel.webview);
+    this.webviewPanel = panel;
 
-    const csp = `default-src 'none';
-      style-src ${webview.cspSource} 'unsafe-inline';
-      script-src ${webview.cspSource} 'unsafe-inline';
-      font-src ${webview.cspSource};
-      img-src ${webview.cspSource} https: data:;
-      connect-src https:;`;
-
-    panel.webview.html = `<!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="Content-Security-Policy" content="${csp}">
-          <title>Quick Commit</title>
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="${scriptUri}"></script>
-        </body>
-      </html>`;
+    // When the panel is closed, clean up resources
+    panel.onDidDispose(() => {
+      this.webviewPanel = undefined;
+    });
 
     return panel;
   }
