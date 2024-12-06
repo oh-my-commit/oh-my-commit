@@ -194,63 +194,29 @@ export class QuickCommitCommand implements VscodeCommand {
       {
         enableScripts: true,
         localResourceRoots: [
-          vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview"),
-          vscode.Uri.parse("http://localhost:5173"), // 允许访问 Vite 开发服务器
-          vscode.Uri.parse("ws://localhost:5173"), // 允许 WebSocket 连接
+          vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview-ui"),
         ],
         retainContextWhenHidden: true,
       }
     );
 
-    // 设置 CSP
     const nonce = this.getNonce();
-    const isDevelopment =
-      process.env.NODE_ENV === "development" ||
-      process.env.VSCODE_DEBUG === "true";
-    console.log({
-      isDevelopment,
-      NODE_ENV: process.env.NODE_ENV,
-      VSCODE_DEBUG: process.env.VSCODE_DEBUG,
-    });
+    const webview = panel.webview;
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "dist",
+        "webview-ui",
+        "main.js"
+      )
+    );
 
-    // 在开发模式下允许连接 Vite 开发服务器
-    const csp = isDevelopment
-      ? `default-src 'none';
-        style-src ${panel.webview.cspSource} 'unsafe-inline' http://localhost:5173;
-        script-src ${panel.webview.cspSource} 'unsafe-inline' http://localhost:5173 'unsafe-eval';
-        font-src ${panel.webview.cspSource};
-        connect-src http://localhost:5173 ws://localhost:5173 wss://localhost:5173;
-        img-src ${panel.webview.cspSource} http://localhost:5173 data:;`
-      : `default-src 'none';
-        style-src ${panel.webview.cspSource} 'unsafe-inline';
-        script-src ${panel.webview.cspSource} 'nonce-${nonce}';
-        font-src ${panel.webview.cspSource};`;
-
-    let scriptUri, styleUri;
-
-    if (isDevelopment) {
-      // 开发模式：使用 Vite 开发服务器
-      scriptUri = "http://localhost:5173/@vite/client";
-      styleUri = "http://localhost:5173/src/styles.css";
-    } else {
-      // 生产模式：使用构建后的文件
-      scriptUri = panel.webview.asWebviewUri(
-        vscode.Uri.joinPath(
-          this.context.extensionUri,
-          "dist",
-          "webview",
-          "main.js"
-        )
-      );
-      styleUri = panel.webview.asWebviewUri(
-        vscode.Uri.joinPath(
-          this.context.extensionUri,
-          "dist",
-          "webview",
-          "main.css"
-        )
-      );
-    }
+    const csp = `default-src 'none';
+      style-src ${webview.cspSource} 'unsafe-inline';
+      script-src ${webview.cspSource} 'unsafe-inline';
+      font-src ${webview.cspSource};
+      img-src ${webview.cspSource} https: data:;
+      connect-src https:;`;
 
     panel.webview.html = `<!DOCTYPE html>
       <html lang="en">
@@ -258,19 +224,11 @@ export class QuickCommitCommand implements VscodeCommand {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="${csp}">
-          ${isDevelopment ? "" : `<link href="${styleUri}" rel="stylesheet">`}
           <title>Quick Commit</title>
         </head>
         <body>
           <div id="root"></div>
-          ${
-            isDevelopment
-              ? `
-            <script type="module" src="${scriptUri}"></script>
-            <script type="module" src="http://localhost:5173/src/main.tsx"></script>
-          `
-              : `<script nonce="${nonce}" type="module" src="${scriptUri}"></script>`
-          }
+          <script type="module" src="${scriptUri}"></script>
         </body>
       </html>`;
 
