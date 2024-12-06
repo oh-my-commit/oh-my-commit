@@ -31,10 +31,10 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
       if (e.key === " " && currentLine === "-") {
         e.preventDefault();
 
-        // Insert a proper bullet point
-        const beforeText = textarea.value.slice(0, selectionStart - 1);
+        // Insert markdown list syntax
+        const beforeText = textarea.value.slice(0, selectionStart);
         const afterText = textarea.value.slice(selectionStart);
-        const newValue = `${beforeText}• ${afterText}`;
+        const newValue = `${beforeText} ${afterText}`;
 
         setInternalValue(newValue);
         onChange(newValue);
@@ -45,11 +45,11 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         }, 0);
       }
       // Handle Enter key for continuing lists
-      else if (e.key === "Enter" && currentLine.startsWith("• ")) {
+      else if (e.key === "Enter" && currentLine.startsWith("- ")) {
         e.preventDefault();
 
         // If the current line only has a bullet point and no content, remove it
-        if (currentLine.trim() === "•") {
+        if (currentLine.trim() === "-") {
           const newValue = textBeforeCursor.slice(0, -1) + textAfterCursor;
           setInternalValue(newValue);
           onChange(newValue);
@@ -57,7 +57,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         }
 
         // Add a new bullet point on the next line
-        const newValue = textBeforeCursor + "\n• " + textAfterCursor;
+        const newValue = textBeforeCursor + "\n- " + textAfterCursor;
 
         setInternalValue(newValue);
         onChange(newValue);
@@ -95,7 +95,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
       <MDEditor
         value={internalValue}
         onChange={handleChange}
-        preview="edit"
+        preview="live"
         hideToolbar={false}
         commands={extraCommands}
         textareaProps={{
