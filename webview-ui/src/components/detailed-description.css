@@ -5,6 +5,8 @@
 .detailed-description .w-md-editor {
   border: 1px solid var(--vscode-input-border);
   border-radius: 2px;
+  background-color: var(--vscode-editor-background);
+  height: 100%;
 }
 
 .detailed-description .w-md-editor-text-input {
@@ -20,6 +22,7 @@
 
 .detailed-description .w-md-editor-text {
   color: var(--vscode-input-foreground);
+  height: 100%;
 }
 
 /* Customize toolbar */

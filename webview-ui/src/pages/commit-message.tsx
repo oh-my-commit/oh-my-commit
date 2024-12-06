@@ -228,7 +228,7 @@ const CommitMessage = () => {
 
       <footer className="button-container">
         <vscode-button appearance="secondary" onClick={handleCancel}>
-          Cancel
+          Cancel2
         </vscode-button>
         <vscode-button onClick={handleSubmit} disabled={!state.title.trim()}>
           {state.isAmendMode ? "Amend Commit" : "Commit Changes"}
