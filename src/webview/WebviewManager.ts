@@ -1,99 +1,73 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import * as Handlebars from "handlebars";
 
 export class WebviewManager {
-  private webviewPanel: vscode.WebviewPanel | undefined;
-  private readonly outputChannel: vscode.OutputChannel;
-  private readonly mainJsPath: vscode.Uri;
-  private readonly debounceTime = 100;
-  private lastUpdate = 0;
+  private webviewPanel?: vscode.WebviewPanel;
+  private readonly scriptUri: vscode.Uri;
+  private readonly templatePath: string;
+  private readonly template: HandlebarsTemplateDelegate;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly viewType: string,
     private readonly title: string,
-    outputChannel?: vscode.OutputChannel
+    private readonly outputChannel = vscode.window.createOutputChannel(
+      "WebviewManager"
+    )
   ) {
-    this.outputChannel =
-      outputChannel || vscode.window.createOutputChannel("WebviewManager");
-    this.mainJsPath = vscode.Uri.joinPath(
+    this.scriptUri = vscode.Uri.joinPath(
       context.extensionUri,
-      "dist",
-      "webview-ui",
-      "main.js"
+      "dist/webview-ui/main.js"
     );
-    this.setupFileWatcher();
-  }
+    this.templatePath = path.join(
+      context.extensionPath,
+      "src/webview/template.html"
+    );
 
-  private setupFileWatcher() {
-    try {
-      // Watch the dist/webview-ui directory for changes
-      const pattern = new vscode.RelativePattern(
-        this.context.extensionUri,
-        "dist/webview-ui/**"
-      );
-      const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+    // Compile template once during initialization
+    const templateContent = fs.readFileSync(this.templatePath, "utf8");
+    this.template = Handlebars.compile(templateContent);
 
-      // Combine all file events into a single handler
-      ["onDidChange", "onDidCreate", "onDidDelete"].forEach((event) => {
-        watcher[event]((uri) => {
-          this.outputChannel.appendLine(`${event}: ${uri.fsPath}`);
-          this.refreshWebview();
-        });
-      });
+    // Watch for file changes
+    const watcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(context.extensionUri, "dist/webview-ui/**")
+    );
 
-      // Cleanup
-      this.context.subscriptions.push(watcher);
-      this.context.subscriptions.push(this);
-    } catch (error) {
-      this.outputChannel.appendLine(`Error setting up file watcher: ${error}`);
-    }
-  }
+    ["onDidChange", "onDidCreate", "onDidDelete"].forEach((event) =>
+      watcher[event](() => this.webviewPanel?.webview && this.updateWebview())
+    );
 
-  private refreshWebview() {
-    const now = Date.now();
-    if (now - this.lastUpdate < this.debounceTime) return;
-    this.lastUpdate = now;
-
-    if (this.webviewPanel) {
-      try {
-        this.updateWebview();
-        this.outputChannel.appendLine("Webview refreshed");
-      } catch (error) {
-        this.outputChannel.appendLine(`Refresh error: ${error}`);
-      }
-    }
+    context.subscriptions.push(watcher, this);
   }
 
   private updateWebview() {
-    if (!this.webviewPanel) return;
+    if (!this.webviewPanel?.webview) return;
 
-    const scriptUri = this.webviewPanel.webview.asWebviewUri(this.mainJsPath);
-    const csp = [
-      "default-src 'none'",
-      `style-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
-      `script-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
-      `img-src ${this.webviewPanel.webview.cspSource} https: data:`,
-      `connect-src ${this.webviewPanel.webview.cspSource} https:`,
-    ].join(";");
+    try {
+      const templateData = {
+        csp: [
+          "default-src 'none'",
+          `style-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
+          `script-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
+          `img-src ${this.webviewPanel.webview.cspSource} https: data:`,
+          `connect-src ${this.webviewPanel.webview.cspSource} https:`,
+        ].join(";"),
+        title: this.title,
+        scriptUri: `${this.webviewPanel.webview.asWebviewUri(
+          this.scriptUri
+        )}?v=${Date.now()}`,
+      };
 
-    this.webviewPanel.webview.html = `<!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="Content-Security-Policy" content="${csp}">
-          <title>${this.title}</title>
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="${scriptUri}?v=${Date.now()}"></script>
-        </body>
-      </html>`;
+      this.webviewPanel.webview.html = this.template(templateData);
+      this.outputChannel.appendLine("Webview refreshed");
+    } catch (error) {
+      this.outputChannel.appendLine(`Refresh error: ${error}`);
+    }
   }
 
-  public createOrShowWebview(
-    options: vscode.WebviewPanelOptions & vscode.WebviewOptions
-  ) {
+  public show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
     if (this.webviewPanel) {
       this.webviewPanel.reveal();
       return this.webviewPanel;
@@ -106,12 +80,8 @@ export class WebviewManager {
       options
     );
 
-    this.updateWebview();
     this.webviewPanel.onDidDispose(() => (this.webviewPanel = undefined));
-    return this.webviewPanel;
-  }
-
-  public getWebviewPanel() {
+    this.updateWebview();
     return this.webviewPanel;
   }
 
