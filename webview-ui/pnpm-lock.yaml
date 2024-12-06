@@ -17,6 +17,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      jotai:
+        specifier: ^2.10.3
+        version: 2.10.3(@types/react@18.2.0)(react@18.2.0)
       marked:
         specifier: ^15.0.3
         version: 15.0.3
@@ -1214,6 +1217,18 @@ packages:
   jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
+
+  jotai@2.10.3:
+    resolution: {integrity: sha512-Nnf4IwrLhNfuz2JOQLI0V/AgwcpxvVy8Ec8PidIIDeRi4KCFpwTFIpHAAcU+yCgnw/oASYElq9UY0YdUUegsSA==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -3502,6 +3517,11 @@ snapshots:
       '@types/node': 22.10.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
+
+  jotai@2.10.3(@types/react@18.2.0)(react@18.2.0):
+    optionalDependencies:
+      '@types/react': 18.2.0
+      react: 18.2.0
 
   js-tokens@4.0.0: {}
 

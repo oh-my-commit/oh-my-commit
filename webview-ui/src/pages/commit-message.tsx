@@ -4,6 +4,8 @@ import { mockFileChanges } from "@/data/mock-file-changes";
 import { mockRecentCommits } from "@/data/mock-recent-commits";
 import { CommitState } from "@/types/commit-state";
 import { DetailedDescription } from "@/components/detailed-description";
+import { descriptionViewModeAtom } from "@/atoms/preferences";
+import { useAtom } from "jotai";
 
 import { buildFileTree } from "@/utils/build-file-tree";
 import {
@@ -46,39 +48,9 @@ const CommitMessage = () => {
     selectedFiles: new Set(mockFileChanges.map((f) => f.path)), // 默认全选
   });
 
-  // UI 状态
-  const [descriptionViewMode, setDescriptionViewMode] = React.useState<
-    "plain" | "split" | "preview"
-  >("split");
-
-  // 从本地存储加载 viewMode
-  React.useEffect(() => {
-    try {
-      const savedViewMode = localStorage.getItem(
-        "commit_description_view_mode"
-      );
-      if (
-        savedViewMode &&
-        ["plain", "split", "preview"].includes(savedViewMode)
-      ) {
-        setDescriptionViewMode(savedViewMode as "plain" | "split" | "preview");
-      }
-    } catch (error) {
-      console.warn("Failed to load view mode from localStorage:", error);
-    }
-  }, []);
-
-  // 保存 viewMode 到本地存储
-  const handleViewModeChange = React.useCallback(
-    (newMode: "plain" | "split" | "preview") => {
-      setDescriptionViewMode(newMode);
-      try {
-        localStorage.setItem("commit_description_view_mode", newMode);
-      } catch (error) {
-        console.warn("Failed to save view mode to localStorage:", error);
-      }
-    },
-    []
+  // UI 状态 - 使用 Jotai 管理
+  const [descriptionViewMode, setDescriptionViewMode] = useAtom(
+    descriptionViewModeAtom
   );
 
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
@@ -236,7 +208,7 @@ const CommitMessage = () => {
                     className={classnames("mode-button", {
                       active: descriptionViewMode === "plain",
                     })}
-                    onClick={() => handleViewModeChange("plain")}
+                    onClick={() => setDescriptionViewMode("plain")}
                     title="Edit in plain text mode"
                   >
                     Plain
@@ -245,7 +217,7 @@ const CommitMessage = () => {
                     className={classnames("mode-button", {
                       active: descriptionViewMode === "split",
                     })}
-                    onClick={() => handleViewModeChange("split")}
+                    onClick={() => setDescriptionViewMode("split")}
                     title="Edit with live preview"
                   >
                     Split
@@ -254,7 +226,7 @@ const CommitMessage = () => {
                     className={classnames("mode-button", {
                       active: descriptionViewMode === "preview",
                     })}
-                    onClick={() => handleViewModeChange("preview")}
+                    onClick={() => setDescriptionViewMode("preview")}
                     title="View rendered preview"
                   >
                     Preview

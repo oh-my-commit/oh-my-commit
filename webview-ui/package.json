@@ -11,6 +11,7 @@
     "@uiw/react-md-editor": "^4.0.4",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "classnames": "^2.5.1",
+    "jotai": "^2.10.3",
     "marked": "^15.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
