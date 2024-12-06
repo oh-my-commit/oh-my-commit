@@ -12,6 +12,8 @@
   flex: 1;
   min-height: 200px;
   transition: border-color 0.2s ease;
+  display: flex;
+  flex-direction: row;
 }
 
 .detailed-description .w-md-editor:focus-within {
@@ -43,11 +45,16 @@
 /* Customize toolbar */
 .detailed-description .w-md-editor-toolbar {
   background: var(--vscode-editor-background);
-  border-bottom: 1px solid var(--vscode-input-border);
-  padding: 6px 8px;
+  border-left: 1px solid var(--vscode-input-border);
+  border-bottom: none;
+  padding: 8px 6px;
+  width: auto;
+  order: 2;
 }
 
 .detailed-description .w-md-editor-toolbar ul {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
@@ -66,6 +73,26 @@
 .detailed-description .w-md-editor-toolbar li.active > button {
   color: var(--vscode-icon-foreground);
   opacity: 1;
+}
+
+.detailed-description .w-md-editor-content {
+  flex: 1;
+  order: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.detailed-description .w-md-editor-input {
+  flex: 1;
+  height: 100%;
+}
+
+.detailed-description .w-md-editor-text-pre,
+.detailed-description .w-md-editor-text-input,
+.detailed-description .w-md-editor-text {
+  height: 100% !important;
+  min-height: 100% !important;
 }
 
 /* Fix preview styles */
