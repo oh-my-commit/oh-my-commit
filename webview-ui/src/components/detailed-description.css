@@ -1,128 +1,137 @@
 /* 最外层容器 */
 .detailed-description {
-  width: 100%;
-  min-height: 120px;
   display: flex;
   flex-direction: column;
-  resize: vertical;
-  overflow: hidden;
+  width: 100%;
 }
 
 /* 编辑器容器 */
 .detailed-description .w-md-editor {
+  display: flex !important;
+  flex-direction: column !important;
   border: 1px solid var(--vscode-input-border);
   border-radius: 4px;
   background-color: var(--vscode-editor-background);
-  display: flex;
-  flex-direction: row;
-  flex: 1;
   min-height: 120px;
-  overflow: hidden;
+}
+
+/* 工具栏样式 */
+.detailed-description .w-md-editor-toolbar {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end !important;
+  background-color: var(--vscode-editor-background) !important;
+  border-bottom: 1px solid var(--vscode-input-border) !important;
+  padding: 4px !important;
+}
+
+.detailed-description .w-md-editor-toolbar ul {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 4px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.detailed-description .w-md-editor-toolbar li {
+  display: inline-flex !important;
+}
+
+.detailed-description .w-md-editor-toolbar button {
+  color: var(--vscode-icon-foreground) !important;
+  background: none !important;
+  border: none !important;
+  padding: 4px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+}
+
+.detailed-description .w-md-editor-toolbar button:hover {
+  opacity: 1 !important;
+  background-color: var(--vscode-toolbar-hoverBackground) !important;
+}
+
+.detailed-description .w-md-editor-toolbar li.active button {
+  opacity: 1 !important;
 }
 
 /* 内容区容器 */
 .detailed-description .w-md-editor-content {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: row !important;
+  min-height: 120px;
 }
 
 /* 输入区域容器 */
 .detailed-description .w-md-editor-input {
-  width: 50%;
-  overflow: hidden;
-  background: var(--vscode-editor-background);
+  width: 50% !important;
+  background: var(--vscode-editor-background) !important;
 }
 
 /* 清除输入区域内部的预览样式 */
-.detailed-description .w-md-editor-input .w-md-editor-text-pre {
+.detailed-description .w-md-editor-input .w-md-editor-text-pre,
+.detailed-description .w-md-editor-input .w-md-editor-text-pre > code,
+.detailed-description .w-md-editor-input .w-md-editor-text-pre > div {
   display: none !important;
 }
 
 /* 输入框样式 */
 .detailed-description .w-md-editor-text-input {
-  width: 100%;
-  height: 100%;
-  min-height: 100px;
-  padding: 8px 12px;
-  margin: 0;
-  border: 0;
-  resize: none;
+  width: 100% !important;
+  min-height: 120px !important;
+  height: auto !important;
+  padding: 8px 12px !important;
+  margin: 0 !important;
+  border: 0 !important;
   color: var(--vscode-input-foreground) !important;
   caret-color: var(--vscode-input-foreground) !important;
   -webkit-text-fill-color: var(--vscode-input-foreground) !important;
   background: transparent !important;
   font-family: var(--vscode-editor-font-family, var(--vscode-font-family)) !important;
   font-size: var(--vscode-editor-font-size) !important;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-  box-sizing: border-box;
+  line-height: 1.5 !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  box-sizing: border-box !important;
   outline: none !important;
-  opacity: 1 !important;
+  resize: none !important;
 }
 
-/* 移除任何可能影响文字显示的样式 */
+/* 预览区域 */
+.detailed-description .w-md-editor-preview {
+  width: 50% !important;
+  padding: 8px 12px !important;
+  color: var(--vscode-input-foreground) !important;
+  background-color: var(--vscode-editor-background) !important;
+  border-left: 1px solid var(--vscode-input-border) !important;
+  overflow-y: auto !important;
+}
+
+/* 隐藏拖动控件和其他不需要的元素 */
+.detailed-description .w-md-editor-text-input::-webkit-resizer,
+.detailed-description .w-md-editor-bar,
+.detailed-description .w-md-editor-drag,
+.detailed-description .w-md-editor-text-pre {
+  display: none !important;
+}
+
+/* 占位符样式 */
+.detailed-description textarea::placeholder {
+  color: var(--vscode-input-placeholderForeground) !important;
+  opacity: 0.5 !important;
+}
+
+/* 选择样式 */
 .detailed-description .w-md-editor-text-input::selection {
   background-color: var(--vscode-editor-selectionBackground) !important;
   color: var(--vscode-editor-foreground) !important;
 }
 
-.detailed-description .w-md-editor-text {
-  background: none !important;
-}
-
-.detailed-description .w-md-editor-text * {
-  background: none !important;
-}
-
-/* 预览区域 */
-.detailed-description .w-md-editor-preview {
-  width: 50%;
-  padding: 8px 12px;
-  color: var(--vscode-input-foreground);
+/* 预览内容样式 */
+.detailed-description .w-md-editor-preview-renderer {
   background-color: var(--vscode-editor-background) !important;
-  border-left: 1px solid var(--vscode-input-border);
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-/* 工具栏样式 */
-.detailed-description .w-md-editor-toolbar {
-  background: var(--vscode-editor-background);
-  border-left: 1px solid var(--vscode-input-border);
-  padding: 8px 6px;
-  width: auto;
-  order: 2;
-}
-
-.detailed-description .w-md-editor-toolbar ul {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.detailed-description .w-md-editor-toolbar li > button {
-  color: var(--vscode-icon-foreground);
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
-}
-
-.detailed-description .w-md-editor-toolbar li > button:hover {
-  color: var(--vscode-icon-foreground);
-  opacity: 1;
-  background-color: var(--vscode-toolbar-hoverBackground);
-}
-
-.detailed-description .w-md-editor-toolbar li.active > button {
-  color: var(--vscode-icon-foreground);
-  opacity: 1;
-}
-
-/* 隐藏底部拖动条 */
-.detailed-description .w-md-editor-bar {
-  display: none;
 }
 
 /* Fix preview styles */
@@ -146,7 +155,138 @@
   background-color: var(--vscode-editor-background) !important;
 }
 
-.detailed-description textarea::placeholder {
+.detailed-description {
+  width: 100%;
+}
+
+.detailed-description .editor-container {
+  display: flex;
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 4px;
+  background: var(--vscode-editor-background);
+  min-height: 120px;
+}
+
+.detailed-description .input-area {
+  width: 50%;
+  border-right: 1px solid var(--vscode-input-border);
+}
+
+.detailed-description .text-input {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  padding: 8px 12px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--vscode-input-foreground);
+  font-family: var(--vscode-editor-font-family, var(--vscode-font-family));
+  font-size: var(--vscode-editor-font-size);
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+.detailed-description .text-input::placeholder {
   color: var(--vscode-input-placeholderForeground);
-  opacity: 0.7;
+  opacity: 0.5;
+}
+
+.detailed-description .preview-area {
+  width: 50%;
+  padding: 8px 12px;
+  overflow-y: auto;
+  color: var(--vscode-input-foreground);
+}
+
+/* Markdown preview styles */
+.detailed-description .preview-area h1,
+.detailed-description .preview-area h2,
+.detailed-description .preview-area h3,
+.detailed-description .preview-area h4,
+.detailed-description .preview-area h5,
+.detailed-description .preview-area h6 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.detailed-description .preview-area p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.detailed-description .preview-area a {
+  color: var(--vscode-textLink-foreground);
+  text-decoration: none;
+}
+
+.detailed-description .preview-area a:hover {
+  text-decoration: underline;
+}
+
+.detailed-description .preview-area code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--vscode-textBlockQuote-background);
+  border-radius: 3px;
+}
+
+.detailed-description .preview-area pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--vscode-textBlockQuote-background);
+  border-radius: 3px;
+}
+
+.detailed-description .preview-area pre code {
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: 0;
+}
+
+.detailed-description .preview-area blockquote {
+  padding: 0 1em;
+  color: var(--vscode-textBlockQuote-foreground);
+  border-left: 0.25em solid var(--vscode-textBlockQuote-border);
+  margin: 0 0 16px 0;
+}
+
+.detailed-description .preview-area ul,
+.detailed-description .preview-area ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.detailed-description .preview-area table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.detailed-description .preview-area table th,
+.detailed-description .preview-area table td {
+  padding: 6px 13px;
+  border: 1px solid var(--vscode-input-border);
+}
+
+.detailed-description .preview-area table tr {
+  background-color: var(--vscode-editor-background);
+  border-top: 1px solid var(--vscode-input-border);
+}
+
+.detailed-description .preview-area table tr:nth-child(2n) {
+  background-color: var(--vscode-textBlockQuote-background);
+}
+
+.detailed-description .preview-area img {
+  max-width: 100%;
+  box-sizing: content-box;
 }

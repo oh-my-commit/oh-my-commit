@@ -1,7 +1,7 @@
 .commit-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
   font-family: var(--vscode-font-family);
   background: var(--vscode-editor-background);
@@ -14,13 +14,14 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px;
-  overflow: auto;
+  overflow: visible;
 }
 
 .commit-input-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-height: fit-content;
 }
 
 .input-header {
