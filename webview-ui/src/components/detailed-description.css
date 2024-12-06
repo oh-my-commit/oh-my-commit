@@ -29,85 +29,162 @@
 }
 
 .editor-container {
-  display: flex;
+  position: relative;
   width: 100%;
   background: var(--vscode-input-background);
-  position: relative;
   overflow: hidden;
 }
 
-.editor-container textarea,
-.editor-container .preview-content {
-  min-height: 150px;
-  padding: 8px;
-  box-sizing: border-box;
-  background: transparent;
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+.view-container {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease-in-out;
 }
 
-.editor-container textarea {
-  width: 50%;
+.view-container.active {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+}
+
+/* Plain View */
+.plain-view {
+  transform: translateX(-100%);
+}
+
+.plain-view textarea {
+  width: 100%;
   resize: none;
+  padding: 8px;
+  background: transparent;
   border: none;
   color: var(--vscode-input-foreground);
   outline: none;
-  opacity: 1;
+  box-sizing: border-box;
+  /* 从左侧展开，因为要占满全宽 */
   transform-origin: left center;
 }
 
-.editor-container .preview-content {
-  flex: 1;
-  overflow-wrap: break-word;
+.mode-plain .plain-view {
+  transform: translateX(0);
+}
+
+/* Split View */
+.split-view {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.split-view.active {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  position: relative;
+}
+
+.split-view textarea {
+  width: 50%;
+  resize: none;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: var(--vscode-input-foreground);
+  outline: none;
+  box-sizing: border-box;
+  /* 从中间向左收缩，因为要和 preview 内容保持平衡 */
+  transform-origin: 75% center;
+  transition: all 0.3s ease-in-out;
+}
+
+.split-view .preview-content {
+  flex: 1;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  /* 从中间向右收缩，因为要和 textarea 保持平衡 */
+  transform-origin: 25% center;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Split View Transitions */
+.mode-plain .split-view textarea {
+  transform: translateX(-25%) scale(0.8);
+  opacity: 0;
+}
+
+.mode-plain .split-view .preview-content {
+  transform: translateX(25%) scale(0.8);
+  opacity: 0;
+}
+
+.mode-preview .split-view textarea {
+  transform: translateX(-25%) scale(0.8);
+  opacity: 0;
+}
+
+.mode-preview .split-view .preview-content {
+  transform: translateX(-25%) scale(1.2);
+  opacity: 0;
+}
+
+/* Preview View */
+.preview-view {
+  transform: translateX(100%);
+}
+
+.preview-view .preview-content {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  /* 从右侧收缩，因为是从 split 视图展开而来 */
   transform-origin: right center;
 }
 
-.editor-container.mode-plain textarea {
-  width: 100%;
-  transform: scale(1);
+.mode-preview .preview-view {
+  transform: translateX(0);
 }
 
-.editor-container.mode-plain .preview-content {
-  opacity: 0;
-  transform: translateX(100%) scale(0.8);
-  position: absolute;
-  right: 0;
-  pointer-events: none;
+/* Active States */
+.mode-plain .plain-view,
+.mode-split .split-view,
+.mode-preview .preview-view {
+  opacity: 1;
+  transform: translateX(0) scale(1);
 }
 
-.editor-container.mode-split textarea {
-  transform: scale(1);
+.mode-split .split-view textarea,
+.mode-split .split-view .preview-content {
+  transform: translateX(0) scale(1);
+  opacity: 1;
 }
 
-.editor-container.mode-split .preview-content {
-  transform: scale(1);
-}
-
-.editor-container.mode-preview textarea {
-  opacity: 0;
-  transform: translateX(-100%) scale(0.8);
-  position: absolute;
-  pointer-events: none;
-}
-
-.editor-container.mode-preview .preview-content {
-  flex: 1;
-  transform: scale(1);
-}
-
-.editor-container textarea::-webkit-scrollbar,
-.editor-container .preview-content::-webkit-scrollbar {
+/* 优化滚动条显示 */
+textarea::-webkit-scrollbar,
+.preview-content::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.editor-container textarea::-webkit-scrollbar-thumb,
-.editor-container .preview-content::-webkit-scrollbar-thumb {
+textarea::-webkit-scrollbar-thumb,
+.preview-content::-webkit-scrollbar-thumb {
   background: var(--vscode-scrollbarSlider-background);
   border-radius: 3px;
 }
 
-.editor-container textarea::-webkit-scrollbar-thumb:hover,
-.editor-container .preview-content::-webkit-scrollbar-thumb:hover {
+textarea::-webkit-scrollbar-thumb:hover,
+.preview-content::-webkit-scrollbar-thumb:hover {
   background: var(--vscode-scrollbarSlider-hoverBackground);
 }
