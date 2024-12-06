@@ -8,13 +8,15 @@
   color: var(--vscode-editor-foreground);
 }
 
+/* 内容区域可以滚动 */
 .commit-form {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px;
-  overflow: visible;
+  padding: 16px 16px 76px 16px; /* 底部留出按钮的空间 */
+  overflow-y: auto;
+  position: relative;
 }
 
 .commit-input-section {
@@ -230,13 +232,19 @@ vscode-text-area {
   white-space: pre-wrap;
 }
 
-.button-container {
+/* 固定在底部的按钮区域 */
+.commit-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 12px;
-  border-top: 1px solid var(--vscode-panel-border);
-  background: var(--vscode-sideBar-background);
+  padding: 16px;
+  background: var(--vscode-editor-background);
+  border-top: 1px solid var(--vscode-input-border);
+  z-index: 100;
 }
 
 @media (max-width: 600px) {
