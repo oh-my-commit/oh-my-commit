@@ -9,6 +9,7 @@ import {
   vsCodeCheckbox,
 } from "@vscode/webview-ui-toolkit";
 import { getVsCodeApi } from "./vscode";
+import "./CommitMessage.css";
 
 // Register VSCode Design System
 provideVSCodeDesignSystem().register(
@@ -39,8 +40,7 @@ const COMMIT_TYPES = [
   },
   {
     value: "refactor",
-    label:
-      "refactor: A code change that neither fixes a bug nor adds a feature",
+    label: "refactor: A code change that neither fixes a bug nor adds a feature",
   },
   { value: "perf", label: "perf: A code change that improves performance" },
   { value: "test", label: "test: Adding missing tests" },
@@ -119,49 +119,75 @@ const CommitMessage = () => {
   return (
     <div className="commit-container">
       <div className="commit-form">
-        <vscode-dropdown
-          value={state.type}
-          onChange={(e: any) =>
-            setState((prev) => ({ ...prev, type: e.target.value }))
-          }
-        >
-          {COMMIT_TYPES.map((type) => (
-            <vscode-option key={type.value} value={type.value}>
-              {type.label}
-            </vscode-option>
-          ))}
-        </vscode-dropdown>
+        <div className="form-section">
+          <label>Commit Type</label>
+          <vscode-dropdown
+            value={state.type}
+            onChange={(e: any) =>
+              setState((prev) => ({ ...prev, type: e.target.value }))
+            }
+          >
+            {COMMIT_TYPES.map((type) => (
+              <vscode-option key={type.value} value={type.value}>
+                {type.label}
+              </vscode-option>
+            ))}
+          </vscode-dropdown>
+        </div>
 
-        <vscode-text-area
-          value={state.message}
-          onChange={(e: any) =>
-            setState((prev) => ({ ...prev, message: e.target.value }))
-          }
-          placeholder="Commit title (required)"
-          resize="vertical"
-          autofocus
-        />
+        <div className="form-section">
+          <label>Commit Title</label>
+          <vscode-text-area
+            value={state.message}
+            onChange={(e: any) =>
+              setState((prev) => ({ ...prev, message: e.target.value }))
+            }
+            placeholder="Enter a concise description of the changes"
+            resize="vertical"
+            autofocus
+          />
+        </div>
 
-        <vscode-text-area
-          value={state.description}
-          onChange={(e: any) =>
-            setState((prev) => ({ ...prev, description: e.target.value }))
-          }
-          placeholder="Detailed description (optional)"
-          resize="vertical"
-        />
+        <div className="form-section">
+          <label>Detailed Description</label>
+          <vscode-text-area
+            value={state.description}
+            onChange={(e: any) =>
+              setState((prev) => ({ ...prev, description: e.target.value }))
+            }
+            placeholder="Add a more detailed explanation of the changes (optional)"
+            resize="vertical"
+          />
+        </div>
 
-        <vscode-checkbox
-          checked={state.isBreakingChange}
-          onChange={(e: any) =>
-            setState((prev) => ({
-              ...prev,
-              isBreakingChange: e.target.checked,
-            }))
-          }
-        >
-          Breaking Change
-        </vscode-checkbox>
+        {state.isBreakingChange ? (
+          <div className="breaking-change-section">
+            <vscode-checkbox
+              checked={state.isBreakingChange}
+              onChange={(e: any) =>
+                setState((prev) => ({
+                  ...prev,
+                  isBreakingChange: e.target.checked,
+                }))
+              }
+            >
+              Breaking Change
+            </vscode-checkbox>
+            <span>⚠️ This commit contains breaking changes</span>
+          </div>
+        ) : (
+          <vscode-checkbox
+            checked={state.isBreakingChange}
+            onChange={(e: any) =>
+              setState((prev) => ({
+                ...prev,
+                isBreakingChange: e.target.checked,
+              }))
+            }
+          >
+            Breaking Change
+          </vscode-checkbox>
+        )}
 
         {state.diff && (
           <div className="diff-preview">

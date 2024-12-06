@@ -1,0 +1,125 @@
+.commit-container {
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.commit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Dropdown styles */
+vscode-dropdown {
+  width: 100%;
+  height: 32px;
+  border-radius: 4px;
+}
+
+/* Text area styles */
+vscode-text-area {
+  width: 100%;
+}
+
+vscode-text-area::part(control) {
+  min-height: 32px;
+  padding: 8px;
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  border-radius: 4px;
+}
+
+/* Description text area */
+vscode-text-area[placeholder="Detailed description (optional)"]::part(control) {
+  min-height: 100px;
+}
+
+/* Checkbox styles */
+vscode-checkbox {
+  margin: 8px 0;
+}
+
+/* Diff preview */
+.diff-preview {
+  margin-top: 16px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diff-preview h3 {
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--vscode-sideBar-background);
+  border-bottom: 1px solid var(--vscode-panel-border);
+  font-size: var(--vscode-font-size);
+  font-weight: normal;
+}
+
+.diff-preview pre {
+  margin: 0;
+  padding: 12px;
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow: auto;
+}
+
+/* Button container */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Button styles */
+vscode-button {
+  min-width: 120px;
+}
+
+/* Form section */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-section label {
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  opacity: 0.8;
+}
+
+/* Breaking change section */
+.breaking-change-section {
+  margin: 8px 0;
+  padding: 12px;
+  background: var(--vscode-inputValidation-warningBackground);
+  border: 1px solid var(--vscode-inputValidation-warningBorder);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .commit-container {
+    padding: 12px;
+  }
+  
+  .button-container {
+    flex-direction: column;
+  }
+  
+  vscode-button {
+    width: 100%;
+  }
+}
