@@ -1,175 +1,93 @@
 /* 最外层容器 */
 .detailed-description {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
 /* 编辑器容器 */
-.detailed-description .w-md-editor {
-  display: flex !important;
-  flex-direction: column !important;
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 4px;
-  background-color: var(--vscode-editor-background);
-  min-height: 120px;
-}
-
-/* 工具栏样式 */
-.detailed-description .w-md-editor-toolbar {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: flex-end !important;
-  background-color: var(--vscode-editor-background) !important;
-  border-bottom: 1px solid var(--vscode-input-border) !important;
-  padding: 4px !important;
-}
-
-.detailed-description .w-md-editor-toolbar ul {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 4px !important;
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.detailed-description .w-md-editor-toolbar li {
-  display: inline-flex !important;
-}
-
-.detailed-description .w-md-editor-toolbar button {
-  color: var(--vscode-icon-foreground) !important;
-  background: none !important;
-  border: none !important;
-  padding: 4px !important;
-  margin: 0 !important;
-  cursor: pointer !important;
-  opacity: 0.8 !important;
-}
-
-.detailed-description .w-md-editor-toolbar button:hover {
-  opacity: 1 !important;
-  background-color: var(--vscode-toolbar-hoverBackground) !important;
-}
-
-.detailed-description .w-md-editor-toolbar li.active button {
-  opacity: 1 !important;
-}
-
-/* 内容区容器 */
-.detailed-description .w-md-editor-content {
-  display: flex !important;
-  flex-direction: row !important;
-  min-height: 120px;
-}
-
-/* 输入区域容器 */
-.detailed-description .w-md-editor-input {
-  width: 50% !important;
-  background: var(--vscode-editor-background) !important;
-}
-
-/* 清除输入区域内部的预览样式 */
-.detailed-description .w-md-editor-input .w-md-editor-text-pre,
-.detailed-description .w-md-editor-input .w-md-editor-text-pre > code,
-.detailed-description .w-md-editor-input .w-md-editor-text-pre > div {
-  display: none !important;
-}
-
-/* 输入框样式 */
-.detailed-description .w-md-editor-text-input {
-  width: 100% !important;
-  min-height: 120px !important;
-  height: auto !important;
-  padding: 8px 12px !important;
-  margin: 0 !important;
-  border: 0 !important;
-  color: var(--vscode-input-foreground) !important;
-  caret-color: var(--vscode-input-foreground) !important;
-  -webkit-text-fill-color: var(--vscode-input-foreground) !important;
-  background: transparent !important;
-  font-family: var(--vscode-editor-font-family, var(--vscode-font-family)) !important;
-  font-size: var(--vscode-editor-font-size) !important;
-  line-height: 1.5 !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-  box-sizing: border-box !important;
-  outline: none !important;
-  resize: none !important;
-}
-
-/* 预览区域 */
-.detailed-description .w-md-editor-preview {
-  width: 50% !important;
-  padding: 8px 12px !important;
-  color: var(--vscode-input-foreground) !important;
-  background-color: var(--vscode-editor-background) !important;
-  border-left: 1px solid var(--vscode-input-border) !important;
-  overflow-y: auto !important;
-}
-
-/* 隐藏拖动控件和其他不需要的元素 */
-.detailed-description .w-md-editor-text-input::-webkit-resizer,
-.detailed-description .w-md-editor-bar,
-.detailed-description .w-md-editor-drag,
-.detailed-description .w-md-editor-text-pre {
-  display: none !important;
-}
-
-/* 占位符样式 */
-.detailed-description textarea::placeholder {
-  color: var(--vscode-input-placeholderForeground) !important;
-  opacity: 0.5 !important;
-}
-
-/* 选择样式 */
-.detailed-description .w-md-editor-text-input::selection {
-  background-color: var(--vscode-editor-selectionBackground) !important;
-  color: var(--vscode-editor-foreground) !important;
-}
-
-/* 预览内容样式 */
-.detailed-description .w-md-editor-preview-renderer {
-  background-color: var(--vscode-editor-background) !important;
-}
-
-/* Fix preview styles */
-.detailed-description .wmde-markdown {
-  background-color: var(--vscode-editor-background);
-}
-
-.detailed-description .wmde-markdown-color {
-  background-color: var(--vscode-editor-background) !important;
-  color: var(--vscode-input-foreground) !important;
-}
-
-/* Fix code block background */
-.detailed-description .wmde-markdown-color code {
-  background-color: var(--vscode-editor-background) !important;
-  color: var(--vscode-input-foreground) !important;
-}
-
-/* Fix preview container */
-.detailed-description .w-md-editor-preview-renderer {
-  background-color: var(--vscode-editor-background) !important;
-}
-
-.detailed-description {
-  width: 100%;
-}
-
 .detailed-description .editor-container {
   display: flex;
+  position: relative;
   border: 1px solid var(--vscode-input-border);
   border-radius: 4px;
   background: var(--vscode-editor-background);
   min-height: 120px;
+  max-height: calc(100vh - 300px);
+  height: auto;
 }
 
-.detailed-description .input-area {
+/* 视图切换按钮 */
+.detailed-description .view-toggles {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 4px;
+  padding: 4px;
+  z-index: 10;
+}
+
+.detailed-description .view-toggles button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+.detailed-description .view-toggles button:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+  opacity: 0.8;
+}
+
+.detailed-description .view-toggles button.active {
+  background: var(--vscode-toolbar-activeBackground);
+  opacity: 1;
+}
+
+.detailed-description .view-toggles button i {
+  font-size: 16px;
+}
+
+/* 视图模式样式 */
+.detailed-description .editor-container.plain .input-area {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.detailed-description .editor-container.split .input-area {
   width: 50%;
   border-right: 1px solid var(--vscode-input-border);
+  padding-right: 40px;
+}
+
+.detailed-description .editor-container.split .preview-area {
+  width: 50%;
+  padding-right: 40px;
+}
+
+.detailed-description .editor-container.preview .preview-area {
+  width: 100%;
+  padding-right: 40px;
+}
+
+/* 输入区域 */
+.detailed-description .input-area {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .detailed-description .text-input {
@@ -193,11 +111,12 @@
   opacity: 0.5;
 }
 
+/* 预览区域 */
 .detailed-description .preview-area {
-  width: 50%;
   padding: 8px 12px;
   overflow-y: auto;
   color: var(--vscode-input-foreground);
+  height: 100%;
 }
 
 /* Markdown preview styles */
