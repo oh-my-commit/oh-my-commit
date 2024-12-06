@@ -3,6 +3,7 @@
   width: 100%;
   min-height: 150px;
   position: relative;
+  background: var(--vscode-input-background);
 }
 
 .editor-container textarea {
@@ -10,14 +11,13 @@
   min-height: 150px;
   resize: none;
   padding: 8px;
-  border: 1px solid var(--vscode-input-border);
   background: var(--vscode-input-background);
+  /* border: 1px solid var(--vscode-input-border); */
+  border: none;
   color: var(--vscode-input-foreground);
   box-sizing: border-box;
   overflow-y: hidden;
   display: block;
-  height: auto;
-  max-height: 1500px;
 }
 
 .editor-container .preview-content {

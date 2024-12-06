@@ -39,7 +39,7 @@ export const DetailedDescription: React.FC<Props> = ({
     textarea.style.height = "0";
 
     // 然后设置为实际需要的高度
-    const height = Math.max(150, textarea.scrollHeight + 20);
+    const height = Math.max(150, textarea.scrollHeight);
     textarea.style.height = `${height}px`;
   }, [textareaRef]);
 

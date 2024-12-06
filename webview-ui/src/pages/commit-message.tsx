@@ -27,7 +27,17 @@ provideVSCodeDesignSystem().register(
 const CommitMessage = () => {
   const [state, setState] = React.useState<CommitState>({
     title: "",
-    body: "",
+    body: `
+  const textarea = textareaRef.current;
+  if (!textarea) return;
+  
+  // 先将高度设为 0，这样可以正确计算 scrollHeight
+  textarea.style.height = '0';
+  
+  // 然后设置为实际需要的高度
+  const height = Math.max(150, textarea.scrollHeight);
+  textarea.style.height = \`\${height}px\`;
+    `,
     isAmendMode: false,
     diff: "",
     filesChanged: mockFileChanges,
@@ -217,20 +227,32 @@ const CommitMessage = () => {
             {mockRecentCommits.map((commit) => (
               <div
                 key={commit.hash}
-                className={`commit-item ${expandedCommit === commit.hash ? 'expanded' : ''}`}
+                className={`commit-item ${
+                  expandedCommit === commit.hash ? "expanded" : ""
+                }`}
               >
                 <div className="commit-summary">
-                  <button 
+                  <button
                     className="expand-button"
                     onClick={() => handleCommitClick(commit.hash)}
-                    title={expandedCommit === commit.hash ? "Collapse details" : "Expand details"}
+                    title={
+                      expandedCommit === commit.hash
+                        ? "Collapse details"
+                        : "Expand details"
+                    }
                   >
-                    <span className={`expand-icon ${expandedCommit === commit.hash ? 'expanded' : ''}`}>▶</span>
+                    <span
+                      className={`expand-icon ${
+                        expandedCommit === commit.hash ? "expanded" : ""
+                      }`}
+                    >
+                      ▶
+                    </span>
                   </button>
                   <span className="commit-message">{commit.message}</span>
                   <span className="commit-date">{commit.date}</span>
-                  <button 
-                    className="hash-button" 
+                  <button
+                    className="hash-button"
                     onClick={(e) => handleCopyHash(commit.hash, e)}
                     title="Click to copy commit hash"
                   >
@@ -239,9 +261,7 @@ const CommitMessage = () => {
                 </div>
                 <div className="commit-details">
                   <div className="commit-author">{commit.author}</div>
-                  <div className="commit-description">
-                    {commit.description}
-                  </div>
+                  <div className="commit-description">{commit.description}</div>
                 </div>
               </div>
             ))}
