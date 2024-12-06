@@ -132,11 +132,21 @@ vscode-text-area {
   line-height: 16px;
 }
 
-.status-M { background: var(--vscode-gitDecoration-modifiedResourceForeground); }
-.status-A { background: var(--vscode-gitDecoration-addedResourceForeground); }
-.status-D { background: var(--vscode-gitDecoration-deletedResourceForeground); }
-.status-R { background: var(--vscode-gitDecoration-renamedResourceForeground); }
-.status-C { background: var(--vscode-gitDecoration-untrackedResourceForeground); }
+.status-M {
+  background: var(--vscode-gitDecoration-modifiedResourceForeground);
+}
+.status-A {
+  background: var(--vscode-gitDecoration-addedResourceForeground);
+}
+.status-D {
+  background: var(--vscode-gitDecoration-deletedResourceForeground);
+}
+.status-R {
+  background: var(--vscode-gitDecoration-renamedResourceForeground);
+}
+.status-C {
+  background: var(--vscode-gitDecoration-untrackedResourceForeground);
+}
 
 .file-path {
   flex: 1;
@@ -152,8 +162,12 @@ vscode-text-area {
   opacity: 0.7;
 }
 
-.additions { color: var(--vscode-gitDecoration-addedResourceForeground); }
-.deletions { color: var(--vscode-gitDecoration-deletedResourceForeground); }
+.additions {
+  color: var(--vscode-gitDecoration-addedResourceForeground);
+}
+.deletions {
+  color: var(--vscode-gitDecoration-deletedResourceForeground);
+}
 
 .file-diff {
   padding: 8px;
@@ -172,29 +186,78 @@ vscode-text-area {
 }
 
 .commits-list {
+  position: relative;
   display: flex;
   flex-direction: column;
   font-size: 13px;
 }
 
 .commit-item {
-  position: relative;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 8px;
-  height: 22px;
-  cursor: pointer;
+  flex-direction: column;
+  border-bottom: 1px solid var(--vscode-panel-border);
 }
 
 .commit-item:hover {
   background: var(--vscode-list-hoverBackground);
 }
 
+.commit-item .commit-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  height: 22px;
+}
+
+.commit-item .expand-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: 3px;
+}
+
+.commit-item .expand-button:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+  opacity: 0.8;
+}
+
+.commit-item .expand-button .expand-icon {
+  display: inline-block;
+  font-size: 10px;
+  line-height: 1;
+  transform: rotate(0);
+  transition: transform 0.15s ease;
+}
+
+.commit-item .expand-button .expand-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.commit-item .commit-details {
+  display: none;
+  padding: 8px 8px 8px 32px; /* 32px = 按钮位置 + 间距 */
+  background: var(--vscode-textBlockQuote-background);
+  border-top: 1px solid var(--vscode-panel-border);
+}
+
+.commit-item.expanded .commit-details {
+  display: block;
+}
+
 .commit-hash {
   font-family: var(--vscode-editor-font-family);
   color: var(--vscode-textPreformat-foreground);
   font-size: 12px;
+  user-select: text;
 }
 
 .commit-message {
@@ -202,34 +265,28 @@ vscode-text-area {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  user-select: text;
 }
 
 .commit-date {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.7;
+  user-select: text;
 }
 
-.commit-details {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%;
-  padding: 8px;
-  background: var(--vscode-editorHoverWidget-background);
-  border: 1px solid var(--vscode-editorHoverWidget-border);
-  box-shadow: var(--vscode-widget-shadow);
-  z-index: 1;
-}
-
-.commit-author {
+.commit-details .commit-author {
   font-size: 12px;
   opacity: 0.8;
   margin-bottom: 4px;
+  user-select: text;
 }
 
-.commit-description {
+.commit-details .commit-description {
   font-size: 12px;
   white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+  user-select: text;
 }
 
 /* 固定在底部的按钮区域 */

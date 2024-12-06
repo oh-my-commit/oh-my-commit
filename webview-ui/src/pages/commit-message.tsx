@@ -9,9 +9,9 @@ import { buildFileTree } from "@/utils/build-file-tree";
 import {
   provideVSCodeDesignSystem,
   vsCodeButton,
-  vsCodeCheckbox,
-  vsCodeDivider,
   vsCodeTextArea,
+  vsCodeDivider,
+  vsCodeCheckbox,
 } from "@vscode/webview-ui-toolkit";
 import React from "react";
 import { getVsCodeApi } from "@/utils/vscode";
@@ -35,7 +35,10 @@ const CommitMessage = () => {
   });
 
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
-  const [hoveredCommit, setHoveredCommit] = React.useState<string | null>(null);
+  const [expandedCommit, setExpandedCommit] = React.useState<string | null>(
+    null
+  );
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
   const vscode = React.useMemo(() => getVsCodeApi(), []);
 
@@ -134,6 +137,10 @@ const CommitMessage = () => {
     [state.filesChanged]
   );
 
+  const handleCommitClick = (hash: string) => {
+    setExpandedCommit(expandedCommit === hash ? null : hash);
+  };
+
   return (
     <div className="commit-container">
       <div className="commit-form">
@@ -204,22 +211,26 @@ const CommitMessage = () => {
             {mockRecentCommits.map((commit) => (
               <div
                 key={commit.hash}
-                className="commit-item"
-                // todo
-                // onMouseEnter={() => setHoveredCommit(commit.hash)}
-                // onMouseLeave={() => setHoveredCommit(null)}
+                className={`commit-item ${expandedCommit === commit.hash ? 'expanded' : ''}`}
               >
-                <span className="commit-hash">{commit.hash.slice(0, 7)}</span>
-                <span className="commit-message">{commit.message}</span>
-                <span className="commit-date">{commit.date}</span>
-                {hoveredCommit === commit.hash && (
-                  <div className="commit-details">
-                    <div className="commit-author">{commit.author}</div>
-                    <div className="commit-description">
-                      {commit.description}
-                    </div>
+                <div className="commit-summary">
+                  <button 
+                    className="expand-button"
+                    onClick={() => handleCommitClick(commit.hash)}
+                    title={expandedCommit === commit.hash ? "Collapse details" : "Expand details"}
+                  >
+                    <span className={`expand-icon ${expandedCommit === commit.hash ? 'expanded' : ''}`}>▶</span>
+                  </button>
+                  <span className="commit-hash">{commit.hash.slice(0, 7)}</span>
+                  <span className="commit-message">{commit.message}</span>
+                  <span className="commit-date">{commit.date}</span>
+                </div>
+                <div className="commit-details">
+                  <div className="commit-author">{commit.author}</div>
+                  <div className="commit-description">
+                    {commit.description}
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
@@ -230,7 +241,11 @@ const CommitMessage = () => {
         <vscode-button appearance="secondary" onClick={handleCancel}>
           Cancel
         </vscode-button>
-        <vscode-button appearance="primary" onClick={handleSubmit} disabled={!state.title.trim()}>
+        <vscode-button
+          appearance="primary"
+          onClick={handleSubmit}
+          disabled={!state.title.trim()}
+        >
           {state.isAmendMode ? "Amend Commit" : "Commit Changes"}
         </vscode-button>
       </div>
