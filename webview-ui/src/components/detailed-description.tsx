@@ -26,118 +26,253 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
   };
 
   // Helper function to get the previous line's indentation level
-  const getPreviousLineIndentLevel = (text: string, currentLineStart: number): number => {
+  const getPreviousLineIndentLevel = (
+    text: string,
+    currentLineStart: number
+  ): number => {
     const lastNewline = text.lastIndexOf("\n", currentLineStart - 1);
     if (lastNewline === -1) return 0;
-    
-    const previousLine = text.slice(text.lastIndexOf("\n", lastNewline - 1) + 1, lastNewline);
+
+    const previousLine = text.slice(
+      text.lastIndexOf("\n", lastNewline - 1) + 1,
+      lastNewline
+    );
     return getIndentationLevel(previousLine);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    console.log("Key pressed:", e);
+    // Prevent default Tab behavior
+    if (e.key === "Tab") {
+      e.preventDefault();
+    }
+
     if (e.currentTarget instanceof HTMLTextAreaElement) {
       const textarea = e.currentTarget;
       const { selectionStart, selectionEnd } = textarea;
       const text = textarea.value;
-      const lines = text.split("\n");
-      
-      // Find the start and end lines of the selection
-      const startLineIndex = text.slice(0, selectionStart).split("\n").length - 1;
-      const endLineIndex = text.slice(0, selectionEnd).split("\n").length - 1;
-      
-      // Get the current line's content
-      const currentLine = lines[startLineIndex];
-      const isList = currentLine.trim().startsWith("- ");
-      const currentIndentLevel = getIndentationLevel(currentLine);
 
       // Handle Tab key for indentation
       if (e.key === "Tab") {
-        e.preventDefault();
-        
-        // Handle list indentation
-        if (isList) {
-          const prevIndentLevel = getPreviousLineIndentLevel(text, text.indexOf(currentLine));
-          
-          // Only allow indentation if it won't exceed previous level + 1
-          if (!e.shiftKey && currentIndentLevel >= prevIndentLevel + 1) {
-            return;
+        console.log("Tab pressed, current state:", {
+          selectionStart,
+          selectionEnd,
+          textLength: text.length,
+          text,
+        });
+
+        // Split text into lines and find the affected lines
+        const lines = text.split("\n");
+        let startLineIndex =
+          text.slice(0, selectionStart).split("\n").length - 1;
+        let endLineIndex = text.slice(0, selectionEnd).split("\n").length - 1;
+
+        console.log("Line indices:", {
+          startLineIndex,
+          endLineIndex,
+          totalLines: lines.length,
+          lines,
+        });
+
+        // Process each affected line
+        for (let i = startLineIndex; i <= endLineIndex; i++) {
+          const line = lines[i];
+          const isList = line.trim().startsWith("- ");
+          const currentIndent = getIndentationLevel(line);
+
+          console.log(`Processing line ${i}:`, {
+            originalLine: line,
+            isList,
+            currentIndent,
+          });
+
+          // For list items, check indentation limit
+          if (isList && !e.shiftKey) {
+            const prevIndentLevel =
+              i === 0
+                ? getPreviousLineIndentLevel(text, text.indexOf(line))
+                : getIndentationLevel(lines[i - 1]);
+
+            console.log("List item indentation check:", {
+              prevIndentLevel,
+              currentIndent,
+              canIndent: currentIndent < prevIndentLevel + 1,
+            });
+
+            if (currentIndent >= prevIndentLevel + 1) {
+              continue;
+            }
+          }
+
+          // Apply indentation
+          if (e.shiftKey) {
+            const oldLine = lines[i];
+            lines[i] = line.replace(/^  /, "");
+            console.log("Unindent line:", {
+              before: oldLine,
+              after: lines[i],
+            });
+          } else {
+            const oldLine = lines[i];
+            lines[i] = "  " + line;
+            console.log("Indent line:", {
+              before: oldLine,
+              after: lines[i],
+            });
           }
         }
 
-        // Process each line in the selection
-        const newLines = lines.map((line, i) => {
-          if (i >= startLineIndex && i <= endLineIndex) {
-            if (e.shiftKey) {
-              // Unindent: remove 2 spaces from start if they exist
-              return line.replace(/^  /, "");
-            } else {
-              // Indent: add 2 spaces at start
-              return "  " + line;
-            }
-          }
-          return line;
+        // Join lines back together
+        const newValue = lines.join("\n");
+        const indentChange = e.shiftKey ? -2 : 2;
+
+        // Calculate new cursor positions
+        const beforeStartLine =
+          lines.slice(0, startLineIndex).join("\n").length +
+          (startLineIndex > 0 ? 1 : 0);
+        const beforeEndLine =
+          lines.slice(0, endLineIndex).join("\n").length +
+          (endLineIndex > 0 ? 1 : 0);
+        const startLineLength = lines[startLineIndex].length;
+        const endLineLength = lines[endLineIndex].length;
+
+        console.log("Cursor position calculation:", {
+          beforeStartLine,
+          beforeEndLine,
+          startLineLength,
+          endLineLength,
+          indentChange,
         });
 
-        const newValue = newLines.join("\n");
-        const newCursorPos = e.shiftKey
-          ? selectionStart - (currentLine.startsWith("  ") ? 2 : 0)
-          : selectionStart + 2;
+        // Update the text
+        console.log("Text update:", {
+          oldValue: text,
+          newValue,
+          lengthChange: newValue.length - text.length,
+        });
 
         setInternalValue(newValue);
         onChange(newValue);
 
-        // Restore cursor position
+        // Adjust cursor position
         setTimeout(() => {
-          textarea.selectionStart = newCursorPos;
-          textarea.selectionEnd = newCursorPos + (selectionEnd - selectionStart);
+          if (startLineIndex === endLineIndex) {
+            // Single line selection
+            const newPos = selectionStart + indentChange;
+            console.log("Single line cursor adjustment:", {
+              oldStart: selectionStart,
+              oldEnd: selectionEnd,
+              newStart: newPos,
+              newEnd:
+                selectionStart === selectionEnd
+                  ? newPos
+                  : newPos + (selectionEnd - selectionStart),
+            });
+            textarea.selectionStart = newPos;
+            textarea.selectionEnd =
+              selectionStart === selectionEnd
+                ? newPos
+                : newPos + (selectionEnd - selectionStart);
+          } else {
+            // Multi-line selection
+            const newStart = beforeStartLine + (e.shiftKey ? 0 : 2);
+            const newEnd = beforeEndLine + endLineLength;
+            console.log("Multi-line cursor adjustment:", {
+              oldStart: selectionStart,
+              oldEnd: selectionEnd,
+              newStart,
+              newEnd,
+            });
+            textarea.selectionStart = newStart;
+            textarea.selectionEnd = newEnd;
+          }
         }, 0);
-        
+
         return;
       }
 
       // Handle bullet points
+      const lines = text.split("\n");
+      const currentLineIndex =
+        text.slice(0, selectionStart).split("\n").length - 1;
+      const currentLine = lines[currentLineIndex];
+
       if (e.key === " " && currentLine === "-") {
         e.preventDefault();
+        console.log("Converting to bullet point:", {
+          currentLine,
+          currentLineIndex,
+        });
 
         // Insert markdown list syntax
-        const beforeText = textarea.value.slice(0, selectionStart);
-        const afterText = textarea.value.slice(selectionStart);
-        const newValue = `${beforeText} ${afterText}`;
+        lines[currentLineIndex] = "- ";
+        const newValue = lines.join("\n");
 
         setInternalValue(newValue);
         onChange(newValue);
 
         // Set cursor position after the bullet point
+        const beforeCurrentLine =
+          lines.slice(0, currentLineIndex).join("\n").length +
+          (currentLineIndex > 0 ? 1 : 0);
         setTimeout(() => {
-          textarea.selectionStart = textarea.selectionEnd = selectionStart + 1;
+          textarea.selectionStart = textarea.selectionEnd =
+            beforeCurrentLine + 2;
         }, 0);
       }
       // Handle Enter key for continuing lists
       else if (e.key === "Enter" && currentLine.trim().startsWith("- ")) {
         e.preventDefault();
+        console.log("Continuing list:", {
+          currentLine,
+          currentLineIndex,
+        });
 
         const indentation = currentLine.match(/^\s*/)?.[0] || "";
-        const contentAfterBullet = currentLine.slice(indentation.length + 2).trim();
+        const contentAfterBullet = currentLine
+          .slice(indentation.length + 2)
+          .trim();
+
+        console.log("List continuation check:", {
+          indentation,
+          contentAfterBullet,
+          isEmpty: !contentAfterBullet,
+        });
 
         // If the current line only has a bullet point and no content, remove it and its indentation
         if (!contentAfterBullet) {
-          const lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
-          const newValue = text.slice(0, lineStart) + text.slice(selectionStart);
+          lines[currentLineIndex] = "";
+          const newValue = lines.join("\n");
+          console.log("Removing empty bullet point:", {
+            oldLine: currentLine,
+            newValue,
+          });
           setInternalValue(newValue);
           onChange(newValue);
           return;
         }
 
         // Add a new bullet point on the next line with the same indentation
-        const newValue = text.slice(0, selectionStart) + 
-          "\n" + indentation + "- " + 
-          text.slice(selectionEnd);
+        lines.splice(currentLineIndex + 1, 0, `${indentation}- `);
+        const newValue = lines.join("\n");
+
+        console.log("Adding new bullet point:", {
+          newLine: `${indentation}- `,
+          newValue,
+        });
 
         setInternalValue(newValue);
         onChange(newValue);
 
         // Set cursor position after the new bullet point
-        const newCursorPos = selectionStart + 1 + indentation.length + 2;
+        const beforeNewLine =
+          lines.slice(0, currentLineIndex + 1).join("\n").length + 1;
+        const newCursorPos = beforeNewLine + indentation.length + 2;
+        console.log("New bullet point cursor position:", {
+          beforeNewLine,
+          indentationLength: indentation.length,
+          newCursorPos,
+        });
         setTimeout(() => {
           textarea.selectionStart = textarea.selectionEnd = newCursorPos;
         }, 0);
@@ -175,7 +310,8 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         commands={extraCommands}
         textareaProps={{
           placeholder,
-          onKeyDown: handleKeyDown,
+          // onKeyDown 检测不到 Tab 键
+          onKeyDownCapture: handleKeyDown,
         }}
         height={150}
       />
