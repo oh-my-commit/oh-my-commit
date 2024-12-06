@@ -8,6 +8,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@uiw/react-md-editor": "^4.0.4",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"

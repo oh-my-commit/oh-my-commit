@@ -1,0 +1,59 @@
+.detailed-description {
+  width: 100%;
+}
+
+.detailed-description .w-md-editor {
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 2px;
+}
+
+.detailed-description .w-md-editor-text-input {
+  color: var(--vscode-input-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+}
+
+.detailed-description .w-md-editor-preview {
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-editor-background) !important;
+}
+
+.detailed-description .w-md-editor-text {
+  color: var(--vscode-input-foreground);
+}
+
+/* Customize toolbar */
+.detailed-description .w-md-editor-toolbar {
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-input-border);
+}
+
+.detailed-description .w-md-editor-toolbar li > button {
+  color: var(--vscode-input-foreground);
+}
+
+.detailed-description .w-md-editor-toolbar li > button:hover {
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-input-border);
+}
+
+/* Fix preview styles */
+.detailed-description .wmde-markdown {
+  background-color: var(--vscode-editor-background);
+}
+
+.detailed-description .wmde-markdown-color {
+  background-color: var(--vscode-editor-background) !important;
+  color: var(--vscode-input-foreground) !important;
+}
+
+/* Fix code block background */
+.detailed-description .wmde-markdown-color code {
+  background-color: var(--vscode-editor-background) !important;
+  color: var(--vscode-input-foreground) !important;
+}
+
+/* Fix preview container */
+.detailed-description .w-md-editor-preview-renderer {
+  background-color: var(--vscode-editor-background) !important;
+}

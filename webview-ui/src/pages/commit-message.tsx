@@ -3,6 +3,7 @@ import { FileTreeErrorBoundary } from "@/components/file-tree-error-boundary";
 import { mockFileChanges } from "@/data/mock-file-changes";
 import { mockRecentCommits } from "@/data/mock-recent-commits";
 import { CommitState } from "@/types/commit-state";
+import { DetailedDescription } from "@/components/detailed-description";
 
 import { buildFileTree } from "@/utils/build-file-tree";
 import {
@@ -155,15 +156,10 @@ const CommitMessage = () => {
             autoFocus
           />
 
-          <vscode-text-area
+          <DetailedDescription
             value={state.body}
-            onChange={(e: any) => {
-              console.log(e);
-              setState((prev) => ({ ...prev, body: e.target.value }));
-            }}
+            onChange={(value) => setState((prev) => ({ ...prev, body: value }))}
             placeholder="Detailed description (optional)"
-            resize="vertical"
-            rows={3}
           />
         </div>
 
