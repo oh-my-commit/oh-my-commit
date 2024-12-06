@@ -10,7 +10,7 @@ export class WebviewManager {
   private readonly template: HandlebarsTemplateDelegate;
 
   constructor(
-    private readonly context: vscode.ExtensionContext,
+    context: vscode.ExtensionContext,
     private readonly viewType: string,
     private readonly title: string,
     private readonly outputChannel = vscode.window.createOutputChannel(
@@ -35,11 +35,40 @@ export class WebviewManager {
       new vscode.RelativePattern(context.extensionUri, "dist/webview-ui/**")
     );
 
-    ["onDidChange", "onDidCreate", "onDidDelete"].forEach((event) =>
-      watcher[event](() => this.webviewPanel?.webview && this.updateWebview())
-    );
+    type WatcherEvent = 'onDidChange' | 'onDidCreate' | 'onDidDelete';
+    const events: WatcherEvent[] = ['onDidChange', 'onDidCreate', 'onDidDelete'];
+    
+    events.forEach(event => {
+      const watcherEvent = watcher[event] as vscode.Event<vscode.Uri>;
+      watcherEvent(() => this.webviewPanel?.webview && this.updateWebview());
+    });
 
     context.subscriptions.push(watcher, this);
+  }
+
+  public createWebviewPanel(): vscode.WebviewPanel {
+    if (this.webviewPanel) {
+      this.webviewPanel.reveal();
+      return this.webviewPanel;
+    }
+
+    this.webviewPanel = vscode.window.createWebviewPanel(
+      this.viewType,
+      this.title,
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+      }
+    );
+
+    this.updateWebview();
+    
+    this.webviewPanel.onDidDispose(() => {
+      this.webviewPanel = undefined;
+    });
+
+    return this.webviewPanel;
   }
 
   private updateWebview() {
