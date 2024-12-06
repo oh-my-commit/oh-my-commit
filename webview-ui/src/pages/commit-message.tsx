@@ -51,9 +51,10 @@ const CommitMessage = () => {
               isAmendMode: message.isAmendMode,
               diff: message.diff || "",
               title: message.initialMessage?.split("\\n")[0] || "",
-              body: message.initialMessage?.split("\\n").slice(1).join("\\n") || "",
+              body:
+                message.initialMessage?.split("\\n").slice(1).join("\\n") || "",
               filesChanged,
-              selectedFiles: new Set(filesChanged.map((f) => f.path)), // 更新选中的文件
+              selectedFiles: new Set(filesChanged.map((f: any) => f.path)), // 更新选中的文件
             };
           });
           break;

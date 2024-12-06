@@ -293,7 +293,7 @@ export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
         groupName: "extra",
         icon: <></>,
         children: ({ textApi }) => {
-          return [];
+          return <></>;
         },
       }),
     ],
