@@ -39,7 +39,8 @@
         "yaac.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "是否启用 YAAC"
+          "description": "是否启用 YAAC",
+          "order": 1
         },
         "yaac.language": {
           "type": "string",
@@ -48,73 +49,8 @@
             "en_US"
           ],
           "default": "zh_CN",
-          "description": "提交信息的语言"
-        },
-        "yaac.noDiffBehavior": {
-          "type": "string",
-          "enum": [
-            "ignore",
-            "revise"
-          ],
-          "enumDescriptions": [
-            "忽略",
-            "修改上次提交"
-          ],
-          "default": "ignore",
-          "description": "当没有文件变更时的行为"
-        },
-        "yaac.providers": {
-          "type": "object",
-          "description": "Provider 启用状态配置",
-          "additionalProperties": {
-            "type": "boolean"
-          },
-          "default": {}
-        },
-        "yaac.currentSolution": {
-          "type": "string",
-          "description": "Current Solution",
-          "enum": [
-            "OpenAI / GPT 4",
-            "OpenAI / GPT 3.5 Turbo"
-          ],
-          "enumDescriptions": [
-            "High accuracy commit messages using GPT-4 (API Required)",
-            "Fast and efficient commit messages using GPT-3.5 (API Required)"
-          ]
-        },
-        "yaac.apiKeys": {
-          "type": "object",
-          "properties": {
-            "openai": {
-              "type": "string",
-              "default": "",
-              "description": "OpenAI API 密钥"
-            },
-            "anthropic": {
-              "type": "string",
-              "default": "",
-              "description": "Anthropic API 密钥"
-            },
-            "deepseek": {
-              "type": "string",
-              "default": "",
-              "description": "Deepseek API 密钥"
-            },
-            "zhipu": {
-              "type": "string",
-              "default": "",
-              "description": "智谱 AI API 密钥"
-            },
-            "groq": {
-              "type": "string",
-              "default": "",
-              "description": "Groq API 密钥"
-            }
-          },
-          "additionalProperties": false,
-          "default": {},
-          "description": "各 AI 服务商的 API 密钥配置"
+          "description": "提交信息的语言",
+          "order": 2
         },
         "yaac.inputAppearence": {
           "type": "string",
@@ -127,7 +63,101 @@
             "⚡️ Quick & Simple: Single-line input box for fast commits",
             "📝 Professional: Split-window editor with preview and formatting"
           ],
-          "markdownDescription": "Choose how to input commit messages:\n\n### Quick Input Mode (`quickInput`)\n- ✨ **Best for**: Quick, simple commits\n- ⚡️ **Pros**: Faster, lightweight\n- 🤔 **Cons**: Limited to single line\n\n### WebView Mode (`webview`)\n- ✨ **Best for**: Detailed commit messages\n- 💪 **Pros**: Multi-line support, live preview, better formatting\n- 🤔 **Cons**: Takes more screen space\n\n[Learn more about Git commit messages](https://cbea.ms/git-commit/)"
+          "markdownDescription": "Choose how to input commit messages:\n\n### Quick Input Mode (`quickInput`)\n- ✨ **Best for**: Quick, simple commits\n- ⚡️ **Pros**: Faster, lightweight\n- 🤔 **Cons**: Limited to single line\n\n### WebView Mode (`webview`)\n- ✨ **Best for**: Detailed commit messages\n- 💪 **Pros**: Multi-line support, live preview, better formatting\n- 🤔 **Cons**: Takes more screen space\n\n[Learn more about Git commit messages](https://cbea.ms/git-commit/)",
+          "order": 10
+        },
+        "yaac.descriptionViewMode": {
+          "type": "string",
+          "enum": [
+            "plain",
+            "split",
+            "preview"
+          ],
+          "enumDescriptions": [
+            "纯文本编辑模式，适合快速编辑",
+            "分屏模式，左侧编辑，右侧实时预览",
+            "预览模式，查看渲染后的效果"
+          ],
+          "default": "split",
+          "description": "提交信息详细描述的编辑器视图模式",
+          "markdownDescription": "提交信息详细描述的编辑器视图模式：\n- `plain`: 纯文本编辑模式\n- `split`: 分屏模式（默认）\n- `preview`: 预览模式",
+          "scope": "window",
+          "order": 11
+        },
+        "yaac.noDiffBehavior": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "revise"
+          ],
+          "enumDescriptions": [
+            "忽略",
+            "修改上次提交"
+          ],
+          "default": "ignore",
+          "description": "当没有文件变更时的行为",
+          "order": 20
+        },
+        "yaac.currentSolution": {
+          "type": "string",
+          "description": "Current Solution",
+          "enum": [
+            "OpenAI / GPT 4",
+            "OpenAI / GPT 3.5 Turbo"
+          ],
+          "enumDescriptions": [
+            "High accuracy commit messages using GPT-4 (API Required)",
+            "Fast and efficient commit messages using GPT-3.5 (API Required)"
+          ],
+          "order": 30
+        },
+        "yaac.providers": {
+          "type": "object",
+          "description": "Provider 启用状态配置",
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "default": {},
+          "order": 31
+        },
+        "yaac.apiKeys": {
+          "type": "object",
+          "properties": {
+            "openai": {
+              "type": "string",
+              "default": "",
+              "description": "OpenAI API 密钥",
+              "order": 32
+            },
+            "anthropic": {
+              "type": "string",
+              "default": "",
+              "description": "Anthropic API 密钥",
+              "order": 33
+            },
+            "deepseek": {
+              "type": "string",
+              "default": "",
+              "description": "Deepseek API 密钥",
+              "order": 34
+            },
+            "zhipu": {
+              "type": "string",
+              "default": "",
+              "description": "智谱 AI API 密钥",
+              "order": 35
+            },
+            "groq": {
+              "type": "string",
+              "default": "",
+              "description": "Groq API 密钥",
+              "order": 36
+            }
+          },
+          "additionalProperties": false,
+          "default": {},
+          "description": "各 AI 服务商的 API 密钥配置",
+          "order": 32
         }
       }
     }
