@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { CommitMessage } from "./CommitMessage";
-import "./styles.css";
+import { CommitMessage } from "@/pages/commit-message";
+import "@/styles/styles.css";
 
 // 确保 DOM 加载完成
 window.addEventListener("load", () => {

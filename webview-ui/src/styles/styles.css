@@ -113,3 +113,26 @@ vscode-button {
 .file-diff pre {
   margin: 0;
 }
+
+.directory-stats {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.changes-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.directory-stats .additions {
+  color: var(--vscode-gitDecoration-addedResourceForeground);
+}
+
+.directory-stats .deletions {
+  color: var(--vscode-gitDecoration-deletedResourceForeground);
+}
