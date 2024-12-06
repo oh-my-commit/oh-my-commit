@@ -36,7 +36,7 @@ const CommitMessage = () => {
       />
       <div className="button-container">
         <vscode-button appearance="secondary" onClick={handleCancel}>
-          Cancel2
+          Cancel23
         </vscode-button>
         <vscode-button onClick={handleSubmit}>Commit</vscode-button>
       </div>
