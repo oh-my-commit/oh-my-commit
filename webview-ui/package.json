@@ -14,7 +14,8 @@
     "jotai": "^2.10.3",
     "marked": "^15.0.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "vscode-webview": "1.0.1-beta.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
