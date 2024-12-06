@@ -1,14 +1,20 @@
-body {
-  padding: 0;
+html,
+body,
+#root {
+  padding: 0px;
   margin: 0;
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
   background: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
   font-family: var(--vscode-font-family);
   font-size: var(--vscode-font-size);
   font-weight: var(--vscode-font-weight);
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 vscode-text-area {
@@ -35,19 +41,17 @@ vscode-button {
   padding: var(--vscode-layout-gap);
   display: flex;
   flex-direction: column;
-  /* width: 100%; */
-  margin: auto;
-  margin-top: 20px;
-  /* gap: var(--vscode-layout-gap); */
+  margin: 0 auto;
+  padding-top: 20px;
   gap: 10px;
   width: 360px;
   height: 480px;
+  box-sizing: border-box;
 }
 
 .button-container {
   display: flex;
   justify-content: flex-end;
   padding: calc(var(--vscode-layout-gap) / 2);
-  /* gap: var(--vscode-layout-gap); */
   gap: 10px;
 }
