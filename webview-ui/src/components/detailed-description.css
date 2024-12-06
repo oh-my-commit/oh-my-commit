@@ -1,31 +1,60 @@
 .detailed-description {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
+}
+
+.description-header {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.description-header .title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vscode-foreground);
+  opacity: 0.7;
+  padding: 0 1px;
 }
 
 .view-mode-buttons {
   display: flex;
-  gap: 4px;
+  gap: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  margin-left: auto;
+}
+
+.view-mode-buttons:hover {
+  opacity: 1;
 }
 
 .mode-button {
-  padding: 4px 12px;
-  border: 1px solid var(--vscode-button-border);
-  background: var(--vscode-button-background);
-  color: var(--vscode-button-foreground);
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--vscode-foreground);
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+  min-width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mode-button:hover {
-  background: var(--vscode-button-hoverBackground);
+  background: var(--vscode-button-secondaryBackground);
+  opacity: 1;
 }
 
 .mode-button.active {
   background: var(--vscode-button-secondaryBackground);
   border-color: var(--vscode-button-secondaryHoverBackground);
+  opacity: 1;
 }
 
 .editor-container {

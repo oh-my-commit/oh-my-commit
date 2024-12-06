@@ -1,5 +1,3 @@
-import { getIndentationLevel, getPreviousLineIndentLevel } from "./utils";
-
 // Helper function to get the indentation level of a line
 export const getIndentationLevel = (line: string): number => {
   const match = line.match(/^\s*/);

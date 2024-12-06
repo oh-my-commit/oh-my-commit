@@ -7,17 +7,17 @@ interface Props {
   value: string;
   placeholder?: string;
   onChange: (value: string) => void;
+  viewMode: "plain" | "split" | "preview";
+  title?: string;
 }
-
-type ViewMode = "plain" | "split" | "preview";
 
 export const DetailedDescription: React.FC<Props> = ({
   value,
   placeholder,
   onChange,
+  viewMode,
 }) => {
   const [internalValue, setInternalValue] = useState(value);
-  const [viewMode, setViewMode] = useState<ViewMode>("split");
   const plainTextareaRef = useRef<HTMLTextAreaElement>(null);
   const splitTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -27,12 +27,15 @@ export const DetailedDescription: React.FC<Props> = ({
   }, [value]);
 
   // 自动调整文本区域高度
-  const adjustTextareaHeight = useCallback((textarea: HTMLTextAreaElement | null) => {
-    if (!textarea) return;
-    textarea.style.height = "auto";
-    const height = Math.max(150, textarea.scrollHeight);
-    textarea.style.height = `${height}px`;
-  }, []);
+  const adjustTextareaHeight = useCallback(
+    (textarea: HTMLTextAreaElement | null) => {
+      if (!textarea) return;
+      textarea.style.height = "auto";
+      const height = Math.max(150, textarea.scrollHeight);
+      textarea.style.height = `${height}px`;
+    },
+    []
+  );
 
   // 处理文本变化
   const handleChange = useCallback(
@@ -70,71 +73,55 @@ export const DetailedDescription: React.FC<Props> = ({
   }, [viewMode, adjustTextareaHeight]);
 
   return (
-    <div className="detailed-description">
-      <div className="view-mode-buttons">
-        <button
-          className={classnames("mode-button", {
-            active: viewMode === "plain",
-          })}
-          onClick={() => setViewMode("plain")}
-        >
-          Plain
-        </button>
-        <button
-          className={classnames("mode-button", {
-            active: viewMode === "split",
-          })}
-          onClick={() => setViewMode("split")}
-        >
-          Split
-        </button>
-        <button
-          className={classnames("mode-button", {
-            active: viewMode === "preview",
-          })}
-          onClick={() => setViewMode("preview")}
-        >
-          Preview
-        </button>
+    <div className={`editor-container mode-${viewMode}`}>
+      {/* Plain View */}
+      <div
+        className={classnames("view-container plain-view", {
+          active: viewMode === "plain",
+        })}
+      >
+        <textarea
+          ref={plainTextareaRef}
+          value={internalValue}
+          onChange={handleChange}
+          placeholder={placeholder}
+          className="plain-textarea"
+        />
       </div>
-      <div className={`editor-container mode-${viewMode}`}>
-        {/* Plain View */}
-        <div className={classnames("view-container plain-view", { active: viewMode === "plain" })}>
-          <textarea
-            ref={plainTextareaRef}
-            value={internalValue}
-            onChange={handleChange}
-            placeholder={placeholder}
-            className="plain-textarea"
-          />
-        </div>
 
-        {/* Split View */}
-        <div className={classnames("view-container split-view", { active: viewMode === "split" })}>
-          <textarea
-            ref={splitTextareaRef}
-            value={internalValue}
-            onChange={handleChange}
-            placeholder={placeholder}
-            className="split-textarea"
-          />
-          <div
-            className="preview-content"
-            dangerouslySetInnerHTML={{
-              __html: marked(internalValue),
-            }}
-          />
-        </div>
+      {/* Split View */}
+      <div
+        className={classnames("view-container split-view", {
+          active: viewMode === "split",
+        })}
+      >
+        <textarea
+          ref={splitTextareaRef}
+          value={internalValue}
+          onChange={handleChange}
+          placeholder={placeholder}
+          className="split-textarea"
+        />
+        <div
+          className="preview-content"
+          dangerouslySetInnerHTML={{
+            __html: marked(internalValue),
+          }}
+        />
+      </div>
 
-        {/* Preview View */}
-        <div className={classnames("view-container preview-view", { active: viewMode === "preview" })}>
-          <div
-            className="preview-content"
-            dangerouslySetInnerHTML={{
-              __html: marked(internalValue),
-            }}
-          />
-        </div>
+      {/* Preview View */}
+      <div
+        className={classnames("view-container preview-view", {
+          active: viewMode === "preview",
+        })}
+      >
+        <div
+          className="preview-content"
+          dangerouslySetInnerHTML={{
+            __html: marked(internalValue),
+          }}
+        />
       </div>
     </div>
   );

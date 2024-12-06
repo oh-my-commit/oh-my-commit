@@ -8,13 +8,12 @@
   color: var(--vscode-editor-foreground);
 }
 
-/* 内容区域可以滚动 */
 .commit-form {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px 16px 76px 16px; /* 底部留出按钮的空间 */
+  gap: 20px;
+  padding: 12px 16px 76px 16px;
   overflow-y: auto;
   position: relative;
 }
@@ -22,34 +21,77 @@
 .commit-input-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-height: fit-content;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .input-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 0 2px;
+  min-height: 24px;
 }
 
-.ai-badge {
-  background: var(--vscode-statusBarItem-remoteBackground);
-  color: var(--vscode-statusBarItem-remoteForeground);
-  padding: 2px 6px;
+.input-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vscode-foreground);
+  opacity: 0.7;
+  padding: 0 1px;
+}
+
+.input-options {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.view-mode-buttons {
+  display: flex;
+  gap: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.view-mode-buttons:hover {
+  opacity: 1;
+}
+
+.mode-button {
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--vscode-foreground);
+  cursor: pointer;
   border-radius: 3px;
   font-size: 11px;
-  font-weight: 600;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+  min-width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hint {
-  color: var(--vscode-descriptionForeground);
-  font-size: 12px;
+.mode-button:hover {
+  background: var(--vscode-button-secondaryBackground);
+  opacity: 1;
+}
+
+.mode-button.active {
+  background: var(--vscode-button-secondaryBackground);
+  border-color: var(--vscode-button-secondaryHoverBackground);
+  opacity: 1;
 }
 
 .commit-title {
-  height: 28px;
-  padding: 4px 8px;
+  height: 26px;
+  padding: 3px 8px;
   border: 1px solid var(--vscode-input-border);
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
@@ -65,44 +107,74 @@
 
 .commit-title::placeholder {
   color: var(--vscode-input-placeholderForeground);
-}
-
-vscode-text-area {
-  width: 100%;
+  opacity: 0.6;
 }
 
 .changes-section {
-  border-top: 1px solid var(--vscode-panel-border);
-  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stats-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.stats-badge {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.file-count {
+  font-size: 10px;
+  opacity: 0.7;
+  font-weight: normal;
+  text-transform: none;
+  padding-left: 2px;
+  border-left: 1px solid var(--vscode-textSeparator-foreground);
 }
 
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
-  height: 22px;
+  padding-bottom: 6px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--vscode-textSeparator-foreground);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--vscode-sideBarSectionHeader-foreground);
 }
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.ai-badge {
+  background: var(--vscode-statusBarItem-remoteBackground);
+  color: var(--vscode-statusBarItem-remoteForeground);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: none;
+  line-height: 14px;
 }
 
-.stats-badge {
-  display: flex;
-  gap: 4px;
+.hint {
+  color: var(--vscode-descriptionForeground);
   font-size: 11px;
+  font-weight: normal;
+  text-transform: none;
   opacity: 0.8;
-}
-
-.file-count {
-  opacity: 0.7;
 }
 
 .files-list {

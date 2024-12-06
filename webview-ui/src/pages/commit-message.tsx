@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { getVsCodeApi } from "@/utils/vscode";
 import "./commit-message.css";
+import classnames from "classnames";
 
 provideVSCodeDesignSystem().register(
   vsCodeButton(),
@@ -25,6 +26,7 @@ provideVSCodeDesignSystem().register(
 );
 
 const CommitMessage = () => {
+  // 业务状态
   const [state, setState] = React.useState<CommitState>({
     title: "",
     body: `
@@ -44,11 +46,45 @@ const CommitMessage = () => {
     selectedFiles: new Set(mockFileChanges.map((f) => f.path)), // 默认全选
   });
 
+  // UI 状态
+  const [descriptionViewMode, setDescriptionViewMode] = React.useState<
+    "plain" | "split" | "preview"
+  >("split");
+
+  // 从本地存储加载 viewMode
+  React.useEffect(() => {
+    try {
+      const savedViewMode = localStorage.getItem(
+        "commit_description_view_mode"
+      );
+      if (
+        savedViewMode &&
+        ["plain", "split", "preview"].includes(savedViewMode)
+      ) {
+        setDescriptionViewMode(savedViewMode as "plain" | "split" | "preview");
+      }
+    } catch (error) {
+      console.warn("Failed to load view mode from localStorage:", error);
+    }
+  }, []);
+
+  // 保存 viewMode 到本地存储
+  const handleViewModeChange = React.useCallback(
+    (newMode: "plain" | "split" | "preview") => {
+      setDescriptionViewMode(newMode);
+      try {
+        localStorage.setItem("commit_description_view_mode", newMode);
+      } catch (error) {
+        console.warn("Failed to save view mode to localStorage:", error);
+      }
+    },
+    []
+  );
+
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
   const [expandedCommit, setExpandedCommit] = React.useState<string | null>(
     null
   );
-  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
   const vscode = React.useMemo(() => getVsCodeApi(), []);
 
@@ -161,44 +197,96 @@ const CommitMessage = () => {
     <div className="commit-container">
       <div className="commit-form">
         <div className="commit-input-section">
-          <div className="input-header">
-            <span className="ai-badge">AI</span>
-            <span className="hint">
-              Review and edit the generated commit message
-            </span>
+          <div className="section-header">
+            <div className="section-title">
+              <span>Commit Message</span>
+              <span className="ai-badge">AI</span>
+              <span className="hint">
+                Review and edit the generated message
+              </span>
+            </div>
           </div>
 
-          <input
-            type="text"
-            className="commit-title"
-            value={state.title}
-            onChange={(e) => {
-              const value = e.target.value.split("\n")[0];
-              setState((prev) => ({ ...prev, title: value }));
-            }}
-            placeholder="Title (press Cmd+Enter to commit)"
-            autoFocus
-          />
+          <div className="input-group">
+            <div className="input-header">
+              <div className="input-label">Title</div>
+            </div>
+            <input
+              type="text"
+              className="commit-title"
+              value={state.title}
+              onChange={(e) => {
+                const value = e.target.value.split("\n")[0];
+                setState((prev) => ({ ...prev, title: value }));
+              }}
+              placeholder="Enter commit title (press Cmd+Enter to commit)"
+              autoFocus
+            />
+          </div>
 
-          <DetailedDescription
-            value={state.body}
-            onChange={(value) => setState((prev) => ({ ...prev, body: value }))}
-            placeholder="Detailed description (optional)"
-          />
+          <div className="input-group">
+            <div className="input-header">
+              <div className="input-label">Description</div>
+              <div className="input-options">
+                <div
+                  className="view-mode-buttons"
+                  title="Toggle editor view mode"
+                >
+                  <button
+                    className={classnames("mode-button", {
+                      active: descriptionViewMode === "plain",
+                    })}
+                    onClick={() => handleViewModeChange("plain")}
+                    title="Edit in plain text mode"
+                  >
+                    Plain
+                  </button>
+                  <button
+                    className={classnames("mode-button", {
+                      active: descriptionViewMode === "split",
+                    })}
+                    onClick={() => handleViewModeChange("split")}
+                    title="Edit with live preview"
+                  >
+                    Split
+                  </button>
+                  <button
+                    className={classnames("mode-button", {
+                      active: descriptionViewMode === "preview",
+                    })}
+                    onClick={() => handleViewModeChange("preview")}
+                    title="View rendered preview"
+                  >
+                    Preview
+                  </button>
+                </div>
+              </div>
+            </div>
+            <DetailedDescription
+              value={state.body}
+              onChange={(value) =>
+                setState((prev) => ({ ...prev, body: value }))
+              }
+              placeholder="Enter detailed description (optional)"
+              viewMode={descriptionViewMode}
+            />
+          </div>
         </div>
 
         <div className="changes-section">
           <div className="section-header">
             <div className="section-title">
               <span>Changed Files</span>
-              <span className="stats-badge">
-                <span className="additions">+{stats.additions}</span>
-                <span className="deletions">-{stats.deletions}</span>
-              </span>
+              <div className="stats-group">
+                <span className="stats-badge">
+                  <span className="additions">+{stats.additions}</span>
+                  <span className="deletions">-{stats.deletions}</span>
+                </span>
+                <span className="file-count">
+                  {state.filesChanged.length} files
+                </span>
+              </div>
             </div>
-            <span className="file-count">
-              {state.filesChanged.length} files
-            </span>
           </div>
 
           <div className="files-tree">
