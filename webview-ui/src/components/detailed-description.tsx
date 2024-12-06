@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { marked } from "marked";
 import classnames from "classnames";
 import "./detailed-description.css";
@@ -31,7 +31,7 @@ export const DetailedDescription: React.FC<Props> = ({
   // }, [internalValue, onChange]);
 
   // 自动调整文本区域高度
-  const adjustTextareaHeight = () => {
+  const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -39,9 +39,9 @@ export const DetailedDescription: React.FC<Props> = ({
     textarea.style.height = "0";
 
     // 然后设置为实际需要的高度
-    const height = Math.max(150, textarea.scrollHeight);
+    const height = Math.max(150, textarea.scrollHeight + 20);
     textarea.style.height = `${height}px`;
-  };
+  }, [textareaRef]);
 
   // 处理拖动开始
   const handleDragStart = (e: React.MouseEvent) => {
