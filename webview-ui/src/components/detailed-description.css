@@ -32,41 +32,82 @@
   display: flex;
   width: 100%;
   background: var(--vscode-input-background);
+  position: relative;
+  overflow: hidden;
+}
+
+.editor-container textarea,
+.editor-container .preview-content {
+  min-height: 150px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: transparent;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .editor-container textarea {
-  min-height: 150px;
   width: 50%;
   resize: none;
-  padding: 8px;
-  background: transparent;
   border: none;
   color: var(--vscode-input-foreground);
-  box-sizing: border-box;
   outline: none;
-}
-
-.editor-container.mode-plain textarea {
-  width: 100%;
-}
-
-.editor-container.mode-preview textarea {
-  display: none;
+  opacity: 1;
+  transform-origin: left center;
 }
 
 .editor-container .preview-content {
   flex: 1;
-  min-height: 150px;
-  padding: 8px;
-  box-sizing: border-box;
   overflow-wrap: break-word;
-  background: transparent;
+  opacity: 1;
+  transform-origin: right center;
+}
+
+.editor-container.mode-plain textarea {
+  width: 100%;
+  transform: scale(1);
 }
 
 .editor-container.mode-plain .preview-content {
-  display: none;
+  opacity: 0;
+  transform: translateX(100%) scale(0.8);
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
+.editor-container.mode-split textarea {
+  transform: scale(1);
+}
+
+.editor-container.mode-split .preview-content {
+  transform: scale(1);
+}
+
+.editor-container.mode-preview textarea {
+  opacity: 0;
+  transform: translateX(-100%) scale(0.8);
+  position: absolute;
+  pointer-events: none;
 }
 
 .editor-container.mode-preview .preview-content {
   flex: 1;
+  transform: scale(1);
+}
+
+.editor-container textarea::-webkit-scrollbar,
+.editor-container .preview-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.editor-container textarea::-webkit-scrollbar-thumb,
+.editor-container .preview-content::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 3px;
+}
+
+.editor-container textarea::-webkit-scrollbar-thumb:hover,
+.editor-container .preview-content::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
 }
