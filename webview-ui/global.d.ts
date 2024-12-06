@@ -33,11 +33,10 @@ namespace JSX {
       HTMLElement
     >;
     "vscode-checkbox": React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLElement> & {
-        checked?: boolean;
-        onChange?: (event: any) => void;
+      React.InputHTMLAttributes<HTMLInputElement> & {
+        indeterminate?: boolean;
       },
-      HTMLElement
+      HTMLInputElement
     >;
     "vscode-panels": any;
     "vscode-panel-tab": any;

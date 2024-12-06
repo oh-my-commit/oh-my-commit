@@ -158,7 +158,7 @@ const mockFileChanges = [
 interface TreeNode {
   path: string;
   type: "file" | "directory";
-  children?: { [key: string]: TreeNode };
+  children?: TreeNode[];
   fileInfo?: {
     path: string;
     status: string;
@@ -172,37 +172,94 @@ const buildFileTree = (files: CommitState["filesChanged"]): TreeNode[] => {
   const root: { [key: string]: TreeNode } = {};
 
   files.forEach((file) => {
+    if (!file || !file.path) return; // Skip if file or path is undefined
+    
     const parts = file.path.split("/");
     let current = root;
 
     parts.forEach((part, index) => {
       const currentPath = parts.slice(0, index + 1).join("/");
+      
       if (!current[currentPath]) {
         current[currentPath] = {
           path: part,
           type: index === parts.length - 1 ? "file" : "directory",
-          children: index === parts.length - 1 ? undefined : {},
-          fileInfo:
-            index === parts.length - 1
-              ? { ...file, path: file.path }
-              : undefined,
+          children: [],
+          fileInfo: index === parts.length - 1 ? { ...file, path: file.path } : undefined,
         };
       }
+
       if (index < parts.length - 1) {
-        current = current[currentPath].children as { [key: string]: TreeNode };
+        const parentPath = parts.slice(0, index + 1).join("/");
+        const childPath = parts.slice(0, index + 2).join("/");
+        
+        // Ensure parent has children array
+        if (!current[parentPath].children) {
+          current[parentPath].children = [];
+        }
+        
+        // Add child to parent if not already present
+        if (!current[childPath]) {
+          current[childPath] = {
+            path: parts[index + 1],
+            type: index === parts.length - 2 ? "file" : "directory",
+            children: [],
+          };
+        }
+        
+        // Only add to children array if not already there
+        const existingChild = current[parentPath].children.find(
+          child => child.path === parts[index + 1]
+        );
+        if (!existingChild) {
+          current[parentPath].children.push(current[childPath]);
+        }
       }
     });
   });
 
-  const convertToArray = (node: { [key: string]: TreeNode }): TreeNode[] => {
-    return Object.values(node).map((n) => ({
-      ...n,
-      children: n.children ? Object.values(n.children) : undefined,
-    }));
-  };
-
-  return convertToArray(root);
+  // Return only top-level nodes
+  return Object.values(root)
+    .filter((node) => !node.path.includes("/"))
+    .sort((a, b) => {
+      // Sort directories before files, then alphabetically
+      if (a.type === "directory" && b.type === "file") return -1;
+      if (a.type === "file" && b.type === "directory") return 1;
+      return a.path.localeCompare(b.path);
+    });
 };
+
+const getAllFiles = (node: TreeNode): string[] => {
+  if (!node) return [];
+  if (node.type === "file" && node.fileInfo?.path) return [node.fileInfo.path];
+  return (node.children || []).reduce<string[]>(
+    (acc, child) => [...acc, ...getAllFiles(child)],
+    []
+  );
+};
+
+// Error Boundary Component
+class FileTreeErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(_: Error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div className="error-message">Error loading file tree</div>;
+    }
+
+    return this.props.children;
+  }
+}
 
 const FileTreeNode: React.FC<{
   node: TreeNode;
@@ -219,34 +276,33 @@ const FileTreeNode: React.FC<{
   selectedFiles,
   onSelectionChange,
 }) => {
+  // Early return if node is invalid
+  if (!node || !node.path) {
+    console.warn('Invalid node received in FileTreeNode');
+    return null;
+  }
+
   const [expanded, setExpanded] = React.useState(true);
   const indent = level * 16;
 
-  // 计算目录的选中状态
   const getDirectoryCheckState = (
     node: TreeNode
   ): "checked" | "unchecked" | "indeterminate" => {
-    if (!node.children) return "unchecked";
+    if (!node?.children?.length) return "unchecked";
 
     const allFiles = getAllFiles(node);
+    if (!allFiles.length) return "unchecked";
+    
     const selectedCount = allFiles.filter((f) => selectedFiles.has(f)).length;
-
     if (selectedCount === 0) return "unchecked";
     if (selectedCount === allFiles.length) return "checked";
     return "indeterminate";
   };
 
-  // 获取目录下所有文件路径
-  const getAllFiles = (node: TreeNode): string[] => {
-    if (node.type === "file") return [node.fileInfo!.path];
-    return node.children?.flatMap(getAllFiles) || [];
-  };
-
-  // 处理目录选中状态变化
   const handleDirectorySelect = (checked: boolean) => {
     const files = getAllFiles(node);
     files.forEach((file) => {
-      onSelectionChange(file, checked);
+      if (file) onSelectionChange(file, checked);
     });
   };
 
@@ -274,26 +330,29 @@ const FileTreeNode: React.FC<{
             {node.path}
           </span>
         </div>
-        {expanded && node.children && (
-          <div className="directory-children">
-            {node.children.map((child, index) => (
-              <FileTreeNode
-                key={child.path + index}
-                node={child}
-                level={level + 1}
-                onToggle={onToggle}
-                expandedFile={expandedFile}
-                selectedFiles={selectedFiles}
-                onSelectionChange={onSelectionChange}
-              />
-            ))}
-          </div>
-        )}
+        {expanded &&
+          node.children?.map((child: TreeNode, index: number) => (
+            child && child.path ? (
+              <FileTreeErrorBoundary key={`${child.path}-${index}`}>
+                <FileTreeNode
+                  node={child}
+                  level={level + 1}
+                  onToggle={onToggle}
+                  expandedFile={expandedFile}
+                  selectedFiles={selectedFiles}
+                  onSelectionChange={onSelectionChange}
+                />
+              </FileTreeErrorBoundary>
+            ) : null
+          ))}
       </div>
     );
   }
 
-  const fileInfo = node.fileInfo!;
+  // File node
+  const fileInfo = node.fileInfo;
+  if (!fileInfo?.path) return null;
+
   return (
     <div>
       <div
@@ -488,17 +547,19 @@ const CommitMessage = () => {
           </div>
 
           <div className="files-tree">
-            {fileTree.map((node, index) => (
-              <FileTreeNode
-                key={node.path + index}
-                node={node}
-                level={0}
-                onToggle={setExpandedFile}
-                expandedFile={expandedFile}
-                selectedFiles={state.selectedFiles}
-                onSelectionChange={handleFileSelection}
-              />
-            ))}
+            <FileTreeErrorBoundary>
+              {fileTree.map((node, index) => (
+                <FileTreeNode
+                  key={`${node.path}-${index}`}
+                  node={node}
+                  level={0}
+                  onToggle={setExpandedFile}
+                  expandedFile={expandedFile}
+                  selectedFiles={state.selectedFiles}
+                  onSelectionChange={handleFileSelection}
+                />
+              ))}
+            </FileTreeErrorBoundary>
           </div>
         </div>
 
