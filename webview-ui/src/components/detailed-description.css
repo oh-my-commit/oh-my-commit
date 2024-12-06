@@ -13,8 +13,9 @@
   border-radius: 4px;
   background: var(--vscode-editor-background);
   min-height: 120px;
-  max-height: calc(100vh - 300px);
+  max-height: 480px;
   height: auto;
+  overflow: auto;
 }
 
 /* 视图切换按钮 */
