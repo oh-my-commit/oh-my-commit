@@ -2,6 +2,7 @@ const path = require("path");
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
+  const isDevelopment = !isProduction;
 
   return {
     mode: argv.mode || "development",
@@ -9,6 +10,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, "../dist/webview-ui"),
       filename: "main.js",
+      clean: true,
       ...(isProduction
         ? {
             libraryTarget: "module",
@@ -19,7 +21,7 @@ module.exports = (env, argv) => {
     experiments: {
       outputModule: isProduction,
     },
-    devtool: "source-map",
+    devtool: isDevelopment ? "inline-source-map" : "source-map",
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx"],
     },
@@ -43,21 +45,13 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    devServer: {
-      static: {
-        directory: path.join(__dirname),
-      },
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, content-type, Authorization",
-      },
-      compress: true,
-      port: 5173,
-      hot: !isProduction,
-      historyApiFallback: true,
+    watchOptions: {
+      ignored: /node_modules/,
+      aggregateTimeout: 100,
+      poll: 1000,
+    },
+    optimization: {
+      minimize: isProduction,
     },
   };
 };
