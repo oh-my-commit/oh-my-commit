@@ -1,155 +1,119 @@
 import React, { useEffect, useRef, useState } from "react";
-import classnames from "classnames";
 import { marked } from "marked";
+import classnames from "classnames";
 import "./detailed-description.css";
 
-interface DetailedDescriptionProps {
+interface Props {
   value: string;
-  onChange: (value: string) => void;
   placeholder?: string;
+  onChange: (value: string) => void;
 }
 
-type ViewMode = "plain" | "preview" | "split";
-
-export const DetailedDescription: React.FC<DetailedDescriptionProps> = ({
+export const DetailedDescription: React.FC<Props> = ({
   value,
-  onChange,
   placeholder,
+  onChange,
 }) => {
-  const [viewMode, setViewMode] = useState<ViewMode>("plain");
   const [internalValue, setInternalValue] = useState(value);
+  const [splitRatio, setSplitRatio] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
 
+  // 同步外部值
   useEffect(() => {
     setInternalValue(value);
   }, [value]);
 
-  useEffect(() => {
-    onChange(internalValue);
-  }, [internalValue, onChange]);
+  // // 向外部同步内部值
+  // useEffect(() => {
+  //   onChange(internalValue);
+  // }, [internalValue, onChange]);
 
-  const calculateHeight = () => {
+  // 自动调整文本区域高度
+  const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
-    const preview = previewRef.current;
-    const container = containerRef.current;
+    if (!textarea) return;
 
-    if (!textarea || !container) return;
+    // 先将高度设为 0，这样可以正确计算 scrollHeight
+    textarea.style.height = "0";
 
-    // 重置文本区域高度以获取准确的 scrollHeight
-    textarea.style.height = "auto";
-    
-    // 确保在下一帧获取正确的 scrollHeight
-    requestAnimationFrame(() => {
-      const textHeight = Math.max(150, textarea.scrollHeight);
-
-      if (viewMode === "plain") {
-        textarea.style.height = `${textHeight}px`;
-      } else if (viewMode === "preview" && preview) {
-        const previewHeight = Math.max(150, preview.scrollHeight);
-        container.style.height = `${previewHeight}px`;
-      } else if (viewMode === "split" && preview) {
-        textarea.style.height = `${textHeight}px`;
-        const previewHeight = Math.max(150, preview.scrollHeight);
-        container.style.height = `${Math.max(textHeight, previewHeight)}px`;
-      }
-    });
+    // 然后设置为实际需要的高度
+    const height = Math.max(150, textarea.scrollHeight);
+    textarea.style.height = `${height}px`;
   };
 
-  // 在组件挂载和内容变化时重新计算高度
+  // 处理拖动开始
+  const handleDragStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  // 处理拖动过程
+  const handleDrag = (e: MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const newRatio =
+      ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
+    // 限制分割比例在 20% - 80% 之间
+    const clampedRatio = Math.max(20, Math.min(80, newRatio));
+
+    // 直接更新 DOM 样式
+    container.style.setProperty("--split-ratio", `${clampedRatio}%`);
+    setSplitRatio(clampedRatio);
+  };
+
+  // 处理拖动结束
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  // 监听拖动事件
   useEffect(() => {
-    calculateHeight();
-  }, [internalValue]);
-
-  // 在视图模式变化时重新计算高度
-  useEffect(() => {
-    // 等待 DOM 完全更新后再计算高度
-    const timer = setTimeout(() => {
-      calculateHeight();
-      // 再次计算以确保获取正确高度（处理一些边缘情况）
-      requestAnimationFrame(() => {
-        calculateHeight();
-      });
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [viewMode]);
-
-  // 监听预览区域的内容变化
-  useEffect(() => {
-    const observer = new ResizeObserver(() => {
-      if (viewMode === "preview" || viewMode === "split") {
-        calculateHeight();
-      }
-    });
-
-    if (previewRef.current) {
-      observer.observe(previewRef.current);
+    if (isDragging) {
+      document.addEventListener("mousemove", handleDrag);
+      document.addEventListener("mouseup", handleDragEnd);
     }
 
-    return () => observer.disconnect();
-  }, [viewMode]);
+    return () => {
+      document.removeEventListener("mousemove", handleDrag);
+      document.removeEventListener("mouseup", handleDragEnd);
+    };
+  }, [isDragging]);
+
+  // 在内容变化时调整文本区域高度
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [internalValue, splitRatio]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setInternalValue(newValue);
-    calculateHeight();
-  };
-
-  const handleViewChange = (mode: ViewMode) => {
-    if (mode === viewMode) return;
-    
-    // 在模式切换前重置容器高度
-    const container = containerRef.current;
-    if (container) {
-      container.style.height = "auto";
-    }
-    
-    setViewMode(mode);
+    adjustTextareaHeight();
   };
 
   return (
-    <div className="detailed-description">
-      <div ref={containerRef} className={classnames("editor-container", viewMode)}>
-        {(viewMode === "plain" || viewMode === "split") && (
-          <textarea
-            ref={textareaRef}
-            value={internalValue}
-            onChange={handleChange}
-            placeholder={placeholder}
-          />
-        )}
-        {(viewMode === "preview" || viewMode === "split") && (
-          <div
-            ref={previewRef}
-            className="preview-content"
-            dangerouslySetInnerHTML={{
-              __html: marked(internalValue),
-            }}
-          />
-        )}
-      </div>
-      <div className="mode-selector">
-        <button
-          className={classnames({ active: viewMode === "plain" })}
-          onClick={() => handleViewChange("plain")}
-        >
-          Plain
-        </button>
-        <button
-          className={classnames({ active: viewMode === "preview" })}
-          onClick={() => handleViewChange("preview")}
-        >
-          Preview
-        </button>
-        <button
-          className={classnames({ active: viewMode === "split" })}
-          onClick={() => handleViewChange("split")}
-        >
-          Split
-        </button>
-      </div>
+    <div
+      ref={containerRef}
+      className={classnames("editor-container", { dragging: isDragging })}
+      style={{ "--split-ratio": `${splitRatio}%` } as React.CSSProperties}
+    >
+      <textarea
+        ref={textareaRef}
+        value={internalValue}
+        onChange={handleChange}
+        placeholder={placeholder}
+      />
+      <div className="divider" onMouseDown={handleDragStart} />
+      <div
+        className="preview-content"
+        dangerouslySetInnerHTML={{
+          __html: marked(internalValue),
+        }}
+      />
     </div>
   );
 };
