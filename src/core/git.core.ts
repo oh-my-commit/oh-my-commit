@@ -1,6 +1,6 @@
-import simpleGit, { SimpleGit } from "simple-git";
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
+import simpleGit, { SimpleGit } from "simple-git";
 
 export interface CommitChanges {
   files: string[];
@@ -32,7 +32,7 @@ export class GitCore {
     }
   }
 
-  public async getDiff(): Promise<string> {
+  public async getStagedDiff(): Promise<string> {
     console.log("[GitCore] Getting diff");
     try {
       const result = await this.git.diff(["--staged"]);
@@ -44,7 +44,7 @@ export class GitCore {
     }
   }
 
-  public async getUnstagedChanges(): Promise<string> {
+  public async getUnstagedDiff(): Promise<string> {
     try {
       return await this.git.diff();
     } catch (error) {

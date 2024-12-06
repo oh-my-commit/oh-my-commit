@@ -45,10 +45,13 @@ export class QuickCommitCommand implements VscodeCommand {
    * 无需 handle error，因为最外层 @command.manager.ts 会处理
    */
   async execute(): Promise<void> {
-    const diff = await this.gitService.getDiff();
+    // 先暂存全部 // todo: is it safe
+    await this.gitService.stageAll();
+    const diff = await this.gitService.getStagedDiff();
 
     // 仅在未改变且在修改模式下才执行 amend
     const isAmendMode = !diff && this.noDiffBehavior === "revise";
+    console.log({ diff, isAmendMode });
 
     if (!diff && !isAmendMode) {
       throw new Error("No changes to commit");
