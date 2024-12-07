@@ -27,9 +27,9 @@ export const DiffViewer: React.FC = () => {
 
   const selectedFile = files.find((f) => f.path === selectedPath);
 
-  const { language } = useMemo(() => {
+  const { language, processedDiff, lineTypes } = useMemo(() => {
     if (!selectedFile?.diff) {
-      return { language: "text" };
+      return { language: "text", processedDiff: "", lineTypes: [] };
     }
 
     // Detect file language from extension
@@ -43,8 +43,21 @@ export const DiffViewer: React.FC = () => {
       // Add more mappings as needed
     };
 
+    // Process diff to add line classes
+    const lines = selectedFile.diff.split("\n");
+    const processedLines = lines.map(line => {
+      if (line.startsWith("+")) {
+        return { line: line.slice(1), type: "addition" };
+      } else if (line.startsWith("-")) {
+        return { line: line.slice(1), type: "deletion" };
+      }
+      return { line, type: "context" };
+    });
+
     return {
       language: languageMap[ext] || "text",
+      processedDiff: processedLines.map(({ line }) => line).join("\n"),
+      lineTypes: processedLines.map(({ type }) => type),
     };
   }, [selectedFile]);
 
@@ -134,16 +147,35 @@ export const DiffViewer: React.FC = () => {
             userSelect: "none",
             color: "var(--vscode-editorLineNumber-foreground)",
           }}
-          className="h-full"
-          codeTagProps={{
-            style: {
-              fontFamily: "inherit",
-              background: "transparent",
-            },
+          lineProps={(lineNumber) => {
+            const type = lineTypes[lineNumber - 1];
+            const style: React.CSSProperties = {
+              display: 'block',
+              position: 'relative',
+              backgroundColor: type === "addition"
+                ? 'var(--vscode-diffEditor-insertedLineBackground)'
+                : type === "deletion"
+                  ? 'var(--vscode-diffEditor-removedLineBackground)'
+                  : 'transparent'
+            };
+            
+            return {
+              style,
+              className: 'group hover:bg-[color:var(--vscode-editor-hoverHighlightBackground)]'
+            };
           }}
-        >
-          {selectedFile.diff || "No changes"}
-        </SyntaxHighlighter>
+          children={processedDiff || "No changes"}
+          PreTag={({ children, ...props }) => (
+            <pre {...props} style={{ margin: 0, padding: 0 }}>
+              {children}
+            </pre>
+          )}
+          CodeTag={({ children, ...props }) => (
+            <code {...props} style={{ fontFamily: 'inherit' }}>
+              {children}
+            </code>
+          )}
+        />
       </div>
     </div>
   );
