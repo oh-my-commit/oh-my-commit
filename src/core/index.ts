@@ -19,7 +19,7 @@ export class AppManager {
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.gitService = new VscodeGitService();
-    this.acManager = new AcManager();
+    this.acManager = new AcManager(this);
     this.commandManager = new CommandManager(context);
     this.statusBarManager = new StatusBarManager(this.acManager);
   }
@@ -74,7 +74,7 @@ export class AppManager {
     }
   }
 
-  private async updateConfiguration(
+  public async updateConfiguration(
     key: string,
     target: any,
     skip: (raw: any, target: any) => boolean
