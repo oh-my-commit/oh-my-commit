@@ -5,26 +5,22 @@ import {
   commitDetailAtom,
   commitFilesAtom,
   selectedFilesAtom,
+  updateCommitStateAtom,
 } from "../atoms/commit-core";
 import { toggleFileExpansionAtom } from "../atoms/commit-ui";
 import type { CommitState } from "../types";
 import type { FileChange } from "../../types/file-change";
-import type { WritableAtom } from "jotai";
 
 export function useCommit() {
   // 核心状态
-  const [commitState, setCommitState] = useAtom(commitStateAtom);
+  const [commitState] = useAtom(commitStateAtom);
+  const [selectedFiles] = useAtom(selectedFilesAtom);
   
   // UI状态
   const toggleExpanded = useSetAtom(toggleFileExpansionAtom);
   
-  // 选择状态
-  const [selectedFiles] = useAtom(selectedFilesAtom);
-  const [, updateCommitState] = useAtom(commitStateAtom as WritableAtom<CommitState, [Partial<CommitState>], void>);
-
-  // 核心动作
-  const [, addFile] = useAtom(commitFilesAtom);
-  const [, reset] = useAtom(commitStateAtom as WritableAtom<CommitState, [Partial<CommitState>], void>);
+  // 更新动作
+  const [, updateCommit] = useAtom(updateCommitStateAtom);
 
   return {
     // 核心状态
@@ -34,14 +30,11 @@ export function useCommit() {
     selectedFiles,
 
     // 更新状态
-    setMessage: (message: string) => updateCommitState({ message }),
-    setDetail: (detail: string) => updateCommitState({ detail }),
-    setState: (update: Partial<CommitState>) => updateCommitState(update),
+    setMessage: (message: string) => updateCommit({ message }),
+    setDetail: (detail: string) => updateCommit({ detail }),
+    setState: (update: Partial<CommitState>) => updateCommit(update),
 
-    // 核心动作
-    updateCommitState,
-    addFile,
-    reset,
+    // UI动作
     toggleExpanded,
   };
 }

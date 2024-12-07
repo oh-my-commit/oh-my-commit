@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import {
   commitFilesAtom,
   commitStatsAtom,
+  updateCommitStateAtom,
 } from "../../state/atoms/commit-core";
 import {
   selectFileAtom,
@@ -65,6 +66,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [selectedPath] = useAtom(selectedFileAtom);
   const [showDiff] = useAtom(showDiffAtom);
   const [, selectFile] = useAtom(selectFileAtom);
+  const [, updateCommitState] = useAtom(updateCommitStateAtom);
   const [viewMode, setViewMode] =
     React.useState<keyof typeof VIEW_MODES>("grouped");
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -98,7 +100,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const handleFileClick = (path: string) => {
     selectFile(path);
-    onFileSelect?.(path);
+    if (onFileSelect) {
+      onFileSelect(path);
+    }
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
