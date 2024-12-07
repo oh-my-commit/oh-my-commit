@@ -6,8 +6,22 @@ import * as Handlebars from "handlebars";
 export class WebviewManager {
   private webviewPanel?: vscode.WebviewPanel;
   private readonly scriptUri: vscode.Uri;
-  private readonly templatePath: string;
   private readonly template: HandlebarsTemplateDelegate;
+
+  /**
+   * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
+   */
+  private readonly templatePath: string;
+
+  /**
+   * 前端打包后的脚本文件路径
+   */
+  private readonly scriptPath: string;
+
+  /**
+   * 开发模式监听的文件变动位置
+   */
+  private readonly watchDir: string;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -15,34 +29,38 @@ export class WebviewManager {
     private readonly title: string,
     private readonly outputChannel = vscode.window.createOutputChannel(
       "WebviewManager"
-    )
+    ),
+    templatePath: string = "assets/webview.template.html",
+    scriptPath: string = "dist/webview-ui/main.js",
+    watchDir: string = "dist/webview-ui"
   ) {
-    this.scriptUri = vscode.Uri.joinPath(
-      context.extensionUri,
-      "dist/webview-ui/main.js"
-    );
-    this.templatePath = path.join(
-      context.extensionPath,
-      "src/webview/template.html"
-    );
-
-    // Compile template once during initialization
+    // load template
+    this.templatePath = templatePath;
+    this.templatePath = path.join(context.extensionPath, this.templatePath);
     const templateContent = fs.readFileSync(this.templatePath, "utf8");
     this.template = Handlebars.compile(templateContent);
 
-    // Watch for file changes
-    const watcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(context.extensionUri, "dist/webview-ui/**")
-    );
+    // load script
+    this.scriptPath = scriptPath;
+    this.scriptUri = vscode.Uri.joinPath(context.extensionUri, this.scriptPath);
 
-    type WatcherEvent = 'onDidChange' | 'onDidCreate' | 'onDidDelete';
-    const events: WatcherEvent[] = ['onDidChange', 'onDidCreate', 'onDidDelete'];
-    
-    events.forEach(event => {
+    // watch for file changes
+    this.watchDir = watchDir;
+    const watcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(context.extensionUri, `${this.watchDir}/**`)
+    );
+    type WatcherEvent = "onDidChange" | "onDidCreate" | "onDidDelete";
+    const events: WatcherEvent[] = [
+      "onDidChange",
+      "onDidCreate",
+      "onDidDelete",
+    ];
+    events.forEach((event) => {
       const watcherEvent = watcher[event] as vscode.Event<vscode.Uri>;
       watcherEvent(() => this.webviewPanel?.webview && this.updateWebview());
     });
 
+    // register webview
     context.subscriptions.push(watcher, this);
   }
 
@@ -63,7 +81,7 @@ export class WebviewManager {
     );
 
     this.updateWebview();
-    
+
     this.webviewPanel.onDidDispose(() => {
       this.webviewPanel = undefined;
     });

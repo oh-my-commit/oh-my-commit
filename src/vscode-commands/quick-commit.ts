@@ -1,7 +1,7 @@
-import { VscodeCommand } from "@/commands/types";
-import { SolutionManager } from "@/managers/solution.manager";
-import { VscodeGitService } from "@/services/vscode-git.service";
-import { WebviewManager } from "@/webview/WebviewManager";
+import { VscodeCommand } from "@/core/vscode-commands/types";
+import { AcManager } from "@/core/ac";
+import { VscodeGitService } from "@/core/vscode-git";
+import { WebviewManager } from "@/core/vscode-webview";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand implements VscodeCommand {
@@ -13,7 +13,7 @@ export class QuickCommitCommand implements VscodeCommand {
 
   constructor(
     gitService: VscodeGitService,
-    _solutionManager: SolutionManager,
+    _acManager: AcManager,
     context: vscode.ExtensionContext
   ) {
     this.gitService = gitService;

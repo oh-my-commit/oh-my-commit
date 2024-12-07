@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { GitCore } from "@/core/git.core";
+import { GitCore } from "@/utils/git";
 
 export class VscodeGitService extends GitCore {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>;

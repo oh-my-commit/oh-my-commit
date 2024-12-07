@@ -8,12 +8,12 @@ YAAC 提供标准化的模型接口，允许不同的提交方案提供商接入
 
 ### 1. 提交方案注册
 
-POST `/solutions/register`
+POST `/models/register`
 
 注册新的提交方案。
 
 ```typescript
-interface Solution {
+interface Model {
   id: string; // 方案唯一标识
   name: string; // 显示名称（可由用户自定义）
   provider: string; // 提供商标识
@@ -38,7 +38,7 @@ POST `/commit/generate`
 interface CommitRequest {
   // 核心参数
   diff: string; // Git diff 内容
-  solutionId: string; // 使用的方案 ID
+  modelId: string; // 使用的方案 ID
 
   // 可选上下文
   context?: {
@@ -81,11 +81,11 @@ interface ApiConfig {
 
 ### 2. 方案配置
 
-POST `/config/solution`
+POST `/config/model`
 
 ```typescript
-interface SolutionConfig {
-  solutionId: string;
+interface ModelConfig {
+  modelId: string;
   name?: string; // 自定义名称
   settings?: {
     [key: string]: any;
@@ -130,7 +130,7 @@ $ [tool-name] generate --diff "git diff content"
 interface ErrorResponse {
   code: string;
   message: string;
-  solution?: string; // 建议的模型
+  model?: string; // 建议的模型
   details?: any;
 }
 ```

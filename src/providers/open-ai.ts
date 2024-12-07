@@ -1,7 +1,7 @@
-import { Solution } from "@/types/solution";
+import { Model } from "@/types/model";
 import { CommitGenerationResult, Provider } from "../types/provider";
 
-class OpenAIGPT4Solution implements Solution {
+class OpenAIGPT4Model implements Model {
   id = "openai/gpt-4";
   name = "OpenAI / GPT 4";
   description = "High accuracy commit messages using GPT-4";
@@ -14,7 +14,7 @@ class OpenAIGPT4Solution implements Solution {
   aiProviderId = "openai";
 }
 
-class OpenAIGPT35Solution implements Solution {
+class OpenAIGPT35Model implements Model {
   id = "openai/gpt-3.5";
   name = "OpenAI / GPT 3.5 Turbo";
   description = "Fast and efficient commit messages using GPT-3.5";
@@ -33,21 +33,21 @@ export class OpenAIProvider implements Provider {
   description = "Commit message generation powered by OpenAI models";
   enabled = true;
 
-  solutions = [new OpenAIGPT4Solution(), new OpenAIGPT35Solution()];
+  models = [new OpenAIGPT4Model(), new OpenAIGPT35Model()];
 
   async generateCommit(
     diff: string,
-    solution: Solution
+    model: Model
   ): Promise<CommitGenerationResult> {
     try {
       console.log(
         `Generating commit message using ${
-          solution.name
+          model.name
         } for diff: ${diff.substring(0, 100)}...`
       );
       // TODO: 实现与 OpenAI API 的集成
       return {
-        message: `feat: implement ${solution.name} commit message generation`,
+        message: `feat: implement ${model.name} commit message generation`,
       };
     } catch (error) {
       return {
