@@ -21,13 +21,13 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
     <footer
       className={`
         flex flex-col items-center justify-center py-3
-        border-t border-vscode-panel-border border-opacity-50
+        border-t border-panel-border border-opacity-50
         ${className || ""}
       `}
     >
       <button
         onClick={() => handleLinkClick("https://github.com/cs-magic/yaac")}
-        className="text-xs font-normal text-vscode-foreground opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
+        className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
       >
         YAAC
       </button>

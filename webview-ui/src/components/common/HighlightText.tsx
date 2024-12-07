@@ -26,7 +26,7 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
             <span key={i} className="relative">
               <span className="relative z-10">{part}</span>
               <span
-                className="absolute inset-0 bg-vscode-list-activeSelectionBackground"
+                className="absolute inset-0 bg-list-active-bg"
                 style={{ margin: "-1px -1px" }}
               />
             </span>

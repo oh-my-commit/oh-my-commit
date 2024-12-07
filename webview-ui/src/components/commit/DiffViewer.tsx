@@ -66,10 +66,10 @@ export const DiffViewer: React.FC = () => {
 
   return (
     <div className="grow overflow-hidden h-full flex flex-col">
-      <div className="flex-none h-[35px] flex items-center justify-between pl-[20px] pr-2 select-none border-b border-vscode-panel-border">
+      <div className="flex-none h-[35px] flex items-center justify-between pl-[20px] pr-2 select-none border-b border-panel-border">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-vscode-sideBarTitle-foreground">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-sidebar-title">
               Changes
             </span>
             <span className="text-[11px] opacity-80">
@@ -78,13 +78,13 @@ export const DiffViewer: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 text-[12px] tabular-nums">
             <span
-              className="text-vscode-gitDecoration-addedResourceForeground"
+              className="text-git-added-fg"
               title="Lines added"
             >
               +{selectedFile.additions}
             </span>
             <span
-              className="text-vscode-gitDecoration-deletedResourceForeground"
+              className="text-git-deleted-fg"
               title="Lines removed"
             >
               -{selectedFile.deletions}
@@ -156,9 +156,9 @@ export const DiffViewer: React.FC = () => {
                           ? "var(--vscode-diffEditor-insertedTextBackground)"
                           : type === "deletion"
                           ? "var(--vscode-diffEditor-removedTextBackground)"
-                          : undefined,
+                          : "",
                       },
-                      className: "group hover:bg-vscode-editor-hoverHighlightBackground",
+                      className: "group hover:bg-editor-line-highlight",
                     };
 
                     return (
@@ -178,7 +178,7 @@ export const DiffViewer: React.FC = () => {
           customStyle={{}}
           showLineNumbers
           lineNumberStyle={twj(
-            "min-w-[3em] pl-4 pr-4 text-right select-none text-vscode-editorLineNumber-foreground"
+            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number"
           )}
           style={vscDarkPlus}
           children={processedDiff || "No changes"}

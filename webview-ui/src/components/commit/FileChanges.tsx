@@ -27,11 +27,11 @@ interface FileChangesProps {
 
 // File change status colors
 const STATUS_COLORS = {
-  added: "text-vscode-gitDecoration-addedResourceForeground", // Git decoration colors
-  modified: "text-vscode-gitDecoration-modifiedResourceForeground",
-  deleted: "text-vscode-gitDecoration-deletedResourceForeground",
-  renamed: "text-vscode-gitDecoration-renamedResourceForeground",
-  default: "text-vscode-gitDecoration-modifiedResourceForeground",
+  added: "text-git-added-fg", // Git decoration colors
+  modified: "text-git-modified-fg",
+  deleted: "text-git-deleted-fg",
+  renamed: "text-git-renamed-fg",
+  default: "text-git-modified-fg",
 } as const;
 
 // File change status icons
@@ -172,8 +172,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 key={file.path}
                 className={cn(
                   "group relative h-[22px] flex items-center pr-2 pl-6",
-                  "hover:bg-vscode-list-hoverBackground",
-                  isSelected && "bg-vscode-list-activeSelectionBackground/25"
+                  "hover:bg-list-hover",
+                  isSelected && "bg-list-active-bg/25"
                 )}
                 onClick={() => handleFileClick(file.path)}
                 title={file.path}
@@ -187,7 +187,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 <div
                   className={cn(
                     "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                    isSelected && "text-vscode-list-activeSelectionForeground"
+                    isSelected && "text-list-active-fg"
                   )}
                 >
                   {file.additions > 0 && (
@@ -195,7 +195,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                       className={cn(
                         isSelected
                           ? ""
-                          : "text-vscode-gitDecoration-addedResourceForeground"
+                          : "text-git-added-fg"
                       )}
                     >
                       +{file.additions}
@@ -206,7 +206,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                       className={cn(
                         isSelected
                           ? ""
-                          : "text-vscode-gitDecoration-deletedResourceForeground"
+                          : "text-git-deleted-fg"
                       )}
                     >
                       -{file.deletions}
@@ -231,7 +231,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               key={file.path}
               className={cn(
                 "group relative h-[22px] flex items-center pl-[30px] pr-2",
-                "hover:bg-vscode-list-hoverBackground",
+                "hover:bg-list-hover",
                 isSelected && "active-selection"
               )}
               onClick={() => handleFileClick(file.path)}
@@ -246,7 +246,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               <div
                 className={cn(
                   "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                  isSelected && "text-vscode-list-activeSelectionForeground"
+                  isSelected && "text-list-active-fg"
                 )}
               >
                 {file.additions > 0 && (
@@ -254,7 +254,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                     className={cn(
                       isSelected
                         ? ""
-                        : "text-vscode-gitDecoration-addedResourceForeground"
+                        : "text-git-added-fg"
                     )}
                   >
                     +{file.additions}
@@ -265,7 +265,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                     className={cn(
                       isSelected
                         ? ""
-                        : "text-vscode-gitDecoration-deletedResourceForeground"
+                        : "text-git-deleted-fg"
                     )}
                   >
                     -{file.deletions}
@@ -276,7 +276,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 className={cn(
                   "absolute left-[10px] w-[16px] h-[16px] flex items-center justify-center",
                   isSelected
-                    ? "text-vscode-list-activeSelectionForeground"
+                    ? "text-list-active-fg"
                     : STATUS_COLORS[file.status]
                 )}
               >
@@ -294,12 +294,12 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   };
 
   return (
-    <div className="flex-1 flex min-h-0 bg-vscode-sideBar-background">
+    <div className="flex-1 flex min-h-0 bg-sidebar-bg">
       {/* 文件列表面板 */}
-      <div className="w-[300px] shrink-0 flex flex-col overflow-y-auto border-r border-vscode-panel-border">
+      <div className="w-[300px] shrink-0 flex flex-col overflow-y-auto border-r border-panel-border">
         <div className="flex-none h-[35px] flex items-center justify-between px-[10px] select-none">
           <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-vscode-sideBarTitle-foreground">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-sidebar-title">
               Changed Files
             </span>
             <span className="text-[11px] opacity-80">
@@ -333,19 +333,19 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           </div>
         </div>
 
-        <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-vscode-panel-border">
+        <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-panel-border">
           <div className="relative flex-1 flex items-center">
             <input
               type="text"
               className="
                   file-search-input w-full h-[24px] px-[6px] pl-[24px]
-                  bg-vscode-input-background
-                  text-vscode-input-foreground
-                  border border-vscode-input-border
+                  bg-input-bg
+                  text-input-fg
+                  border border-input-border
                   rounded-[2px] text-[12px]
                   focus:outline-none
-                  focus:border-vscode-focusBorder
-                  placeholder:text-vscode-input-placeholderForeground
+                  focus:border-input-border
+                  placeholder:text-input-placeholder
                 "
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -353,7 +353,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               placeholder="Full Search"
               spellCheck={false}
             />
-            <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-vscode-input-placeholderForeground codicon codicon-search text-[12px]"></span>
+            <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-input-placeholder codicon codicon-search text-[12px]"></span>
             {searchQuery && (
               <VSCodeButton
                 appearance="icon"

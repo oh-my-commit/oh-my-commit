@@ -23,7 +23,7 @@ export function CommitMessage({
   return (
     <div className="flex flex-col gap-2">
       <VSCodeTextArea
-        className="!h-[28px] !min-h-[28px] !bg-vscode-input-background !text-vscode-input-foreground"
+        className="!h-[28px] !min-h-[28px] !bg-input-bg !text-input-fg"
         value={message}
         onChange={(e) =>
           onMessageChange((e.target as HTMLTextAreaElement).value)
@@ -38,7 +38,7 @@ export function CommitMessage({
       />
 
       <VSCodeTextArea
-        className="!h-[80px] !min-h-[80px] !bg-vscode-input-background !text-vscode-input-foreground"
+        className="!h-[80px] !min-h-[80px] !bg-input-bg !text-input-fg"
         value={detail}
         onChange={(e) =>
           onDetailChange((e.target as HTMLTextAreaElement).value)

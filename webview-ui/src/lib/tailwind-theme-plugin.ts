@@ -8,15 +8,12 @@
 import plugin from "tailwindcss/plugin";
 
 export type ThemePluginConfig = {
-  /** List of variable names without prefix */
-  inputs: string[];
-  /** Optional function to transform CSS variable name and value */
-  transform?: {
-    /** Transform the variable name to CSS variable format (default: name => `--${prefix}-${name}`) */
-    input2field?: (name: string) => string;
-    /** Transform the CSS variable into a Tailwind-compatible value (default: cssVar => `var(${cssVar})`) */
-    input2value?: (name: string) => string;
-  };
+  /** 
+   * Map of Tailwind class names to their corresponding values
+   * Key: Tailwind class name (e.g., 'primary', 'bg-default')
+   * Value: CSS value or transformation function
+   */
+  mapping: Record<string, string | ((key: string) => string)>;
   /** Optional configuration for the plugin */
   pluginOptions?: {
     /** Whether to add base styles */
@@ -36,18 +33,17 @@ export type ThemePluginConfig = {
  *
  * @example
  * ```ts
- * // Create a plugin for custom brand colors
- * const brandTheme = createTailwindThemePlugin({
- *   prefix: 'brand',
- *   variables: ['primary', 'secondary'],
- *   transform: {
- *     value: cssVar => `rgb(var(${cssVar}) / <alpha-value>)`
+ * // Create a plugin for VSCode theme
+ * const vscodeTheme = createTailwindThemePlugin({
+ *   mapping: {
+ *     'editor-bg': '--vscode-editor-background',
+ *     'primary': name => `rgb(from var(--vscode-${name}) r g b / <alpha-value>)`
  *   }
  * });
  * ```
  */
 export function createTailwindThemePlugin(config: ThemePluginConfig) {
-  const { inputs: variables, transform = {}, pluginOptions = {} } = config;
+  const { mapping, pluginOptions = {} } = config;
 
   return plugin(
     function ({ addBase, addUtilities, addComponents }) {
@@ -69,11 +65,13 @@ export function createTailwindThemePlugin(config: ThemePluginConfig) {
     {
       theme: {
         extend: {
-          colors: variables.reduce<Record<string, string>>((acc, name) => {
-            acc[transform.input2field?.(name) || name] =
-              transform.input2value?.(name) || `var(${name})`;
-            return acc;
-          }, {}),
+          colors: Object.entries(mapping).reduce<Record<string, string>>(
+            (acc, [key, value]) => {
+              acc[key] = typeof value === "function" ? value(key) : value;
+              return acc;
+            },
+            {}
+          ),
         },
       },
     }
