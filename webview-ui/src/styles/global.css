@@ -1,8 +1,8 @@
+@import "@vscode/codicons/dist/codicon.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "@vscode/codicons/dist/codicon.css";
 
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
