@@ -30,7 +30,7 @@ export const CommitPage: React.FC = () => {
   };
 
   return (
-    <div className="commit-container">
+    <div className="commit-page">
       <CommitForm onSubmit={handleCommit} />
       <FileChanges onFileSelect={handleFileSelect} />
       <CommitActions onCommit={handleCommit} onCancel={handleCancel} />

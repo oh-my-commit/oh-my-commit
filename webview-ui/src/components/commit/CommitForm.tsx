@@ -1,6 +1,9 @@
-import React from 'react';
-import { useAtom } from 'jotai';
-import { commitMessageAtom, commitDetailAtom } from '../../state/atoms/commit-core';
+import React from "react";
+import { useAtom } from "jotai";
+import {
+  commitMessageAtom,
+  commitDetailAtom,
+} from "../../state/atoms/commit-core";
 
 interface CommitFormProps {
   onSubmit?: () => void;
@@ -19,13 +22,7 @@ export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
     <form onSubmit={handleSubmit} className="commit-form">
       <div className="commit-input-section">
         <div className="section-header">
-          <div className="section-title">
-            Commit Message
-            <span className="ai-badge">AI</span>
-            <span className="hint">
-              AI will help you write a better commit message
-            </span>
-          </div>
+          <div className="section-title">Commit Message</div>
         </div>
 
         <div className="input-group">
