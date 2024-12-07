@@ -346,9 +346,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 placeholder="Search files"
                 spellCheck={false}
               />
-              <span className="absolute left-[6px] text-vscode-input-placeholderForeground">
-                <span className="codicon codicon-search text-[14px]" />
-              </span>
+              <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-vscode-input-placeholderForeground codicon codicon-search text-[12px]"></span>
               {searchQuery && (
                 <VSCodeButton
                   appearance="icon"
