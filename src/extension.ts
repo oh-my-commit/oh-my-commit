@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { AppManager } from "./managers/app.manager";
+import { AppManager } from "./core";
 
 /**
  * @description

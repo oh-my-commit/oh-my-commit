@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { SolutionManager } from "@/managers/solution.manager";
-import { VscodeGitService } from "@/services/vscode-git.service";
+import { AcManager } from "@/core/ac";
+import { VscodeGitService } from "@/core/vscode-git";
 
 export class StatusBarManager {
   private statusBarItem: vscode.StatusBarItem;
   private gitService: VscodeGitService;
   private disposables: vscode.Disposable[] = [];
 
-  constructor(private solutionManager: SolutionManager) {
+  constructor(private acManager: AcManager) {
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
       100
@@ -63,18 +63,18 @@ export class StatusBarManager {
         return;
       }
 
-      const solution = await this.solutionManager.getCurrentSolution();
+      const model = await this.acManager.getCurrentModel();
       this.statusBarItem.text = "$(git-commit) YAAC";
-      if (!solution) {
-        this.statusBarItem.text = "$(git-commit) YAAC (No Solution)";
-        this.statusBarItem.tooltip = "Click to select a commit solution";
+      if (!model) {
+        this.statusBarItem.text = "$(git-commit) YAAC (No Model)";
+        this.statusBarItem.tooltip = "Click to select a commit model";
       } else {
-        this.statusBarItem.command = "yaac.selectSolution";
-        this.statusBarItem.text = `$(git-commit) YAAC (${solution.name})`;
+        this.statusBarItem.command = "yaac.selectModel";
+        this.statusBarItem.text = `$(git-commit) YAAC (${model.name})`;
         this.statusBarItem.tooltip =
-          `Current solution: ${solution.name}\n` +
-          `Accuracy: ${solution.metrics.accuracy}, Speed: ${solution.metrics.speed}, Cost: ${solution.metrics.cost}\n` +
-          `Click to change solution`;
+          `Current model: ${model.name}\n` +
+          `Accuracy: ${model.metrics.accuracy}, Speed: ${model.metrics.speed}, Cost: ${model.metrics.cost}\n` +
+          `Click to change model`;
       }
     } catch (error) {
       this.statusBarItem.text = "$(warning) YAAC";

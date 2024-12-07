@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 
-import { VscodeCommand } from "@/commands/types";
+import { VscodeCommand } from "@/core/vscode-commands/types";
 
 export class CommandManager {
   private commands: Map<string, VscodeCommand> = new Map();
-  private context: vscode.ExtensionContext
+  private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
-    this.context = context
+    this.context = context;
   }
 
   register(command: VscodeCommand): void {

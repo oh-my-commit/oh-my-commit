@@ -82,9 +82,9 @@
 ### 2. 命令面板
 
 - `YAAC: Quick Commit` - 使用当前方案快速提交
-- `YAAC: Select Solution` - 切换提交方案
+- `YAAC: Select Model` - 切换提交方案
 - `YAAC: Configure API Keys` - 配置 API 密钥
-- `YAAC: Manage Solutions` - 管理提交方案
+- `YAAC: Manage Models` - 管理提交方案
 
 ### 3. 设置界面
 

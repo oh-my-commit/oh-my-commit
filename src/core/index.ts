@@ -1,28 +1,27 @@
-import { SelectSolutionCommand } from "@/commands/select-solution.command";
-import { OpenPreferencesCommand } from "@/commands/open-preferences.command";
-import { QuickCommitCommand } from "@/commands/quick-commit.command";
+import { SelectModelCommand } from "@/core/vscode-commands/select-model";
+import { OpenPreferencesCommand } from "@/core/vscode-commands/open-preferences";
+import { QuickCommitCommand } from "@/core/vscode-commands/quick-commit";
 import fs from "fs";
 import path from "path";
 import * as vscode from "vscode";
-import { CommandManager } from "./command.manager";
-import { VscodeGitService } from "@/services/vscode-git.service";
-import { SolutionManager } from "./solution.manager";
-import { StatusBarManager } from "./status-bar.manager";
-import { isEqual, pick } from "lodash-es";
+import { CommandManager } from "./vscode-command.manager";
+import { VscodeGitService } from "@/core/vscode-git";
+import { AcManager } from "./ac";
+import { StatusBarManager } from "./vscode-status-bar";
 
 export class AppManager {
   private context: vscode.ExtensionContext;
   private gitService: VscodeGitService;
-  private solutionManager: SolutionManager;
+  private acManager: AcManager;
   private commandManager: CommandManager;
   private statusBarManager: StatusBarManager;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.gitService = new VscodeGitService();
-    this.solutionManager = new SolutionManager();
+    this.acManager = new AcManager();
     this.commandManager = new CommandManager(context);
-    this.statusBarManager = new StatusBarManager(this.solutionManager);
+    this.statusBarManager = new StatusBarManager(this.acManager);
   }
 
   public async initialize(): Promise<void> {
@@ -48,25 +47,6 @@ export class AppManager {
       await this.setupGitIntegration();
       console.log("Git integration setup completed");
 
-      // update solutions
-      const solutions = await this.solutionManager.getAvailableSolutions();
-      const currentSolution = await this.solutionManager.getCurrentSolution();
-      const target = {
-        type: "string",
-        description: "Current Solution",
-        enum: solutions.map((s) => s.name),
-        enumDescriptions: solutions.map((s) => s.description),
-        default: currentSolution?.name,
-      };
-      await this.updateConfiguration(
-        "yaac.currentSolution",
-        target,
-        (raw, target) => {
-          const keys = Object.keys(target).filter((k) => k !== "default"); // except default
-          return isEqual(pick(raw, keys), pick(target, keys));
-        }
-      );
-
       console.log("YAAC initialization completed");
     } catch (error) {
       console.error("Failed to initialize app:", error);
@@ -81,15 +61,9 @@ export class AppManager {
 
   private registerCommands(): void {
     this.commandManager.register(
-      new QuickCommitCommand(
-        this.gitService,
-        this.solutionManager,
-        this.context
-      )
+      new QuickCommitCommand(this.gitService, this.acManager, this.context)
     );
-    this.commandManager.register(
-      new SelectSolutionCommand(this.solutionManager)
-    );
+    this.commandManager.register(new SelectModelCommand(this.acManager));
     this.commandManager.register(new OpenPreferencesCommand());
   }
 

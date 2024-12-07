@@ -1,4 +1,4 @@
-export interface SolutionMetrics {
+export interface ModelMetrics {
   accuracy?: number;
   speed?: number;
   cost?: number;
@@ -17,15 +17,15 @@ export interface ValidationResult {
   }[];
 }
 
-export interface Solution {
+export interface Model {
   id: string; // 全局唯一的模型ID
   name: string; // 显示名称
   description: string; // 描述
   providerId: string; // 提供者ID
-  metrics: SolutionMetrics;
+  metrics: ModelMetrics;
 
   aiProviderId?: string;
   // 目前通过 preset ai provider的 apikey 确定前置条件
-  // todo: 验证 solution 是否满足使用条件
+  // todo: 验证 model 是否满足使用条件
   validate?: () => Promise<ValidationResult>;
 }
