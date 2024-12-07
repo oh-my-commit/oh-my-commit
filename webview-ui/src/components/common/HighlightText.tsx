@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '../../lib/utils';
+import React from "react";
+import { cn } from "../../lib/utils";
 
 interface HighlightTextProps {
   text: string;
@@ -10,25 +10,34 @@ interface HighlightTextProps {
 export const HighlightText: React.FC<HighlightTextProps> = ({
   text,
   highlight,
-  className
+  className,
 }) => {
-  if (!highlight.trim()) {
+  if (!highlight?.trim()) {
     return <span className={className}>{text}</span>;
   }
 
-  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+  try {
+    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
 
-  return (
-    <span className={className}>
-      {parts.map((part, i) => 
-        part.toLowerCase() === highlight.toLowerCase() ? (
-          <span key={i} className="bg-yellow-500/20 text-inherit rounded px-[2px]">
-            {part}
-          </span>
-        ) : (
-          part
-        )
-      )}
-    </span>
-  );
+    return (
+      <span className={className}>
+        {parts.map((part, i) =>
+          part.toLowerCase() === highlight?.toLowerCase() ? (
+            <span key={i} className="relative">
+              <span className="relative z-10">{part}</span>
+              <span
+                className="absolute inset-0 bg-vscode-list-activeSelectionBackground"
+                style={{ margin: "-1px -1px" }}
+              />
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </span>
+    );
+  } catch (error) {
+    // 如果发生错误（比如无效的正则表达式），直接返回原文本
+    return <span className={className}>{text}</span>;
+  }
 };

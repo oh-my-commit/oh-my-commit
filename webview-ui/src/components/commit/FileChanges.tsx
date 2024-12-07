@@ -174,7 +174,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   "group relative h-[22px] flex items-center pr-2 pl-6",
                   "hover:bg-vscode-list-hoverBackground",
                   isSelected &&
-                    "bg-vscode-list-activeSelectionBackground text-vscode-list-activeSelectionForeground"
+                    "bg-vscode-list-activeSelectionBackground/50 text-vscode-list-activeSelectionForeground"
                 )}
                 onClick={() => handleFileClick(file.path)}
                 title={file.path}

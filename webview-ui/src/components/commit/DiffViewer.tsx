@@ -10,19 +10,6 @@ import { cn } from "../../lib/utils";
 import { HighlightText } from "../common/HighlightText";
 import { twj } from "tw-to-css";
 
-interface DiffLineProps {
-  content: string;
-  type: "addition" | "deletion" | "context";
-  lineNumber: number;
-}
-
-const DiffLine: React.FC<DiffLineProps> = ({ content, type, lineNumber }) => (
-  <div className={cn("diff-line", type)}>
-    <span className="line-number">{lineNumber}</span>
-    <span className="line-content">{content}</span>
-  </div>
-);
-
 export const DiffViewer: React.FC = () => {
   const [selectedPath] = useAtom(selectedFileAtom);
   const [files] = useAtom(commitFilesAtom);
@@ -118,62 +105,82 @@ export const DiffViewer: React.FC = () => {
       <div className="flex-1 overflow-x-auto">
         <SyntaxHighlighter
           language={language}
-          style={{
-            ...vscDarkPlus,
-            'pre[class*="language-"]': {
-              ...vscDarkPlus['pre[class*="language-"]'],
-              ...twj`bg-transparent m-0`,
-            },
-            'code[class*="language-"]': {
-              ...vscDarkPlus['code[class*="language-"]'],
-              ...twj`bg-transparent text-vscode-editor-foreground`,
-            },
+          wrapLines={true}
+          renderer={({ rows, stylesheet, useInlineStyles }: any) => {
+            const renderNode = (node: any, searchText?: string): React.ReactNode => {
+              if (node.type === 'text') {
+                if (searchText) {
+                  return (
+                    <HighlightText
+                      text={String(node.value || '')}
+                      highlight={searchText}
+                    />
+                  );
+                }
+                return node.value;
+              }
+
+              if (node.tagName) {
+                const props: any = { ...node.properties };
+                if (useInlineStyles) {
+                  props.style = props.style || {};
+                } else {
+                  props.className = props.className?.join(' ');
+                }
+
+                return React.createElement(
+                  node.tagName,
+                  props,
+                  node.children?.map((child: any, i: number) => (
+                    <React.Fragment key={i}>
+                      {renderNode(child, searchText)}
+                    </React.Fragment>
+                  ))
+                );
+              }
+
+              return null;
+            };
+
+            return (
+              <pre className={twj("leading-[20px] py-3")} style={stylesheet['pre[class*="language-"]']}>
+                <code style={stylesheet['code[class*="language-"]']}>
+                  {rows.map((row, i) => {
+                    const type = lineTypes[i];
+                    const lineProps = {
+                      key: i,
+                      style: {
+                        display: "block",
+                        width: "100%",
+                        backgroundColor: type === "addition"
+                          ? "var(--vscode-diffEditor-insertedTextBackground)"
+                          : type === "deletion"
+                          ? "var(--vscode-diffEditor-removedTextBackground)"
+                          : undefined,
+                      },
+                      className: "group hover:bg-vscode-editor-hoverHighlightBackground",
+                    };
+
+                    return (
+                      <div {...lineProps}>
+                        {row.children?.map((child, j) => (
+                          <React.Fragment key={j}>
+                            {renderNode(child, searchQuery || undefined)}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </code>
+              </pre>
+            );
           }}
+          customStyle={{}}
           showLineNumbers
-          customStyle={twj("leading-[20px] py-3")}
           lineNumberStyle={twj(
             "min-w-[3em] pl-4 pr-4 text-right select-none text-vscode-editorLineNumber-foreground"
           )}
-          wrapLines={true}
-          PreTag={({ children, ...props }) => (
-            <pre {...props} style={twj("m-0 p-0")}>
-              {children}
-            </pre>
-          )}
-          CodeTag={({ children, ...props }) => (
-            <code
-              {...props}
-              className={cn("block w-full", props.className)}
-              style={{
-                ...twj("font-inherit"),
-                backgroundColor: props.style?.backgroundColor || "transparent",
-              }}
-            >
-              {typeof children === "string" ? (
-                <HighlightText text={children} highlight={searchQuery} />
-              ) : (
-                children
-              )}
-            </code>
-          )}
-          lineProps={(lineNumber) => {
-            const type = lineTypes[lineNumber - 1];
-            return {
-              style: {
-                display: "block",
-                width: "100%",
-              },
-              className: cn(
-                "group",
-                type === "addition"
-                  ? "bg-vscode-diffEditor-insertedTextBackground"
-                  : type === "deletion"
-                  ? "bg-vscode-diffEditor-removedTextBackground"
-                  : "bg-vscode-editor-background",
-                "hover:bg-vscode-editor-hoverHighlightBackground"
-              ),
-            };
-          }}
+          style={vscDarkPlus}
           children={processedDiff || "No changes"}
         />
       </div>
