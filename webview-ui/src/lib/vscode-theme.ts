@@ -1,3 +1,19 @@
+/**
+ * 本文件是 tailwind 插件，用于将 vscode 预设的 hex 形式的 css 变量转换为 tailwind 变量，并支持透明度。
+ * 感谢 claude 2024年12月08日03:20:44 （耗时 2 小时，终于解决了历史遗留问题：关于 hex 透明度的注入）：
+ * @see: [Tailwind CSS Plugin for Hex Color Opacity - Claude](https://claude.ai/chat/2e0544d8-eda0-4b88-afa3-ac0b57ebbd2f)
+ *
+ * 输入： --vscode-diffEditor-insertedTextBackground hex
+ * 输出：
+ *   - text-vscode-diffEditor-insertedTextBackground √
+ *   - bg-vscode-diffEditor-insertedTextBackground √
+ *   - bg-vscode-diffEditor-insertedTextBackground/50 √
+ *
+ */
+
+import plugin from "tailwindcss/plugin";
+
+// 定义 VSCode 变量数组
 const vsVariables = [
   "vscode-diffEditor-insertedTextBackground",
   "vscode-diffEditor-removedTextBackground",
@@ -41,26 +57,20 @@ const vsVariables = [
   "vscode-sideBarTitle-foreground",
 ];
 
-const vsMap = Object.fromEntries(
-  vsVariables.map((key) => [key, `var(--${key})`])
-);
-
-// Plugin configuration
-export const vsTheme = {
-  theme: {
-    extend: {
-      colors: vsMap,
-      backgroundColor: vsMap,
-      textColor: vsMap,
-      borderColor: vsMap,
-    },
+// 创建插件
+export default plugin(
+  function () {
+    // 不需要在这里添加基础样式，因为 VSCode 已经提供了 hex 变量
   },
-  plugins: [
-    function ({ addUtilities }: { addUtilities: Function }) {
-      const utilities = {
-        // Background with opacity variants
-      };
-      addUtilities(utilities);
+  {
+    theme: {
+      extend: {
+        colors: vsVariables.reduce((acc, varName) => {
+          // 直接使用 CSS var() 函数获取 hex 值，然后通过 color-mix 转换为 RGB
+          acc[varName] = `rgb(from var(--${varName}) r g b / <alpha-value>)`;
+          return acc;
+        }, {} as Record<string, string>),
+      },
     },
-  ],
-};
+  }
+);

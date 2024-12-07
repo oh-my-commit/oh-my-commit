@@ -173,8 +173,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 className={cn(
                   "group relative h-[22px] flex items-center pr-2 pl-6",
                   "hover:bg-vscode-list-hoverBackground",
-                  isSelected &&
-                    "bg-vscode-list-activeSelectionBackground/50 text-vscode-list-activeSelectionForeground"
+                  isSelected && "bg-vscode-list-activeSelectionBackground/25"
                 )}
                 onClick={() => handleFileClick(file.path)}
                 title={file.path}
@@ -233,8 +232,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               className={cn(
                 "group relative h-[22px] flex items-center pl-[30px] pr-2",
                 "hover:bg-vscode-list-hoverBackground",
-                isSelected &&
-                  "bg-vscode-list-activeSelectionBackground text-vscode-list-activeSelectionForeground"
+                isSelected && "active-selection"
               )}
               onClick={() => handleFileClick(file.path)}
               title={file.path}
@@ -352,7 +350,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchKeyDown}
-              placeholder="Search files"
+              placeholder="Full Search"
               spellCheck={false}
             />
             <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-vscode-input-placeholderForeground codicon codicon-search text-[12px]"></span>
