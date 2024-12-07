@@ -3,6 +3,7 @@ import React from "react";
 import { CommitForm, FileChanges } from "../components/commit";
 import { commitStateAtom, resetFilesAtom } from "../state/atoms/commit-core";
 import { getVSCodeAPI } from "../utils/vscode";
+import { Footer } from "../components/footer";
 
 export const CommitPage: React.FC = () => {
   const [commitState] = useAtom(commitStateAtom);
@@ -31,6 +32,7 @@ export const CommitPage: React.FC = () => {
     <div className="commit-page">
       <CommitForm onSubmit={handleCommit} />
       <FileChanges onFileSelect={handleFileSelect} />
+      <Footer />
     </div>
   );
 };

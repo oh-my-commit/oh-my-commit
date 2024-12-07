@@ -20,23 +20,6 @@ export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
   return (
     <form className="commit-form">
       <div className="commit-input-section">
-        <div className="section-header">
-          <div className="header-left">
-            <span className="brand-text">YAAC</span>
-            <span className="hint">Your Assured AI Committer</span>
-          </div>
-          <div className="header-right">
-            <button
-              className="commit-button"
-              onClick={onSubmit}
-              disabled={!isValid}
-              type="button"
-            >
-              Commit Changes
-            </button>
-          </div>
-        </div>
-
         <div className="input-group">
           <input
             type="text"
@@ -55,6 +38,17 @@ export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
             placeholder="Detailed explanation of changes"
             rows={4}
           />
+        </div>
+
+        <div className="form-actions">
+          <button
+            className="commit-button"
+            onClick={onSubmit}
+            disabled={!isValid}
+            type="button"
+          >
+            Commit Changes
+          </button>
         </div>
       </div>
     </form>
