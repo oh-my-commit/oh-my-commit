@@ -1,35 +1,28 @@
 // Mock VS Code API for development
-const mockVsCodeApi = {
-  postMessage: (message: any) => {
-    console.log("Development mode - Message posted:", message);
-  },
-  getState: () => {
-    return {};
-  },
-  setState: (state: any) => {
-    console.log("Development mode - State updated:", state);
-  },
-};
+import type { VSCodeAPI } from '../state/types';
 
-// Get VS Code API singleton
-let vsCodeApi: any;
-
-export function getVsCodeApi() {
-  if (vsCodeApi) {
-    return vsCodeApi;
+declare global {
+  interface Window {
+    acquireVsCodeApi(): VSCodeAPI;
   }
+}
 
-  try {
-    if (typeof acquireVsCodeApi === "function") {
-      vsCodeApi = acquireVsCodeApi();
-    } else {
-      console.log("Development mode - Using mock VSCode API");
-      vsCodeApi = mockVsCodeApi;
+let vscode: VSCodeAPI | undefined;
+
+export function getVSCodeAPI(): VSCodeAPI {
+  if (!vscode) {
+    try {
+      vscode = window.acquireVsCodeApi();
+    } catch (error) {
+      // 在非VSCode环境中提供mock实现
+      console.warn('Running outside VSCode, using mock implementation');
+      const mockState: Record<string, any> = {};
+      vscode = {
+        getState: () => ({ ...mockState }),
+        setState: (state) => Object.assign(mockState, state),
+        postMessage: (message) => console.log('VSCode message:', message),
+      };
     }
-  } catch (error) {
-    console.log("Failed to acquire VS Code API, using mock", error);
-    vsCodeApi = mockVsCodeApi;
   }
-
-  return vsCodeApi;
+  return vscode;
 }

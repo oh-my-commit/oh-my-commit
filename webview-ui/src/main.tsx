@@ -1,7 +1,9 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { CommitMessage } from "@/pages/commit-message";
-import "@/styles/styles.css";
+import { Provider } from "jotai";
+import { CommitPage } from "./pages/CommitPage";
+import { MockDataProvider } from "./data/MockDataProvider";
+import "./styles/styles.css";
 
 // 确保 DOM 加载完成
 window.addEventListener("load", () => {
@@ -14,7 +16,11 @@ window.addEventListener("load", () => {
   const root = createRoot(container);
   root.render(
     <React.StrictMode>
-      <CommitMessage />
+      <Provider>
+        <MockDataProvider>
+          <CommitPage />
+        </MockDataProvider>
+      </Provider>
     </React.StrictMode>
   );
 });
