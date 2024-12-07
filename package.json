@@ -12,10 +12,7 @@
   ],
   "activationEvents": [
     "onStartupFinished",
-    "workspaceContains:.git",
-    "onCommand:yaac.quickCommit",
-    "onCommand:yaac.selectModel",
-    "onCommand:yaac.openPreferences"
+    "workspaceContains:.git"
   ],
   "main": "./dist/extension.js",
   "contributes": {
