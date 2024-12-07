@@ -45,7 +45,7 @@ export const DiffViewer: React.FC = () => {
 
     // Process diff to add line classes
     const lines = selectedFile.diff.split("\n");
-    const processedLines = lines.map(line => {
+    const processedLines = lines.map((line) => {
       if (line.startsWith("+")) {
         return { line: line.slice(1), type: "addition" };
       } else if (line.startsWith("-")) {
@@ -74,7 +74,7 @@ export const DiffViewer: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="grow overflow-hidden h-full flex flex-col">
       <div className="flex-none h-[35px] flex items-center justify-between pl-[20px] pr-2 select-none border-b border-[var(--vscode-panel-border)]">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
@@ -114,67 +114,77 @@ export const DiffViewer: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-x-auto">
         <SyntaxHighlighter
           language={language}
           style={{
             ...vscDarkPlus,
             'pre[class*="language-"]': {
               ...vscDarkPlus['pre[class*="language-"]'],
-              background: 'transparent',
+              background: "transparent",
               margin: 0,
+              minWidth: "100%",
             },
             'code[class*="language-"]': {
               ...vscDarkPlus['code[class*="language-"]'],
-              background: 'transparent',
-              color: 'var(--vscode-editor-foreground)',
+              background: "transparent",
+              color: "var(--vscode-editor-foreground)",
+              display: "inline-block",
+              minWidth: "100%",
             },
           }}
           showLineNumbers
-          wrapLines
           customStyle={{
-            margin: 0,
-            fontSize: "13px",
             lineHeight: "20px",
             padding: "12px 0",
             background: "transparent",
             fontFamily: "var(--vscode-editor-font-family)",
+            minWidth: "100%",
           }}
           lineNumberStyle={{
-            minWidth: "3.5em",
+            minWidth: "3em",
+            paddingLeft: "1em",
             paddingRight: "1em",
             textAlign: "right",
             userSelect: "none",
             color: "var(--vscode-editorLineNumber-foreground)",
           }}
-          lineProps={(lineNumber) => {
-            const type = lineTypes[lineNumber - 1];
-            const style: React.CSSProperties = {
-              display: 'block',
-              position: 'relative',
-              backgroundColor: type === "addition"
-                ? 'var(--vscode-diffEditor-insertedLineBackground)'
-                : type === "deletion"
-                  ? 'var(--vscode-diffEditor-removedLineBackground)'
-                  : 'transparent'
-            };
-            
-            return {
-              style,
-              className: 'group hover:bg-[color:var(--vscode-editor-hoverHighlightBackground)]'
-            };
-          }}
-          children={processedDiff || "No changes"}
+          wrapLines={true}
           PreTag={({ children, ...props }) => (
             <pre {...props} style={{ margin: 0, padding: 0 }}>
               {children}
             </pre>
           )}
           CodeTag={({ children, ...props }) => (
-            <code {...props} style={{ fontFamily: 'inherit' }}>
+            <code {...props} style={{ 
+              display: "block",
+              width: "100%",
+              fontFamily: "inherit",
+              backgroundColor: props.style?.backgroundColor || "transparent",
+            }}>
               {children}
             </code>
           )}
+          lineProps={(lineNumber) => {
+            const type = lineTypes[lineNumber - 1];
+            const style: React.CSSProperties = {
+              backgroundColor:
+                type === "addition"
+                  ? "color-mix(in srgb, var(--vscode-diffEditor-insertedLineBackground), transparent 30%)"
+                  : type === "deletion"
+                  ? "color-mix(in srgb, var(--vscode-diffEditor-removedLineBackground), transparent 30%)"
+                  : "var(--vscode-editor-background)",
+              display: "block",
+              width: "100%",
+            };
+
+            return {
+              style,
+              className:
+                "group hover:bg-[color:var(--vscode-editor-hoverHighlightBackground)]",
+            };
+          }}
+          children={processedDiff || "No changes"}
         />
       </div>
     </div>
