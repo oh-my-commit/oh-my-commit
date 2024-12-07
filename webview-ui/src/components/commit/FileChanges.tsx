@@ -9,12 +9,14 @@ import {
   selectFileAtom,
   selectedFileAtom,
   showDiffAtom,
+  searchQueryAtom,
 } from "../../state/atoms/commit-ui";
 import { DiffViewer } from "./DiffViewer";
 import type { FileChange } from "../../state/types";
 import type { CommitState } from "../../types/commit-state";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { cn } from "../../lib/utils";
+import { HighlightText } from "../common/HighlightText";
 
 interface FileChangesProps {
   files: FileChange[];
@@ -70,7 +72,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [, updateCommitState] = useAtom(updateCommitStateAtom);
   const [viewMode, setViewMode] =
     React.useState<keyof typeof VIEW_MODES>("grouped");
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [isSearching, setIsSearching] = React.useState(false);
 
   // 过滤文件
@@ -80,16 +82,16 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     return files.filter((file) => {
       // 搜索文件路径
       if (file.path.toLowerCase().includes(query)) return true;
-      
+
       // 搜索文件内容
       if (file.content?.toLowerCase().includes(query)) return true;
-      
+
       // 搜索旧文件内容（对于修改和删除的文件）
       if (file.oldContent?.toLowerCase().includes(query)) return true;
-      
+
       // 搜索差异内容
       if (file.diff?.toLowerCase().includes(query)) return true;
-      
+
       return false;
     });
   }, [files, searchQuery]);
@@ -178,7 +180,10 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 title={file.path}
               >
                 <span className="flex-1 truncate text-[13px] leading-[22px] cursor-pointer">
-                  {file.path.split("/").pop()}
+                  <HighlightText
+                    text={file.path.split("/").pop() || ""}
+                    highlight={searchQuery}
+                  />
                 </span>
                 <div
                   className={cn(
@@ -235,7 +240,10 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               title={file.path}
             >
               <span className="flex-1 truncate text-[13px] leading-[22px] cursor-pointer">
-                {file.path.split("/").pop()}
+                <HighlightText
+                  text={file.path.split("/").pop() || ""}
+                  highlight={searchQuery}
+                />
               </span>
               <div
                 className={cn(
@@ -303,18 +311,6 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           <div className="flex items-center gap-1">
             <VSCodeButton
               appearance="icon"
-              title="Search files"
-              onClick={toggleSearch}
-            >
-              <span
-                className={cn(
-                  "codicon codicon-search",
-                  isSearching ? "text-vscode-inputOption-activeForeground" : ""
-                )}
-              />
-            </VSCodeButton>
-            <VSCodeButton
-              appearance="icon"
               title="Switch View Mode"
               onClick={() => {
                 const modes = Object.keys(
@@ -339,12 +335,11 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           </div>
         </div>
 
-        {isSearching && (
-          <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-vscode-panel-border">
-            <div className="relative flex-1 flex items-center">
-              <input
-                type="text"
-                className="
+        <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-vscode-panel-border">
+          <div className="relative flex-1 flex items-center">
+            <input
+              type="text"
+              className="
                   file-search-input w-full h-[24px] px-[6px] pl-[24px]
                   bg-vscode-input-background
                   text-vscode-input-foreground
@@ -354,25 +349,24 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   focus:border-vscode-focusBorder
                   placeholder:text-vscode-input-placeholderForeground
                 "
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder="Search files"
-                spellCheck={false}
-              />
-              <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-vscode-input-placeholderForeground codicon codicon-search text-[12px]"></span>
-              {searchQuery && (
-                <VSCodeButton
-                  appearance="icon"
-                  className="absolute right-[2px]"
-                  onClick={() => setSearchQuery("")}
-                >
-                  <span className="codicon codicon-close text-[14px]" />
-                </VSCodeButton>
-              )}
-            </div>
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Search files"
+              spellCheck={false}
+            />
+            <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-vscode-input-placeholderForeground codicon codicon-search text-[12px]"></span>
+            {searchQuery && (
+              <VSCodeButton
+                appearance="icon"
+                className="absolute right-[2px]"
+                onClick={() => setSearchQuery("")}
+              >
+                <span className="codicon codicon-close text-[14px]" />
+              </VSCodeButton>
+            )}
           </div>
-        )}
+        </div>
 
         <div className="flex-1 overflow-y-auto">
           {viewMode === "grouped" && (
