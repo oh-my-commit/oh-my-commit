@@ -3,8 +3,8 @@ import { FileTreeErrorBoundary } from "@/components/file-tree-error-boundary";
 import { mockFileChanges } from "@/data/mock-file-changes";
 import { mockRecentCommits } from "@/data/mock-recent-commits";
 import { CommitState } from "@/types/commit-state";
-import { DetailedDescription } from "@/components/detailed-description";
-import { descriptionViewModeAtom } from "@/atoms/preferences";
+import { CommitDetail } from "@/components/commit-detail";
+import { uiWebviewLayoutAtom } from "@/atoms/preferences";
 import { useAtom } from "jotai";
 
 import { buildFileTree } from "@/utils/build-file-tree";
@@ -49,9 +49,7 @@ const CommitMessage = () => {
   });
 
   // UI 状态 - 使用 Jotai 管理
-  const [descriptionViewMode, setDescriptionViewMode] = useAtom(
-    descriptionViewModeAtom
-  );
+  const [webviewLayout, setWebviewLayout] = useAtom(uiWebviewLayoutAtom);
 
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
   const [expandedCommit, setExpandedCommit] = React.useState<string | null>(
@@ -206,27 +204,27 @@ const CommitMessage = () => {
                 >
                   <button
                     className={classnames("mode-button", {
-                      active: descriptionViewMode === "plain",
+                      active: webviewLayout === "plain",
                     })}
-                    onClick={() => setDescriptionViewMode("plain")}
+                    onClick={() => setWebviewLayout("plain")}
                     title="Edit in plain text mode"
                   >
                     Plain
                   </button>
                   <button
                     className={classnames("mode-button", {
-                      active: descriptionViewMode === "split",
+                      active: webviewLayout === "split",
                     })}
-                    onClick={() => setDescriptionViewMode("split")}
+                    onClick={() => setWebviewLayout("split")}
                     title="Edit with live preview"
                   >
                     Split
                   </button>
                   <button
                     className={classnames("mode-button", {
-                      active: descriptionViewMode === "preview",
+                      active: webviewLayout === "preview",
                     })}
-                    onClick={() => setDescriptionViewMode("preview")}
+                    onClick={() => setWebviewLayout("preview")}
                     title="View rendered preview"
                   >
                     Preview
@@ -234,13 +232,13 @@ const CommitMessage = () => {
                 </div>
               </div>
             </div>
-            <DetailedDescription
+            <CommitDetail
               value={state.body}
               onChange={(value) =>
                 setState((prev) => ({ ...prev, body: value }))
               }
               placeholder="Enter detailed description (optional)"
-              viewMode={descriptionViewMode}
+              webviewLayout={webviewLayout}
             />
           </div>
         </div>

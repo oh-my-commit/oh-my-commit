@@ -1,21 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { marked } from "marked";
 import classnames from "classnames";
-import "./detailed-description.css";
+import "./commit-detail.css";
 
 interface Props {
   value: string;
   placeholder?: string;
   onChange: (value: string) => void;
-  viewMode: "plain" | "split" | "preview";
+  webviewLayout: "plain" | "split" | "preview";
   title?: string;
 }
 
-export const DetailedDescription: React.FC<Props> = ({
+export const CommitDetail: React.FC<Props> = ({
   value,
   placeholder,
   onChange,
-  viewMode,
+  webviewLayout,
 }) => {
   const [internalValue, setInternalValue] = useState(value);
   const plainTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -26,58 +26,22 @@ export const DetailedDescription: React.FC<Props> = ({
     setInternalValue(value);
   }, [value]);
 
-  // 自动调整文本区域高度
-  const adjustTextareaHeight = useCallback(
-    (textarea: HTMLTextAreaElement | null) => {
-      if (!textarea) return;
-      textarea.style.height = "auto";
-      const height = Math.max(150, textarea.scrollHeight);
-      textarea.style.height = `${height}px`;
-    },
-    []
-  );
-
   // 处理文本变化
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = e.target.value;
       setInternalValue(newValue);
       onChange(newValue);
-      // 调整当前激活的 textarea 的高度
-      if (viewMode === "plain") {
-        adjustTextareaHeight(plainTextareaRef.current);
-      } else if (viewMode === "split") {
-        adjustTextareaHeight(splitTextareaRef.current);
-      }
     },
-    [onChange, viewMode, adjustTextareaHeight]
+    [onChange]
   );
 
-  // 监听内容变化时调整所有 textarea 的高度
-  useEffect(() => {
-    adjustTextareaHeight(plainTextareaRef.current);
-    adjustTextareaHeight(splitTextareaRef.current);
-  }, [internalValue, adjustTextareaHeight]);
-
-  // 监听视图模式变化，等待过渡动画完成后调整高度
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (viewMode === "plain") {
-        adjustTextareaHeight(plainTextareaRef.current);
-      } else if (viewMode === "split") {
-        adjustTextareaHeight(splitTextareaRef.current);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [viewMode, adjustTextareaHeight]);
-
   return (
-    <div className={`editor-container mode-${viewMode}`}>
+    <div className={`editor-container mode-${webviewLayout}`}>
       {/* Plain View */}
       <div
         className={classnames("view-container plain-view", {
-          active: viewMode === "plain",
+          active: webviewLayout === "plain",
         })}
       >
         <textarea
@@ -91,7 +55,7 @@ export const DetailedDescription: React.FC<Props> = ({
       {/* Split View */}
       <div
         className={classnames("view-container split-view", {
-          active: viewMode === "split",
+          active: webviewLayout === "split",
         })}
       >
         <textarea
@@ -111,7 +75,7 @@ export const DetailedDescription: React.FC<Props> = ({
       {/* Preview View */}
       <div
         className={classnames("view-container preview-view", {
-          active: viewMode === "preview",
+          active: webviewLayout === "preview",
         })}
       >
         <div
