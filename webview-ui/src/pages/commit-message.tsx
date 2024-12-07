@@ -1,10 +1,9 @@
 import { FileTreeNode } from "@/components/file-tree";
 import { FileTreeErrorBoundary } from "@/components/file-tree-error-boundary";
-import { mockFileChanges } from "@/data/mock-file-changes";
 import { mockRecentCommits } from "@/data/mock-recent-commits";
 import { CommitState } from "@/types/commit-state";
 import { CommitDetail } from "@/components/commit-detail";
-import { uiWebviewLayoutAtom } from "@/atoms/preferences";
+import { webviewLayoutAtom } from "@/atoms/preferences";
 import { useAtom } from "jotai";
 
 import { buildFileTree } from "@/utils/build-file-tree";
@@ -19,9 +18,9 @@ import React from "react";
 import { getVsCodeApi } from "@/utils/vscode";
 import "./commit-message.css";
 import classnames from "classnames";
+import { defaultAppState } from "./defaultAppState";
 
 provideVSCodeDesignSystem().register(
-  vsCodeButton(),
   vsCodeTextArea(),
   vsCodeDivider(),
   vsCodeCheckbox()
@@ -29,28 +28,12 @@ provideVSCodeDesignSystem().register(
 
 const CommitMessage = () => {
   // 业务状态
-  const [state, setState] = React.useState<CommitState>({
-    title: "",
-    body: `
-  const textarea = textareaRef.current;
-  if (!textarea) return;
-  
-  // 先将高度设为 0，这样可以正确计算 scrollHeight
-  textarea.style.height = '0';
-  
-  // 然后设置为实际需要的高度
-  const height = Math.max(150, textarea.scrollHeight);
-  textarea.style.height = \`\${height}px\`;
-    `,
-    isAmendMode: false,
-    diff: "",
-    filesChanged: mockFileChanges,
-    selectedFiles: new Set(mockFileChanges.map((f) => f.path)), // 默认全选
-  });
+  const [state, setState] = React.useState<CommitState>(defaultAppState);
 
   // UI 状态 - 使用 Jotai 管理
-  const [webviewLayout, setWebviewLayout] = useAtom(uiWebviewLayoutAtom);
+  const [webviewLayout, setWebviewLayout] = useAtom(webviewLayoutAtom);
 
+  // 组件状态
   const [expandedFile, setExpandedFile] = React.useState<string | null>(null);
   const [expandedCommit, setExpandedCommit] = React.useState<string | null>(
     null

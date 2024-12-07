@@ -143,17 +143,6 @@
           "markdownDescription": "提交界面模式选择",
           "order": 40
         },
-        "yaac.ui.webview.layout": {
-          "type": "string",
-          "enum": [
-            "plain",
-            "split",
-            "preview"
-          ],
-          "default": "split",
-          "markdownDescription": "Webview 模式下 填写 commit body 的布局方式",
-          "order": 401
-        },
         "yaac.telemetry.enabled": {
           "type": "boolean",
           "default": true,
