@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useAtom } from "jotai";
 import {
   commitFilesAtom,
@@ -48,6 +48,13 @@ const STATUS_LABELS = {
   default: "Unknown",
 } as const;
 
+// 视图模式
+const VIEW_MODES = {
+  grouped: 'Grouped',
+  tree: 'Tree',
+  flat: 'Flat',
+} as const;
+
 export const FileChanges: React.FC<FileChangesProps> = ({
   files,
   selectedFiles,
@@ -58,6 +65,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [selectedPath] = useAtom(selectedFileAtom);
   const [showDiff] = useAtom(showDiffAtom);
   const [, selectFile] = useAtom(selectFileAtom);
+  const [viewMode, setViewMode] = React.useState<keyof typeof VIEW_MODES>('grouped');
 
   // 按状态分组的文件
   const groupedFiles = useMemo(() => {
@@ -87,71 +95,111 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     if (files.length === 0) return null;
 
     return (
-      <div key={status}>
-        <div className="h-[22px] flex items-center gap-2 px-2">
+      <div key={status} className="group">
+        <div 
+          className="
+            h-[22px] flex items-center gap-1 px-[10px] select-none
+            text-[11px] text-[var(--vscode-foreground)] opacity-80
+            hover:opacity-100
+          "
+        >
           <vscode-icon 
             name={STATUS_ICONS[status] || STATUS_ICONS.default}
             style={{ color: STATUS_COLORS[status] }}
+            className="text-[14px]"
           />
-          <span className="text-[12px] font-medium text-[var(--vscode-foreground)]">
-            {STATUS_LABELS[status]} ({files.length})
+          <span className="font-medium uppercase tracking-wide">
+            {STATUS_LABELS[status]}
           </span>
+          <span className="opacity-80">({files.length})</span>
         </div>
-        {files.map(file => {
-          const isSelected = file.path === selectedPath;
-          return (
-            <div
-              key={file.path}
-              className={`
-                h-[22px] flex items-center px-3 cursor-pointer
-                hover:bg-[var(--vscode-list-hoverBackground)]
-                ${isSelected ? 'bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]' : ''}
-              `}
-              onClick={() => handleFileClick(file.path)}
-              title={file.path}
-            >
-              <span className="flex-1 truncate text-[12px]">{file.path}</span>
-              <div className="flex items-center gap-2 text-[12px]">
-                {file.additions > 0 && (
-                  <span style={{ color: STATUS_COLORS.added }}>+{file.additions}</span>
+        <div className="mb-1">
+          {files.map(file => {
+            const isSelected = file.path === selectedPath;
+            const hasChanges = file.additions > 0 || file.deletions > 0;
+            
+            return (
+              <div
+                key={file.path}
+                className={`
+                  group relative h-[22px] flex items-center pl-[30px] pr-2
+                  hover:bg-[var(--vscode-list-hoverBackground)]
+                  ${isSelected ? 'bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]' : ''}
+                `}
+                onClick={() => handleFileClick(file.path)}
+                title={file.path}
+              >
+                <span className="flex-1 truncate text-[13px] leading-[22px] cursor-pointer">
+                  {file.path.split('/').pop()}
+                </span>
+                {hasChanges && (
+                  <div 
+                    className={`
+                      hidden group-hover:flex items-center gap-2 pl-2 text-[12px] tabular-nums
+                      ${isSelected ? 'text-[var(--vscode-list-activeSelectionForeground)]' : ''}
+                    `}
+                  >
+                    {file.additions > 0 && (
+                      <span className={isSelected ? '' : 'text-[var(--vscode-gitDecoration-addedResourceForeground)]'}>
+                        +{file.additions}
+                      </span>
+                    )}
+                    {file.deletions > 0 && (
+                      <span className={isSelected ? '' : 'text-[var(--vscode-gitDecoration-deletedResourceForeground)]'}>
+                        -{file.deletions}
+                      </span>
+                    )}
+                  </div>
                 )}
-                {file.deletions > 0 && (
-                  <span style={{ color: STATUS_COLORS.deleted }}>-{file.deletions}</span>
-                )}
+                <div 
+                  className={`
+                    absolute left-[10px] w-[16px] h-[16px] flex items-center justify-center
+                    ${isSelected ? 'text-[var(--vscode-list-activeSelectionForeground)]' : `text-[${STATUS_COLORS[status]}]`}
+                  `}
+                >
+                  <vscode-icon name={STATUS_ICONS[status]} className="text-[14px]" />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="flex-1 flex min-h-0 bg-[var(--vscode-editor-background)] border border-[var(--vscode-panel-border)]">
+    <div className="flex-1 flex min-h-0 bg-[var(--vscode-sideBar-background)]">
       {/* 文件列表面板 */}
-      <div className="w-[280px] flex flex-col overflow-y-auto border-r border-[var(--vscode-panel-border)]">
-        <div className="flex-none h-[28px] flex items-center justify-between px-2 border-b border-[var(--vscode-panel-border)]">
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-medium">Changes</span>
-            <div className="flex items-center gap-1 text-[12px]">
-              <span style={{ color: STATUS_COLORS.added }}>+{stats.additions}</span>
-              <span style={{ color: STATUS_COLORS.deleted }}>-{stats.deletions}</span>
-              <span className="text-[var(--vscode-descriptionForeground)]">
-                {files.length} files
-              </span>
-            </div>
+      <div className="w-[300px] flex flex-col overflow-y-auto border-r border-[var(--vscode-panel-border)]">
+        <div className="flex-none h-[35px] flex items-center justify-between px-[10px] select-none">
+          <div className="flex items-center gap-1">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--vscode-sideBarTitle-foreground)]">
+              Changed Files
+            </span>
+            <span className="text-[11px] opacity-80">({files.length})</span>
           </div>
-          <VSCodeButton
-            appearance="icon"
-            title="Refresh Changes"
-            onClick={() => {/* TODO: 实现刷新功能 */}}
-          >
-            <span className="codicon codicon-refresh" />
-          </VSCodeButton>
+          <div className="flex items-center gap-1">
+            <VSCodeButton
+              appearance="icon"
+              title="Switch View Mode"
+              onClick={() => {
+                const modes = Object.keys(VIEW_MODES) as (keyof typeof VIEW_MODES)[];
+                const currentIndex = modes.indexOf(viewMode);
+                const nextIndex = (currentIndex + 1) % modes.length;
+                setViewMode(modes[nextIndex]);
+              }}
+            >
+              <span className={`codicon codicon-${
+                viewMode === 'grouped' ? 'list-flat' : 
+                viewMode === 'tree' ? 'list-tree' : 
+                'list-selection'
+              }`} />
+            </VSCodeButton>
+          </div>
         </div>
 
         <div className="flex-1 py-1">
-          {Object.entries(groupedFiles).map(([status, files]) => 
+          {viewMode === 'grouped' && Object.entries(groupedFiles).map(([status, files]) => 
             renderFileGroup(status as keyof typeof STATUS_COLORS, files)
           )}
         </div>

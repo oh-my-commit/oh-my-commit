@@ -2,9 +2,10 @@ import React, { useMemo } from "react";
 import { useAtom } from "jotai";
 import { selectedFileAtom } from "../../state/atoms/commit-ui";
 import { commitFilesAtom } from "../../state/atoms/commit-core";
+import { selectFileAtom } from "../../state/atoms/commit-ui";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { selectFileAtom } from "../../state/atoms/commit-ui";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 
 interface DiffLineProps {
   content: string;
@@ -60,40 +61,85 @@ export const DiffViewer: React.FC = () => {
   };
 
   return (
-    <div className="diff-viewer">
-      <div className="diff-header">
-        <div className="file-info">
-          <span className="file-path" title={selectedFile.path}>
-            {selectedFile.path}
-          </span>
-          <span className="file-stats">
-            <span className="additions" title="Lines added">
+    <div className="h-full flex flex-col">
+      <div className="flex-none h-[35px] flex items-center justify-between pl-[20px] pr-2 select-none border-b border-[var(--vscode-panel-border)]">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <span
+              className="text-[13px] text-[var(--vscode-editor-foreground)] truncate max-w-[300px]"
+              title={selectedFile.path}
+            >
+              {selectedFile.path.split("/").pop()}
+            </span>
+            <span className="text-[12px] text-[var(--vscode-descriptionForeground)]">
+              {selectedFile.path.split("/").slice(0, -1).join("/")}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-[12px] tabular-nums">
+            <span
+              className="text-[var(--vscode-gitDecoration-addedResourceForeground)]"
+              title="Lines added"
+            >
               +{selectedFile.additions}
             </span>
-            <span className="deletions" title="Lines removed">
+            <span
+              className="text-[var(--vscode-gitDecoration-deletedResourceForeground)]"
+              title="Lines removed"
+            >
               -{selectedFile.deletions}
             </span>
-          </span>
+          </div>
         </div>
-        <button
-          className="close-button"
-          onClick={handleClose}
-          title="Close diff view"
-        >
-          Close
-        </button>
+        <div className="flex items-center gap-1">
+          <VSCodeButton
+            appearance="icon"
+            title="Close diff view"
+            onClick={handleClose}
+          >
+            <span className="codicon codicon-close" />
+          </VSCodeButton>
+        </div>
       </div>
-      
-      <div className="diff-content">
+
+      <div className="flex-1 overflow-y-auto">
         <SyntaxHighlighter
           language={language}
-          style={vscDarkPlus}
+          style={{
+            ...vscDarkPlus,
+            'pre[class*="language-"]': {
+              ...vscDarkPlus['pre[class*="language-"]'],
+              background: 'transparent',
+              margin: 0,
+            },
+            'code[class*="language-"]': {
+              ...vscDarkPlus['code[class*="language-"]'],
+              background: 'transparent',
+              color: 'var(--vscode-editor-foreground)',
+            },
+          }}
           showLineNumbers
           wrapLines
           customStyle={{
             margin: 0,
-            padding: "1rem",
+            fontSize: "13px",
+            lineHeight: "20px",
+            padding: "12px 0",
             background: "transparent",
+            fontFamily: "var(--vscode-editor-font-family)",
+          }}
+          lineNumberStyle={{
+            minWidth: "3.5em",
+            paddingRight: "1em",
+            textAlign: "right",
+            userSelect: "none",
+            color: "var(--vscode-editorLineNumber-foreground)",
+          }}
+          className="h-full"
+          codeTagProps={{
+            style: {
+              fontFamily: "inherit",
+              background: "transparent",
+            },
           }}
         >
           {selectedFile.diff || "No changes"}
