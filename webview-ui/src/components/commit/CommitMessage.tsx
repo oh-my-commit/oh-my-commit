@@ -4,8 +4,8 @@ import { VSCodeButton, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react";
 interface CommitMessageProps {
   message: string;
   detail: string;
-  setMessage: (message: string) => void;
-  setDetail: (detail: string) => void;
+  onMessageChange: (message: string) => void;
+  onDetailChange: (detail: string) => void;
   onCommit: () => void;
   selectedFilesCount: number;
   disabled?: boolean;
@@ -14,31 +14,44 @@ interface CommitMessageProps {
 export function CommitMessage({
   message,
   detail,
-  setMessage,
-  setDetail,
+  onMessageChange,
+  onDetailChange,
   onCommit,
   selectedFilesCount,
   disabled,
 }: CommitMessageProps) {
   return (
-    <div className="commit-message">
+    <div className="flex flex-col gap-2">
       <VSCodeTextArea
+        className="!h-[28px] !min-h-[28px] !bg-[var(--vscode-input-background)] !text-[var(--vscode-input-foreground)]"
         value={message}
-        onChange={(e) => setMessage((e.target as HTMLTextAreaElement).value)}
-        placeholder="Enter commit message"
+        onChange={(e) => onMessageChange((e.target as HTMLTextAreaElement).value)}
+        placeholder="feat: describe your changes..."
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey && !disabled) {
+            e.preventDefault();
+            onCommit();
+          }
+        }}
       />
+
       <VSCodeTextArea
+        className="!h-[80px] !min-h-[80px] !bg-[var(--vscode-input-background)] !text-[var(--vscode-input-foreground)]"
         value={detail}
-        onChange={(e) => setDetail((e.target as HTMLTextAreaElement).value)}
-        placeholder="Enter detailed description (optional)"
+        onChange={(e) => onDetailChange((e.target as HTMLTextAreaElement).value)}
+        placeholder="Detailed description of your changes (optional)..."
       />
-      <div className="commit-actions">
+
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-[var(--vscode-descriptionForeground)]">
+          {selectedFilesCount} files selected
+        </span>
         <VSCodeButton
           appearance="primary"
           onClick={onCommit}
           disabled={disabled}
         >
-          Commit Changes ({selectedFilesCount} files)
+          Commit Changes
         </VSCodeButton>
       </div>
     </div>

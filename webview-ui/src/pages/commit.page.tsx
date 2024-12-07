@@ -3,9 +3,7 @@ import { useCommit } from "../state/hooks/useCommit";
 import { FileChanges } from "../components/commit/FileChanges";
 import { CommitMessage } from "../components/commit/CommitMessage";
 import { getVSCodeAPI } from "../utils/vscode";
-import { Footer } from "../components/footer";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import "./commit-page.css";
+import { Footer } from "@/components/footer";
 
 export function CommitPage() {
   const {
@@ -51,13 +49,13 @@ export function CommitPage() {
   );
 
   return (
-    <div className="commit-page">
-      <div className="commit-content">
+    <div className="h-full flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0 p-3 space-y-3">
         <CommitMessage
           message={message}
           detail={detail}
-          setMessage={setMessage}
-          setDetail={setDetail}
+          onMessageChange={setMessage}
+          onDetailChange={setDetail}
           onCommit={handleCommit}
           selectedFilesCount={selectedFiles.length}
           disabled={!message.trim() || selectedFiles.length === 0}
@@ -69,6 +67,7 @@ export function CommitPage() {
           onFileSelect={handleFileSelect}
         />
       </div>
+
       <Footer />
     </div>
   );
