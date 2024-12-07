@@ -271,26 +271,54 @@
 }
 
 .diff-header {
-  composes: section-header;
-  background: var(--vscode-editor-background);
+  display: flex;
   justify-content: space-between;
-  padding: 0 0.5rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--vscode-editor-background);
+  border-bottom: 1px solid var(--vscode-panel-border);
 }
 
 .file-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  overflow: hidden;
-  font-size: 11px;
+  gap: 1rem;
+  font-size: 12px;
 }
 
-.file-info .file-path {
-  color: var(--vscode-editor-foreground);
+.file-path {
+  color: var(--vscode-foreground);
+  opacity: 0.8;
 }
 
-.file-info .file-stats {
+.file-stats {
+  display: flex;
+  gap: 0.5rem;
   color: var(--vscode-descriptionForeground);
+}
+
+.additions {
+  color: var(--vscode-gitDecoration-addedResourceForeground);
+}
+
+.deletions {
+  color: var(--vscode-gitDecoration-deletedResourceForeground);
+}
+
+.close-button {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.close-button:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+  opacity: 1;
 }
 
 .diff-content {
