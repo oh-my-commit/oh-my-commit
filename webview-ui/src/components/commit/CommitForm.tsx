@@ -1,9 +1,6 @@
 import React from "react";
 import { useAtom } from "jotai";
-import {
-  commitMessageAtom,
-  commitDetailAtom,
-} from "../../state/atoms/commit-core";
+import { commitMessageAtom, commitDetailAtom, commitFilesAtom } from "../../state/atoms/commit-core";
 
 interface CommitFormProps {
   onSubmit?: () => void;
@@ -12,23 +9,31 @@ interface CommitFormProps {
 export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
   const [message, setMessage] = useAtom(commitMessageAtom);
   const [detail, setDetail] = useAtom(commitDetailAtom);
+  const [files] = useAtom(commitFilesAtom);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit?.();
-  };
+  const isValid = message.trim().length > 0 && files.length > 0;
 
   return (
-    <form onSubmit={handleSubmit} className="commit-form">
+    <form className="commit-form">
       <div className="commit-input-section">
         <div className="section-header">
-          <div className="section-title">Commit Message</div>
+          <div className="header-left">
+            <span className="brand-text">YAAC</span>
+            <span className="hint">AI-powered commit message</span>
+          </div>
+          <div className="header-right">
+            <button
+              className="commit-button"
+              onClick={onSubmit}
+              disabled={!isValid}
+              type="button"
+            >
+              Commit Changes
+            </button>
+          </div>
         </div>
 
         <div className="input-group">
-          <div className="input-header">
-            <div className="input-label">Title</div>
-          </div>
           <input
             type="text"
             className="commit-title"
@@ -39,9 +44,6 @@ export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
         </div>
 
         <div className="input-group">
-          <div className="input-header">
-            <div className="input-label">Description</div>
-          </div>
           <textarea
             className="commit-detail"
             value={detail}
