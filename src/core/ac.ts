@@ -4,17 +4,21 @@ import * as vscode from "vscode";
 import { OpenAIProvider } from "../providers/open-ai";
 import { presetAiProviders, Provider } from "../types/provider";
 import { isEqual, pick } from "lodash-es";
+import { AppManager } from "@/core"; // Add this line
 
 export const getWorkspaceConfig = () =>
   vscode.workspace.getConfiguration("yaac");
 
 export class AcManager {
+  private app: AppManager; // Add this line
   private currentModelId: string | undefined;
   private providers: Provider[] = [
     new OpenAIProvider(), // 添加更多providers
   ];
 
-  constructor() {
+  constructor(app: AppManager) {
+    // Modify this line
+    this.app = app;
     // 从配置中加载provider状态和当前model
     this.loadConfig();
   }
@@ -129,7 +133,7 @@ export class AcManager {
     this.currentModelId = config.get<string>("currentModel");
   }
 
-  private async registerConfiguration() {
+  protected async registerConfiguration() {
     const models = await this.getAvailableModels();
     const currentModel = await this.getCurrentModel();
     const target = {
