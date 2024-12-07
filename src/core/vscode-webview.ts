@@ -80,6 +80,20 @@ export class WebviewManager {
       }
     );
 
+    this.webviewPanel.webview.onDidReceiveMessage(
+      async (message: any) => {
+        switch (message.command) {
+          case "openExternal":
+            if (message.url) {
+              vscode.env.openExternal(vscode.Uri.parse(message.url));
+            }
+            break;
+        }
+      },
+      undefined,
+      []
+    );
+
     this.updateWebview();
 
     this.webviewPanel.onDidDispose(() => {
@@ -98,8 +112,10 @@ export class WebviewManager {
           "default-src 'none'",
           `style-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
           `script-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
+          `font-src ${this.webviewPanel.webview.cspSource}`,
           `img-src ${this.webviewPanel.webview.cspSource} https: data:`,
           `connect-src ${this.webviewPanel.webview.cspSource} https:`,
+          "frame-src https:",
         ].join(";"),
         title: this.title,
         scriptUri: `${this.webviewPanel.webview.asWebviewUri(
