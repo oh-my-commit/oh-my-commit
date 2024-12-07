@@ -77,7 +77,21 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const filteredFiles = useMemo(() => {
     if (!searchQuery) return files;
     const query = searchQuery.toLowerCase();
-    return files.filter((file) => file.path.toLowerCase().includes(query));
+    return files.filter((file) => {
+      // 搜索文件路径
+      if (file.path.toLowerCase().includes(query)) return true;
+      
+      // 搜索文件内容
+      if (file.content?.toLowerCase().includes(query)) return true;
+      
+      // 搜索旧文件内容（对于修改和删除的文件）
+      if (file.oldContent?.toLowerCase().includes(query)) return true;
+      
+      // 搜索差异内容
+      if (file.diff?.toLowerCase().includes(query)) return true;
+      
+      return false;
+    });
   }, [files, searchQuery]);
 
   // 按状态分组的文件
