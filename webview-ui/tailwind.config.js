@@ -1,11 +1,14 @@
 /** @type {import('tailwindcss').Config} */
+const { vsTheme } = require('./src/lib/vscode-theme');
+
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./index.html",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      ...vsTheme.theme.extend,
+    },
   },
-  plugins: [],
-}
+  plugins: [
+    ...vsTheme.plugins,
+  ],
+};

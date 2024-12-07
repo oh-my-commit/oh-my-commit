@@ -14,6 +14,7 @@ import { DiffViewer } from "./DiffViewer";
 import type { FileChange } from "../../state/types";
 import type { CommitState } from "../../types/commit-state";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { cn } from "../../lib/utils";
 
 interface FileChangesProps {
   files: FileChange[];
@@ -22,16 +23,16 @@ interface FileChangesProps {
   onFileSelect?: (path: string) => void;
 }
 
-// 文件变更类型的颜色映射
+// File change status colors
 const STATUS_COLORS = {
-  added: "#89D185", // VSCode git colors
-  modified: "#E2C08D",
-  deleted: "#F14C4C",
-  renamed: "#569CD6",
-  default: "var(--vscode-foreground)",
+  added: "text-vscode-gitDecoration-addedResourceForeground", // Git decoration colors
+  modified: "text-vscode-gitDecoration-modifiedResourceForeground",
+  deleted: "text-vscode-gitDecoration-deletedResourceForeground",
+  renamed: "text-vscode-gitDecoration-renamedResourceForeground",
+  default: "text-vscode-gitDecoration-modifiedResourceForeground",
 } as const;
 
-// 文件变更类型的图标映射
+// File change status icons
 const STATUS_ICONS = {
   added: "add",
   modified: "edit",
@@ -40,7 +41,7 @@ const STATUS_ICONS = {
   default: "file",
 } as const;
 
-// 文件变更类型的标签映射
+// File change status labels
 const STATUS_LABELS = {
   added: "Added",
   modified: "Modified",
@@ -132,11 +133,11 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     return (
       <div key={status} className="group">
         <div
-          className="
-            h-[22px] flex items-center gap-1 px-[10px] select-none
-            text-[11px] text-[var(--vscode-foreground)] opacity-80
-            hover:opacity-100
-          "
+          className={cn(
+            "h-[22px] flex items-center gap-1 px-[10px] select-none",
+            "text-[11px] opacity-80",
+            "hover:opacity-100"
+          )}
         >
           {/* <span
             className={`codicon codicon-${STATUS_ICONS[status]} text-[14px]`}
@@ -153,15 +154,12 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             return (
               <div
                 key={file.path}
-                className={`
-                  group relative h-[22px] flex items-center pr-2 pl-6
-                  hover:bg-[var(--vscode-list-hoverBackground)]
-                  ${
-                    isSelected
-                      ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
-                      : ""
-                  }
-                `}
+                className={cn(
+                  "group relative h-[22px] flex items-center pr-2 pl-6",
+                  "hover:bg-vscode-list-hoverBackground",
+                  isSelected &&
+                    "bg-vscode-list-activeSelectionBackground text-vscode-list-activeSelectionForeground"
+                )}
                 onClick={() => handleFileClick(file.path)}
                 title={file.path}
               >
@@ -169,33 +167,29 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   {file.path.split("/").pop()}
                 </span>
                 <div
-                  className={`
-                    flex items-center gap-2 pl-2 text-[12px] tabular-nums
-                    ${
-                      isSelected
-                        ? "text-[var(--vscode-list-activeSelectionForeground)]"
-                        : ""
-                    }
-                  `}
+                  className={cn(
+                    "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                    isSelected && "text-vscode-list-activeSelectionForeground"
+                  )}
                 >
                   {file.additions > 0 && (
                     <span
-                      className={
+                      className={cn(
                         isSelected
                           ? ""
-                          : "text-[var(--vscode-gitDecoration-addedResourceForeground)]"
-                      }
+                          : "text-vscode-gitDecoration-addedResourceForeground"
+                      )}
                     >
                       +{file.additions}
                     </span>
                   )}
                   {file.deletions > 0 && (
                     <span
-                      className={
+                      className={cn(
                         isSelected
                           ? ""
-                          : "text-[var(--vscode-gitDecoration-deletedResourceForeground)]"
-                      }
+                          : "text-vscode-gitDecoration-deletedResourceForeground"
+                      )}
                     >
                       -{file.deletions}
                     </span>
@@ -217,15 +211,12 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           return (
             <div
               key={file.path}
-              className={`
-                group relative h-[22px] flex items-center pl-[30px] pr-2
-                hover:bg-[var(--vscode-list-hoverBackground)]
-                ${
-                  isSelected
-                    ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
-                    : ""
-                }
-              `}
+              className={cn(
+                "group relative h-[22px] flex items-center pl-[30px] pr-2",
+                "hover:bg-vscode-list-hoverBackground",
+                isSelected &&
+                  "bg-vscode-list-activeSelectionBackground text-vscode-list-activeSelectionForeground"
+              )}
               onClick={() => handleFileClick(file.path)}
               title={file.path}
             >
@@ -233,47 +224,41 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 {file.path.split("/").pop()}
               </span>
               <div
-                className={`
-                  flex items-center gap-2 pl-2 text-[12px] tabular-nums
-                  ${
-                    isSelected
-                      ? "text-[var(--vscode-list-activeSelectionForeground)]"
-                      : ""
-                  }
-                `}
+                className={cn(
+                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                  isSelected && "text-vscode-list-activeSelectionForeground"
+                )}
               >
                 {file.additions > 0 && (
                   <span
-                    className={
+                    className={cn(
                       isSelected
                         ? ""
-                        : "text-[var(--vscode-gitDecoration-addedResourceForeground)]"
-                    }
+                        : "text-vscode-gitDecoration-addedResourceForeground"
+                    )}
                   >
                     +{file.additions}
                   </span>
                 )}
                 {file.deletions > 0 && (
                   <span
-                    className={
+                    className={cn(
                       isSelected
                         ? ""
-                        : "text-[var(--vscode-gitDecoration-deletedResourceForeground)]"
-                    }
+                        : "text-vscode-gitDecoration-deletedResourceForeground"
+                    )}
                   >
                     -{file.deletions}
                   </span>
                 )}
               </div>
               <div
-                className={`
-                  absolute left-[10px] w-[16px] h-[16px] flex items-center justify-center
-                  ${
-                    isSelected
-                      ? "text-[var(--vscode-list-activeSelectionForeground)]"
-                      : `text-[${STATUS_COLORS[file.status]}]`
-                  }
-                `}
+                className={cn(
+                  "absolute left-[10px] w-[16px] h-[16px] flex items-center justify-center",
+                  isSelected
+                    ? "text-vscode-list-activeSelectionForeground"
+                    : STATUS_COLORS[file.status]
+                )}
               >
                 <span
                   className={`codicon codicon-${
@@ -289,12 +274,12 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   };
 
   return (
-    <div className="flex-1 flex min-h-0 bg-[var(--vscode-sideBar-background)]">
+    <div className="flex-1 flex min-h-0 bg-vscode-sideBar-background">
       {/* 文件列表面板 */}
-      <div className="w-[300px] shrink-0 flex flex-col overflow-y-auto border-r border-[var(--vscode-panel-border)]">
+      <div className="w-[300px] shrink-0 flex flex-col overflow-y-auto border-r border-vscode-panel-border">
         <div className="flex-none h-[35px] flex items-center justify-between px-[10px] select-none">
           <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--vscode-sideBarTitle-foreground)]">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-vscode-sideBarTitle-foreground">
               Changed Files
             </span>
             <span className="text-[11px] opacity-80">
@@ -308,11 +293,10 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               onClick={toggleSearch}
             >
               <span
-                className={`codicon codicon-search ${
-                  isSearching
-                    ? "text-[var(--vscode-inputOption-activeForeground)]"
-                    : ""
-                }`}
+                className={cn(
+                  "codicon codicon-search",
+                  isSearching ? "text-vscode-inputOption-activeForeground" : ""
+                )}
               />
             </VSCodeButton>
             <VSCodeButton
@@ -328,32 +312,33 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               }}
             >
               <span
-                className={`codicon codicon-${
+                className={cn(
+                  "codicon",
                   viewMode === "grouped"
-                    ? "list-flat"
+                    ? "codicon-list-flat"
                     : viewMode === "tree"
-                    ? "list-tree"
-                    : "list-selection"
-                }`}
+                    ? "codicon-list-tree"
+                    : "codicon-list-selection"
+                )}
               />
             </VSCodeButton>
           </div>
         </div>
 
         {isSearching && (
-          <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-[var(--vscode-panel-border)]">
+          <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-vscode-panel-border">
             <div className="relative flex-1 flex items-center">
               <input
                 type="text"
                 className="
                   file-search-input w-full h-[24px] px-[6px] pl-[24px]
-                  bg-[var(--vscode-input-background)]
-                  text-[var(--vscode-input-foreground)]
-                  border border-[var(--vscode-input-border)]
+                  bg-vscode-input-background
+                  text-vscode-input-foreground
+                  border border-vscode-input-border
                   rounded-[2px] text-[12px]
                   focus:outline-none
-                  focus:border-[var(--vscode-focusBorder)]
-                  placeholder:text-[var(--vscode-input-placeholderForeground)]
+                  focus:border-vscode-focusBorder
+                  placeholder:text-vscode-input-placeholderForeground
                 "
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -361,7 +346,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 placeholder="Search files"
                 spellCheck={false}
               />
-              <span className="absolute left-[6px] text-[var(--vscode-input-placeholderForeground)]">
+              <span className="absolute left-[6px] text-vscode-input-placeholderForeground">
                 <span className="codicon codicon-search text-[14px]" />
               </span>
               {searchQuery && (

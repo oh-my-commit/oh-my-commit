@@ -1,9 +1,12 @@
-@import "@vscode/codicons/dist/codicon.css";
-
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Import codicons */
+@import "@vscode/codicons/dist/codicon.css";
+
+/* Root styles */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
@@ -17,7 +20,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 

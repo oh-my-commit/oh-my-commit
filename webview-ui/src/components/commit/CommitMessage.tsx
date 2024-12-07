@@ -23,12 +23,14 @@ export function CommitMessage({
   return (
     <div className="flex flex-col gap-2">
       <VSCodeTextArea
-        className="!h-[28px] !min-h-[28px] !bg-[var(--vscode-input-background)] !text-[var(--vscode-input-foreground)]"
+        className="!h-[28px] !min-h-[28px] !bg-vscode-input-background !text-vscode-input-foreground"
         value={message}
-        onChange={(e) => onMessageChange((e.target as HTMLTextAreaElement).value)}
+        onChange={(e) =>
+          onMessageChange((e.target as HTMLTextAreaElement).value)
+        }
         placeholder="feat: describe your changes..."
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey && !disabled) {
+          if (e.key === "Enter" && !e.shiftKey && !disabled) {
             e.preventDefault();
             onCommit();
           }
@@ -36,14 +38,16 @@ export function CommitMessage({
       />
 
       <VSCodeTextArea
-        className="!h-[80px] !min-h-[80px] !bg-[var(--vscode-input-background)] !text-[var(--vscode-input-foreground)]"
+        className="!h-[80px] !min-h-[80px] !bg-vscode-input-background !text-vscode-input-foreground"
         value={detail}
-        onChange={(e) => onDetailChange((e.target as HTMLTextAreaElement).value)}
+        onChange={(e) =>
+          onDetailChange((e.target as HTMLTextAreaElement).value)
+        }
         placeholder="Detailed description of your changes (optional)..."
       />
 
       <div className="flex items-center justify-between">
-        <span className="text-xs text-[var(--vscode-descriptionForeground)]">
+        <span className="text-xs text-vscode-descriptionForeground">
           {selectedFilesCount} files selected
         </span>
         <VSCodeButton
