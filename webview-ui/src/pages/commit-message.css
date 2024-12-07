@@ -30,6 +30,10 @@
   gap: 3px;
 }
 
+.input-group:first-child {
+  min-height: unset;
+}
+
 .input-header {
   display: flex;
   justify-content: space-between;

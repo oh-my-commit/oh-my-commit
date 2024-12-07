@@ -1,7 +1,7 @@
 ---
 author: @markshawn2020
-date: 2024-12-05
-version: 0.3.0
+date: 2024-12-07
+version: 0.4.0
 ---
 
 ## 思考原则
@@ -14,12 +14,11 @@ version: 0.3.0
 
 - README.md，项目说明，服务对象为产品的使用者、投资者等
 - PRD.md，持续更新的、纲领性质的产品目标与进度管理文档，服务对象为 AI、开发者、测试者等
-- development_log.md，持续更新的、追加模式的开发日志，服务对象为开发者、测试者等
 
 ## 执行步骤
 
 1. 先回复：Vita brevis, ars longa.
 2. 仔细阅读 README.md、PRD.md （若无则创建）
 3. 依据上述【## 思考原则】回复我的问题
-4. 把本次的问题、思考过程、回复下来，输出到 development_log.md
+4. 把本次的问题、思考过程、回复下来，以 时间\_问题.md 格式新建保存在 logs/ai/ 目录下
 5. 如果有必要，更新 PRD.md 和 README.md

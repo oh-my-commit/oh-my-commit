@@ -1,229 +1,140 @@
-.detailed-description {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.description-header {
-  display: flex;
-  align-items: center;
-  min-height: 24px;
-}
-
-.description-header .title {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--vscode-foreground);
-  opacity: 0.7;
-  padding: 0 1px;
-}
-
-.view-mode-buttons {
-  display: flex;
-  gap: 2px;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-  margin-left: auto;
-}
-
-.view-mode-buttons:hover {
-  opacity: 1;
-}
-
-.mode-button {
-  padding: 2px 8px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--vscode-foreground);
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 11px;
-  opacity: 0.8;
-  transition: all 0.2s ease;
-  min-width: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mode-button:hover {
-  background: var(--vscode-button-secondaryBackground);
-  opacity: 1;
-}
-
-.mode-button.active {
-  background: var(--vscode-button-secondaryBackground);
-  border-color: var(--vscode-button-secondaryHoverBackground);
-  opacity: 1;
-}
-
+/* 编辑器容器 */
 .editor-container {
   position: relative;
   width: 100%;
-  min-height: 120px;
+  height: 150px; /* 设置一个合适的默认高度 */
   background: var(--vscode-input-background);
   border: 1px solid var(--vscode-input-border);
   resize: vertical;
-  overflow: hidden;
+  overflow: hidden; /* 添加这个以防止内容溢出 */
+  box-sizing: border-box; /* 确保边框计入总宽高 */
 }
 
+/* 拖拽手柄 */
 .editor-container::after {
   content: "";
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 15px;
-  height: 15px;
+  right: 2px; /* 稍微调整位置 */
+  bottom: 2px;
+  width: 12px;
+  height: 12px;
   cursor: ns-resize;
+  opacity: 0.5;
   background: linear-gradient(
-      45deg,
-      transparent 2px,
-      var(--vscode-input-border) 2px,
-      var(--vscode-input-border) 3px,
-      transparent 3px
-    ),
-    linear-gradient(
-      -45deg,
-      transparent 2px,
-      var(--vscode-input-border) 2px,
-      var(--vscode-input-border) 3px,
-      transparent 3px
-    );
+    135deg,
+    transparent 2px,
+    var(--vscode-input-border) 2px,
+    var(--vscode-input-border) 3px,
+    transparent 3px
+  );
   background-size: 6px 6px;
   background-position: bottom right;
   background-repeat: no-repeat;
-  opacity: 0.5;
-  transition: opacity 0.2s;
+  pointer-events: none; /* 确保不会干扰拖动 */
 }
 
 .editor-container:hover::after {
-  opacity: 1;
+  opacity: 0.8;
 }
 
+/* 视图容器基础样式 */
 .view-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  display: none;
   height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
-    transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-  overflow: hidden;
+  box-sizing: border-box; /* 确保padding计入总高度 */
 }
 
 .view-container.active {
-  opacity: 1;
-  pointer-events: auto;
-  position: relative;
+  display: block;
 }
 
-/* Plain View */
-.plain-view {
-  height: 100%;
-}
-
+/* Plain 视图 */
 .plain-view textarea {
   width: 100%;
   height: 100%;
-  resize: none;
   padding: 8px;
-  background: transparent;
+  margin: 0;
   border: none;
+  resize: none;
+  background: transparent;
   color: var(--vscode-input-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  line-height: 1.5;
   outline: none;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-  word-wrap: break-word;
+  box-sizing: border-box; /* 确保padding计入总高度 */
 }
 
-/* Split View */
+/* Split 视图 */
 .split-view {
-  display: flex;
-  gap: 8px;
+  display: none;
   height: 100%;
-  transform: translateX(30%);
 }
 
 .split-view.active {
-  transform: translateX(0);
+  display: flex;
+  gap: 8px;
 }
 
 .split-view textarea {
   width: 50%;
   height: 100%;
-  resize: none;
   padding: 8px;
-  background: transparent;
+  margin: 0;
   border: none;
+  resize: none;
+  background: transparent;
   color: var(--vscode-input-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  line-height: 1.5;
   outline: none;
   box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-  word-wrap: break-word;
 }
 
 .split-view .preview-content {
   width: 50%;
   height: 100%;
   padding: 8px;
+  overflow: auto;
   box-sizing: border-box;
-  overflow-wrap: break-word;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
-/* Preview View */
+/* Preview 视图 */
 .preview-view {
   height: 100%;
-  transform: translateX(-30%);
-}
-
-.preview-view.active {
-  transform: translateX(0);
-}
-
-.preview-view .preview-content {
-  width: 100%;
-  height: 100%;
   padding: 8px;
+  overflow: auto;
   box-sizing: border-box;
-  overflow-wrap: break-word;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
-/* Active States */
-.mode-plain .plain-view,
-.mode-split .split-view,
-.mode-preview .preview-view {
-  opacity: 1;
-  transform: translateX(0);
+/* Markdown 预览样式 */
+.preview-content {
+  color: var(--vscode-input-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  line-height: 1.5;
 }
 
-.mode-split .split-view textarea,
-.mode-split .split-view .preview-content {
-  transform: translateX(0) scale(1);
-  opacity: 1;
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
-/* 优化滚动条显示 */
-textarea::-webkit-scrollbar,
-.preview-content::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.preview-content p {
+  margin: 8px 0;
 }
 
-textarea::-webkit-scrollbar-thumb,
-.preview-content::-webkit-scrollbar-thumb {
-  background: var(--vscode-scrollbarSlider-background);
+.preview-content pre,
+.preview-content code {
+  background: var(--vscode-textBlockQuote-background);
   border-radius: 3px;
-}
-
-textarea::-webkit-scrollbar-thumb:hover,
-.preview-content::-webkit-scrollbar-thumb:hover {
-  background: var(--vscode-scrollbarSlider-hoverBackground);
+  padding: 2px 4px;
+  font-family: var(--vscode-editor-font-family);
 }

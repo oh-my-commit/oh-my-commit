@@ -1684,3 +1684,566 @@
 - 确保资源的正确清理（状态栏项目和事件监听器）
 
 #### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message（第二版）
+
+#### 问题背景
+- 之前使用的 `createInputBox` 方案仍然不支持多行输入
+- 用户在按下回车键时会直接提交，无法实现换行功能
+
+#### 新实现方案
+- 使用 VS Code 的 `openTextDocument` 和 `showTextDocument` API
+- 创建临时文件让用户编辑 commit message
+- 当用户切换到其他文件时，自动读取编辑内容并提交
+- 添加状态栏提示，指导用户如何完成提交操作
+
+#### 技术要点
+- 使用 VS Code 的文档编辑 API，提供完整的编辑器功能
+- 通过 `onDidChangeActiveTextEditor` 事件监听用户切换文件
+- 添加状态栏提示改善用户体验
+- 确保资源的正确清理（状态栏项目和事件监听器）
+
+#### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message（第二版）
+
+#### 问题背景
+- 之前使用的 `createInputBox` 方案仍然不支持多行输入
+- 用户在按下回车键时会直接提交，无法实现换行功能
+
+#### 新实现方案
+- 使用 VS Code 的 `openTextDocument` 和 `showTextDocument` API
+- 创建临时文件让用户编辑 commit message
+- 当用户切换到其他文件时，自动读取编辑内容并提交
+- 添加状态栏提示，指导用户如何完成提交操作
+
+#### 技术要点
+- 使用 VS Code 的文档编辑 API，提供完整的编辑器功能
+- 通过 `onDidChangeActiveTextEditor` 事件监听用户切换文件
+- 添加状态栏提示改善用户体验
+- 确保资源的正确清理（状态栏项目和事件监听器）
+
+#### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message（第二版）
+
+#### 问题背景
+- 之前使用的 `createInputBox` 方案仍然不支持多行输入
+- 用户在按下回车键时会直接提交，无法实现换行功能
+
+#### 新实现方案
+- 使用 VS Code 的 `openTextDocument` 和 `showTextDocument` API
+- 创建临时文件让用户编辑 commit message
+- 当用户切换到其他文件时，自动读取编辑内容并提交
+- 添加状态栏提示，指导用户如何完成提交操作
+
+#### 技术要点
+- 使用 VS Code 的文档编辑 API，提供完整的编辑器功能
+- 通过 `onDidChangeActiveTextEditor` 事件监听用户切换文件
+- 添加状态栏提示改善用户体验
+- 确保资源的正确清理（状态栏项目和事件监听器）
+
+#### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message（第二版）
+
+#### 问题背景
+- 之前使用的 `createInputBox` 方案仍然不支持多行输入
+- 用户在按下回车键时会直接提交，无法实现换行功能
+
+#### 新实现方案
+- 使用 VS Code 的 `openTextDocument` 和 `showTextDocument` API
+- 创建临时文件让用户编辑 commit message
+- 当用户切换到其他文件时，自动读取编辑内容并提交
+- 添加状态栏提示，指导用户如何完成提交操作
+
+#### 技术要点
+- 使用 VS Code 的文档编辑 API，提供完整的编辑器功能
+- 通过 `onDidChangeActiveTextEditor` 事件监听用户切换文件
+- 添加状态栏提示改善用户体验
+- 确保资源的正确清理（状态栏项目和事件监听器）
+
+#### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
+- 保持了原有的验证逻辑，确保提交信息不为空
+- 优化了用户体验，支持多行输入且不会因失焦而丢失内容
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message（第二版）
+
+#### 问题背景
+- 之前使用的 `createInputBox` 方案仍然不支持多行输入
+- 用户在按下回车键时会直接提交，无法实现换行功能
+
+#### 新实现方案
+- 使用 VS Code 的 `openTextDocument` 和 `showTextDocument` API
+- 创建临时文件让用户编辑 commit message
+- 当用户切换到其他文件时，自动读取编辑内容并提交
+- 添加状态栏提示，指导用户如何完成提交操作
+
+#### 技术要点
+- 使用 VS Code 的文档编辑 API，提供完整的编辑器功能
+- 通过 `onDidChangeActiveTextEditor` 事件监听用户切换文件
+- 添加状态栏提示改善用户体验
+- 确保资源的正确清理（状态栏项目和事件监听器）
+
+#### 优势
+- 完整的多行编辑支持
+- 熟悉的编辑器界面
+- 支持复制粘贴、撤销重做等编辑器功能
+- 清晰的用户操作指引
+
+## 2024-01-09
+
+### Quick Commit No-Diff Behavior Configuration
+
+#### Changes Made
+- Added new configuration option `yaac.noDiffBehavior` to control behavior when no changes are detected
+  - `ignore`: Shows a message and exits (default)
+  - `revise`: Allows amending the last commit
+- Updated QuickCommitCommand to respect this configuration
+- Maintained consistent UX patterns for both behaviors
+
+#### Technical Details
+- Used VSCode's configuration API to manage the setting
+- Added proper schema in package.json with enum values
+- Added descriptive configuration description in Chinese
+- Kept existing logging and error handling
+
+## 2024-01-09
+
+### 优化 Commit Message 输入体验
+
+#### 问题
+- VSCode 的 InputBox 不支持多行输入
+- Commit message 最佳实践建议分离标题和描述
+
+#### 解决方案
+- 使用 QuickPick 替代 InputBox 实现更好的多行输入体验
+- 将 commit message 分成标题和描述两部分
+- 用户可以分别编辑标题和描述
+- 使用 VSCode 内置图标美化界面
+
+#### 技术要点
+- 使用 `vscode.window.createQuickPick()` 创建交互界面
+- 通过 Promise 处理异步编辑流程
+- 保持了原有的错误处理和日志记录功能
+- 符合 Git commit message 最佳实践格式
+
+## 2024-01-08
+
+### 功能优化：支持多行 Commit Message
+
+#### 需求背景
+- 用户需要在编写 commit message 时支持多行输入，以便更详细地描述提交内容
+
+#### 实现方案
+- 由于 `showInputBox` 不支持多行输入，改用 `createInputBox` API
+- `createInputBox` 提供了更灵活的输入框控制，默认支持多行输入
+- 添加了 `ignoreFocusOut` 选项，防止用户意外失去焦点导致输入丢失
+- 使用 Promise 包装异步操作，确保正确处理用户的确认和取消操作
+
+#### 技术要点
+- VS Code 的 `createInputBox` API 提供了更丰富的功能
+- 使用事件监听器处理用户交互
