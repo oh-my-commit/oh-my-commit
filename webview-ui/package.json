@@ -23,6 +23,7 @@
     "react-syntax-highlighter": "^15.6.1",
     "react-toastify": "^10.0.6",
     "tailwind-merge": "^2.5.5",
+    "tw-to-css": "^0.0.12",
     "vscode-webview": "1.0.1-beta.1"
   },
   "devDependencies": {

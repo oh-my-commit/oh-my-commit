@@ -10,6 +10,9 @@ export const fileUIStatesAtom = atom<Record<string, FileUIState>>({});
 // 是否显示diff预览
 export const showDiffAtom = atom<boolean>(false);
 
+// 搜索查询
+export const searchQueryAtom = atom<string>('');
+
 // UI操作
 export const toggleFileExpansionAtom = atom(
   null,

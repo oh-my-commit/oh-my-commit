@@ -9,6 +9,7 @@ import {
   selectFileAtom,
   selectedFileAtom,
   showDiffAtom,
+  searchQueryAtom,
 } from "../../state/atoms/commit-ui";
 import { DiffViewer } from "./DiffViewer";
 import type { FileChange } from "../../state/types";
@@ -69,9 +70,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [showDiff] = useAtom(showDiffAtom);
   const [, selectFile] = useAtom(selectFileAtom);
   const [, updateCommitState] = useAtom(updateCommitStateAtom);
+  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [viewMode, setViewMode] =
     React.useState<keyof typeof VIEW_MODES>("grouped");
-  const [searchQuery, setSearchQuery] = React.useState("");
   const [isSearching, setIsSearching] = React.useState(false);
 
   // 过滤文件

@@ -1,12 +1,14 @@
 import React, { useMemo } from "react";
 import { useAtom } from "jotai";
-import { selectedFileAtom } from "../../state/atoms/commit-ui";
+import { selectedFileAtom, searchQueryAtom } from "../../state/atoms/commit-ui";
 import { commitFilesAtom } from "../../state/atoms/commit-core";
 import { selectFileAtom } from "../../state/atoms/commit-ui";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { cn } from "../../lib/utils";
+import { HighlightText } from "../common/HighlightText";
+import { twj } from "tw-to-css";
 
 interface DiffLineProps {
   content: string;
@@ -25,6 +27,7 @@ export const DiffViewer: React.FC = () => {
   const [selectedPath] = useAtom(selectedFileAtom);
   const [files] = useAtom(commitFilesAtom);
   const [, selectFile] = useAtom(selectFileAtom);
+  const [searchQuery] = useAtom(searchQueryAtom);
 
   const selectedFile = files.find((f) => f.path === selectedPath);
 
@@ -119,33 +122,21 @@ export const DiffViewer: React.FC = () => {
             ...vscDarkPlus,
             'pre[class*="language-"]': {
               ...vscDarkPlus['pre[class*="language-"]'],
-              background: "transparent",
-              margin: 0,
+              ...twj`bg-transparent m-0`,
             },
             'code[class*="language-"]': {
               ...vscDarkPlus['code[class*="language-"]'],
-              background: "transparent",
-              color: "var(--vscode-editor-foreground)",
+              ...twj`bg-transparent text-vscode-editor-foreground`,
             },
           }}
           showLineNumbers
-          customStyle={{
-            lineHeight: "20px",
-            padding: "12px 0",
-            background: "transparent",
-            fontFamily: "var(--vscode-editor-font-family)",
-          }}
-          lineNumberStyle={{
-            minWidth: "3em",
-            paddingLeft: "1em",
-            paddingRight: "1em",
-            textAlign: "right",
-            userSelect: "none",
-            color: "var(--vscode-editorLineNumber-foreground)",
-          }}
+          customStyle={twj("leading-[20px] py-3")}
+          lineNumberStyle={twj(
+            "min-w-[3em] pl-4 pr-4 text-right select-none text-vscode-editorLineNumber-foreground"
+          )}
           wrapLines={true}
           PreTag={({ children, ...props }) => (
-            <pre {...props} style={{ margin: 0, padding: 0 }}>
+            <pre {...props} style={twj("m-0 p-0")}>
               {children}
             </pre>
           )}
@@ -154,11 +145,15 @@ export const DiffViewer: React.FC = () => {
               {...props}
               className={cn("block w-full", props.className)}
               style={{
-                fontFamily: "inherit",
+                ...twj("font-inherit"),
                 backgroundColor: props.style?.backgroundColor || "transparent",
               }}
             >
-              {children}
+              {typeof children === "string" ? (
+                <HighlightText text={children} highlight={searchQuery} />
+              ) : (
+                children
+              )}
             </code>
           )}
           lineProps={(lineNumber) => {
