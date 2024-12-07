@@ -36,23 +36,29 @@
     "configuration": {
       "title": "Yet Another Auto Commit",
       "properties": {
-        "yaac.enabled": {
+        "yaac.basic.enabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "是否启用 YAAC\n\n### 为什么需要这个设置？\n- 控制整个扩展的开关，让你可以临时禁用自动提交功能\n- 在团队协作时，可能需要临时切换到手动提交模式\n\n### 什么时候需要配置？\n- 当你想暂时禁用自动提交功能时\n- 当你在处理特别重要或敏感的代码改动时\n- 在进行代码审查或重构时，可能需要更细粒度的提交控制\n\n### 什么时候不需要配置？\n- 日常开发中，保持默认启用即可\n- 如果你的工作流程中没有特殊的提交要求\n\n### 补充说明\n- 禁用后，你仍然可以通过命令面板手动触发 YAAC",
+          "markdownDescription": "是否启用 YAAC",
           "order": 1
         },
-        "yaac.language": {
+        "yaac.basic.uiLanguage": {
           "type": "string",
           "enum": [
+            "system",
             "zh_CN",
             "en_US"
           ],
-          "default": "zh_CN",
-          "markdownDescription": "提交信息的语言\n\n### 为什么需要这个设置？\n- 确保提交信息符合团队的语言规范\n- 方便不同语言背景的开发者理解提交历史\n\n### 什么时候需要配置？\n- 在国际化团队中工作时\n- 当项目有特定的语言要求时\n- 当你需要与非中文开发者协作时\n\n### 什么时候不需要配置？\n- 个人项目中，使用最习惯的语言即可\n- 团队都使用同一种语言时\n\n### 补充说明\n- 更改语言设置不会影响已有的提交记录\n- 建议与团队沟通后再选择语言",
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文",
+            "English"
+          ],
+          "default": "system",
+          "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "yaac.inputAppearence": {
+        "yaac.ui.mode": {
           "type": "string",
           "default": "webview",
           "enum": [
@@ -60,30 +66,41 @@
             "webview"
           ],
           "enumDescriptions": [
-            "⚡️ Quick & Simple: Single-line input box for fast commits",
-            "📝 Professional: Split-window editor with preview and formatting"
+            "Quick & Simple: Single-line input box for fast commits",
+            "Professional: Full-featured editor with preview and formatting"
           ],
-          "markdownDescription": "选择提交信息的输入方式：\n\n### 为什么需要这个设置？\n- 不同的工作场景需要不同的输入体验\n- 在快速迭代和详细文档之间找到平衡\n\n### 什么时候选择 quickInput？\n- 进行小型、简单的代码修改时\n- 需要快速提交且信息简单时\n- 在频繁提交的开发阶段\n\n### 什么时候选择 webview？\n- 进行重要的功能开发或重构时\n- 需要详细描述变更内容时\n- 团队要求规范的提交信息格式时\n\n### 补充说明\n- quickInput 模式性能更好，但功能较简单\n- webview 模式提供更多格式化和预览功能",
+          "markdownDescription": "提交界面模式选择",
           "order": 10
         },
-        "yaac.descriptionViewMode": {
+        "yaac.ui.webview.layout": {
+          "type": "string",
+          "enum": [
+            "vertical",
+            "horizontal"
+          ],
+          "enumDescriptions": [
+            "编辑器和预览上下排列",
+            "编辑器和预览左右排列"
+          ],
+          "default": "horizontal",
+          "markdownDescription": "Webview 模式下的布局方式",
+          "order": 11
+        },
+        "yaac.ui.webview.editor": {
           "type": "string",
           "enum": [
             "plain",
-            "split",
-            "preview"
+            "rich"
           ],
           "enumDescriptions": [
-            "纯文本编辑模式，适合快速编辑",
-            "分屏模式，左侧编辑，右侧实时预览",
-            "预览模式，查看渲染后的效果"
+            "纯文本编辑器",
+            "富文本编辑器"
           ],
-          "default": "split",
-          "markdownDescription": "提交信息详细描述的编辑器视图模式：\n\n### 为什么需要这个设置？\n- 提供不同的编辑体验以适应不同的工作习惯\n- 在编辑效率和预览效果之间取得平衡\n\n### 什么时候需要配置？\n- plain：当你习惯纯文本编辑，追求速度时\n- split：当你需要边编辑边预览效果时\n- preview：当你主要关注最终渲染效果时\n\n### 什么时候保持默认？\n- 大多数情况下，split 模式能满足日常需求\n- 如果你不确定选择哪种模式\n\n### 补充说明\n- 可以随时切换模式，不会影响已编写的内容\n- preview 模式下仍然可以编辑，双击文本即可",
-          "scope": "window",
-          "order": 11
+          "default": "rich",
+          "markdownDescription": "Webview 模式下的编辑器类型",
+          "order": 12
         },
-        "yaac.emptyChangeBehavior": {
+        "yaac.git.emptyChangeBehavior": {
           "type": "string",
           "enum": [
             "skip",
@@ -94,12 +111,33 @@
             "修改最近一次提交（git commit --amend）"
           ],
           "default": "skip",
-          "markdownDescription": "当工作区没有文件变更时的行为：\n\n### 为什么需要这个设置？\n- 提供修改最近提交信息的便捷方式\n- 避免创建空的提交记录\n\n### 什么时候选择 skip？\n- 希望保持 Git 历史的简洁性\n- 不需要修改已有提交时\n- 团队规范禁止修改提交历史\n\n### 什么时候选择 amend？\n- 需要修正最近提交的信息时\n- 进行代码审查后需要更新提交说明\n- 想要保持提交历史整洁和专业\n\n### 补充说明\n- amend 操作会修改 Git 历史\n- 如果最近的提交已经推送到远程，使用 amend 需要强制推送\n- 在协作分支上使用 amend 时需要与团队沟通",
+          "markdownDescription": "当工作区没有文件变更时的行为",
           "order": 20
         },
-        "yaac.currentSolution": {
+        "yaac.git.autoStage": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否自动暂存所有更改",
+          "order": 21
+        },
+        "yaac.git.commitLanguage": {
           "type": "string",
-          "description": "Current Solution",
+          "enum": [
+            "system",
+            "zh_CN",
+            "en_US"
+          ],
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文提交信息",
+            "English commit messages"
+          ],
+          "default": "system",
+          "markdownDescription": "Git 提交信息的语言",
+          "order": 22
+        },
+        "yaac.ai.provider": {
+          "type": "string",
           "enum": [
             "OpenAI / GPT 4",
             "OpenAI / GPT 3.5 Turbo"
@@ -107,53 +145,66 @@
           "enumDescriptions": [
             "High accuracy commit messages using GPT-4 (API Required)",
             "Fast and efficient commit messages using GPT-3.5 (API Required)"
-          ]
+          ],
+          "default": "OpenAI / GPT 3.5 Turbo",
+          "markdownDescription": "选择 AI 提供商和模型",
+          "order": 30
         },
-        "yaac.providers": {
+        "yaac.ai.providers": {
           "type": "object",
-          "markdownDescription": "AI 提供商的启用状态配置：\n\n### 为什么需要这个设置？\n- 控制不同 AI 提供商的可用性\n- 可以根据实际需求启用或禁用特定提供商\n\n### 什么时候需要配置？\n- 想要尝试不同的 AI 提供商时\n- 某个提供商服务不稳定需要临时禁用时\n- 需要比较不同提供商的效果时\n\n### 什么时候不需要配置？\n- 使用默认提供商已经满足需求时\n- 只有一个可用的 API 密钥时\n\n### 补充说明\n- 启用多个提供商可以作为备选方案\n- 建议至少保持一个提供商处于启用状态",
+          "markdownDescription": "AI 提供商的启用状态配置",
           "additionalProperties": {
             "type": "boolean"
           },
           "default": {},
           "order": 31
         },
-        "yaac.apiKeys": {
+        "yaac.ai.apiKeys": {
           "type": "object",
-          "markdownDescription": "AI 服务提供商的 API 密钥配置：\n\n### 为什么需要这个设置？\n- 连接不同的 AI 服务提供商\n- 使用付费 API 服务来获得更好的体验\n\n### 什么时候需要配置？\n- 首次使用插件时\n- 想要尝试新的 AI 提供商时\n- 当前 API 密钥过期或需要更新时\n\n### 配置建议\n- 请妥善保管你的 API 密钥\n- 建议使用环境变量管理密钥\n- 定期检查 API 余额和使用情况\n\n### 补充说明\n- API 密钥不会上传或分享给其他用户\n- 可以配置多个提供商作为备选",
+          "markdownDescription": "AI 服务提供商的 API 密钥配置",
           "properties": {
             "openai": {
               "type": "string",
               "default": "",
-              "markdownDescription": "OpenAI API 密钥\n\n### 使用说明\n- 从 OpenAI 官网获取 API 密钥\n- 支持 GPT-3.5 和 GPT-4 模型\n- 需要付费账户才能访问 GPT-4",
+              "markdownDescription": "OpenAI API 密钥",
               "order": 32
             },
             "anthropic": {
               "type": "string",
               "default": "",
-              "markdownDescription": "Anthropic API 密钥\n\n### 使用说明\n- 支持 Claude 系列模型\n- 适合长文本和复杂代码分析\n- 响应速度较快，成本适中",
+              "markdownDescription": "Anthropic API 密钥",
               "order": 33
-            },
-            "deepseek": {
-              "type": "string",
-              "default": "",
-              "markdownDescription": "Deepseek API 密钥\n\n### 使用说明\n- 专注于代码理解和生成\n- 支持多种编程语言\n- 适合技术性较强的提交信息",
-              "order": 34
-            },
-            "zhipu": {
-              "type": "string",
-              "default": "",
-              "markdownDescription": "智谱 AI API 密钥\n\n### 使用说明\n- 国内服务商，访问稳定\n- 支持中英双语优化\n- 适合中文环境的团队使用",
-              "order": 35
-            },
-            "groq": {
-              "type": "string",
-              "default": "",
-              "markdownDescription": "Groq API 密钥\n\n### 使用说明\n- 超快的响应速度\n- 支持多种开源模型\n- 适合需要快速反馈的场景",
-              "order": 36
             }
           },
           "order": 32
+        },
+        "yaac.telemetry.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否启用使用数据收集（匿名）",
+          "order": 40
+        },
+        "yaac.telemetry.shareLevel": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "basic",
+            "full"
+          ],
+          "enumDescriptions": [
+            "仅收集基本错误信息",
+            "包含功能使用统计和性能数据",
+            "额外包含 AI 生成结果的质量反馈"
+          ],
+          "default": "basic",
+          "markdownDescription": "数据收集级别",
+          "order": 41
+        },
+        "yaac.feedback.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",
+          "order": 50
         }
       }
     }
