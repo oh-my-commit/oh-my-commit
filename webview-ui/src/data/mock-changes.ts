@@ -3,6 +3,7 @@ import type { FileChange } from "../state/types";
 export const mockFileChanges: FileChange[] = [
   {
     path: "src/components/commit/CommitForm.tsx",
+    type: "modified",
     status: "modified",
     additions: 15,
     deletions: 8,
@@ -27,6 +28,7 @@ export const mockFileChanges: FileChange[] = [
   },
   {
     path: "src/components/commit/FileChanges.tsx",
+    type: "added",
     status: "added",
     additions: 73,
     deletions: 0,
@@ -51,6 +53,7 @@ export const mockFileChanges: FileChange[] = [
   },
   {
     path: "src/state/atoms/commit-core.ts",
+    type: "modified",
     status: "modified",
     additions: 42,
     deletions: 35,
@@ -73,6 +76,7 @@ export const mockFileChanges: FileChange[] = [
   },
   {
     path: "src/state/types.ts",
+    type: "modified",
     status: "modified",
     additions: 12,
     deletions: 6,
@@ -95,6 +99,7 @@ export const mockFileChanges: FileChange[] = [
   },
   {
     path: "src/utils/vscode.ts",
+    type: "deleted",
     status: "deleted",
     additions: 0,
     deletions: 15,

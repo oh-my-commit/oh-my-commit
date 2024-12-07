@@ -29,23 +29,29 @@ export const commitStatsAtom = atom<CommitStats>((get) => {
   const files = get(commitFilesAtom);
   const selectedFiles = get(selectedFilesAtom);
 
+  const added = files.filter(f => f.type === 'added').length;
+  const modified = files.filter(f => f.type === 'modified').length;
+  const deleted = files.filter(f => f.type === 'deleted').length;
+
   return {
-    totalFiles: files.length,
-    selectedFiles: selectedFiles.length,
+    added,
+    modified,
+    deleted,
+    total: files.length,
     additions: files.reduce((sum, file) => sum + file.additions, 0),
     deletions: files.reduce((sum, file) => sum + file.deletions, 0),
   };
 });
 
 // 组合状态
-export const commitStateAtom = atom<CommitState>(
+export const commitStateAtom = atom<CommitState, [Partial<CommitState>], void>(
   (get) => ({
     message: get(commitMessageAtom),
     detail: get(commitDetailAtom),
     files: get(commitFilesAtom),
     selectedFiles: get(selectedFilesAtom),
   }),
-  (get, set, update: Partial<CommitState>) => {
+  (_get, set, update) => {
     if (update.message !== undefined) set(commitMessageAtom, update.message);
     if (update.detail !== undefined) set(commitDetailAtom, update.detail);
     if (update.files !== undefined) set(commitFilesAtom, update.files);

@@ -1,10 +1,13 @@
 // 核心业务类型
 export interface FileChange {
   path: string;
+  type: 'added' | 'modified' | 'deleted';
   status: 'added' | 'modified' | 'deleted';
+  content?: string;
+  oldContent?: string;
   additions: number;
   deletions: number;
-  content?: string;
+  displayName?: string;
   diff?: string;
 }
 
@@ -12,7 +15,8 @@ export interface FileChange {
 export interface CommitState {
   message: string;
   detail: string;
-  changes: FileChange[];
+  files: FileChange[];
+  selectedFiles: string[];
 }
 
 // UI 展示状态

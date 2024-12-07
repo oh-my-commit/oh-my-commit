@@ -1,68 +1,47 @@
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { FileChange, CommitState } from '../types';
+import { useAtom, useSetAtom } from "jotai";
 import {
   commitStateAtom,
-  commitStatsAtom,
-  addChangeAtom,
-  removeChangeAtom,
-  resetCommitAtom,
-} from '../atoms/commit-core';
-import {
-  fileUIStatesAtom,
-  toggleFileExpandedAtom,
-} from '../atoms/commit-ui';
-import {
-  fileSelectionAtom,
-  toggleFileSelectionAtom,
-  generateCommitMessageAtom,
-} from '../atoms/commit-selection';
+  commitMessageAtom,
+  commitDetailAtom,
+  commitFilesAtom,
+  selectedFilesAtom,
+} from "../atoms/commit-core";
+import { toggleFileExpansionAtom } from "../atoms/commit-ui";
+import type { CommitState } from "../types";
+import type { FileChange } from "../../types/file-change";
+import type { WritableAtom } from "jotai";
 
 export function useCommit() {
   // 核心状态
   const [commitState, setCommitState] = useAtom(commitStateAtom);
-  const stats = useAtomValue(commitStatsAtom);
   
   // UI状态
-  const [uiStates] = useAtom(fileUIStatesAtom);
-  const toggleExpanded = useSetAtom(toggleFileExpandedAtom);
+  const toggleExpanded = useSetAtom(toggleFileExpansionAtom);
   
   // 选择状态
-  const [selectionState] = useAtom(fileSelectionAtom);
-  const toggleSelection = useSetAtom(toggleFileSelectionAtom);
-  const generateCommitMessage = useSetAtom(generateCommitMessageAtom);
+  const [selectedFiles] = useAtom(selectedFilesAtom);
+  const [, updateCommitState] = useAtom(commitStateAtom as WritableAtom<CommitState, [Partial<CommitState>], void>);
 
   // 核心动作
-  const addChange = useSetAtom(addChangeAtom);
-  const removeChange = useSetAtom(removeChangeAtom);
-  const reset = useSetAtom(resetCommitAtom);
+  const [, addFile] = useAtom(commitFilesAtom);
+  const [, reset] = useAtom(commitStateAtom as WritableAtom<CommitState, [Partial<CommitState>], void>);
 
   return {
     // 核心状态
-    ...commitState,
-    stats,
-    
-    // UI状态
-    uiStates,
-    toggleExpanded,
-    
-    // 选择状态
-    selectedPaths: selectionState.selectedPaths,
-    toggleSelection,
-    
-    // 更新提交状态
-    setMessage: (message: string) => setCommitState({ message }),
-    setDetail: (detail: string) => setCommitState({ detail }),
-    setChanges: (changes: FileChange[]) => setCommitState({ changes }),
-    setState: (update: Partial<CommitState>) => setCommitState(update),
+    message: commitState.message,
+    detail: commitState.detail,
+    files: commitState.files,
+    selectedFiles,
 
-    // 文件操作
-    addChange,
-    removeChange,
-    
-    // 自动生成
-    generateCommitMessage,
+    // 更新状态
+    setMessage: (message: string) => updateCommitState({ message }),
+    setDetail: (detail: string) => updateCommitState({ detail }),
+    setState: (update: Partial<CommitState>) => updateCommitState(update),
 
-    // 重置
+    // 核心动作
+    updateCommitState,
+    addFile,
     reset,
+    toggleExpanded,
   };
 }

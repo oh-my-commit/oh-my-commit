@@ -1,5 +1,6 @@
 import { atom } from "jotai";
-import type { FileChange, CommitState, CommitStats } from "../types";
+import type { FileChange } from "../../types/file-change";
+import type { CommitState, CommitStats } from "../types";
 
 // 核心状态原子
 export const commitMessageAtom = atom<string>("");
@@ -15,23 +16,23 @@ export const commitStatsAtom = atom<CommitStats>((get) => {
   const totalFiles = files.length;
   const selectedFiles = files.filter((f) => selectedPaths.has(f.path)).length;
 
-  const stats = {
-    added: files.filter((f: FileChange) => f.status === "added").length,
-    modified: files.filter((f: FileChange) => f.status === "modified").length,
-    deleted: files.filter((f: FileChange) => f.status === "deleted").length,
+  return {
+    added: files.filter((f) => f.type === "added").length,
+    modified: files.filter((f) => f.type === "modified").length,
+    deleted: files.filter((f) => f.type === "deleted").length,
     total: totalFiles,
-    additions: files.reduce((sum, f) => sum + f.additions, 0),
-    deletions: files.reduce((sum, f) => sum + f.deletions, 0),
+    additions: files.reduce((sum, f) => sum + (f.additions || 0), 0),
+    deletions: files.reduce((sum, f) => sum + (f.deletions || 0), 0),
   };
-
-  return stats;
 });
 
 // 完整提交状态
 export const commitStateAtom = atom<CommitState>((get) => ({
   message: get(commitMessageAtom),
   detail: get(commitDetailAtom),
-  changes: get(commitFilesAtom),
+  files: get(commitFilesAtom),
+  selectedFiles: get(selectedFilesAtom),
+  filesChanged: get(commitFilesAtom),
 }));
 
 // 更新提交状态的action
@@ -40,28 +41,15 @@ export const updateCommitStateAtom = atom(
   (get, set, update: Partial<CommitState>) => {
     if (update.message !== undefined) set(commitMessageAtom, update.message);
     if (update.detail !== undefined) set(commitDetailAtom, update.detail);
-    if (update.changes !== undefined) set(commitFilesAtom, update.changes);
+    if (update.files !== undefined) set(commitFilesAtom, update.files);
+    if (update.selectedFiles !== undefined) set(selectedFilesAtom, update.selectedFiles);
   }
 );
 
-// 文件操作actions
-export const addFileAtom = atom(null, (get, set, file: FileChange) => {
-  const files = get(commitFilesAtom);
-  const fileExists = files.some((f) => f.path === file.path);
-  if (!fileExists) {
-    set(commitFilesAtom, [...files, file]);
-  }
-});
-
-export const removeFileAtom = atom(null, (get, set, path: string) => {
-  const files = get(commitFilesAtom);
-  set(
-    commitFilesAtom,
-    files.filter((f: FileChange) => f.path !== path)
-  );
-});
-
-export const resetFilesAtom = atom(null, (get, set) => {
+// 重置提交状态
+export const resetCommitStateAtom = atom(null, (get, set) => {
+  set(commitMessageAtom, "");
+  set(commitDetailAtom, "");
   set(commitFilesAtom, []);
   set(selectedFilesAtom, []);
 });

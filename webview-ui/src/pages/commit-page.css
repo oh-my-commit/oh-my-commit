@@ -3,10 +3,22 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem 1.5rem 0;
+  gap: 1.5rem;
   box-sizing: border-box;
+  background: var(--vscode-editor-background);
+}
+
+.commit-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 1.5rem;
 }
 
 /* 表单样式 */
@@ -22,6 +34,41 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.commit-message {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 6px;
+  padding: 1.25rem;
+}
+
+.commit-message vscode-text-area {
+  width: 100%;
+  font-family: var(--vscode-editor-font-family);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.commit-message vscode-text-area:first-child {
+  min-height: 38px;
+}
+
+.commit-message vscode-text-area:nth-child(2) {
+  min-height: 80px;
+}
+
+.commit-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.commit-actions vscode-button {
+  min-width: 200px;
 }
 
 /* 品牌标识 */
@@ -172,93 +219,62 @@
   min-height: 0;
 }
 
-.files-panel {
-  width: 300px;
-  border-right: 1px solid var(--vscode-panel-border);
-  overflow-y: auto;
-}
-
-.diff-panel {
+.file-changes {
   flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.diff-placeholder {
+.file-list {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--vscode-descriptionForeground);
-  font-size: 0.9rem;
-  background: var(--vscode-editor-background);
+  overflow-y: auto;
+  padding: 0.5rem;
 }
 
 .file-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
-  border-bottom: 1px solid var(--vscode-panel-border);
-  font-size: 0.9rem;
+  border-radius: 4px;
+  gap: 0.5rem;
+  transition: background-color 0.1s ease;
 }
 
 .file-item:hover {
-  background-color: var(--vscode-list-hoverBackground);
+  background: var(--vscode-list-hoverBackground);
 }
 
 .file-item.selected {
-  background-color: var(--vscode-list-activeSelectionBackground);
+  background: var(--vscode-list-activeSelectionBackground);
   color: var(--vscode-list-activeSelectionForeground);
-}
-
-.file-icon {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.file-icon.added::before {
-  content: "A";
-  font-size: 12px;
-  color: var(--vscode-gitDecoration-addedResourceForeground);
-}
-
-.file-icon.modified::before {
-  content: "M";
-  font-size: 12px;
-  color: var(--vscode-gitDecoration-modifiedResourceForeground);
-}
-
-.file-icon.deleted::before {
-  content: "D";
-  font-size: 12px;
-  color: var(--vscode-gitDecoration-deletedResourceForeground);
 }
 
 .file-path {
   flex: 1;
+  font-size: 13px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .file-stats {
   display: flex;
-  gap: 0.25rem;
-  font-size: 0.9rem;
-  white-space: nowrap;
+  gap: 0.5rem;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .additions {
-  color: var(--vscode-gitDecoration-addedResourceForeground);
+  color: var(--vscode-gitDecoration-addedResourceForeground, #81b88b);
 }
 
 .deletions {
-  color: var(--vscode-gitDecoration-deletedResourceForeground);
+  color: var(--vscode-gitDecoration-deletedResourceForeground, #c74e39);
 }
 
 /* Diff预览样式 */
@@ -495,35 +511,26 @@
 
 /* Footer styles */
 .footer {
-  position: fixed;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--vscode-statusBar-background);
-  border-top: 1px solid var(--vscode-statusBar-border);
-  padding: 0.5rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--vscode-editor-background);
+  border-top: 1px solid var(--vscode-widget-border);
+  z-index: 10;
+  margin: 0 -1.5rem;
+}
+
+.footer vscode-button {
+  min-width: 200px;
 }
 
 .footer-content {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  opacity: 0.8;
-}
-
-.brand-text {
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--vscode-statusBar-foreground);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-.hint {
-  color: var(--vscode-statusBar-foreground);
-  font-size: 12px;
-  opacity: 0.7;
+  gap: 0.5rem;
 }

@@ -1,39 +1,75 @@
-import { useAtom } from "jotai";
-import React from "react";
-import { CommitForm, FileChanges } from "../components/commit";
-import { commitStateAtom, resetFilesAtom } from "../state/atoms/commit-core";
+import React, { useCallback } from "react";
+import { useCommit } from "../state/hooks/useCommit";
+import { FileChanges } from "../components/commit/FileChanges";
+import { CommitMessage } from "../components/commit/CommitMessage";
 import { getVSCodeAPI } from "../utils/vscode";
 import { Footer } from "../components/footer";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import "./commit-page.css";
 
-export const CommitPage: React.FC = () => {
-  const [commitState] = useAtom(commitStateAtom);
-  const [, resetFiles] = useAtom(resetFilesAtom);
+export function CommitPage() {
+  const {
+    message,
+    detail,
+    files,
+    selectedFiles,
+    setMessage,
+    setDetail,
+    setState,
+  } = useCommit();
+
   const vscode = getVSCodeAPI();
 
-  const handleCommit = () => {
+  const handleCommit = useCallback(() => {
+    if (!message.trim()) {
+      vscode.postMessage({
+        command: "showError",
+        data: "Please enter a commit message",
+      });
+      return;
+    }
+
     vscode.postMessage({
       command: "commit",
       data: {
-        message: commitState.message,
-        detail: commitState.detail,
-        files: commitState.files,
+        message,
+        detail,
+        files,
+        selectedFiles,
       },
     });
-  };
+  }, [message, detail, files, selectedFiles]);
 
-  const handleFileSelect = (path: string) => {
-    vscode.postMessage({
-      command: "showDiff",
-      data: { path },
-    });
-  };
+  const handleFileSelect = useCallback(
+    (path: string) => {
+      const newSelectedFiles = selectedFiles.includes(path)
+        ? selectedFiles.filter((p) => p !== path)
+        : [...selectedFiles, path];
+      setState({ selectedFiles: newSelectedFiles });
+    },
+    [selectedFiles, setState]
+  );
 
   return (
     <div className="commit-page">
-      <CommitForm onSubmit={handleCommit} />
-      <FileChanges onFileSelect={handleFileSelect} />
+      <div className="commit-content">
+        <CommitMessage
+          message={message}
+          detail={detail}
+          setMessage={setMessage}
+          setDetail={setDetail}
+          onCommit={handleCommit}
+          selectedFilesCount={selectedFiles.length}
+          disabled={!message.trim() || selectedFiles.length === 0}
+        />
+        <FileChanges
+          files={files}
+          selectedFiles={selectedFiles}
+          setState={setState}
+          onFileSelect={handleFileSelect}
+        />
+      </div>
       <Footer />
     </div>
   );
-};
+}

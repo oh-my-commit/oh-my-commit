@@ -1,8 +1,12 @@
-import type { WebviewApi } from "vscode-webview";
+declare const acquireVsCodeApi: () => {
+  postMessage: (message: unknown) => void;
+  getState: () => unknown;
+  setState: (state: unknown) => void;
+};
 
-let vscode: WebviewApi<unknown> | undefined;
+let vscode: ReturnType<typeof acquireVsCodeApi> | undefined;
 
-export function getVSCodeAPI(): WebviewApi<unknown> {
+export function getVSCodeAPI(): ReturnType<typeof acquireVsCodeApi> {
   if (!vscode) {
     vscode = acquireVsCodeApi();
   }
@@ -11,7 +15,7 @@ export function getVSCodeAPI(): WebviewApi<unknown> {
 
 export function getStorageValue<T>(key: string, defaultValue: T): T {
   const vscode = getVSCodeAPI();
-  const state = vscode.getState() || {};
+  const state = (vscode.getState() || {}) as Record<string, unknown>;
   return (state[key] as T) ?? defaultValue;
 }
 

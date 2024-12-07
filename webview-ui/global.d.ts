@@ -42,5 +42,6 @@ namespace JSX {
     "vscode-panel-tab": any;
     "vscode-panel-view": any;
     "vscode-progress-ring": any;
+    "vscode-icon": any;
   }
 }

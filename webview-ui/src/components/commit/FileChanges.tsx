@@ -11,6 +11,8 @@ import {
 } from "../../state/atoms/commit-ui";
 import { DiffViewer } from "./DiffViewer";
 import type { FileChange } from "../../state/types";
+import type { CommitState } from "../../types/commit-state";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import "./FileChanges.css";
 
 interface TreeNode {
@@ -21,11 +23,18 @@ interface TreeNode {
 }
 
 interface FileChangesProps {
+  files: FileChange[];
+  selectedFiles: string[];
+  setState: (update: Partial<CommitState>) => void;
   onFileSelect?: (path: string) => void;
 }
 
-export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
-  const [files] = useAtom(commitFilesAtom);
+export const FileChanges: React.FC<FileChangesProps> = ({
+  files,
+  selectedFiles,
+  setState,
+  onFileSelect,
+}) => {
   const [stats] = useAtom(commitStatsAtom);
   const [selectedPath] = useAtom(selectedFileAtom);
   const [showDiff] = useAtom(showDiffAtom);
@@ -124,9 +133,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
           onClick={() => setIsTreeView(!isTreeView)}
           title={`Switch to ${isTreeView ? "list" : "tree"} view`}
         >
-          <vscode-button appearance="icon">
+          <VSCodeButton appearance="icon">
             <span className={isTreeView ? "view-tree" : "view-list"} />
-          </vscode-button>
+          </VSCodeButton>
         </button>
       </div>
 

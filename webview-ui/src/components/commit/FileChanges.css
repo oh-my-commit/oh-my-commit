@@ -89,7 +89,8 @@
   border-right: 1px solid var(--vscode-panel-border);
 }
 
-.file-item, .folder-item {
+.file-item,
+.folder-item {
   display: flex;
   align-items: center;
   padding: 4px 8px;
@@ -98,7 +99,8 @@
   transition: background-color 0.1s;
 }
 
-.file-item:hover, .folder-item:hover {
+.file-item:hover,
+.folder-item:hover {
   background-color: var(--vscode-list-hoverBackground);
 }
 
@@ -107,7 +109,8 @@
   color: var(--vscode-list-activeSelectionForeground);
 }
 
-.file-path, .folder-name {
+.file-path,
+.folder-name {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -120,7 +123,8 @@
   font-size: 0.9em;
 }
 
-.tree-view .file-item, .tree-view .folder-item {
+.tree-view .file-item,
+.tree-view .folder-item {
   position: relative;
 }
 
@@ -144,9 +148,21 @@
 }
 
 /* Git status colors */
-.codicon-modified { color: var(--vscode-gitDecoration-modifiedResourceForeground, #e2c08d); }
-.codicon-added { color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043); }
-.codicon-deleted { color: var(--vscode-gitDecoration-deletedResourceForeground, #f85149); }
-.codicon-renamed { color: var(--vscode-gitDecoration-renamedResourceForeground, #73c991); }
-.codicon-untracked { color: var(--vscode-gitDecoration-untrackedResourceForeground, #73c991); }
-.codicon-folder { color: var(--vscode-gitDecoration-submoduleResourceForeground, #8db9e2); }
+.codicon-modified {
+  color: var(--vscode-gitDecoration-modifiedResourceForeground, #e2c08d);
+}
+.codicon-added {
+  color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043);
+}
+.codicon-deleted {
+  color: var(--vscode-gitDecoration-deletedResourceForeground, #f85149);
+}
+.codicon-renamed {
+  color: var(--vscode-gitDecoration-renamedResourceForeground, #73c991);
+}
+.codicon-untracked {
+  color: var(--vscode-gitDecoration-untrackedResourceForeground, #73c991);
+}
+.codicon-folder {
+  color: var(--vscode-gitDecoration-submoduleResourceForeground, #8db9e2);
+}

@@ -1,11 +1,12 @@
-import { atom } from 'jotai';
-import { atomWithVSCodeStorage } from '../storage/vscode-storage';
-import { FileSelectionState, FileChange } from '../types';
-import { commitChangesAtom } from './commit-core';
+import { atom } from "jotai";
+import { atomWithVSCodeStorage } from "../storage/vscode-storage";
+import { FileSelectionState } from "../types";
+import { commitFilesAtom, selectedFilesAtom } from "./commit-core";
+import type { FileChange } from "../../types/file-change";
 
 // 文件选择状态
 export const fileSelectionAtom = atomWithVSCodeStorage<FileSelectionState>({
-  key: 'yaac.selection.files',
+  key: "yaac.selection.files",
   defaultValue: { selectedPaths: new Set<string>() },
 });
 
@@ -14,10 +15,10 @@ export const toggleFileSelectionAtom = atom<null, [string[]], void>(
   null,
   (get, set, paths) => {
     const { selectedPaths } = get(fileSelectionAtom);
-    const changes = get(commitChangesAtom);
+    const changes = get(commitFilesAtom);
     const newSelectedPaths = new Set(selectedPaths);
 
-    paths.forEach(path => {
+    paths.forEach((path) => {
       const fileExists = changes.some((f: FileChange) => f.path === path);
       if (!fileExists) return;
 
@@ -33,23 +34,25 @@ export const toggleFileSelectionAtom = atom<null, [string[]], void>(
 );
 
 // 重置选择状态
-export const resetSelectionAtom = atom<null, [], void>(
-  null,
-  (_get, set) => {
-    set(fileSelectionAtom, { selectedPaths: new Set<string>() });
-  }
-);
+export const resetSelectionAtom = atom<null, [], void>(null, (_get, set) => {
+  set(fileSelectionAtom, { selectedPaths: new Set<string>() });
+});
 
 // 自动生成提交信息（基于选中文件）
 export const generateCommitMessageAtom = atom((get) => {
   const { selectedPaths } = get(fileSelectionAtom);
-  const changes = get(commitChangesAtom);
-  const selectedChanges = changes.filter((f: FileChange) => selectedPaths.has(f.path));
-  
+  const changes = get(commitFilesAtom);
+  const selectedChanges = changes.filter((f: FileChange) =>
+    selectedPaths.has(f.path)
+  );
+
   const stats = {
-    added: selectedChanges.filter((f: FileChange) => f.status === 'added').length,
-    modified: selectedChanges.filter((f: FileChange) => f.status === 'modified').length,
-    deleted: selectedChanges.filter((f: FileChange) => f.status === 'deleted').length,
+    added: selectedChanges.filter((f: FileChange) => f.status === "added")
+      .length,
+    modified: selectedChanges.filter((f: FileChange) => f.status === "modified")
+      .length,
+    deleted: selectedChanges.filter((f: FileChange) => f.status === "deleted")
+      .length,
     total: selectedChanges.length,
   };
 
