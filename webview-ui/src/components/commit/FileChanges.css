@@ -1,0 +1,152 @@
+.changes-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.changes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.stats-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 0.9em;
+}
+
+.stats-badge {
+  display: flex;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: var(--vscode-badge-background);
+}
+
+.additions {
+  color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043);
+}
+
+.deletions {
+  color: var(--vscode-gitDecoration-deletedResourceForeground, #f85149);
+}
+
+.view-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.view-mode-toggle:hover {
+  opacity: 1;
+}
+
+.view-mode-toggle vscode-button {
+  padding: 4px;
+}
+
+.view-list::before {
+  content: "";
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 3H14V4H2V3ZM2 6H14V7H2V6ZM14 9H2V10H14V9ZM2 12H14V13H2V12Z' fill='%23C5C5C5'/%3E%3C/svg%3E");
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.view-tree::before {
+  content: "";
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 3V4H2V3H14ZM12 6V7H4V6H12ZM10 9V10H6V9H10ZM8 12V13H8V12H8Z' fill='%23C5C5C5'/%3E%3C/svg%3E");
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.changes-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.files-panel {
+  width: 300px;
+  overflow-y: auto;
+  border-right: 1px solid var(--vscode-panel-border);
+}
+
+.file-item, .folder-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  gap: 8px;
+  transition: background-color 0.1s;
+}
+
+.file-item:hover, .folder-item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.file-item.selected {
+  background-color: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.file-path, .folder-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-stats {
+  display: flex;
+  gap: 4px;
+  font-size: 0.9em;
+}
+
+.tree-view .file-item, .tree-view .folder-item {
+  position: relative;
+}
+
+.tree-view .folder-item {
+  font-weight: 600;
+  color: var(--vscode-foreground);
+  opacity: 0.8;
+}
+
+.diff-panel {
+  flex: 1;
+  overflow: auto;
+}
+
+.diff-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* Git status colors */
+.codicon-modified { color: var(--vscode-gitDecoration-modifiedResourceForeground, #e2c08d); }
+.codicon-added { color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043); }
+.codicon-deleted { color: var(--vscode-gitDecoration-deletedResourceForeground, #f85149); }
+.codicon-renamed { color: var(--vscode-gitDecoration-renamedResourceForeground, #73c991); }
+.codicon-untracked { color: var(--vscode-gitDecoration-untrackedResourceForeground, #73c991); }
+.codicon-folder { color: var(--vscode-gitDecoration-submoduleResourceForeground, #8db9e2); }

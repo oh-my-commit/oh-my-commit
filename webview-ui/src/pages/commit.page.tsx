@@ -4,6 +4,7 @@ import { CommitForm, FileChanges } from "../components/commit";
 import { commitStateAtom, resetFilesAtom } from "../state/atoms/commit-core";
 import { getVSCodeAPI } from "../utils/vscode";
 import { Footer } from "../components/footer";
+import "./commit-page.css";
 
 export const CommitPage: React.FC = () => {
   const [commitState] = useAtom(commitStateAtom);
