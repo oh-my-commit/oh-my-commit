@@ -88,7 +88,6 @@ export const DetailedDescription: React.FC<Props> = ({
           className="plain-textarea"
         />
       </div>
-
       {/* Split View */}
       <div
         className={classnames("view-container split-view", {
@@ -109,7 +108,6 @@ export const DetailedDescription: React.FC<Props> = ({
           }}
         />
       </div>
-
       {/* Preview View */}
       <div
         className={classnames("view-container preview-view", {

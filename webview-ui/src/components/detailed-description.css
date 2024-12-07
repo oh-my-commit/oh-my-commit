@@ -64,6 +64,7 @@
   min-height: 150px;
   height: auto;
   transition: height 0.3s ease-out;
+  overflow: hidden;
 }
 
 .view-container {
@@ -74,6 +75,7 @@
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  height: 100%;
 }
 
 .view-container.active {
@@ -81,13 +83,14 @@
   pointer-events: auto;
   position: relative;
   height: auto;
+  overflow: visible;
 }
 
 /* Plain View */
 .plain-view {
-  transform: translateX(-30%);
   width: 100%;
   height: auto;
+  overflow: hidden;
 }
 
 .plain-view textarea {
