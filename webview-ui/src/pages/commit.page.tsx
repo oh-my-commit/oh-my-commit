@@ -50,7 +50,7 @@ export function CommitPage() {
   );
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
+    <div className="flex flex-col h-full gap-4 mx-auto max-w-[1080px]">
       <CommitMessage
         message={message}
         detail={detail}

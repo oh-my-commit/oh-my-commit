@@ -20,6 +20,7 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
   return (
     <footer
       className={`
+        mt-auto
         flex flex-col items-center justify-center py-3
         border-t border-panel-border border-opacity-50
         ${className || ""}
