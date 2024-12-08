@@ -3,5 +3,6 @@
   "autoInsert": true,
   "watch": false,
   "style": "horizontal",
-  "minLevel": 2
+  "minLevel": 2,
+  "logLevel": "warning"
 }
