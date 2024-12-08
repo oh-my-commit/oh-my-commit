@@ -59,7 +59,7 @@ jobs:
 
       - name: Generate temporary config docs
         run: |
-          pnpm gen-docs -o temp-config.md --section "## 配置项"
+          pnpm gen-docs -o temp-config.md -t "## 配置项"
 
       - name: Check if docs are in sync
         run: |
