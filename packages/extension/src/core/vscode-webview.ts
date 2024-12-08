@@ -32,7 +32,7 @@ export class WebviewManager {
     ),
     templatePath: string = "./assets/webview.template.html",
     scriptPath: string = "./dist/webview-ui/main.js",
-    watchDir: string = "./dist/webview-ui"
+    watchDir: string = "dist/webview-ui"
   ) {
     // load template
     this.templatePath = templatePath;
@@ -46,8 +46,19 @@ export class WebviewManager {
 
     // watch for file changes
     this.watchDir = watchDir;
+    const mainJsPath = path.join(
+      context.extensionPath,
+      "dist",
+      "webview-ui",
+      "main.js"
+    );
+    this.outputChannel.appendLine(`Watching file: ${mainJsPath}`);
+
     const watcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(context.extensionUri, `${this.watchDir}/**`)
+      new vscode.RelativePattern(
+        vscode.Uri.file(path.dirname(mainJsPath)),
+        path.basename(mainJsPath)
+      )
     );
     type WatcherEvent = "onDidChange" | "onDidCreate" | "onDidDelete";
     const events: WatcherEvent[] = [
@@ -57,7 +68,14 @@ export class WebviewManager {
     ];
     events.forEach((event) => {
       const watcherEvent = watcher[event] as vscode.Event<vscode.Uri>;
-      watcherEvent(() => this.webviewPanel?.webview && this.updateWebview());
+      watcherEvent((uri) => {
+        this.outputChannel.appendLine(`File ${event}: ${uri.fsPath}`);
+        if (this.webviewPanel?.webview) {
+          this.updateWebview();
+        } else {
+          this.outputChannel.appendLine("Webview panel not available");
+        }
+      });
     });
 
     // register webview
@@ -107,6 +125,10 @@ export class WebviewManager {
     if (!this.webviewPanel?.webview) return;
 
     try {
+      // Force clear cache by adding timestamp
+      const timestamp = Date.now();
+      this.outputChannel.appendLine(`Updating webview at ${timestamp}`);
+
       const templateData = {
         csp: [
           "default-src 'none'",
@@ -120,11 +142,11 @@ export class WebviewManager {
         title: this.title,
         scriptUri: `${this.webviewPanel.webview.asWebviewUri(
           this.scriptUri
-        )}?v=${Date.now()}`,
+        )}?v=${timestamp}`,
       };
 
       this.webviewPanel.webview.html = this.template(templateData);
-      this.outputChannel.appendLine("Webview refreshed");
+      this.outputChannel.appendLine("Webview refreshed successfully");
     } catch (error) {
       this.outputChannel.appendLine(`Refresh error: ${error}`);
     }
