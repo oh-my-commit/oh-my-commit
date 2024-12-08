@@ -4,6 +4,31 @@
         {
             "type": "shell",
             "command": "pnpm",
+            "args": ["run", "dev"],
+            "label": "pnpm: dev",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": ".*(built|compiled|finished).*"
+                }
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "command": "pnpm",
             "args": ["run", "watch"],
             "label": "pnpm: watch",
             "isBackground": true,
@@ -14,15 +39,27 @@
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": ".*",
-                    "endsPattern": ".*"
+                    "endsPattern": ".*(built|compiled|finished).*"
                 }
             },
             "presentation": {
-                "reveal": "never"
+                "reveal": "silent",
+                "panel": "dedicated"
             },
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "build"],
+            "label": "pnpm: build",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated"
             }
         }
     ]

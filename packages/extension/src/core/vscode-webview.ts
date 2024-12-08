@@ -30,9 +30,9 @@ export class WebviewManager {
     private readonly outputChannel = vscode.window.createOutputChannel(
       "WebviewManager"
     ),
-    templatePath: string = "assets/webview.template.html",
-    scriptPath: string = "dist/webview-ui/main.js",
-    watchDir: string = "dist/webview-ui"
+    templatePath: string = "./assets/webview.template.html",
+    scriptPath: string = "./dist/webview-ui/main.js",
+    watchDir: string = "./dist/webview-ui"
   ) {
     // load template
     this.templatePath = templatePath;

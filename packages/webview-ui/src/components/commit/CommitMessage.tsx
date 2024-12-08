@@ -115,10 +115,22 @@ const InfoIcon = () => (
 
 const CommitFormatTooltip = () => {
   const [markdown, setMarkdown] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const content = loadMarkdown("commit-format");
-    setMarkdown(content);
+    const fetchMarkdown = async () => {
+      try {
+        const content = await loadMarkdown("commit-specification");
+        setMarkdown(content);
+      } catch (error) {
+        console.error('Failed to load markdown:', error);
+        setMarkdown("Failed to load commit format guide. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchMarkdown();
   }, []);
 
   const renderer = {
@@ -140,7 +152,11 @@ const CommitFormatTooltip = () => {
       style={{ pointerEvents: "auto" }}
     >
       <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3 markdown-content">
-        <Markdown value={markdown} renderer={renderer} />
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Markdown value={markdown} renderer={renderer} />
+        )}
         <div className="pt-2 border-t border-[var(--vscode-widget-border)]">
           <a
             href="https://www.conventionalcommits.org"

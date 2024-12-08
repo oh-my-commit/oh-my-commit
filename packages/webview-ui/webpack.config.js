@@ -1,7 +1,4 @@
 const path = require("path");
-const webpack = require('webpack');
-const https = require('https');
-const fs = require('fs');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
@@ -11,7 +8,7 @@ module.exports = (env, argv) => {
     mode: argv.mode || "development",
     entry: "./src/main.tsx",
     output: {
-      path: path.resolve(__dirname, "../dist/webview-ui"),
+      path: path.resolve(__dirname, "../../dist/webview-ui"),
       filename: "main.js",
       clean: true,
       ...(isProduction
@@ -47,26 +44,26 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.md$/,
-          type: 'asset/source',
-          use: 'raw-loader'
+          type: "asset/source",
+          use: "raw-loader",
         },
         {
           test: /\.css$/,
           use: [
-            'style-loader',
+            "style-loader",
             {
-              loader: 'css-loader',
+              loader: "css-loader",
               options: {
-                importLoaders: 1
-              }
+                importLoaders: 1,
+              },
             },
-            'postcss-loader'
+            "postcss-loader",
           ],
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
-          type: 'asset/resource',
-        }
+          type: "asset/resource",
+        },
       ],
     },
     watchOptions: {
@@ -77,27 +74,6 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
-    plugins: [
-      new webpack.NormalModuleReplacementPlugin(
-        /^@github-md:(.*)$/,
-        (resource) => {
-          const githubUrl = resource.request.replace('@github-md:', '');
-          resource.request = path.resolve(__dirname, `.temp/${path.basename(githubUrl)}`);
-          
-          // 在编译时下载文件
-          if (!fs.existsSync('.temp')) {
-            fs.mkdirSync('.temp');
-          }
-          
-          https.get(githubUrl, (response) => {
-            let data = '';
-            response.on('data', (chunk) => data += chunk);
-            response.on('end', () => {
-              fs.writeFileSync(resource.request, data);
-            });
-          });
-        }
-      )
-    ]
+    plugins: [],
   };
 };
