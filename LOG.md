@@ -91,3 +91,37 @@
 - More intuitive and predictable behavior
 - Reduced code complexity while maintaining functionality
 - Better aligned with standard UI patterns
+
+## 2024-12-09 05:00:47+08:00
+
+### UI Enhancement: Improved File Selection Logic 
+
+**Problem:**
+- File selection behavior wasn't intuitive
+- Checkbox state wasn't always in sync with file active state
+- Click handling was overly complex
+
+**Solution:**
+- Improved file selection logic:
+  - Clicking non-active file: Select and activate
+  - Clicking active file: Deselect and deactivate
+  - Cmd/Ctrl + click: Toggle selection with activation
+- Synchronized states:
+  - Checkbox state always matches file active state
+  - Added state validation during rendering
+  - Unified selection and activation handling
+- Simplified event handlers:
+  - Consolidated click handling logic
+  - Clear separation of normal vs. Cmd/Ctrl click behavior
+  - Removed redundant event handlers
+
+**Files Changed:**
+- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+  - Refactored `handleFileClick` and `handleFileSelect`
+  - Added state synchronization
+  - Improved code organization
+
+**Notes:**
+- More predictable and intuitive behavior
+- Better state management
+- Improved code maintainability
