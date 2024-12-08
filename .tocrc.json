@@ -1,0 +1,7 @@
+{
+  "files": ["README.md", "CONTRIBUTING.md", "FAQ.md", "docs/**/*.md"],
+  "autoInsert": true,
+  "watch": false,
+  "style": "vertical",
+  "minLevel": 2
+}

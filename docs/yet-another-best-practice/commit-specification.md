@@ -1,5 +1,12 @@
 # Commit Specification
 
+<!-- toc -->
+
+[Examples](#examples)
+
+<!-- tocstop -->
+
+
 Write clear and meaningful commit messages that describe your changes.
 
 Follow the format:

@@ -1,5 +1,12 @@
 # CSS Management in YetAnotherAutoCommit
 
+<!-- toc -->
+
+[VSCode Theme Integration](#vscode-theme-integration)
+
+<!-- tocstop -->
+
+
 ## VSCode Theme Integration
 
 ### Overview
