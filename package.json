@@ -199,6 +199,7 @@
     "glob": "^11.0.0",
     "husky": "^8.0.3",
     "markdown-toc": "^1.2.0",
+    "minimist": "^1.2.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },

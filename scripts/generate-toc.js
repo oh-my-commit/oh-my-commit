@@ -3,6 +3,41 @@ const fs = require("fs");
 const path = require("path");
 const glob = require("glob");
 const chalk = require("chalk");
+const parseArgs = require("minimist");
+
+// 解析命令行参数
+const argv = parseArgs(process.argv.slice(2), {
+  string: ["files", "patterns"], // 字符串参数
+  boolean: ["autoInsert", "help"], // 布尔参数
+  alias: {
+    f: "files",
+    p: "patterns",
+    a: "autoInsert",
+    h: "help",
+  },
+  default: {
+    autoInsert: undefined, // undefined 表示使用配置文件的值
+  },
+});
+
+// 显示帮助信息
+if (argv.help) {
+  console.log(`
+使用方法: node generate-toc.js [选项]
+
+选项:
+  -f, --files      指定要处理的文件，用逗号分隔
+  -p, --patterns   指定要处理的文件模式，用逗号分隔
+  -a, --autoInsert 是否自动插入目录标记 (true/false)
+  -h, --help       显示帮助信息
+
+示例:
+  node generate-toc.js --files README.md,CONTRIBUTING.md
+  node generate-toc.js --patterns "docs/*.md,*.md" --autoInsert
+  node generate-toc.js -f README.md -a true
+`);
+  process.exit(0);
+}
 
 // 状态图标
 const STATUS = {
@@ -32,11 +67,18 @@ function insertTocMarkers(content) {
   return lines.join("\n");
 }
 
-// 读取配置文件
+// 读取配置文件并合并命令行参数
 function loadConfig() {
+  let config = {
+    files: [],
+    patterns: [],
+    autoInsert: false,
+  };
+
+  // 尝试读取配置文件
   const configPath = path.join(process.cwd(), ".toc.config.json");
   try {
-    return require(configPath);
+    config = { ...config, ...require(configPath) };
   } catch (error) {
     console.log(
       chalk.yellow(`
@@ -51,8 +93,20 @@ function loadConfig() {
 }
 `)
     );
-    return { files: [], patterns: [], autoInsert: false };
   }
+
+  // 合并命令行参数
+  if (argv.files) {
+    config.files = argv.files.split(",").map((f) => f.trim());
+  }
+  if (argv.patterns) {
+    config.patterns = argv.patterns.split(",").map((p) => p.trim());
+  }
+  if (argv.autoInsert !== undefined) {
+    config.autoInsert = argv.autoInsert;
+  }
+
+  return config;
 }
 
 // 获取需要处理的文件
