@@ -4,6 +4,15 @@
   "version": "0.1.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "publisher": "cs-magic",
+  "scripts": {
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "lint": "eslint src --ext ts",
+    "test": "vitest",
+    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
+    "gen-toc": "echo README.md PRD.md FAQ.md CONTRIBUTING.md | xargs -n 1 markdown-toc -i",
+    "prepare": "husky install"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -170,15 +179,6 @@
         }
       }
     }
-  },
-  "scripts": {
-    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
-    "lint": "eslint src --ext ts",
-    "test": "vitest",
-    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
-    "gen-toc": "markdown-toc -i README.md && markdown-toc -i CONTRIBUTING.md && markdown-toc -i FAQ.md",
-    "prepare": "husky install"
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12",

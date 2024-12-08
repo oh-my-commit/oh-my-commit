@@ -57,19 +57,26 @@ jobs:
           echo "Installing dependencies..."
           pnpm install --no-frozen-lockfile
 
-      - name: Generate temporary config docs
-        run: |
-          pnpm gen-docs -o temp-config.md -t "用户配置"
-
       - name: Check if docs are in sync
         run: |
-          # 从 README.md 提取配置部分
-          awk '/^## 用户配置$/,/^##[^#]/' README.md > current-config.md
+          # 创建一个临时目录
+          mkdir -p temp
 
-          # 比较生成的配置和当前配置
-          if ! diff -q current-config.md temp-config.md > /dev/null; then
+          # 备份原始的 README.md
+          cp README.md temp/README.original.md
+
+          # 生成新的文档
+          pnpm gen-docs -o temp/README.md
+
+          # 比较文件
+          if ! diff -q README.md temp/README.original.md > /dev/null; then
             echo "::error::Configuration documentation is out of sync with package.json"
+            echo "Differences found:"
+            diff -u temp/README.original.md README.md || true
             echo "Please run 'pnpm gen-docs' to update the documentation"
+            
+            # 恢复原始文件
+            mv temp/README.original.md README.md
             exit 1
           fi
 
@@ -78,4 +85,4 @@ jobs:
       - name: Cleanup temporary files
         if: always()
         run: |
-          rm -f temp-config.md current-config.md
+          rm -rf temp
