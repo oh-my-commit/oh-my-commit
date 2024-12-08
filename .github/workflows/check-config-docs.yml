@@ -59,12 +59,12 @@ jobs:
 
       - name: Generate temporary config docs
         run: |
-          pnpm gen-docs -o temp-config.md -t "## 配置项"
+          pnpm gen-docs -o temp-config.md -t "用户配置"
 
       - name: Check if docs are in sync
         run: |
           # 从 README.md 提取配置部分
-          awk '/^## 配置项$/,/^##[^#]/' README.md > current-config.md
+          awk '/^## 用户配置$/,/^##[^#]/' README.md > current-config.md
 
           # 比较生成的配置和当前配置
           if ! diff -q current-config.md temp-config.md > /dev/null; then
