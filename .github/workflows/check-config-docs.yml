@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'package.json'
+      - 'pnpm-lock.yaml'
       - 'README.md'
       - 'scripts/generate-config-docs.ts'
       - '.github/workflows/check-config-docs.yml'
@@ -11,6 +12,7 @@ on:
   pull_request:
     paths:
       - 'package.json'
+      - 'pnpm-lock.yaml'
       - 'README.md'
       - 'scripts/generate-config-docs.ts'
       - '.github/workflows/check-config-docs.yml'
@@ -51,7 +53,14 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "Installing dependencies with frozen lockfile..."
+            pnpm install --frozen-lockfile
+          else
+            echo "Warning: pnpm-lock.yaml not found, installing without frozen lockfile..."
+            pnpm install --no-frozen-lockfile
+          fi
 
       - name: Generate temporary config docs
         run: |
