@@ -6,6 +6,7 @@
 
 <!-- toc -->
 
+- [推荐阅读](#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB)
 - [开发环境设置](#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E8%AE%BE%E7%BD%AE)
 - [代码风格](#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC)
 - [配置系统](#%E9%85%8D%E7%BD%AE%E7%B3%BB%E7%BB%9F)
@@ -21,6 +22,24 @@
 - [许可证](#%E8%AE%B8%E5%8F%AF%E8%AF%81)
 
 <!-- tocstop -->
+
+## 推荐阅读
+
+在开始贡献代码之前，我们强烈建议你阅读以下文档：
+
+1. **最佳实践指南**
+
+   请阅读我们的最佳实践文档（`docs/yet-another-best-practice/`）：
+
+   - [状态管理最佳实践](docs/yet-another-best-practice/state-management.md)
+   - [CSS 管理最佳实践](docs/yet-another-best-practice/css-management.md)
+
+2. **API 规范**
+
+   所有底层实现必须严格遵循我们的 API 规范（`api-spec.md`）。这确保了代码的一致性和可维护性。
+
+3. **Commit 规范**
+   - [Commit 规范](docs/yet-another-best-practice/commit-specification.md)
 
 ## 开发环境设置
 
