@@ -35,16 +35,16 @@ const STATUS_COLORS = {
   default: "text-git-modified-fg",
 } as const;
 
-// File change status icons (使用 VSCode Codicons)
-const STATUS_ICONS = {
-  added: "add",
-  modified: "edit",
-  deleted: "trash",
-  renamed: "arrow-right",
-  default: "file",
+// File change status letters (Git-style)
+const STATUS_LETTERS = {
+  added: "A",
+  modified: "M",
+  deleted: "D",
+  renamed: "R",
+  default: "?",
 } as const;
 
-// File change status labels
+// File change status labels (for tooltips)
 const STATUS_LABELS = {
   added: "Added",
   modified: "Modified",
@@ -157,7 +157,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
     return (
       <div key={status} className="flex flex-col">
-        <div className="flex items-center justify-between group h-[22px] px-2">
+        <div className="flex items-center justify-between h-[22px] px-2">
           <div className="flex items-center gap-2">
             <span
               className={cn(
@@ -201,23 +201,28 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               <div
                 key={file.path}
                 className={cn(
-                  "group flex items-center h-[22px] px-2 cursor-pointer select-none",
+                  "group flex items-center h-[22px] cursor-pointer select-none",
                   "hover:bg-[var(--vscode-list-hoverBackground)]",
                   isActive &&
                     "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
                 )}
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey) {
-                    onFileSelect?.(file.path);
-                  } else {
-                    handleFileClick(file.path);
-                  }
-                }}
               >
-                <div className="flex-1 flex items-center gap-2 min-w-0">
-                  <label
-                    className="flex items-center justify-center w-4 h-4 cursor-pointer"
-                    onClick={(e) => e.stopPropagation()}
+                <div
+                  className="flex-1 flex items-center min-w-0 px-2 h-full"
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey) {
+                      onFileSelect?.(file.path);
+                    } else {
+                      handleFileClick(file.path);
+                    }
+                  }}
+                >
+                  <div
+                    className="flex items-center justify-center w-6 h-full cursor-pointer hover:bg-[var(--vscode-list-hoverBackground)]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onFileSelect?.(file.path);
+                    }}
                   >
                     <input
                       type="checkbox"
@@ -225,8 +230,26 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                       checked={isSelected}
                       onChange={() => onFileSelect?.(file.path)}
                     />
-                  </label>
-                  <span className="flex items-center gap-1.5 truncate text-[13px]">
+                  </div>
+                  <span className="flex items-center gap-1.5 truncate text-[13px] ml-1">
+                    <span
+                      className={cn(
+                        "font-mono font-medium text-[12px] w-4 text-center",
+                        STATUS_COLORS[
+                          file.status as keyof typeof STATUS_COLORS
+                        ],
+                        isActive && "text-inherit"
+                      )}
+                      title={
+                        STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]
+                      }
+                    >
+                      {
+                        STATUS_LETTERS[
+                          file.status as keyof typeof STATUS_LETTERS
+                        ]
+                      }
+                    </span>
                     <span className="truncate">
                       <HighlightText text={file.path} highlight={searchQuery} />
                     </span>
@@ -234,7 +257,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 </div>
                 <div
                   className={cn(
-                    "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                    "flex items-center gap-2 px-2 text-[12px] tabular-nums",
                     !isActive && "text-[var(--vscode-descriptionForeground)]"
                   )}
                 >
@@ -303,15 +326,18 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   />
                 </label>
                 <span className="flex items-center gap-1.5 truncate text-[13px]">
-                  <i
+                  <span
                     className={cn(
-                      `codicon codicon-${
-                        STATUS_ICONS[file.status]
-                      } text-[14px]`,
+                      "font-mono font-medium text-[12px] w-4 text-center",
                       STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
                       isActive && "text-inherit"
                     )}
-                  />
+                    title={
+                      STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]
+                    }
+                  >
+                    {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
+                  </span>
                   <span className="truncate">
                     <HighlightText text={file.path} highlight={searchQuery} />
                   </span>
@@ -353,7 +379,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const renderFlatView = () => {
     return (
-      <div className="flex flex-col gap-4 p-2">
+      <div className="flex flex-col gap-0 p-2">
         {filteredFiles.map((file) => {
           const isSelected = selectedFiles.includes(file.path);
           const isActive = file.path === selectedPath;
@@ -361,49 +387,84 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             <div
               key={file.path}
               className={cn(
-                "group flex items-center h-[22px] px-2 cursor-pointer select-none",
+                "group flex items-center h-[32px] select-none",
                 "hover:bg-[var(--vscode-list-hoverBackground)]",
                 isActive &&
                   "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
               )}
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey) {
-                  onFileSelect?.(file.path);
-                } else {
-                  handleFileClick(file.path);
-                }
-              }}
             >
-              <div className="flex-1 flex items-center gap-2 min-w-0">
-                <label
-                  className="flex items-center justify-center w-4 h-4 cursor-pointer"
-                  onClick={(e) => e.stopPropagation()}
+              <div className="flex-1 flex items-center min-w-0 h-full">
+                <div
+                  className="flex items-center justify-center w-8 h-full cursor-pointer hover:bg-[var(--vscode-list-hoverBackground)]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFileSelect?.(file.path);
+                  }}
                 >
-                  <input
-                    type="checkbox"
-                    className="w-3 h-3"
-                    checked={isSelected}
-                    onChange={() => onFileSelect?.(file.path)}
-                  />
-                </label>
-                <span className="flex items-center gap-1.5 truncate text-[13px]">
-                  <i
+                  <div className="w-3 h-3 relative">
+                    <input
+                      type="checkbox"
+                      className="absolute inset-0 cursor-pointer opacity-0 w-full h-full"
+                      checked={isSelected}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        onFileSelect?.(file.path);
+                      }}
+                    />
+                    <div
+                      className={cn(
+                        "absolute inset-0 border rounded",
+                        "border-[var(--vscode-checkbox-border)]",
+                        isSelected &&
+                          "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]"
+                      )}
+                    />
+                    {isSelected && (
+                      <div className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]">
+                        <svg
+                          className="w-2 h-2"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div
+                  className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2"
+                  onClick={(e) => {
+                    if (!e.metaKey && !e.ctrlKey) {
+                      e.stopPropagation();
+                      handleFileClick(file.path);
+                    }
+                  }}
+                >
+                  <span
                     className={cn(
-                      `codicon codicon-${
-                        STATUS_ICONS[file.status]
-                      } text-[14px]`,
+                      "font-mono font-medium text-[12px] w-4 text-center",
                       STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
                       isActive && "text-inherit"
                     )}
-                  />
+                    title={
+                      STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]
+                    }
+                  >
+                    {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
+                  </span>
                   <span className="truncate">
                     <HighlightText text={file.path} highlight={searchQuery} />
                   </span>
-                </span>
+                </div>
               </div>
               <div
                 className={cn(
-                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                  "flex items-center gap-2 px-2 text-[12px] tabular-nums",
                   !isActive && "text-[var(--vscode-descriptionForeground)]"
                 )}
               >
