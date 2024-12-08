@@ -1,0 +1,36 @@
+{
+  "name": "@yaac/extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "dev": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
+    "watch": "pnpm run dev",
+    "lint": "eslint src --ext ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "handlebars": "^4.7.8",
+    "lodash-es": "^4.17.21",
+    "simple-git": "^3.27.0",
+    "yaml": "^2.6.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cs-magic/md-toc": "^0.5.1",
+    "@types/node": "^22.10.1",
+    "@types/vscode": "^1.95.0",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "commander": "^12.1.0",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.24.0",
+    "glob": "^11.0.0",
+    "husky": "^8.0.3",
+    "markdown-toc": "^1.2.0",
+    "minimist": "^1.2.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

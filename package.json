@@ -1,16 +1,50 @@
 {
-  "name": "yaac",
+  "name": "@cs-magic/yaac",
   "displayName": "YAAC - Yet Another Auto Commit",
   "version": "0.1.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
+  "author": "cs-magic",
   "publisher": "cs-magic",
+  "main": "./dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cs-magic/yaac"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "vscode",
+    "productivity"
+  ],
+  "packageManager": "pnpm@8.10.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
-    "lint": "eslint src --ext ts",
-    "test": "vitest",
-    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "watch": "turbo watch",
+    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts"
+  },
+  "devDependencies": {
+    "@cs-magic/md-toc": "^0.5.1",
+    "@types/node": "^22.10.1",
+    "@types/vscode": "^1.95.0",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "commander": "^12.1.0",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.24.0",
+    "glob": "^11.0.0",
+    "husky": "^8.0.3",
+    "markdown-toc": "^1.2.0",
+    "minimist": "^1.2.8",
+    "ts-node": "^10.9.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "zod": "^3.23.8"
   },
   "engines": {
     "vscode": "^1.80.0"
@@ -22,7 +56,6 @@
     "onStartupFinished",
     "workspaceContains:.git"
   ],
-  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -35,7 +68,7 @@
       },
       {
         "command": "yaac.openPreferences",
-        "title": "YAAC: Open Prefernces"
+        "title": "YAAC: Open Preferences"
       }
     ],
     "configuration": {
@@ -179,41 +212,5 @@
       }
     }
   },
-  "dependencies": {
-    "@types/lodash-es": "^4.17.12",
-    "handlebars": "^4.7.8",
-    "lodash-es": "^4.17.21",
-    "simple-git": "^3.27.0",
-    "yaml": "^2.6.1",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@cs-magic/md-toc": "^0.5.1",
-    "@types/node": "^22.10.1",
-    "@types/vscode": "^1.95.0",
-    "chalk": "^4.1.2",
-    "cli-progress": "^3.12.0",
-    "commander": "^12.1.0",
-    "cross-env": "^7.0.3",
-    "esbuild": "^0.24.0",
-    "glob": "^11.0.0",
-    "husky": "^8.0.3",
-    "markdown-toc": "^1.2.0",
-    "minimist": "^1.2.8",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cs-magic/yaac"
-  },
-  "keywords": [
-    "git",
-    "commit",
-    "ai",
-    "vscode",
-    "productivity"
-  ],
-  "author": "cs-magic",
   "license": "MIT"
 }

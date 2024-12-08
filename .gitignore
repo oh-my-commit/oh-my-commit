@@ -1,10 +1,11 @@
+.turbo/
 temp/
 out/
 src-tauri/target
 **/.env
 **/.pnpm-store
 **/.idea
-dist/
+**/dist/
 deploy_versions/
 .temp/
 .rn_temp/

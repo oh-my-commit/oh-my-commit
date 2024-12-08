@@ -1,21 +1,18 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Run Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "preLaunchTask": "pnpm: watch",
-            "env": {
-                "NODE_ENV": "development",
-                "VSCODE_DEBUG": "true"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "pnpm: dev",
+      "env": {
+        "NODE_ENV": "development",
+        "VSCODE_DEBUG": "true"
+      }
+    }
+  ],
+  "compounds": []
 }
