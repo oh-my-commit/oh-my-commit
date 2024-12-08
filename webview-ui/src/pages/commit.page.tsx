@@ -4,6 +4,7 @@ import { FileChanges } from "../components/commit/FileChanges";
 import { CommitMessage } from "../components/commit/CommitMessage";
 import { getVSCodeAPI } from "../utils/vscode";
 import { Footer } from "@/components/footer";
+import { Section } from "@/components/layout/Section";
 
 export function CommitPage() {
   const {
@@ -49,24 +50,23 @@ export function CommitPage() {
   );
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex-1 flex flex-col min-h-0 p-3 space-y-3">
-        <CommitMessage
-          message={message}
-          detail={detail}
-          onMessageChange={setMessage}
-          onDetailChange={setDetail}
-          onCommit={handleCommit}
-          selectedFilesCount={selectedFiles.length}
-          disabled={!message.trim() || selectedFiles.length === 0}
-        />
-        <FileChanges
-          files={files}
-          selectedFiles={selectedFiles}
-          setState={setState}
-          onFileSelect={handleFileSelect}
-        />
-      </div>
+    <div className="flex flex-col h-full p-4 gap-4">
+      <CommitMessage
+        message={message}
+        detail={detail}
+        onMessageChange={setMessage}
+        onDetailChange={setDetail}
+        onCommit={handleCommit}
+        selectedFilesCount={selectedFiles.length}
+        disabled={!message.trim() || selectedFiles.length === 0}
+      />
+
+      <FileChanges
+        files={files}
+        selectedFiles={selectedFiles}
+        setState={setState}
+        onFileSelect={handleFileSelect}
+      />
 
       <Footer />
     </div>

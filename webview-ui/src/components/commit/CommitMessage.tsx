@@ -8,6 +8,7 @@ import {
   COMMON_COMMIT_TYPES,
   EXTENDED_COMMIT_TYPES,
 } from "../../constants/commitTypes";
+import { Section } from "../layout/Section";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -26,81 +27,6 @@ interface CommitMessageProps {
   ) => void;
   disabled?: boolean;
 }
-
-const TypeBadge = ({
-  type,
-  onTypeChange,
-}: {
-  type: string;
-  onTypeChange?: (type: string) => void;
-}) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const commitType = [...COMMON_COMMIT_TYPES, ...EXTENDED_COMMIT_TYPES].find(
-    (t) => t.value === type
-  );
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  if (!commitType) return null;
-
-  const handleFeedback = () => {
-    setShowMenu(false);
-    onTypeChange?.(type);
-  };
-
-  return (
-    <div className="relative" ref={menuRef}>
-      <button
-        className="px-2 py-1 text-[11px] rounded-sm inline-flex items-center gap-1.5 select-none hover:bg-[var(--vscode-badge-background)] group transition-colors"
-        onClick={() => setShowMenu(!showMenu)}
-        style={{
-          backgroundColor: showMenu
-            ? "var(--vscode-badge-background)"
-            : "var(--vscode-badge-background)",
-          color: "var(--vscode-badge-foreground)",
-        }}
-      >
-        <span className="opacity-80">{commitType.label.split(" ")[0]}</span>
-        <span className="font-medium">{type}</span>
-        <span className="text-[8px] opacity-60 group-hover:opacity-100">▼</span>
-      </button>
-
-      {showMenu && (
-        <div
-          className="absolute right-0 top-full mt-1 z-50 min-w-[200px] py-1 rounded-sm shadow-lg"
-          style={{
-            backgroundColor: "var(--vscode-input-background)",
-            border: "1px solid var(--vscode-input-border)",
-          }}
-        >
-          <div className="px-2 py-1.5 border-b border-[var(--vscode-input-border)]">
-            <div className="text-xs font-medium mb-1">Current Type</div>
-            <div className="text-[11px] text-[var(--vscode-descriptionForeground)]">
-              {commitType.description}
-            </div>
-          </div>
-          <button
-            className="w-full px-2 py-1.5 text-left text-[11px] hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-errorForeground)] flex items-center gap-2"
-            onClick={handleFeedback}
-          >
-            <span>⚠️</span>
-            <span>This type seems incorrect</span>
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const MessageInput = ({
   value,
@@ -257,27 +183,6 @@ const CommitFormatTooltip = () => (
   </div>
 );
 
-const TypeBadgeNew = ({ type }: { type: string }) => {
-  const commitType = [...COMMON_COMMIT_TYPES, ...EXTENDED_COMMIT_TYPES].find(
-    (t) => t.value === type
-  );
-
-  if (!commitType) return null;
-
-  return (
-    <div
-      className="px-2 py-1 text-[11px] rounded-sm inline-flex items-center gap-1 select-none"
-      style={{
-        backgroundColor: "var(--vscode-badge-background)",
-        color: "var(--vscode-badge-foreground)",
-      }}
-    >
-      <span className="opacity-80">{commitType.label.split(" ")[0]}</span>
-      <span className="font-medium">{type}</span>
-    </div>
-  );
-};
-
 const FeedbackButton = ({
   onFeedback,
   disabled,
@@ -410,73 +315,61 @@ export function CommitMessage({
     subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH;
 
   return (
-    <section className="flex flex-col gap-3 bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-base font-medium text-[var(--vscode-editor-foreground)]">
-            Commit Message
-          </h1>
-          <div className="relative" ref={tooltipContainerRef}>
-            <button
-              className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            >
-              <InfoIcon />
-            </button>
-            {showTooltip && <CommitFormatTooltip />}
+    <Section
+      title="Commit Message"
+      actions={
+        <div className="relative" ref={tooltipContainerRef}>
+          <button
+            className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <InfoIcon />
+          </button>
+          {showTooltip && <CommitFormatTooltip />}
+        </div>
+      }
+    >
+      <Section.Content>
+        <div className="flex flex-col gap-1.5">
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+            Summary
           </div>
+          <MessageInput
+            value={message}
+            maxLength={MAX_SUBJECT_LENGTH}
+            placeholder="Write a brief description of your changes"
+            onChange={onMessageChange}
+            className="h-[32px]"
+          />
         </div>
-      </div>
 
-      <div className="flex flex-col gap-1.5">
-        <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-          Summary
+        <div className="flex flex-col gap-1.5">
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+            Details
+          </div>
+          <MessageInput
+            value={detail}
+            maxLength={MAX_DETAIL_LENGTH}
+            placeholder="Add a detailed description of your changes (optional)"
+            onChange={onDetailChange}
+            className="min-h-[120px]"
+            multiline
+          />
         </div>
-        <MessageInput
-          value={message}
-          maxLength={MAX_SUBJECT_LENGTH}
-          placeholder="Write a brief description of your changes"
-          onChange={onMessageChange}
-          className="h-[32px]"
-        />
-      </div>
+      </Section.Content>
 
-      <div className="flex flex-col gap-1.5">
-        <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-          Details
-        </div>
-        <MessageInput
-          value={detail}
-          maxLength={MAX_DETAIL_LENGTH}
-          placeholder="Add a detailed description of your changes (optional)"
-          onChange={onDetailChange}
-          className="min-h-[120px]"
-          multiline
-        />
-      </div>
-
-      <div className="flex items-center justify-between">
+      <Section.Footer>
         {!isSubjectValid && subjectLength > 0 && (
           <span className="text-[11px] text-[var(--vscode-errorForeground)]">
             Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
           </span>
         )}
-
-        <div className="flex items-center gap-2 ml-auto">
-          <FeedbackButton
-            onFeedback={onFeedback}
-            disabled={!message || disabled}
-          />
-
-          <VSCodeButton
-            disabled={!isSubjectValid || disabled}
-            onClick={onCommit}
-          >
-            Commit Changes
-          </VSCodeButton>
-        </div>
-      </div>
-    </section>
+        <FeedbackButton onFeedback={onFeedback} disabled={disabled} />
+        <VSCodeButton disabled={!isSubjectValid || disabled} onClick={onCommit}>
+          Commit Changes
+        </VSCodeButton>
+      </Section.Footer>
+    </Section>
   );
 }
