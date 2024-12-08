@@ -45,14 +45,6 @@
 
 欢迎贡献代码！请查看我们的 [贡献指南](CONTRIBUTING.md) 了解详情。
 
-为了帮助开发者更好地理解和贡献代码，我们提供了以下开发文档：
-
-- [状态管理最佳实践](docs/state-management.md) - 详细介绍了项目中复杂状态管理的最佳实践
-
-## 许可证
-
-MIT
-
 ## 支持
 
 如果你遇到任何问题或有建议，请：
@@ -60,3 +52,7 @@ MIT
 1. 查看 [常见问题](FAQ.md)
 2. 提交 [Issue](https://github.com/cs-magic/yaac/issues)
 3. 加入我们的 [Discord 社区](https://discord.gg/yaac)
+
+## 许可证
+
+MIT
