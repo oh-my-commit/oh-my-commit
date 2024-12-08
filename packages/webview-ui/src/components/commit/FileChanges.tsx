@@ -201,9 +201,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 )}
                 onClick={(e) => {
                   if (e.metaKey || e.ctrlKey) {
-                    handleFileClick(file.path);
-                  } else {
                     onFileSelect?.(file.path);
+                  } else {
+                    handleFileClick(file.path);
                   }
                 }}
               >
@@ -277,9 +277,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               )}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey) {
-                  handleFileClick(file.path);
-                } else {
                   onFileSelect?.(file.path);
+                } else {
+                  handleFileClick(file.path);
                 }
               }}
             >
@@ -361,9 +361,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               )}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey) {
-                  handleFileClick(file.path);
-                } else {
                   onFileSelect?.(file.path);
+                } else {
+                  handleFileClick(file.path);
                 }
               }}
             >
