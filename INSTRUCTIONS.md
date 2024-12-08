@@ -20,5 +20,9 @@ version: 0.5.0
 1. 先回复：Vita brevis, ars longa.
 2. 仔细阅读 README.md、PRD.md （若无则创建）
 3. 依据上述【## 思考原则】回复我的问题
-4. 把本次的时间、问题、思考、答案、备注记录下来（尽量精简），记录在 LOG.md 结尾
+4. 把时间、问题、思考、答案、备注记录下来（尽量精简），记录在 LOG.md 结尾
 5. 如果有必要，更新 PRD.md 和 README.md
+
+## 背景
+
+我在开发一款 ai commit vscode 插件，技术栈：typescript，inline-tailwindcss，jotai ，请阅读 @INSTRUCTIONS.md 协助我推进项目，下面是我的新需求/问题：

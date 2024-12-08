@@ -10,7 +10,7 @@
     "lint": "eslint src --ext ts",
     "test": "vitest",
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
-    "gen-toc": "echo README.md PRD.md FAQ.md CONTRIBUTING.md | xargs -n 1 markdown-toc -i",
+    "gen-toc": "node scripts/generate-toc.js",
     "prepare": "husky install"
   },
   "engines": {
