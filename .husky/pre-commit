@@ -13,7 +13,7 @@ GENDOCS_OUTPUT="./temp/gendocs_output.txt"
 (md-toc > "$GENTOC_OUTPUT" 2>&1) &
 TOC_PID=$!
 
-(pnpm gen-docs > "$GENDOCS_OUTPUT" 2>&1) &
+(pnpm gen-docs -o README.md > "$GENDOCS_OUTPUT" 2>&1) &
 DOCS_PID=$!
 
 # 等待两个任务完成
