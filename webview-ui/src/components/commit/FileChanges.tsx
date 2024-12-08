@@ -14,7 +14,7 @@ import {
 import { DiffViewer } from "./DiffViewer";
 import type { FileChange } from "../../state/types";
 import type { CommitState } from "../../types/commit-state";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import { cn } from "../../lib/utils";
 import { HighlightText } from "../common/HighlightText";
 
@@ -34,7 +34,7 @@ const STATUS_COLORS = {
   default: "text-git-modified-fg",
 } as const;
 
-// File change status icons
+// File change status icons (使用 VSCode Codicons)
 const STATUS_ICONS = {
   added: "add",
   modified: "edit",
@@ -54,9 +54,9 @@ const STATUS_LABELS = {
 
 // 视图模式
 const VIEW_MODES = {
-  grouped: "Grouped",
-  tree: "Tree",
   flat: "Flat",
+  grouped: "Group",
+  tree: "Tree",
 } as const;
 
 export const FileChanges: React.FC<FileChangesProps> = ({
@@ -72,7 +72,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [, updateCommitState] = useAtom(updateCommitStateAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [viewMode, setViewMode] =
-    React.useState<keyof typeof VIEW_MODES>("grouped");
+    React.useState<keyof typeof VIEW_MODES>("flat");
   const [isSearching, setIsSearching] = React.useState(false);
 
   // 过滤文件
@@ -147,69 +147,85 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     if (files.length === 0) return null;
 
     return (
-      <div key={status} className="group">
-        <div
-          className={cn(
-            "h-[22px] flex items-center gap-1 px-[10px] select-none",
-            "text-[11px] opacity-80",
-            "hover:opacity-100"
-          )}
-        >
-          {/* <span
-            className={`codicon codicon-${STATUS_ICONS[status]} text-[14px]`}
-            style={{ color: STATUS_COLORS[status] }}
-          /> */}
-          <span className="font-medium uppercase tracking-wide">
-            {STATUS_LABELS[status]}
-          </span>
-          <span className="opacity-80">({files.length})</span>
+      <div key={status} className="flex flex-col">
+        <div className="flex items-center justify-between group h-[22px] px-2">
+          <div className="flex items-center gap-2">
+            <span className={cn("flex items-center gap-1 text-[12px] font-medium", STATUS_COLORS[status])}>
+              <span className="uppercase">{STATUS_LABELS[status]}</span>
+              <span className="text-[var(--vscode-descriptionForeground)]">({files.length})</span>
+            </span>
+          </div>
+          <button
+            className={cn(
+              "px-2 py-0.5 text-[11px] rounded",
+              "bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)]",
+              "hover:bg-[var(--vscode-button-secondaryHoverBackground)]"
+            )}
+            onClick={() => {
+              const allSelected = files.every(f => selectedFiles.includes(f.path));
+              const newSelectedFiles = allSelected
+                ? selectedFiles.filter(p => !files.some(f => f.path === p))
+                : [...new Set([...selectedFiles, ...files.map(f => f.path)])];
+              setState({ selectedFiles: newSelectedFiles });
+            }}
+          >
+            {files.every(f => selectedFiles.includes(f.path)) ? 'Deselect All' : 'Select All'}
+          </button>
         </div>
-        <div className="mb-1">
+
+        <div className="flex flex-col">
           {files.map((file) => {
-            const isSelected = file.path === selectedPath;
+            const isSelected = selectedFiles.includes(file.path);
+            const isActive = file.path === selectedPath;
             return (
               <div
                 key={file.path}
                 className={cn(
-                  "group relative h-[22px] flex items-center pr-2 pl-6",
-                  "hover:bg-list-hover",
-                  isSelected && "bg-list-active-bg/25"
+                  "group flex items-center h-[22px] px-2 cursor-pointer select-none",
+                  "hover:bg-[var(--vscode-list-hoverBackground)]",
+                  isActive && "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
                 )}
-                onClick={() => handleFileClick(file.path)}
-                title={file.path}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey) {
+                    handleFileClick(file.path);
+                  } else {
+                    onFileSelect?.(file.path);
+                  }
+                }}
               >
-                <span className="flex-1 truncate text-[13px] leading-[22px] cursor-pointer">
-                  <HighlightText
-                    text={file.path.split("/").pop() || ""}
-                    highlight={searchQuery}
-                  />
-                </span>
-                <div
-                  className={cn(
-                    "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                    isSelected && "text-list-active-fg"
-                  )}
-                >
+                <div className="flex-1 flex items-center gap-2 min-w-0">
+                  <label 
+                    className="flex items-center justify-center w-4 h-4 cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-3 h-3"
+                      checked={isSelected}
+                      onChange={() => onFileSelect?.(file.path)}
+                    />
+                  </label>
+                  <span className="flex items-center gap-1.5 truncate text-[13px]">
+                    <span className="truncate">
+                      <HighlightText
+                        text={file.path}
+                        highlight={searchQuery}
+                      />
+                    </span>
+                  </span>
+                </div>
+                <div className={cn(
+                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                  !isActive && "text-[var(--vscode-descriptionForeground)]"
+                )}>
                   {file.additions > 0 && (
-                    <span
-                      className={cn(
-                        isSelected
-                          ? ""
-                          : "text-git-added-fg"
-                      )}
-                    >
+                    <span className={cn("text-git-added-fg", isActive && "text-inherit")}>
                       +{file.additions}
                     </span>
                   )}
                   {file.deletions > 0 && (
-                    <span
-                      className={cn(
-                        isSelected
-                          ? ""
-                          : "text-git-deleted-fg"
-                      )}
-                    >
-                      -{file.deletions}
+                    <span className={cn("text-git-deleted-fg", isActive && "text-inherit")}>
+                      −{file.deletions}
                     </span>
                   )}
                 </div>
@@ -223,68 +239,66 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const renderFlatList = () => {
     return (
-      <div>
+      <div className="flex flex-col gap-4 p-2">
         {filteredFiles.map((file) => {
-          const isSelected = file.path === selectedPath;
+          const isSelected = selectedFiles.includes(file.path);
+          const isActive = file.path === selectedPath;
           return (
             <div
               key={file.path}
               className={cn(
-                "group relative h-[22px] flex items-center pl-[30px] pr-2",
-                "hover:bg-list-hover",
-                isSelected && "active-selection"
+                "group flex items-center h-[22px] px-2 cursor-pointer select-none",
+                "hover:bg-[var(--vscode-list-hoverBackground)]",
+                isActive && "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
               )}
-              onClick={() => handleFileClick(file.path)}
-              title={file.path}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey) {
+                  handleFileClick(file.path);
+                } else {
+                  onFileSelect?.(file.path);
+                }
+              }}
             >
-              <span className="flex-1 truncate text-[13px] leading-[22px] cursor-pointer">
-                <HighlightText
-                  text={file.path.split("/").pop() || ""}
-                  highlight={searchQuery}
-                />
-              </span>
-              <div
-                className={cn(
-                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                  isSelected && "text-list-active-fg"
-                )}
-              >
+              <div className="flex-1 flex items-center gap-2 min-w-0">
+                <label 
+                  className="flex items-center justify-center w-4 h-4 cursor-pointer"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    className="w-3 h-3"
+                    checked={isSelected}
+                    onChange={() => onFileSelect?.(file.path)}
+                  />
+                </label>
+                <span className="flex items-center gap-1.5 truncate text-[13px]">
+                  <i className={cn(
+                    `codicon codicon-${STATUS_ICONS[file.status]} text-[14px]`,
+                    STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                    isActive && "text-inherit"
+                  )} />
+                  <span className="truncate">
+                    <HighlightText
+                      text={file.path}
+                      highlight={searchQuery}
+                    />
+                  </span>
+                </span>
+              </div>
+              <div className={cn(
+                "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                !isActive && "text-[var(--vscode-descriptionForeground)]"
+              )}>
                 {file.additions > 0 && (
-                  <span
-                    className={cn(
-                      isSelected
-                        ? ""
-                        : "text-git-added-fg"
-                    )}
-                  >
+                  <span className={cn("text-git-added-fg", isActive && "text-inherit")}>
                     +{file.additions}
                   </span>
                 )}
                 {file.deletions > 0 && (
-                  <span
-                    className={cn(
-                      isSelected
-                        ? ""
-                        : "text-git-deleted-fg"
-                    )}
-                  >
-                    -{file.deletions}
+                  <span className={cn("text-git-deleted-fg", isActive && "text-inherit")}>
+                    −{file.deletions}
                   </span>
                 )}
-              </div>
-              <div
-                className={cn(
-                  "absolute left-[10px] w-[16px] h-[16px] flex items-center justify-center",
-                  isSelected
-                    ? "text-list-active-fg"
-                    : STATUS_COLORS[file.status]
-                )}
-              >
-                <span
-                  className={`codicon codicon-${
-                    STATUS_ICONS[file.status]
-                  } text-[14px]`}
-                />
               </div>
             </div>
           );
@@ -294,92 +308,64 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   };
 
   return (
-    <div className="flex-1 flex min-h-0 bg-sidebar-bg">
-      {/* 文件列表面板 */}
-      <div className="w-[300px] shrink-0 flex flex-col overflow-y-auto border-r border-panel-border">
-        <div className="flex-none h-[35px] flex items-center justify-between px-[10px] select-none">
-          <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-sidebar-title">
-              Changed Files
-            </span>
-            <span className="text-[11px] opacity-80">
-              ({filteredFiles.length})
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <VSCodeButton
-              appearance="icon"
-              title="Switch View Mode"
-              onClick={() => {
-                const modes = Object.keys(
-                  VIEW_MODES
-                ) as (keyof typeof VIEW_MODES)[];
-                const currentIndex = modes.indexOf(viewMode);
-                const nextIndex = (currentIndex + 1) % modes.length;
-                setViewMode(modes[nextIndex]);
-              }}
+    <div className="flex flex-col h-full">
+      <div className="flex items-center gap-2 px-2 py-1.5 sticky top-0 z-10 bg-[var(--vscode-editor-background)]">
+        <div className="relative flex-1 flex items-center">
+          <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10" />
+          <style>
+            {`
+              .search-input::part(control) {
+                padding-left: 24px !important;
+              }
+            `}
+          </style>
+          <VSCodeTextField
+            className="w-full search-input"
+            placeholder="Filter"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2 text-[12px] text-[var(--vscode-descriptionForeground)]">
+          <span>{Object.values(stats).reduce((a, b) => a + b, 0)} files</span>
+          <span className="text-git-added-fg">+{Object.values(groupedFiles).flat().reduce((acc, file) => acc + file.additions, 0)}</span>
+          <span className="text-git-deleted-fg">−{Object.values(groupedFiles).flat().reduce((acc, file) => acc + file.deletions, 0)}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          {Object.entries(VIEW_MODES).map(([mode, label]) => (
+            <button
+              key={mode}
+              className={cn(
+                "px-2 py-0.5 text-[12px] rounded",
+                viewMode === mode
+                  ? "bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)]"
+                  : "bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)] hover:bg-[var(--vscode-button-secondaryHoverBackground)]"
+              )}
+              onClick={() => setViewMode(mode as keyof typeof VIEW_MODES)}
             >
-              <span
-                className={cn(
-                  "codicon",
-                  viewMode === "grouped"
-                    ? "codicon-list-flat"
-                    : viewMode === "tree"
-                    ? "codicon-list-tree"
-                    : "codicon-list-selection"
-                )}
-              />
-            </VSCodeButton>
-          </div>
-        </div>
-
-        <div className="flex-none h-[30px] px-[10px] flex items-center border-b border-panel-border">
-          <div className="relative flex-1 flex items-center">
-            <input
-              type="text"
-              className="
-                  file-search-input w-full h-[24px] px-[6px] pl-[24px]
-                  bg-input-bg
-                  text-input-fg
-                  border border-input-border
-                  rounded-[2px] text-[12px]
-                  focus:outline-none
-                  focus:border-input-border
-                  placeholder:text-input-placeholder
-                "
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
-              placeholder="Full Search"
-              spellCheck={false}
-            />
-            <span className="absolute top-1/2 -translate-y-1/2 left-[6px] text-input-placeholder codicon codicon-search text-[12px]"></span>
-            {searchQuery && (
-              <VSCodeButton
-                appearance="icon"
-                className="absolute right-[2px]"
-                onClick={() => setSearchQuery("")}
-              >
-                <span className="codicon codicon-close text-[14px]" />
-              </VSCodeButton>
-            )}
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto">
-          {viewMode === "grouped" && (
-            <>
-              {renderFileGroup("added", groupedFiles.added)}
-              {renderFileGroup("modified", groupedFiles.modified)}
-              {renderFileGroup("deleted", groupedFiles.deleted)}
-              {renderFileGroup("renamed", groupedFiles.renamed)}
-            </>
-          )}
-          {viewMode === "flat" && renderFlatList()}
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* 差异查看器面板 */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {viewMode === "flat" ? (
+          renderFlatList()
+        ) : viewMode === "grouped" ? (
+          <div className="flex flex-col">
+            {renderFileGroup("added", groupedFiles.added)}
+            {renderFileGroup("modified", groupedFiles.modified)}
+            {renderFileGroup("deleted", groupedFiles.deleted)}
+            {renderFileGroup("renamed", groupedFiles.renamed)}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full text-[var(--vscode-descriptionForeground)]">
+            Tree view coming soon...
+          </div>
+        )}
+      </div>
+
       {showDiff && <DiffViewer />}
     </div>
   );
