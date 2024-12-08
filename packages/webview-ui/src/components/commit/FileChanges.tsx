@@ -449,7 +449,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   return (
     <Section title="Changed Files">
       <Section.Content>
-        <div className="flex items-center gap-2 px-2 py-1.5 sticky top-0 z-10 bg-[var(--vscode-editor-background)]">
+        <div className="flex items-center gap-2 px-2 py-1.5 sticky top-0 z-10 ">
           <div className="relative flex-1 flex items-center">
             <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10" />
             <style>
