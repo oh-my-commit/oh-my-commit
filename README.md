@@ -1,6 +1,6 @@
-# 🎨 YAAC - Redefining the art of commits
+# 🎨 YAAC - Your Artistic Aide for Commits
 
-🎨 一款专注用户体验的智能 Git 提交插件，让你的每一次提交都优雅而专业。
+🎨 一款专注用户体验、重新定义 Git Commit 的 VSCode 插件，助力你的每一次提交，优雅而专业。
 
 > YAAC 中文名读作"雅刻"，是优雅的雅，也是雅虎的雅 [Doge]。
 
