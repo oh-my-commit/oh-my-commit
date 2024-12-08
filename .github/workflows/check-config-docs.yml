@@ -54,13 +54,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "Installing dependencies with frozen lockfile..."
-            pnpm install --frozen-lockfile
-          else
-            echo "Warning: pnpm-lock.yaml not found, installing without frozen lockfile..."
-            pnpm install --no-frozen-lockfile
-          fi
+          echo "Installing dependencies..."
+          pnpm install --no-frozen-lockfile
 
       - name: Generate temporary config docs
         run: |
