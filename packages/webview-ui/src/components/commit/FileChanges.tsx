@@ -118,16 +118,31 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const handleFileClick = (path: string) => {
     if (path === selectedPath) {
-      // 如果点击的是已选中的文件，取消选中并关闭 diff
+      // 如果点击的是当前选中的文件，取消选中
+      selectFile("");
+      setShowDiff(false);
+      onFileSelect?.(path); // 同步取消 checkbox 选中状态
+    } else {
+      // 如果点击的是其他文件，选中它
+      selectFile(path);
+      setShowDiff(true);
+      if (!selectedFiles.includes(path)) {
+        onFileSelect?.(path); // 同步选中 checkbox
+      }
+    }
+  };
+
+  const handleFileSelect = (path: string) => {
+    if (path === selectedPath) {
+      // 如果是当前选中的文件，切换其选择状态
+      onFileSelect?.(path);
       selectFile("");
       setShowDiff(false);
     } else {
-      // 如果点击的是未选中的文件，选中并显示 diff
+      // 如果是其他文件，直接选中并展开
+      onFileSelect?.(path);
       selectFile(path);
       setShowDiff(true);
-    }
-    if (onFileSelect) {
-      onFileSelect(path);
     }
   };
 
@@ -290,99 +305,18 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     );
   };
 
-  const renderFlatList = () => {
-    return (
-      <div className="flex flex-col gap-4 p-2">
-        {filteredFiles.map((file) => {
-          const isSelected = selectedFiles.includes(file.path);
-          const isActive = file.path === selectedPath;
-          return (
-            <div
-              key={file.path}
-              className={cn(
-                "group flex items-center h-[22px] px-2 cursor-pointer select-none",
-                "hover:bg-[var(--vscode-list-hoverBackground)]",
-                isActive &&
-                  "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
-              )}
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey) {
-                  onFileSelect?.(file.path);
-                } else {
-                  handleFileClick(file.path);
-                }
-              }}
-            >
-              <div className="flex-1 flex items-center gap-2 min-w-0">
-                <label
-                  className="flex items-center justify-center w-4 h-4 cursor-pointer"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <input
-                    type="checkbox"
-                    className="w-3 h-3"
-                    checked={isSelected}
-                    onChange={() => onFileSelect?.(file.path)}
-                  />
-                </label>
-                <span className="flex items-center gap-1.5 truncate text-[13px]">
-                  <span
-                    className={cn(
-                      "font-mono font-medium text-[12px] w-4 text-center",
-                      STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-                      isActive && "text-inherit"
-                    )}
-                    title={
-                      STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]
-                    }
-                  >
-                    {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
-                  </span>
-                  <span className="truncate">
-                    <HighlightText text={file.path} highlight={searchQuery} />
-                  </span>
-                </span>
-              </div>
-              <div
-                className={cn(
-                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                  !isActive && "text-[var(--vscode-descriptionForeground)]"
-                )}
-              >
-                {file.additions > 0 && (
-                  <span
-                    className={cn(
-                      "text-git-added-fg",
-                      isActive && "text-inherit"
-                    )}
-                  >
-                    +{file.additions}
-                  </span>
-                )}
-                {file.deletions > 0 && (
-                  <span
-                    className={cn(
-                      "text-git-deleted-fg",
-                      isActive && "text-inherit"
-                    )}
-                  >
-                    −{file.deletions}
-                  </span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   const renderFlatView = () => {
     return (
       <div className="flex flex-col gap-0 p-2">
         {filteredFiles.map((file) => {
           const isSelected = selectedFiles.includes(file.path);
           const isActive = file.path === selectedPath;
+
+          // 确保 checkbox 状态与文件激活状态保持一致
+          if (isActive && !isSelected) {
+            onFileSelect?.(file.path);
+          }
+
           return (
             <div
               key={file.path}
@@ -394,7 +328,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               )}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey) {
-                  onFileSelect?.(file.path);
+                  handleFileSelect(file.path);
                 } else {
                   handleFileClick(file.path);
                 }
