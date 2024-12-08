@@ -127,6 +127,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   // Build tree structure from flat file list
   const fileTree = useMemo(() => {
+    console.log('Building tree from files:', filteredFiles);
+    
     const root: TreeNode = {
       name: "",
       path: "",
@@ -135,34 +137,64 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     };
 
     filteredFiles.forEach((file) => {
-      const parts = file.path.split("/");
+      const parts = file.path.split("/").filter(Boolean); // Remove empty strings
       let current = root;
 
-      parts.forEach((part, index) => {
-        const isFile = index === parts.length - 1;
-        const path = parts.slice(0, index + 1).join("/");
+      // Create directory nodes
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = parts[i];
+        const path = parts.slice(0, i + 1).join("/");
         
         let node = current.children.find((n) => n.name === part);
         
         if (!node) {
           node = {
             name: part,
-            path: path,
-            type: isFile ? "file" : "directory",
+            path,
+            type: "directory",
             children: [],
-            ...(isFile && { file }),
           };
           current.children.push(node);
         }
         
         current = node;
+      }
+
+      // Add file node
+      const fileName = parts[parts.length - 1];
+      const filePath = parts.join("/");
+      current.children.push({
+        name: fileName,
+        path: filePath,
+        type: "file",
+        children: [],
+        file,
       });
     });
 
+    console.log('Built tree structure:', root);
     return root;
   }, [filteredFiles]);
 
+  // Track expanded directories
+  const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set([""]));
+
+  // Toggle directory expansion
+  const toggleDir = (path: string) => {
+    setExpandedDirs((prev) => {
+      const next = new Set(prev);
+      if (next.has(path)) {
+        next.delete(path);
+      } else {
+        next.add(path);
+      }
+      return next;
+    });
+  };
+
   const renderTreeNode = (node: TreeNode, level: number = 0) => {
+    console.log('Rendering node:', { node, level });
+    
     if (node.type === "file" && node.file) {
       const file = node.file;
       const isActive = selectedPath === file.path;
@@ -232,32 +264,44 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       );
     }
 
+    const isExpanded = expandedDirs.has(node.path);
+    const hasChildren = node.children.length > 0;
+
     return (
-      <div key={node.path}>
-        {node.path && (
+      <div key={node.path || "root"}>
+        {(node.path || level > 0) && (
           <div
             style={{ paddingLeft: `${level * 16}px` }}
-            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)]"
+            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)] cursor-pointer hover:bg-[var(--vscode-list-hoverBackground)] rounded-sm"
+            onClick={() => toggleDir(node.path)}
           >
+            {hasChildren && (
+              <i className={cn(
+                "codicon",
+                isExpanded ? "codicon-chevron-down" : "codicon-chevron-right"
+              )} />
+            )}
             <i className="codicon codicon-folder" />
-            <span className="truncate">{node.name}</span>
+            <span className="truncate">{node.name || "/"}</span>
+            {hasChildren && (
+              <span className="ml-1 text-xs opacity-60">
+                ({node.children.length})
+              </span>
+            )}
           </div>
         )}
-        {node.children
-          .sort((a, b) => {
-            // Directories first, then files
-            if (a.type !== b.type) {
-              return a.type === "directory" ? -1 : 1;
-            }
-            return a.name.localeCompare(b.name);
-          })
-          .map((child) => renderTreeNode(child, level + 1))}
+        {isExpanded && node.children.map((child) => renderTreeNode(child, level + 1))}
       </div>
     );
   };
 
   const renderTreeView = () => {
-    return <div className="flex flex-col">{renderTreeNode(fileTree)}</div>;
+    console.log('Rendering tree view with fileTree:', fileTree);
+    return (
+      <div className="flex flex-col">
+        {renderTreeNode(fileTree)}
+      </div>
+    );
   };
 
   const handleFileClick = (path: string) => {
@@ -361,9 +405,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 key={file.path}
                 className={cn(
                   "group flex items-center h-[22px] cursor-pointer select-none",
-                  "hover:bg-[var(--vscode-list-hoverBackground)]",
-                  isActive &&
-                    "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                  isActive
+                    ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                    : "hover:bg-[var(--vscode-list-hoverBackground)]"
                 )}
               >
                 <div
