@@ -68,7 +68,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 }) => {
   const [stats] = useAtom(commitStatsAtom);
   const [selectedPath] = useAtom(selectedFileAtom);
-  const [showDiff] = useAtom(showDiffAtom);
+  const [showDiff, setShowDiff] = useAtom(showDiffAtom);
   const [, selectFile] = useAtom(selectFileAtom);
   const [, updateCommitState] = useAtom(updateCommitStateAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
@@ -118,6 +118,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const handleFileClick = (path: string) => {
     selectFile(path);
+    setShowDiff(true);
     if (onFileSelect) {
       onFileSelect(path);
     }
@@ -151,9 +152,16 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       <div key={status} className="flex flex-col">
         <div className="flex items-center justify-between group h-[22px] px-2">
           <div className="flex items-center gap-2">
-            <span className={cn("flex items-center gap-1 text-[12px] font-medium", STATUS_COLORS[status])}>
+            <span
+              className={cn(
+                "flex items-center gap-1 text-[12px] font-medium",
+                STATUS_COLORS[status]
+              )}
+            >
               <span className="uppercase">{STATUS_LABELS[status]}</span>
-              <span className="text-[var(--vscode-descriptionForeground)]">({files.length})</span>
+              <span className="text-[var(--vscode-descriptionForeground)]">
+                ({files.length})
+              </span>
             </span>
           </div>
           <button
@@ -163,14 +171,18 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               "hover:bg-[var(--vscode-button-secondaryHoverBackground)]"
             )}
             onClick={() => {
-              const allSelected = files.every(f => selectedFiles.includes(f.path));
+              const allSelected = files.every((f) =>
+                selectedFiles.includes(f.path)
+              );
               const newSelectedFiles = allSelected
-                ? selectedFiles.filter(p => !files.some(f => f.path === p))
-                : [...new Set([...selectedFiles, ...files.map(f => f.path)])];
+                ? selectedFiles.filter((p) => !files.some((f) => f.path === p))
+                : [...new Set([...selectedFiles, ...files.map((f) => f.path)])];
               setState({ selectedFiles: newSelectedFiles });
             }}
           >
-            {files.every(f => selectedFiles.includes(f.path)) ? 'Deselect All' : 'Select All'}
+            {files.every((f) => selectedFiles.includes(f.path))
+              ? "Deselect All"
+              : "Select All"}
           </button>
         </div>
 
@@ -184,7 +196,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 className={cn(
                   "group flex items-center h-[22px] px-2 cursor-pointer select-none",
                   "hover:bg-[var(--vscode-list-hoverBackground)]",
-                  isActive && "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                  isActive &&
+                    "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
                 )}
                 onClick={(e) => {
                   if (e.metaKey || e.ctrlKey) {
@@ -195,7 +208,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 }}
               >
                 <div className="flex-1 flex items-center gap-2 min-w-0">
-                  <label 
+                  <label
                     className="flex items-center justify-center w-4 h-4 cursor-pointer"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -208,24 +221,33 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   </label>
                   <span className="flex items-center gap-1.5 truncate text-[13px]">
                     <span className="truncate">
-                      <HighlightText
-                        text={file.path}
-                        highlight={searchQuery}
-                      />
+                      <HighlightText text={file.path} highlight={searchQuery} />
                     </span>
                   </span>
                 </div>
-                <div className={cn(
-                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                  !isActive && "text-[var(--vscode-descriptionForeground)]"
-                )}>
+                <div
+                  className={cn(
+                    "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                    !isActive && "text-[var(--vscode-descriptionForeground)]"
+                  )}
+                >
                   {file.additions > 0 && (
-                    <span className={cn("text-git-added-fg", isActive && "text-inherit")}>
+                    <span
+                      className={cn(
+                        "text-git-added-fg",
+                        isActive && "text-inherit"
+                      )}
+                    >
                       +{file.additions}
                     </span>
                   )}
                   {file.deletions > 0 && (
-                    <span className={cn("text-git-deleted-fg", isActive && "text-inherit")}>
+                    <span
+                      className={cn(
+                        "text-git-deleted-fg",
+                        isActive && "text-inherit"
+                      )}
+                    >
                       −{file.deletions}
                     </span>
                   )}
@@ -250,7 +272,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               className={cn(
                 "group flex items-center h-[22px] px-2 cursor-pointer select-none",
                 "hover:bg-[var(--vscode-list-hoverBackground)]",
-                isActive && "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                isActive &&
+                  "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
               )}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey) {
@@ -261,7 +284,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               }}
             >
               <div className="flex-1 flex items-center gap-2 min-w-0">
-                <label 
+                <label
                   className="flex items-center justify-center w-4 h-4 cursor-pointer"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -273,30 +296,43 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   />
                 </label>
                 <span className="flex items-center gap-1.5 truncate text-[13px]">
-                  <i className={cn(
-                    `codicon codicon-${STATUS_ICONS[file.status]} text-[14px]`,
-                    STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-                    isActive && "text-inherit"
-                  )} />
+                  <i
+                    className={cn(
+                      `codicon codicon-${
+                        STATUS_ICONS[file.status]
+                      } text-[14px]`,
+                      STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                      isActive && "text-inherit"
+                    )}
+                  />
                   <span className="truncate">
-                    <HighlightText
-                      text={file.path}
-                      highlight={searchQuery}
-                    />
+                    <HighlightText text={file.path} highlight={searchQuery} />
                   </span>
                 </span>
               </div>
-              <div className={cn(
-                "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                !isActive && "text-[var(--vscode-descriptionForeground)]"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                  !isActive && "text-[var(--vscode-descriptionForeground)]"
+                )}
+              >
                 {file.additions > 0 && (
-                  <span className={cn("text-git-added-fg", isActive && "text-inherit")}>
+                  <span
+                    className={cn(
+                      "text-git-added-fg",
+                      isActive && "text-inherit"
+                    )}
+                  >
                     +{file.additions}
                   </span>
                 )}
                 {file.deletions > 0 && (
-                  <span className={cn("text-git-deleted-fg", isActive && "text-inherit")}>
+                  <span
+                    className={cn(
+                      "text-git-deleted-fg",
+                      isActive && "text-inherit"
+                    )}
+                  >
                     −{file.deletions}
                   </span>
                 )}
@@ -320,7 +356,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               className={cn(
                 "group flex items-center h-[22px] px-2 cursor-pointer select-none",
                 "hover:bg-[var(--vscode-list-hoverBackground)]",
-                isActive && "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                isActive &&
+                  "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
               )}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey) {
@@ -331,7 +368,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               }}
             >
               <div className="flex-1 flex items-center gap-2 min-w-0">
-                <label 
+                <label
                   className="flex items-center justify-center w-4 h-4 cursor-pointer"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -343,30 +380,43 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   />
                 </label>
                 <span className="flex items-center gap-1.5 truncate text-[13px]">
-                  <i className={cn(
-                    `codicon codicon-${STATUS_ICONS[file.status]} text-[14px]`,
-                    STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-                    isActive && "text-inherit"
-                  )} />
+                  <i
+                    className={cn(
+                      `codicon codicon-${
+                        STATUS_ICONS[file.status]
+                      } text-[14px]`,
+                      STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                      isActive && "text-inherit"
+                    )}
+                  />
                   <span className="truncate">
-                    <HighlightText
-                      text={file.path}
-                      highlight={searchQuery}
-                    />
+                    <HighlightText text={file.path} highlight={searchQuery} />
                   </span>
                 </span>
               </div>
-              <div className={cn(
-                "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
-                !isActive && "text-[var(--vscode-descriptionForeground)]"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center gap-2 pl-2 text-[12px] tabular-nums",
+                  !isActive && "text-[var(--vscode-descriptionForeground)]"
+                )}
+              >
                 {file.additions > 0 && (
-                  <span className={cn("text-git-added-fg", isActive && "text-inherit")}>
+                  <span
+                    className={cn(
+                      "text-git-added-fg",
+                      isActive && "text-inherit"
+                    )}
+                  >
                     +{file.additions}
                   </span>
                 )}
                 {file.deletions > 0 && (
-                  <span className={cn("text-git-deleted-fg", isActive && "text-inherit")}>
+                  <span
+                    className={cn(
+                      "text-git-deleted-fg",
+                      isActive && "text-inherit"
+                    )}
+                  >
                     −{file.deletions}
                   </span>
                 )}
@@ -406,7 +456,10 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               className="w-full search-input"
               placeholder="Filter"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement;
+                setSearchQuery(target.value);
+              }}
             />
           </div>
           <div className="flex items-center gap-2 text-[12px] text-[var(--vscode-descriptionForeground)]">

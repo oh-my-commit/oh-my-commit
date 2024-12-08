@@ -77,16 +77,10 @@ export const DiffViewer: React.FC = () => {
             </span>
           </div>
           <div className="flex items-center gap-2 text-[12px] tabular-nums">
-            <span
-              className="text-git-added-fg"
-              title="Lines added"
-            >
+            <span className="text-git-added-fg" title="Lines added">
               +{selectedFile.additions}
             </span>
-            <span
-              className="text-git-deleted-fg"
-              title="Lines removed"
-            >
+            <span className="text-git-deleted-fg" title="Lines removed">
               -{selectedFile.deletions}
             </span>
           </div>
@@ -107,12 +101,15 @@ export const DiffViewer: React.FC = () => {
           language={language}
           wrapLines={true}
           renderer={({ rows, stylesheet, useInlineStyles }: any) => {
-            const renderNode = (node: any, searchText?: string): React.ReactNode => {
-              if (node.type === 'text') {
+            const renderNode = (
+              node: any,
+              searchText?: string
+            ): React.ReactNode => {
+              if (node.type === "text") {
                 if (searchText) {
                   return (
                     <HighlightText
-                      text={String(node.value || '')}
+                      text={String(node.value || "")}
                       highlight={searchText}
                     />
                   );
@@ -125,7 +122,7 @@ export const DiffViewer: React.FC = () => {
                 if (useInlineStyles) {
                   props.style = props.style || {};
                 } else {
-                  props.className = props.className?.join(' ');
+                  props.className = props.className?.join(" ");
                 }
 
                 return React.createElement(
@@ -143,27 +140,31 @@ export const DiffViewer: React.FC = () => {
             };
 
             return (
-              <pre className={twj("leading-[20px] py-3")} style={stylesheet['pre[class*="language-"]']}>
+              <pre
+                className={"leading-[20px] py-3"}
+                style={stylesheet['pre[class*="language-"]']}
+              >
                 <code style={stylesheet['code[class*="language-"]']}>
-                  {rows.map((row, i) => {
+                  {rows.map((row: { children?: any[] }, i: number) => {
                     const type = lineTypes[i];
                     const lineProps = {
                       key: i,
                       style: {
                         display: "block",
                         width: "100%",
-                        backgroundColor: type === "addition"
-                          ? "var(--vscode-diffEditor-insertedTextBackground)"
-                          : type === "deletion"
-                          ? "var(--vscode-diffEditor-removedTextBackground)"
-                          : "",
+                        backgroundColor:
+                          type === "addition"
+                            ? "var(--vscode-diffEditor-insertedTextBackground)"
+                            : type === "deletion"
+                            ? "var(--vscode-diffEditor-removedTextBackground)"
+                            : "",
                       },
                       className: "group hover:bg-editor-line-highlight",
                     };
 
                     return (
                       <div {...lineProps}>
-                        {row.children?.map((child, j) => (
+                        {row.children?.map((child: any, j: number) => (
                           <React.Fragment key={j}>
                             {renderNode(child, searchQuery || undefined)}
                           </React.Fragment>
