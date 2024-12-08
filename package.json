@@ -176,7 +176,8 @@
     "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "lint": "eslint src --ext ts",
     "test": "vitest",
-    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts"
+    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
+    "gen-toc": "markdown-toc -i CONTRIBUTING.md"
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -192,6 +193,7 @@
     "commander": "^12.1.0",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
+    "markdown-toc": "^1.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
