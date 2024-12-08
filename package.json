@@ -188,6 +188,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@cs-magic/md-toc": "^0.5.1",
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
     "chalk": "^4.1.2",
