@@ -106,7 +106,7 @@ interface ModelConfig {
 
 命令行工具需要提供以下基本功能：
 
-```bash
+```zsh
 # 注册方案
 $ [tool-name] register
 

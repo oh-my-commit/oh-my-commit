@@ -1,4 +1,4 @@
-# Commit Message Format
+# Commit Specification
 
 Write clear and meaningful commit messages that describe your changes.
 
