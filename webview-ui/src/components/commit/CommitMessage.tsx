@@ -4,7 +4,10 @@ import {
   VSCodeDivider,
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
-import { COMMON_COMMIT_TYPES, EXTENDED_COMMIT_TYPES } from "../../constants/commitTypes";
+import {
+  COMMON_COMMIT_TYPES,
+  EXTENDED_COMMIT_TYPES,
+} from "../../constants/commitTypes";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -12,69 +15,87 @@ const MAX_DETAIL_LENGTH = 1000;
 interface CommitMessageProps {
   message: string;
   detail: string;
-  onMessageChange: (message: string) => void;
-  onDetailChange: (detail: string) => void;
-  onCommit: () => void;
   selectedFilesCount: number;
+  commitType?: string;
+  onMessageChange: (value: string) => void;
+  onDetailChange: (value: string) => void;
+  onCommit: () => void;
+  onFeedback?: (
+    type: "type" | "content" | "regenerate" | "other",
+    details?: string
+  ) => void;
   disabled?: boolean;
 }
 
 const TypeBadge = ({
   type,
-  label,
-  description,
-  isSelected,
-  onClick,
+  onTypeChange,
 }: {
   type: string;
-  label: string;
-  description: string;
-  isSelected: boolean;
-  onClick: () => void;
+  onTypeChange?: (type: string) => void;
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const commitType = [...COMMON_COMMIT_TYPES, ...EXTENDED_COMMIT_TYPES].find(
+    (t) => t.value === type
+  );
 
-  const handleMouseEnter = () => {
-    timeoutRef.current = setTimeout(() => {
-      setShowTooltip(true);
-    }, 500);
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
 
-  const handleMouseLeave = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setShowTooltip(false);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  if (!commitType) return null;
+
+  const handleFeedback = () => {
+    setShowMenu(false);
+    onTypeChange?.(type);
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
-        className={`
-          px-2 py-1 text-[11px] rounded-sm transition-all duration-150 ease-in-out
-          ${isSelected 
-            ? "bg-[var(--vscode-toolbar-activeBackground)] text-[var(--vscode-foreground)] font-medium" 
-            : "text-[var(--vscode-descriptionForeground)] hover:text-[var(--vscode-foreground)]"
-          }
-          hover:bg-[var(--vscode-toolbar-hoverBackground)]
-        `}
-        onClick={onClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className="px-2 py-1 text-[11px] rounded-sm inline-flex items-center gap-1.5 select-none hover:bg-[var(--vscode-badge-background)] group transition-colors"
+        onClick={() => setShowMenu(!showMenu)}
+        style={{
+          backgroundColor: showMenu
+            ? "var(--vscode-badge-background)"
+            : "var(--vscode-badge-background)",
+          color: "var(--vscode-badge-foreground)",
+        }}
       >
-        {label}
+        <span className="opacity-80">{commitType.label.split(" ")[0]}</span>
+        <span className="font-medium">{type}</span>
+        <span className="text-[8px] opacity-60 group-hover:opacity-100">▼</span>
       </button>
-      {showTooltip && (
+
+      {showMenu && (
         <div
-          className="absolute z-50 p-2 text-xs rounded-sm shadow-lg whitespace-nowrap top-full left-1/2 transform -translate-x-1/2 mt-1.5 min-w-[200px]"
+          className="absolute right-0 top-full mt-1 z-50 min-w-[200px] py-1 rounded-sm shadow-lg"
           style={{
             backgroundColor: "var(--vscode-input-background)",
             border: "1px solid var(--vscode-input-border)",
           }}
         >
-          <div className="font-medium mb-1">{label}</div>
-          <div className="text-[var(--vscode-descriptionForeground)]">{description}</div>
+          <div className="px-2 py-1.5 border-b border-[var(--vscode-input-border)]">
+            <div className="text-xs font-medium mb-1">Current Type</div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)]">
+              {commitType.description}
+            </div>
+          </div>
+          <button
+            className="w-full px-2 py-1.5 text-left text-[11px] hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-errorForeground)] flex items-center gap-2"
+            onClick={handleFeedback}
+          >
+            <span>⚠️</span>
+            <span>This type seems incorrect</span>
+          </button>
         </div>
       )}
     </div>
@@ -236,30 +257,160 @@ const CommitFormatTooltip = () => (
   </div>
 );
 
+const TypeBadgeNew = ({ type }: { type: string }) => {
+  const commitType = [...COMMON_COMMIT_TYPES, ...EXTENDED_COMMIT_TYPES].find(
+    (t) => t.value === type
+  );
+
+  if (!commitType) return null;
+
+  return (
+    <div
+      className="px-2 py-1 text-[11px] rounded-sm inline-flex items-center gap-1 select-none"
+      style={{
+        backgroundColor: "var(--vscode-badge-background)",
+        color: "var(--vscode-badge-foreground)",
+      }}
+    >
+      <span className="opacity-80">{commitType.label.split(" ")[0]}</span>
+      <span className="font-medium">{type}</span>
+    </div>
+  );
+};
+
+const FeedbackButton = ({
+  onFeedback,
+  disabled,
+}: {
+  onFeedback?: (
+    type: "type" | "content" | "regenerate" | "other",
+    details?: string
+  ) => void;
+  disabled?: boolean;
+}) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleFeedback = (
+    type: "type" | "content" | "regenerate" | "other"
+  ) => {
+    onFeedback?.(type);
+    setShowMenu(false);
+  };
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        className={`px-4 py-[6px] text-sm rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
+          disabled
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
+        } text-[var(--vscode-descriptionForeground)]`}
+        onClick={() => !disabled && setShowMenu(!showMenu)}
+        disabled={disabled}
+      >
+        <span>Improve</span>
+      </button>
+
+      {showMenu && (
+        <div
+          className="absolute right-0 top-full mt-1 z-50 min-w-[240px] py-1 rounded-sm shadow-lg"
+          style={{
+            backgroundColor: "var(--vscode-input-background)",
+            border: "1px solid var(--vscode-input-border)",
+          }}
+        >
+          <div className="px-3 py-2 border-b border-[var(--vscode-input-border)]">
+            <div className="text-xs font-medium mb-1">Suggest Improvements</div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)]">
+              Help AI generate better commit messages
+            </div>
+          </div>
+          <button
+            className="w-full px-3 py-2 text-left hover:bg-[var(--vscode-toolbar-hoverBackground)] group"
+            onClick={() => handleFeedback("type")}
+          >
+            <div className="flex items-center gap-2 text-[11px] font-medium">
+              <span>🏷️</span>
+              <span>Incorrect Commit Type</span>
+            </div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)] pl-6 mt-0.5 group-hover:text-[var(--vscode-foreground)]">
+              The selected type doesn't match the changes
+            </div>
+          </button>
+          <button
+            className="w-full px-3 py-2 text-left hover:bg-[var(--vscode-toolbar-hoverBackground)] group"
+            onClick={() => handleFeedback("content")}
+          >
+            <div className="flex items-center gap-2 text-[11px] font-medium">
+              <span>📝</span>
+              <span>Enhance Message</span>
+            </div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)] pl-6 mt-0.5 group-hover:text-[var(--vscode-foreground)]">
+              Message could be clearer or more descriptive
+            </div>
+          </button>
+          <button
+            className="w-full px-3 py-2 text-left hover:bg-[var(--vscode-toolbar-hoverBackground)] group"
+            onClick={() => handleFeedback("regenerate")}
+          >
+            <div className="flex items-center gap-2 text-[11px] font-medium">
+              <span>🔄</span>
+              <span>Regenerate Message</span>
+            </div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)] pl-6 mt-0.5 group-hover:text-[var(--vscode-foreground)]">
+              Start over with a new commit message
+            </div>
+          </button>
+          <div className="border-t border-[var(--vscode-input-border)] my-1"></div>
+          <button
+            className="w-full px-3 py-2 text-left hover:bg-[var(--vscode-toolbar-hoverBackground)] group"
+            onClick={() => handleFeedback("other")}
+          >
+            <div className="flex items-center gap-2 text-[11px] font-medium">
+              <span>💡</span>
+              <span>Provide Other Feedback</span>
+            </div>
+            <div className="text-[11px] text-[var(--vscode-descriptionForeground)] pl-6 mt-0.5 group-hover:text-[var(--vscode-foreground)]">
+              Share additional suggestions or concerns
+            </div>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export function CommitMessage({
   message,
   detail,
   selectedFilesCount,
+  commitType = "feat",
   onMessageChange,
   onDetailChange,
   onCommit,
+  onFeedback,
   disabled,
 }: CommitMessageProps) {
-  const [selectedType, setSelectedType] = useState<string>("feat");
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showExtended, setShowExtended] = useState(false);
   const tooltipContainerRef = useRef<HTMLDivElement>(null);
   const subjectLength = message.length;
   const isSubjectValid =
     subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH;
 
-  const handleTypeSelect = (type: string) => {
-    setSelectedType(type);
-    setShowExtended(false);
-  };
-
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-3 bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-base font-medium text-[var(--vscode-editor-foreground)]">
@@ -276,96 +427,55 @@ export function CommitMessage({
             {showTooltip && <CommitFormatTooltip />}
           </div>
         </div>
-        <div className="text-xs text-[var(--vscode-descriptionForeground)]">
-          {selectedFilesCount} file{selectedFilesCount !== 1 ? "s" : ""} selected
-        </div>
       </div>
 
-      <div className="flex flex-col gap-3 bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]">
-        <div>
-          <div className="text-xs font-medium mb-2 text-[var(--vscode-input-foreground)]">
-            Type
-          </div>
-          <div className="flex flex-wrap gap-1.5 items-center">
-            {COMMON_COMMIT_TYPES.map((type) => (
-              <TypeBadge
-                key={type.value}
-                type={type.value}
-                label={type.label}
-                description={type.description}
-                isSelected={selectedType === type.value}
-                onClick={() => handleTypeSelect(type.value)}
-              />
-            ))}
-            <button
-              className={`
-                px-2 py-1 text-[11px] rounded-sm transition-all duration-150 ease-in-out
-                text-[var(--vscode-descriptionForeground)] hover:text-[var(--vscode-foreground)]
-                hover:bg-[var(--vscode-toolbar-hoverBackground)]
-                ${showExtended ? "bg-[var(--vscode-toolbar-activeBackground)] text-[var(--vscode-foreground)]" : ""}
-              `}
-              onClick={() => setShowExtended(!showExtended)}
-            >
-              {showExtended ? "Less ▲" : "More ▼"}
-            </button>
-          </div>
-          {showExtended && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {EXTENDED_COMMIT_TYPES.map((type) => (
-                <TypeBadge
-                  key={type.value}
-                  type={type.value}
-                  label={type.label}
-                  description={type.description}
-                  isSelected={selectedType === type.value}
-                  onClick={() => handleTypeSelect(type.value)}
-                />
-              ))}
-            </div>
-          )}
+      <div className="flex flex-col gap-1.5">
+        <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+          Summary
         </div>
-
-        <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-            Summary
-          </div>
-          <MessageInput
-            value={message}
-            maxLength={MAX_SUBJECT_LENGTH}
-            placeholder="Write a brief description of your changes"
-            onChange={onMessageChange}
-            className="h-[32px]"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-            Details
-          </div>
-          <MessageInput
-            value={detail}
-            maxLength={MAX_DETAIL_LENGTH}
-            placeholder="Add a detailed description of your changes (optional)"
-            onChange={onDetailChange}
-            className="min-h-[120px]"
-            multiline
-          />
-        </div>
+        <MessageInput
+          value={message}
+          maxLength={MAX_SUBJECT_LENGTH}
+          placeholder="Write a brief description of your changes"
+          onChange={onMessageChange}
+          className="h-[32px]"
+        />
       </div>
 
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex flex-col gap-1.5">
+        <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+          Details
+        </div>
+        <MessageInput
+          value={detail}
+          maxLength={MAX_DETAIL_LENGTH}
+          placeholder="Add a detailed description of your changes (optional)"
+          onChange={onDetailChange}
+          className="min-h-[120px]"
+          multiline
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
         {!isSubjectValid && subjectLength > 0 && (
           <span className="text-[11px] text-[var(--vscode-errorForeground)]">
             Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
           </span>
         )}
 
-        <VSCodeButton
-          disabled={!isSubjectValid || disabled}
-          onClick={onCommit}
-        >
-          Commit Changes
-        </VSCodeButton>
+        <div className="flex items-center gap-2 ml-auto">
+          <FeedbackButton
+            onFeedback={onFeedback}
+            disabled={!message || disabled}
+          />
+
+          <VSCodeButton
+            disabled={!isSubjectValid || disabled}
+            onClick={onCommit}
+          >
+            Commit Changes
+          </VSCodeButton>
+        </div>
       </div>
     </section>
   );
