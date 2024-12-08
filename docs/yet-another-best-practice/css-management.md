@@ -2,7 +2,7 @@
 
 <!-- toc -->
 
-  - [VSCode Theme Integration](#vscode-theme-integration)
+[VSCode Theme Integration](#vscode-theme-integration)
 
 <!-- tocstop -->
 

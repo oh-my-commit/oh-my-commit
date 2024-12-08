@@ -2,7 +2,7 @@
 
 <!-- toc -->
 
-  - [Examples](#examples)
+[Examples](#examples)
 
 <!-- tocstop -->
 
