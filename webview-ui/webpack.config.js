@@ -43,10 +43,19 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
         },
         {
+          test: /\.md$/,
+          type: 'asset/source'
+        },
+        {
           test: /\.css$/,
           use: [
             'style-loader',
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1
+              }
+            },
             'postcss-loader'
           ],
         },

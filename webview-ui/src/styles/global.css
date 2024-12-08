@@ -6,10 +6,12 @@
 /* Import codicons */
 @import "@vscode/codicons/dist/codicon.css";
 
+@import "./markdown.css";
+
 /* Root styles */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   line-height: 1.5;
   font-weight: 400;

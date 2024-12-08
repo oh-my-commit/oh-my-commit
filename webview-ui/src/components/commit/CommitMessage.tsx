@@ -3,12 +3,16 @@ import {
   VSCodeButton,
   VSCodeDivider,
   VSCodeTextField,
+  VSCodeTextArea,
 } from "@vscode/webview-ui-toolkit/react";
 import {
   COMMON_COMMIT_TYPES,
   EXTENDED_COMMIT_TYPES,
 } from "../../constants/commitTypes";
 import { Section } from "../layout/Section";
+import cn from "classnames";
+import Markdown from "marked-react";
+import { loadMarkdown } from "../../utils/loadMarkdown";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -45,94 +49,53 @@ const MessageInput = ({
   className?: string;
   multiline?: boolean;
 }) => {
-  const length = value.length;
-  const isOverLimit = length > maxLength;
-
-  if (!multiline) {
-    return (
-      <div className="relative">
-        <VSCodeTextField
-          value={value}
-          onChange={(e) => onChange((e.target as HTMLInputElement).value)}
-          placeholder={placeholder}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey && onEnter) {
-              e.preventDefault();
-              onEnter();
-            }
-          }}
-          className={className}
-          style={
-            {
-              width: "100%",
-              ...(isOverLimit
-                ? {
-                    "--vscode-inputValidation-errorBorder":
-                      "var(--vscode-errorForeground)",
-                  }
-                : {}),
-            } as React.CSSProperties
-          }
-        />
-        <div
-          className="absolute right-2 bottom-1.5 px-1 text-[10px] rounded"
-          style={{
-            color: isOverLimit
-              ? "var(--vscode-inputValidation-errorForeground)"
-              : "var(--vscode-descriptionForeground)",
-            backgroundColor: "var(--vscode-input-background)",
-            opacity: 0.8,
-          }}
-        >
-          {length}/{maxLength}
-        </div>
-      </div>
-    );
-  }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && onEnter) {
+      e.preventDefault();
+      onEnter();
+    }
+  };
 
   return (
-    <div className="relative">
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey && onEnter) {
-            e.preventDefault();
-            onEnter();
+    <div className="relative group">
+      <style>
+        {`
+          .message-textarea::part(control) {
+            min-height: 120px;
+            resize: vertical;
+            overflow-y: auto;
           }
-        }}
-        className={`w-full resize-none rounded-[3px] px-2 py-1 ${className}`}
-        style={{
-          backgroundColor: "var(--vscode-input-background)",
-          border: `1px solid ${
-            isOverLimit
-              ? "var(--vscode-inputValidation-errorBorder)"
-              : "var(--vscode-input-border)"
-          }`,
-          color: "var(--vscode-input-foreground)",
-          outline: "none",
-          fontFamily: "var(--vscode-font-family)",
-          fontSize: "var(--vscode-font-size)",
-          lineHeight: "var(--vscode-line-height)",
-          minHeight: "60px",
-          "&::placeholder": {
-            color: "var(--vscode-input-placeholderForeground)",
-            opacity: 0.5,
-          },
-        }}
-      />
-      <div
-        className="absolute right-2 bottom-1.5 px-1 text-[10px] rounded"
-        style={{
-          color: isOverLimit
-            ? "var(--vscode-inputValidation-errorForeground)"
-            : "var(--vscode-descriptionForeground)",
-          backgroundColor: "var(--vscode-input-background)",
-          opacity: 0.8,
-        }}
-      >
-        {length}/{maxLength}
+        `}
+      </style>
+      {multiline ? (
+        <VSCodeTextArea
+          className={cn("w-full message-textarea", className)}
+          value={value}
+          placeholder={placeholder}
+          onKeyDown={handleKeyDown}
+          onChange={(e) => {
+            const newValue = (e.target as HTMLTextAreaElement).value;
+            if (newValue.length <= maxLength) {
+              onChange(newValue);
+            }
+          }}
+        />
+      ) : (
+        <VSCodeTextField
+          className={cn("w-full", className)}
+          value={value}
+          placeholder={placeholder}
+          onKeyDown={handleKeyDown}
+          onChange={(e) => {
+            const newValue = (e.target as HTMLInputElement).value;
+            if (newValue.length <= maxLength) {
+              onChange(newValue);
+            }
+          }}
+        />
+      )}
+      <div className="absolute right-2 bottom-1 text-[10px] text-[var(--vscode-descriptionForeground)] opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        {value.length}/{maxLength}
       </div>
     </div>
   );
@@ -150,38 +113,59 @@ const InfoIcon = () => (
   </svg>
 );
 
-const CommitFormatTooltip = () => (
-  <div
-    className="absolute z-50 p-1.5 text-[11px] rounded shadow-lg border border-[var(--vscode-widget-border)]"
-    style={{
-      backgroundColor: "var(--vscode-menu-background)",
-      color: "var(--vscode-menu-foreground)",
-      width: "240px",
-      right: "-4px",
-      top: "calc(100% + 4px)",
-    }}
-  >
-    <div className="font-medium mb-1">Commit Message Format</div>
-    <div className="space-y-0.5 opacity-90">
-      <div className="flex gap-1.5">
-        <span className="opacity-60">•</span>
-        <span>First line: [type]: [concise description]</span>
-      </div>
-      <div className="flex gap-1.5">
-        <span className="opacity-60">•</span>
-        <span>Leave a blank line after the subject</span>
-      </div>
-      <div className="flex gap-1.5">
-        <span className="opacity-60">•</span>
-        <span>Detailed description: what, why, and how</span>
-      </div>
-      <div className="flex gap-1.5">
-        <span className="opacity-60">•</span>
-        <span>Use present tense ("add feature" not "added feature")</span>
+const CommitFormatTooltip = () => {
+  const [markdown, setMarkdown] = useState("");
+
+  useEffect(() => {
+    const content = loadMarkdown('commit-format');
+    setMarkdown(content);
+  }, []);
+
+  const renderer = {
+    code(code: string, language: string) {
+      return (
+        <div className="code-block" key={`${language}-${code.slice(0, 20)}`}>
+          <div className="code-block-header">
+            {language || 'text'}
+          </div>
+          <pre>
+            <code>{code}</code>
+          </pre>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div
+      className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]"
+      style={{ pointerEvents: "auto" }}
+    >
+      <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3 markdown-content">
+        <Markdown value={markdown} renderer={renderer} />
+        <div className="pt-2 border-t border-[var(--vscode-widget-border)]">
+          <a
+            href="https://www.conventionalcommits.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)] hover:underline"
+            onClick={(e) => {
+              e.preventDefault();
+              const vscode = acquireVsCodeApi();
+              vscode.postMessage({
+                command: "openUrl",
+                data: "https://www.conventionalcommits.org"
+              });
+            }}
+          >
+            Learn more about Conventional Commits
+            <i className="codicon codicon-link-external text-[10px]" />
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const FeedbackButton = ({
   onFeedback,
@@ -314,6 +298,17 @@ export function CommitMessage({
   const isSubjectValid =
     subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH;
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tooltipContainerRef.current && !tooltipContainerRef.current.contains(event.target as Node)) {
+        setShowTooltip(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <Section
       title="Commit Message"
@@ -321,8 +316,7 @@ export function CommitMessage({
         <div className="relative" ref={tooltipContainerRef}>
           <button
             className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
+            onClick={() => setShowTooltip(!showTooltip)}
           >
             <InfoIcon />
           </button>
