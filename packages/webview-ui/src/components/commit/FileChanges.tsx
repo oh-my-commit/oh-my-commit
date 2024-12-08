@@ -116,6 +116,150 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     return groups;
   }, [filteredFiles]);
 
+  // Tree node type for file tree structure
+  interface TreeNode {
+    name: string;
+    path: string;
+    type: "file" | "directory";
+    children: TreeNode[];
+    file?: FileChange;
+  }
+
+  // Build tree structure from flat file list
+  const fileTree = useMemo(() => {
+    const root: TreeNode = {
+      name: "",
+      path: "",
+      type: "directory",
+      children: [],
+    };
+
+    filteredFiles.forEach((file) => {
+      const parts = file.path.split("/");
+      let current = root;
+
+      parts.forEach((part, index) => {
+        const isFile = index === parts.length - 1;
+        const path = parts.slice(0, index + 1).join("/");
+        
+        let node = current.children.find((n) => n.name === part);
+        
+        if (!node) {
+          node = {
+            name: part,
+            path: path,
+            type: isFile ? "file" : "directory",
+            children: [],
+            ...(isFile && { file }),
+          };
+          current.children.push(node);
+        }
+        
+        current = node;
+      });
+    });
+
+    return root;
+  }, [filteredFiles]);
+
+  const renderTreeNode = (node: TreeNode, level: number = 0) => {
+    if (node.type === "file" && node.file) {
+      const file = node.file;
+      const isActive = selectedPath === file.path;
+      const isSelected = selectedFiles.includes(file.path);
+      const status = file.status || "default";
+
+      return (
+        <div
+          key={file.path}
+          style={{ paddingLeft: `${level * 16}px` }}
+          className={cn(
+            "flex items-center gap-2 px-2 py-1 rounded-sm cursor-pointer group",
+            isActive && "bg-[var(--vscode-list-activeSelectionBackground)]",
+            !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]"
+          )}
+          onClick={() => {
+            selectFile(file.path);
+            onFileSelect?.(file.path);
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => {
+              updateCommitState({
+                selectedFiles: e.target.checked
+                  ? [...selectedFiles, file.path]
+                  : selectedFiles.filter((p) => p !== file.path),
+              });
+            }}
+          />
+          <span
+            className={cn(
+              STATUS_COLORS[status],
+              isActive && "text-inherit"
+            )}
+            title={STATUS_LABELS[status]}
+          >
+            {STATUS_LETTERS[status]}
+          </span>
+          <span className="flex-1 truncate">
+            <HighlightText text={node.name} highlight={searchQuery} />
+          </span>
+          <div className="flex items-center gap-1 text-xs opacity-60">
+            {file.additions > 0 && (
+              <span
+                className={cn(
+                  "text-git-added-fg",
+                  isActive && "text-inherit"
+                )}
+              >
+                +{file.additions}
+              </span>
+            )}
+            {file.deletions > 0 && (
+              <span
+                className={cn(
+                  "text-git-deleted-fg",
+                  isActive && "text-inherit"
+                )}
+              >
+                −{file.deletions}
+              </span>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={node.path}>
+        {node.path && (
+          <div
+            style={{ paddingLeft: `${level * 16}px` }}
+            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)]"
+          >
+            <i className="codicon codicon-folder" />
+            <span className="truncate">{node.name}</span>
+          </div>
+        )}
+        {node.children
+          .sort((a, b) => {
+            // Directories first, then files
+            if (a.type !== b.type) {
+              return a.type === "directory" ? -1 : 1;
+            }
+            return a.name.localeCompare(b.name);
+          })
+          .map((child) => renderTreeNode(child, level + 1))}
+      </div>
+    );
+  };
+
+  const renderTreeView = () => {
+    return <div className="flex flex-col">{renderTreeNode(fileTree)}</div>;
+  };
+
   const handleFileClick = (path: string) => {
     if (path === selectedPath) {
       // 如果点击的是当前选中的文件，取消选中
@@ -506,7 +650,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         <div className="flex-1 overflow-auto px-2">
           {viewMode === "flat" && renderFlatView()}
           {viewMode === "grouped" && renderGroupedView()}
-          {viewMode === "tree" && <div>Tree view coming soon...</div>}
+          {viewMode === "tree" && renderTreeView()}
         </div>
       </Section.Content>
 
