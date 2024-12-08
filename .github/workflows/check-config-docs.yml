@@ -3,20 +3,20 @@ name: Check Config Documentation
 on:
   push:
     paths:
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'README.md'
-      - 'scripts/generate-config-docs.ts'
-      - '.github/workflows/check-config-docs.yml'
-      - 'docs/**'
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "README.md"
+      - "scripts/generate-config-docs.ts"
+      - ".github/workflows/check-config-docs.yml"
+      - "docs/**"
   pull_request:
     paths:
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'README.md'
-      - 'scripts/generate-config-docs.ts'
-      - '.github/workflows/check-config-docs.yml'
-      - 'docs/**'
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "README.md"
+      - "scripts/generate-config-docs.ts"
+      - ".github/workflows/check-config-docs.yml"
+      - "docs/**"
 
 jobs:
   check-config-docs:
@@ -36,8 +36,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'pnpm'
+          node-version: "18"
+          cache: "pnpm"
 
       - name: Get pnpm store directory
         shell: bash
@@ -59,22 +59,22 @@ jobs:
 
       - name: Generate temporary config docs
         run: |
-          pnpm tsx scripts/generate-config-docs.ts -o temp-config.md --section "## 配置项"
-          
+          pnpm gen-docs -o temp-config.md --section "## 配置项"
+
       - name: Check if docs are in sync
         run: |
           # 从 README.md 提取配置部分
           awk '/^## 配置项$/,/^##[^#]/' README.md > current-config.md
-          
+
           # 比较生成的配置和当前配置
           if ! diff -q current-config.md temp-config.md > /dev/null; then
             echo "::error::Configuration documentation is out of sync with package.json"
             echo "Please run 'pnpm gen-docs' to update the documentation"
             exit 1
           fi
-          
+
           echo "Configuration documentation is in sync with package.json "
-          
+
       - name: Cleanup temporary files
         if: always()
         run: |
