@@ -1,4 +1,7 @@
 const path = require("path");
+const webpack = require('webpack');
+const https = require('https');
+const fs = require('fs');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
@@ -44,7 +47,8 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.md$/,
-          type: 'asset/source'
+          type: 'asset/source',
+          use: 'raw-loader'
         },
         {
           test: /\.css$/,
@@ -73,5 +77,27 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
+    plugins: [
+      new webpack.NormalModuleReplacementPlugin(
+        /^@github-md:(.*)$/,
+        (resource) => {
+          const githubUrl = resource.request.replace('@github-md:', '');
+          resource.request = path.resolve(__dirname, `.temp/${path.basename(githubUrl)}`);
+          
+          // 在编译时下载文件
+          if (!fs.existsSync('.temp')) {
+            fs.mkdirSync('.temp');
+          }
+          
+          https.get(githubUrl, (response) => {
+            let data = '';
+            response.on('data', (chunk) => data += chunk);
+            response.on('end', () => {
+              fs.writeFileSync(resource.request, data);
+            });
+          });
+        }
+      )
+    ]
   };
 };
