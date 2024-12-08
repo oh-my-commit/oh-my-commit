@@ -36,7 +36,7 @@
 
 2. **API 规范**
 
-   所有底层实现必须严格遵循我们的 API 规范（`api-spec.md`）。这确保了代码的一致性和可维护性。
+   所有底层实现必须严格遵循我们的 [API 规范](docs/api-spec.md)，这确保了代码的一致性和可维护性。
 
 3. **Commit 规范**
    - [Commit 规范](docs/yet-another-best-practice/commit-specification.md)
