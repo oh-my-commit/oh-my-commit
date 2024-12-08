@@ -42,6 +42,9 @@ importers:
       esbuild:
         specifier: ^0.24.0
         version: 0.24.0
+      husky:
+        specifier: ^8.0.3
+        version: 8.0.3
       markdown-toc:
         specifier: ^1.2.0
         version: 1.2.0
@@ -357,6 +360,11 @@ packages:
   handlebars@4.7.8:
     resolution: {integrity: sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==}
     engines: {node: '>=0.4.7'}
+    hasBin: true
+
+  husky@8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
+    engines: {node: '>=14'}
     hasBin: true
 
   inherits@2.0.4:
@@ -837,6 +845,8 @@ snapshots:
       wordwrap: 1.0.0
     optionalDependencies:
       uglify-js: 3.19.3
+
+  husky@8.0.3: {}
 
   inherits@2.0.4: {}
 
