@@ -6,11 +6,15 @@ on:
       - 'package.json'
       - 'README.md'
       - 'scripts/generate-config-docs.ts'
+      - '.github/workflows/check-config-docs.yml'
+      - 'docs/**'
   pull_request:
     paths:
       - 'package.json'
       - 'README.md'
       - 'scripts/generate-config-docs.ts'
+      - '.github/workflows/check-config-docs.yml'
+      - 'docs/**'
 
 jobs:
   check-config-docs:
