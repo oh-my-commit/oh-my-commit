@@ -177,7 +177,8 @@
     "lint": "eslint src --ext ts",
     "test": "vitest",
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
-    "gen-toc": "markdown-toc -i CONTRIBUTING.md"
+    "gen-toc": "markdown-toc -i README.md && markdown-toc -i CONTRIBUTING.md && markdown-toc -i FAQ.md",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -193,6 +194,7 @@
     "commander": "^12.1.0",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
+    "husky": "^8.0.3",
     "markdown-toc": "^1.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
