@@ -58,3 +58,36 @@
 - Better touch targets improve usability
 - More efficient use of vertical space
 - Smoother interaction with clear visual feedback
+
+## 2024-12-09 04:54:20+08:00
+
+### UI Enhancement: Simplified File List Interaction 
+
+**Problem:**
+- File list interactions were complex with multiple click handlers
+- Checkbox area had separate click handling logic
+- Overall interaction model needed simplification
+
+**Solution:**
+- Unified click handling at the row level:
+  - Normal click: Toggle file expansion
+  - Cmd/Ctrl + click: Toggle file selection
+- Simplified checkbox implementation:
+  - Made checkbox purely presentational (readOnly)
+  - Removed separate click handlers
+  - Maintained visual feedback
+- Optimized layout:
+  - Consistent 32px row height
+  - Clear visual hierarchy
+  - Efficient space usage
+
+**Files Changed:**
+- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+  - Simplified event handling logic
+  - Unified interaction model
+  - Improved code organization
+
+**Notes:**
+- More intuitive and predictable behavior
+- Reduced code complexity while maintaining functionality
+- Better aligned with standard UI patterns

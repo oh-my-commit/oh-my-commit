@@ -388,28 +388,26 @@ export const FileChanges: React.FC<FileChangesProps> = ({
               key={file.path}
               className={cn(
                 "group flex items-center h-[32px] select-none",
-                "hover:bg-[var(--vscode-list-hoverBackground)]",
-                isActive &&
-                  "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                isActive
+                  ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
+                  : "hover:bg-[var(--vscode-list-hoverBackground)]"
               )}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey) {
+                  onFileSelect?.(file.path);
+                } else {
+                  handleFileClick(file.path);
+                }
+              }}
             >
               <div className="flex-1 flex items-center min-w-0 h-full">
-                <div
-                  className="flex items-center justify-center w-8 h-full cursor-pointer hover:bg-[var(--vscode-list-hoverBackground)]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onFileSelect?.(file.path);
-                  }}
-                >
+                <div className="flex items-center justify-center w-8 h-full">
                   <div className="w-3 h-3 relative">
                     <input
                       type="checkbox"
                       className="absolute inset-0 cursor-pointer opacity-0 w-full h-full"
                       checked={isSelected}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        onFileSelect?.(file.path);
-                      }}
+                      readOnly
                     />
                     <div
                       className={cn(
@@ -436,15 +434,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                     )}
                   </div>
                 </div>
-                <div
-                  className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2"
-                  onClick={(e) => {
-                    if (!e.metaKey && !e.ctrlKey) {
-                      e.stopPropagation();
-                      handleFileClick(file.path);
-                    }
-                  }}
-                >
+                <div className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2">
                   <span
                     className={cn(
                       "font-mono font-medium text-[12px] w-4 text-center",
