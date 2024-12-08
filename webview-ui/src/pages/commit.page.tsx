@@ -49,7 +49,7 @@ export function CommitPage() {
   );
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="w-full h-full flex flex-col">
       <div className="flex-1 flex flex-col min-h-0 p-3 space-y-3">
         <CommitMessage
           message={message}
