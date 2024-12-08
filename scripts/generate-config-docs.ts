@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { z } from "zod";
+import { Command } from "commander";
 
 type VSCodeConfigurationItem = {
   type: string;
@@ -35,7 +36,7 @@ function loadPackageConfig() {
 // 生成配置表格
 function generateConfigTable() {
   const properties = loadPackageConfig();
-  let table = "| key | 类型 | 默认值 | 说明 | 可选值 |\n";
+  let table = "| 配置项 | 类型 | 默认值 | 说明 | 可选值 |\n";
   table += "| --- | --- | --- | --- | --- |\n";
 
   // 按 order 排序
@@ -66,7 +67,7 @@ function generateConfigTable() {
         .map((enumValue) => `• \`${enumValue}\``)
         .join("<br>");
     } else if (type === "boolean") {
-      options = "`bool`";
+      options = "`true / false`";
     }
 
     table += `| \`${key}\` | ${type} | ${defaultValue} | ${description} | ${options} |\n`;
@@ -76,38 +77,38 @@ function generateConfigTable() {
 }
 
 // 命令行参数解析
-const argsSchema = z.object({
-  outputPath: z.string().optional(),
-  sectionTitle: z.string().default("配置项"),
-}).transform(args => ({
-  ...args,
-  // 如果提供了路径，转换为绝对路径
-  outputPath: args.outputPath ? path.resolve(process.cwd(), args.outputPath) : undefined,
-}));
+const argsSchema = z
+  .object({
+    outputPath: z.string().optional(),
+    sectionTitle: z.string(),
+  })
+  .transform((args) => ({
+    ...args,
+    // 如果提供了路径，转换为绝对路径
+    outputPath: args.outputPath
+      ? path.resolve(process.cwd(), args.outputPath)
+      : undefined,
+  }));
 
 type Args = z.infer<typeof argsSchema>;
 
 function parseArgs(): Args {
-  const args = process.argv.slice(2);
-  const argPairs = new Map<string, string>();
+  const program = new Command();
 
-  // 解析参数对
-  for (let i = 0; i < args.length; i += 2) {
-    const key = args[i];
-    const value = args[i + 1];
-    if (!key.startsWith("-")) {
-      throw new Error(`Invalid argument: ${key}`);
-    }
-    if (value === undefined || value.startsWith("-")) {
-      throw new Error(`Missing value for argument: ${key}`);
-    }
-    argPairs.set(key.slice(1), value);
-  }
+  program
+    .name("gen-docs")
+    .description("生成配置文档")
+    .option("-o, --out <path>", "输出文件路径")
+    .option("-t, --title <title>", "用户配置章节标题", "用户配置")
+    .version("1.0.0");
 
-  // 构造参数对象
+  program.parse();
+
+  const opts = program.opts();
+
   return argsSchema.parse({
-    outputPath: argPairs.get("o"),
-    sectionTitle: argPairs.get("t"),
+    outputPath: opts.out,
+    sectionTitle: opts.title,
   });
 }
 
@@ -142,10 +143,11 @@ function main() {
           `# Yet Another Auto Commit\n\n## ${args.sectionTitle}\n\n` + table;
       }
       fs.writeFileSync(args.outputPath, content);
+      console.log(`配置表格已写入：${args.outputPath}`);
     } else {
       fs.writeFileSync(args.outputPath, table);
+      console.log(`配置表格已写入：${args.outputPath}`);
     }
-    console.log(`Configuration table has been written to ${args.outputPath}`);
   } else {
     console.log(table);
   }
