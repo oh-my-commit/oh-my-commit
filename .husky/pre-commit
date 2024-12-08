@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 并行执行生成目录和配置文档
+echo "🔄 正在更新文档..."
+
+# 创建一个临时文件来存储任务的输出
+mkdir -p ./temp
+GENTOC_OUTPUT="./temp/gentoc_output.txt"
+GENDOCS_OUTPUT="./temp/gendocs_output.txt"
+
+# 并行执行任务
+(md-toc > "$GENTOC_OUTPUT" 2>&1) &
+TOC_PID=$!
+
+(pnpm gen-docs > "$GENDOCS_OUTPUT" 2>&1) &
+DOCS_PID=$!
+
+# 等待两个任务完成
+wait $TOC_PID
+TOC_STATUS=$?
+wait $DOCS_PID
+DOCS_STATUS=$?
+
+# 显示任务输出
+echo "📝 目录生成任务输出:"
+cat "$GENTOC_OUTPUT"
+echo "📚 文档生成任务输出:"
+cat "$GENDOCS_OUTPUT"
+
+# 清理临时文件
+rm "$GENTOC_OUTPUT" "$GENDOCS_OUTPUT"
+rmdir ./temp 2>/dev/null || true
+
+# 检查任务状态
+if [ $TOC_STATUS -ne 0 ] || [ $DOCS_STATUS -ne 0 ]; then
+    echo "❌ 文档更新失败"
+    exit 1
+fi
+
+echo "✅ 文档更新完成"
