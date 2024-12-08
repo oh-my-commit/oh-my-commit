@@ -1,5 +1,5 @@
-import { atom } from 'jotai';
-import type { FileUIState } from '../types';
+import { atom } from "jotai";
+import type { FileUIState } from "../types";
 
 // 选中的文件路径
 export const selectedFileAtom = atom<string | null>(null);
@@ -11,25 +11,19 @@ export const fileUIStatesAtom = atom<Record<string, FileUIState>>({});
 export const showDiffAtom = atom<boolean>(false);
 
 // 搜索查询
-export const searchQueryAtom = atom<string>('');
+export const searchQueryAtom = atom<string>("");
 
 // UI操作
-export const toggleFileExpansionAtom = atom(
-  null,
-  (get, set, path: string) => {
-    const states = get(fileUIStatesAtom);
-    const currentState = states[path] || { path, isExpanded: false };
-    set(fileUIStatesAtom, {
-      ...states,
-      [path]: { ...currentState, isExpanded: !currentState.isExpanded }
-    });
-  }
-);
+export const toggleFileExpansionAtom = atom(null, (get, set, path: string) => {
+  const states = get(fileUIStatesAtom);
+  const currentState = states[path] || { path, isExpanded: false };
+  set(fileUIStatesAtom, {
+    ...states,
+    [path]: { ...currentState, isExpanded: !currentState.isExpanded },
+  });
+});
 
-export const selectFileAtom = atom(
-  null,
-  (get, set, path: string | null) => {
-    set(selectedFileAtom, path);
-    set(showDiffAtom, path !== null);
-  }
-);
+export const selectFileAtom = atom(null, (get, set, path: string | null) => {
+  set(selectedFileAtom, path);
+  set(showDiffAtom, path !== null);
+});

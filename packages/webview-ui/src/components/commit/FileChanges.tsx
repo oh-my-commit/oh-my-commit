@@ -117,8 +117,15 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   }, [filteredFiles]);
 
   const handleFileClick = (path: string) => {
-    selectFile(path);
-    setShowDiff(true);
+    if (path === selectedPath) {
+      // 如果点击的是已选中的文件，取消选中并关闭 diff
+      selectFile("");
+      setShowDiff(false);
+    } else {
+      // 如果点击的是未选中的文件，选中并显示 diff
+      selectFile(path);
+      setShowDiff(true);
+    }
     if (onFileSelect) {
       onFileSelect(path);
     }
