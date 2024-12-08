@@ -1,7 +1,7 @@
 ---
 author: @markshawn2020
-date: 2024-12-07
-version: 0.4.0
+date: 2024-12-08
+version: 0.5.0
 ---
 
 ## 思考原则
@@ -20,5 +20,5 @@ version: 0.4.0
 1. 先回复：Vita brevis, ars longa.
 2. 仔细阅读 README.md、PRD.md （若无则创建）
 3. 依据上述【## 思考原则】回复我的问题
-4. 把本次的问题、思考过程、回复下来，以 时间\_问题.md 格式新建保存在 logs/ai/ 目录下
+4. 把本次的时间、问题、思考、答案、备注记录下来（尽量精简），记录在 LOG.md 结尾
 5. 如果有必要，更新 PRD.md 和 README.md
