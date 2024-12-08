@@ -117,7 +117,7 @@ const CommitFormatTooltip = () => {
   const [markdown, setMarkdown] = useState("");
 
   useEffect(() => {
-    const content = loadMarkdown('commit-format');
+    const content = loadMarkdown("commit-format");
     setMarkdown(content);
   }, []);
 
@@ -125,15 +125,13 @@ const CommitFormatTooltip = () => {
     code(code: string, language: string) {
       return (
         <div className="code-block" key={`${language}-${code.slice(0, 20)}`}>
-          <div className="code-block-header">
-            {language || 'text'}
-          </div>
+          <div className="code-block-header">{language || "text"}</div>
           <pre>
             <code>{code}</code>
           </pre>
         </div>
       );
-    }
+    },
   };
 
   return (
@@ -154,7 +152,7 @@ const CommitFormatTooltip = () => {
               const vscode = acquireVsCodeApi();
               vscode.postMessage({
                 command: "openUrl",
-                data: "https://www.conventionalcommits.org"
+                data: "https://www.conventionalcommits.org",
               });
             }}
           >
@@ -300,7 +298,10 @@ export function CommitMessage({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (tooltipContainerRef.current && !tooltipContainerRef.current.contains(event.target as Node)) {
+      if (
+        tooltipContainerRef.current &&
+        !tooltipContainerRef.current.contains(event.target as Node)
+      ) {
         setShowTooltip(false);
       }
     };

@@ -172,11 +172,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run build",
     "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "watch": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "lint": "eslint src --ext ts",
-    "test": "vitest"
+    "test": "vitest",
+    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts"
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -189,8 +189,10 @@
   "devDependencies": {
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
+    "commander": "^12.1.0",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "repository": {
