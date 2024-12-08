@@ -1,4 +1,4 @@
-# YAAC (Yet Another Auto Commit)
+# 🎨 YAAC - Redefining the art of commits
 
 🎨 一款专注用户体验的智能 Git 提交插件，让你的每一次提交都优雅而专业。
 
