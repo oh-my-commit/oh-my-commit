@@ -9,11 +9,11 @@ export const getAllFiles = (node: TreeNode): string[] => {
 
   // 如果是目录，递归获取所有子文件的路径
   return (node.children || [])
-    .filter(child => child.type === "file" && child.fileInfo?.path)
-    .map(child => child.fileInfo!.path)
+    .filter((child) => child.type === "file" && child.fileInfo?.path)
+    .map((child) => child.fileInfo!.path)
     .concat(
       (node.children || [])
-        .filter(child => child.type === "directory")
-        .flatMap(child => getAllFiles(child))
+        .filter((child) => child.type === "directory")
+        .flatMap((child) => getAllFiles(child)),
     );
 };

@@ -5,22 +5,24 @@ import {
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { TreeNode } from "@/types/tree-node";
+import { getAllDirectoryPaths } from "@/utils/get-all-directory-paths";
+import { getSubDirectories } from "@/utils/get-sub-directories";
 import { useAtom } from "jotai";
-import React, { memo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
 import { HighlightText } from "../../common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
 
 interface TreeViewProps {
   fileTree: TreeNode;
-  onSelect?: (path: string) => void;
+  onFileSelect?: (path: string) => void;
   onFileClick?: (path: string) => void;
 }
 
 export const TreeView = ({
   fileTree,
   onFileClick,
-  onSelect,
+  onFileSelect,
 }: TreeViewProps) => {
   const [expandedDirsArray, setExpandedDirsArray] = useAtom(expandedDirsAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
@@ -48,48 +50,10 @@ export const TreeView = ({
       }
 
       setExpandedDirs(parentDirs);
-
-      // Auto show diff view if there's a selected file
-      setLastOpenedFilePath(lastOpenedFile);
     }
   }, [lastOpenedFile]);
 
-  // Handle file selection
-  const handleFileSelect = (path: string) => {
-    onSelect?.(path);
-    setLastOpenedFilePath(path);
-  };
-
-  // Handle file click
-  const handleFileClick = (path: string) => {
-    onFileClick?.(path);
-    setLastOpenedFilePath(path);
-  };
-
   // Function to collect all directory paths from the tree
-  const getAllDirectoryPaths = (
-    node: TreeNode,
-    parentPath: string = "",
-  ): string[] => {
-    const currentPath = parentPath
-      ? `${parentPath}/${node.displayName}`
-      : node.displayName;
-    if (node.type === "directory" && node.children) {
-      return [
-        currentPath,
-        ...node.children.flatMap((child) =>
-          getAllDirectoryPaths(child, currentPath),
-        ),
-      ];
-    }
-    return [];
-  };
-
-  // Get all subdirectories under a path
-  const getSubDirectories = (path: string): string[] => {
-    const allDirs = getAllDirectoryPaths(fileTree);
-    return allDirs.filter((dir) => dir.startsWith(path + "/"));
-  };
 
   // Initialize expanded dirs only when there's no persisted state
   useEffect(() => {
@@ -106,7 +70,7 @@ export const TreeView = ({
     if (expandedDirsSet.has(path)) {
       // When collapsing, remove this dir and all its subdirs
       newExpandedDirs.delete(path);
-      const subDirs = getSubDirectories(path);
+      const subDirs = getSubDirectories(fileTree, path);
       subDirs.forEach((dir) => newExpandedDirs.delete(dir));
     } else {
       // When expanding, only add this dir and its immediate children
@@ -129,7 +93,7 @@ export const TreeView = ({
     if (node.type === "file") {
       if (node.fileInfo) {
         const file = node.fileInfo;
-        handleFileClick?.(path);
+        onFileClick?.(path);
       }
     } else {
       toggleDir(path);
@@ -156,7 +120,7 @@ export const TreeView = ({
           <input
             type="checkbox"
             checked={isSelected}
-            onChange={() => handleFileSelect?.(file.path)}
+            onChange={() => onFileSelect?.(file.path)}
           />
           <span
             className={cn(

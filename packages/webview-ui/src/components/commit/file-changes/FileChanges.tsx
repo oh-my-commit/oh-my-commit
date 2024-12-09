@@ -124,10 +124,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
       onFileSelect?.(path);
     } else if (path === lastOpenedFilePath) {
       setLastOpenedFile("");
-      setLastOpenedFile("");
       onFileSelect?.(path);
     } else {
-      setLastOpenedFile(path);
       setLastOpenedFile(path);
       if (!selectedFiles.includes(path)) {
         onFileSelect?.(path);
@@ -222,7 +220,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
           {viewMode === "tree" && (
             <TreeView
               fileTree={fileTree}
-              onSelect={onFileSelect}
+              onFileSelect={onFileSelect}
               onFileClick={(path) => handleFileClick(path, false)}
             />
           )}
