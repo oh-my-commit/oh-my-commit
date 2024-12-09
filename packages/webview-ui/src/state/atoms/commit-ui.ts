@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import type { FileUIState } from "../types";
 import { VIEW_MODES } from "../../components/commit/file-changes/constants";
-import { atomWithVSCodeStorage } from "../storage/vscode-storage";
+import { atomWithStorage } from "../storage";
 
 // 选中的文件路径
 export const selectedFileAtom = atom<string | null>(null);
@@ -31,7 +31,7 @@ export const selectFileAtom = atom(null, (get, set, path: string | null) => {
 });
 
 // View mode atom with persistence
-export const viewModeAtom = atomWithVSCodeStorage<keyof typeof VIEW_MODES>({
+export const viewModeAtom = atomWithStorage<keyof typeof VIEW_MODES>({
   key: "yaac.webview.viewMode",
   defaultValue: "flat",
 });

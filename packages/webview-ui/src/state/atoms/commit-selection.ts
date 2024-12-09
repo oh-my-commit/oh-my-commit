@@ -1,13 +1,15 @@
 import { atom } from "jotai";
-import { atomWithVSCodeStorage } from "../storage/vscode-storage";
+
 import { FileSelectionState } from "../types";
 import { commitFilesAtom, selectedFilesAtom } from "./commit-core";
 import type { FileChange } from "../../types/file-change";
+import { atomWithStorage } from "../storage";
 
 // 文件选择状态
-export const fileSelectionAtom = atomWithVSCodeStorage<FileSelectionState>({
+export const fileSelectionAtom = atomWithStorage<FileSelectionState>({
   key: "yaac.selection.files",
   defaultValue: { selectedPaths: new Set<string>() },
+  storageType: "localStorage",
 });
 
 // 选择动作

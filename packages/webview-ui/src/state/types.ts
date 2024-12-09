@@ -1,8 +1,8 @@
 // 核心业务类型
 export interface FileChange {
   path: string;
-  type: 'added' | 'modified' | 'deleted';
-  status: 'added' | 'modified' | 'deleted';
+  type: "added" | "modified" | "deleted";
+  status: "added" | "modified" | "deleted";
   content?: string;
   oldContent?: string;
   additions: number;
@@ -44,10 +44,10 @@ export interface CommitStats {
 export interface VSCodeStorageOptions<T> {
   key: string;
   defaultValue: T;
-  // 存储类型：vscode状态存储 或 localStorage
-  storageType: 'vscode' | 'localStorage' | 'both';
+  // default: 'localStorage'
+  storageType?: "vscode" | "localStorage" | "both";
   // vscode workspace/global 配置
-  storage?: 'global' | 'workspace';
+  storage?: "global" | "workspace";
 }
 
 // VSCode API类型
