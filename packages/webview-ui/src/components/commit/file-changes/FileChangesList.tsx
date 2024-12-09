@@ -105,7 +105,7 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="sticky top-0 z-10 bg-[var(--vscode-sideBar-background)] border-b border-[var(--vscode-panel-border)]">
+      <div className="sticky top-0 z-10  border-b border-[var(--vscode-panel-border)]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2">
           <SearchBar className="w-full sm:w-[240px] min-w-[120px]" />
           <button
