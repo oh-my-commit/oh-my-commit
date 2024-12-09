@@ -1,10 +1,14 @@
-import { atom } from 'jotai';
-import { getVSCodeAPI } from '../../utils/vscode';
-import type { VSCodeStorageOptions } from '../types';
+import { atom } from "jotai";
+import { getVSCodeAPI } from "../../utils/vscode";
+import type { VSCodeStorageOptions } from "../types";
 
 export function atomWithVSCodeStorage<T>(options: VSCodeStorageOptions<T>) {
-  const baseAtom = atom<T>(options.defaultValue);
-  
+  const baseAtom = atom<T>(
+    options.defaultValue ?? localStorage.getItem(options.key)
+      ? JSON.parse(localStorage.getItem(options.key)!)
+      : options.defaultValue
+  );
+
   // 从VSCode状态中读取初始值
   const vscode = getVSCodeAPI();
   const state = vscode.getState() || {};
@@ -20,12 +24,15 @@ export function atomWithVSCodeStorage<T>(options: VSCodeStorageOptions<T>) {
       const vscode = getVSCodeAPI();
       const state = vscode.getState() || {};
       vscode.setState({ ...state, [options.key]: update });
+      localStorage.setItem(options.key, JSON.stringify(update));
     }
   );
 }
 
 // 用于派生状态的只读原子
-export function atomWithVSCodeStorageReadOnly<T>(options: VSCodeStorageOptions<T>) {
+export function atomWithVSCodeStorageReadOnly<T>(
+  options: VSCodeStorageOptions<T>
+) {
   const baseAtom = atomWithVSCodeStorage(options);
   return atom((get) => get(baseAtom));
 }

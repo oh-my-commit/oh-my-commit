@@ -44,6 +44,9 @@ export interface CommitStats {
 export interface VSCodeStorageOptions<T> {
   key: string;
   defaultValue: T;
+  // 存储类型：vscode状态存储 或 localStorage
+  storageType: 'vscode' | 'localStorage' | 'both';
+  // vscode workspace/global 配置
   storage?: 'global' | 'workspace';
 }
 

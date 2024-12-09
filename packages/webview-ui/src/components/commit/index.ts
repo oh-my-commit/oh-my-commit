@@ -1,3 +1,5 @@
-export * from './CommitForm';
-export * from './FileChanges';
-export * from './CommitActions';
+export * from "./CommitForm";
+
+export * from "./CommitActions";
+
+export * from "./file-changes/FileChanges";

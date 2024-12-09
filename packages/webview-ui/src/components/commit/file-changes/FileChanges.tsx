@@ -1,14 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useAtom } from "jotai";
-import {
-  commitStatsAtom,
-  updateCommitStateAtom,
-} from "../../../state/atoms/commit-core";
+import { commitStatsAtom } from "../../../state/atoms/commit-core";
 import {
   selectFileAtom,
   selectedFileAtom,
   showDiffAtom,
   searchQueryAtom,
+  viewModeAtom,
 } from "../../../state/atoms/commit-ui";
 import { DiffViewer } from "../DiffViewer";
 import type { FileChange } from "../../../state/types";
@@ -46,10 +44,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const [selectedPath] = useAtom(selectedFileAtom);
   const [showDiff, setShowDiff] = useAtom(showDiffAtom);
   const [, selectFile] = useAtom(selectFileAtom);
-  const [, updateCommitState] = useAtom(updateCommitStateAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
-  const [viewMode, setViewMode] =
-    React.useState<keyof typeof VIEW_MODES>("flat");
+  const [viewMode, setViewMode] = useAtom(viewModeAtom);
 
   // Filter files based on search query
   const filteredFiles = useMemo(() => {
@@ -99,8 +95,10 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
         const path = parts.slice(0, i + 1).join("/");
-        let node = current.children.find((n) => n.name === part) as TreeNode | undefined;
-        
+        let node = current.children.find((n) => n.name === part) as
+          | TreeNode
+          | undefined;
+
         if (!node) {
           node = {
             name: part,
@@ -110,7 +108,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           };
           current.children.push(node);
         }
-        
+
         current = node;
       }
 
@@ -188,20 +186,22 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         </div>
 
         <div className="flex items-center gap-2 px-2">
-          {(Object.keys(VIEW_MODES) as Array<keyof typeof VIEW_MODES>).map((mode) => (
-            <button
-              key={mode}
-              className={cn(
-                "px-2 py-1 text-xs rounded-sm",
-                viewMode === mode
-                  ? "bg-[var(--vscode-toolbar-activeBackground)]"
-                  : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
-              )}
-              onClick={() => setViewMode(mode)}
-            >
-              {VIEW_MODES[mode]}
-            </button>
-          ))}
+          {(Object.keys(VIEW_MODES) as Array<keyof typeof VIEW_MODES>).map(
+            (mode) => (
+              <button
+                key={mode}
+                className={cn(
+                  "px-2 py-1 text-xs rounded-sm",
+                  viewMode === mode
+                    ? "bg-[var(--vscode-toolbar-activeBackground)]"
+                    : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
+                )}
+                onClick={() => setViewMode(mode)}
+              >
+                {VIEW_MODES[mode]}
+              </button>
+            )
+          )}
         </div>
 
         <div className="flex-1 overflow-auto px-2">

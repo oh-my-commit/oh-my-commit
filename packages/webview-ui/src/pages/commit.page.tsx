@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useCommit } from "../state/hooks/useCommit";
-import { FileChanges } from "../components/commit/FileChanges";
+import { FileChanges } from "../components/commit/file-changes/FileChanges";
 import { CommitMessage } from "../components/commit/CommitMessage";
 import { getVSCodeAPI } from "../utils/vscode";
 import { Footer } from "@/components/footer";
