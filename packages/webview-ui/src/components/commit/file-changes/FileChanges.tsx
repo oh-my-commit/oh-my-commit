@@ -51,11 +51,46 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
               className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]"
               style={{ pointerEvents: "auto" }}
             >
-              <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-2">
-                <p>• Click on a file to view its changes</p>
-                <p>• Use ↑↓ keys to navigate between files</p>
-                <p>• Press Space to stage/unstage selected files</p>
-                <p>• Use Shift+Click to select multiple files</p>
+              <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3">
+                <div>
+                  <p className="font-semibold mb-1">About Changed Files</p>
+                  <p>This section shows files that will be included in your commit. Each file is marked with its status:</p>
+                  <ul className="ml-2 mt-1 space-y-1">
+                    <li><span className="text-git-added-fg">A</span> - Added (new file)</li>
+                    <li><span className="text-git-modified-fg">M</span> - Modified</li>
+                    <li><span className="text-git-deleted-fg">D</span> - Deleted</li>
+                    <li><span className="text-git-renamed-fg">R</span> - Renamed</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="font-semibold mb-1">Interactions</p>
+                  <ul className="ml-2 space-y-1">
+                    <li>• Click checkbox - Stage/unstage a file for commit</li>
+                    <li>• Click filename - View file changes</li>
+                    <li>• Cmd/Ctrl+Click - Select multiple files</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="font-semibold mb-1">View Options</p>
+                  <ul className="ml-2 space-y-1">
+                    <li>• Flat View - Shows all files in a simple list</li>
+                    <li>• Grouped View - Groups files by their status</li>
+                    <li>• Tree View - Shows files in their directory structure</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="font-semibold mb-1">Tips</p>
+                  <ul className="ml-2 space-y-1">
+                    <li>• Only staged (checked) files will be included in your commit</li>
+                    <li>• Use the search bar to quickly find specific files</li>
+                    <li>• Different views help organize large changesets</li>
+                    <li>• Review changes carefully before committing</li>
+                    <li>• Stage related changes together for cleaner commits</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
