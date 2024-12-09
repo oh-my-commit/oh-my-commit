@@ -7,9 +7,9 @@ import { atomWithStorage } from "../../../state/storage";
 import { TreeNode } from "@/types/tree-node";
 
 // Create atom for expanded directories state
-const expandedDirsAtom = atomWithStorage<Set<string>>({
-  key: "treeview-expanded-dirs",
-  defaultValue: new Set([""]),
+const expandedDirsAtom = atomWithStorage<string[]>({
+  key: "yaac.webview-ui.treeview.expanded-dirs",
+  defaultValue: [""],
   storageType: "both",
 });
 
@@ -30,7 +30,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
   onSelect,
   onFileClick,
 }) => {
-  const [expandedDirs, setExpandedDirs] = useAtom(expandedDirsAtom);
+  const [expandedDirsArray, setExpandedDirsArray] = useAtom(expandedDirsAtom);
+  const expandedDirs = new Set(expandedDirsArray);
+
+  const setExpandedDirs = (dirs: Set<string>) => {
+    setExpandedDirsArray(Array.from(dirs));
+  };
 
   // Function to collect all directory paths from the tree
   const getAllDirectoryPaths = (
