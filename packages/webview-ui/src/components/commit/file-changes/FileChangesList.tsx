@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { SearchBar } from "./SearchBar";
 import { FlatView } from "./FlatView";
 import { GroupedView } from "./GroupedView";
+import { TreeView } from "./TreeView";
 import { EmptyState } from "./EmptyState";
 import {
   commitFilesAtom,
@@ -13,6 +14,8 @@ import {
 import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
 import type { FileChange } from "@/state/types";
+import { buildFileTree } from "@/utils/build-file-tree";
+import type { TreeNode } from "@/types/tree-node";
 
 const VIEW_MODES = {
   flat: {
@@ -21,6 +24,10 @@ const VIEW_MODES = {
   },
   grouped: {
     label: "Grouped View",
+    icon: "list-tree",
+  },
+  tree: {
+    label: "Tree View",
     icon: "list-tree",
   },
 } as const;
@@ -103,6 +110,17 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
     return groups;
   }, [filteredFiles]);
 
+  const fileTree = React.useMemo(() => {
+    const children = buildFileTree(filteredFiles);
+    const root: TreeNode = {
+      path: "",
+      type: "directory",
+      displayName: "",
+      children,
+    };
+    return root;
+  }, [filteredFiles]);
+
   return (
     <div className="flex flex-col h-full">
       <div className="sticky top-0 z-10  border-b border-[var(--vscode-panel-border)]">
@@ -114,10 +132,10 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
               "self-end sm:self-auto"
             )}
             onClick={() =>
-              setViewMode(viewMode === "flat" ? "grouped" : "flat")
+              setViewMode(viewMode === "flat" ? "grouped" : viewMode === "grouped" ? "tree" : "flat")
             }
             title={`Switch to ${
-              VIEW_MODES[viewMode === "flat" ? "grouped" : "flat"].label
+              VIEW_MODES[viewMode === "flat" ? "grouped" : viewMode === "grouped" ? "tree" : "flat"].label
             }`}
           >
             <i className={`codicon codicon-${VIEW_MODES[viewMode].icon}`} />
@@ -153,6 +171,13 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
               onFileClick={handleFileClick}
               onGroupSelect={handleGroupSelect}
               hasOpenedFile={!!lastOpenedFilePath}
+            />
+          )}
+          {viewMode === "tree" && (
+            <TreeView
+              fileTree={fileTree}
+              onFileSelect={handleSelect}
+              onFileClick={(path) => handleFileClick(path, false)}
             />
           )}
         </div>
