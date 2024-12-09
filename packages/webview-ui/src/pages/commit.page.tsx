@@ -10,13 +10,13 @@ import {
 import { useAtom } from "jotai";
 import React, { useCallback } from "react";
 import { CommitMessage } from "@/components/commit/core/CommitMessage";
-import { FileChanges } from "../components/commit/file-changes/FileChanges";
-import { getVSCodeAPI } from "../utils/vscode";
+import { FileChanges } from "@/components/commit/file-changes/FileChanges";
+import { getVSCodeAPI } from "@/utils/vscode";
 
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
   const [detail, setDetail] = useAtom(commitDetailAtom);
-  const [files] = useAtom(commitFilesAtom);
+  const [files, setFiles] = useAtom(commitFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
 
   const vscode = getVSCodeAPI();
@@ -63,7 +63,7 @@ export function CommitPage() {
         disabled={!message.trim() || selectedFiles.length === 0}
       />
 
-      <FileChanges files={files} onFileSelect={handleFileSelect} />
+      <FileChanges onFileSelect={handleFileSelect} />
 
       <Footer />
     </div>

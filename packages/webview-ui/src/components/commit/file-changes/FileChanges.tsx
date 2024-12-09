@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import {
+  commitFilesAtom,
   commitStatsAtom,
   lastOpenedFilePathAtom,
   selectedFilesAtom,
@@ -19,14 +20,12 @@ import { GroupedView } from "./GroupedView";
 import { TreeView } from "./TreeView";
 
 interface FileChangesProps {
-  files: FileChange[];
   onFileSelect?: (path: string) => void;
 }
 
-export const FileChanges: React.FC<FileChangesProps> = ({
-  files,
-  onFileSelect,
-}) => {
+export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
+  const [files] = useAtom(commitFilesAtom);
+
   const [stats] = useAtom(commitStatsAtom);
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
     lastOpenedFilePathAtom,
@@ -223,9 +222,6 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           {viewMode === "tree" && (
             <TreeView
               fileTree={fileTree}
-              selectedFiles={selectedFiles}
-              selectedPath={lastOpenedFilePath || undefined}
-              searchQuery={searchQuery}
               onSelect={onFileSelect}
               onFileClick={(path) => handleFileClick(path, false)}
             />

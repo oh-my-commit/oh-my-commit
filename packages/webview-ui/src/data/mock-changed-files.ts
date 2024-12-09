@@ -2,7 +2,7 @@ import type { FileChange } from "../state/types";
 
 export const mockFileChanges: FileChange[] = [
   {
-    path: "@/components/commit/CommitForm.tsx",
+    path: "src/components/commit/CommitForm.tsx",
     type: "modified",
     status: "modified",
     additions: 15,
@@ -27,7 +27,7 @@ export const mockFileChanges: FileChange[] = [
              <span className="ai-badge">AI</span>`,
   },
   {
-    path: "@/components/commit/FileChanges.tsx",
+    path: "src/components/commit/FileChanges.tsx",
     type: "added",
     status: "added",
     additions: 73,
@@ -52,7 +52,7 @@ export const mockFileChanges: FileChange[] = [
 +  const [, selectFile] = useAtom(selectFileAtom);`,
   },
   {
-    path: "@/state/atoms/commit-core.ts",
+    path: "src/state/atoms/commit-core.ts",
     type: "modified",
     status: "modified",
     additions: 42,
@@ -75,7 +75,7 @@ export const mockFileChanges: FileChange[] = [
 +export const selectedFilesAtom = atom<string[]>([]);`,
   },
   {
-    path: "@/state/types.ts",
+    path: "src/state/types.ts",
     type: "modified",
     status: "modified",
     additions: 12,
@@ -98,7 +98,7 @@ export const mockFileChanges: FileChange[] = [
 -export type FileStatus = 'added' | 'modified' | 'deleted';`,
   },
   {
-    path: "@/utils/vscode.ts",
+    path: "src/utils/vscode.ts",
     type: "deleted",
     status: "deleted",
     additions: 0,
