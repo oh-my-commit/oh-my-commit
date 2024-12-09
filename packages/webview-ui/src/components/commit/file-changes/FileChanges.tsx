@@ -27,11 +27,11 @@ interface FileChangesProps {
 }
 
 interface TreeNode {
-  name: string;
+  displayName: string;
   path: string;
   type: "file" | "directory";
-  children: TreeNode[];
-  file?: FileChange;
+  children?: TreeNode[];
+  fileInfo?: FileChange;
 }
 
 export const FileChanges: React.FC<FileChangesProps> = ({
@@ -82,44 +82,50 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   // Build tree structure
   const fileTree = useMemo(() => {
     const root: TreeNode = {
-      name: "",
+      displayName: "",
       path: "",
       type: "directory",
-      children: [],
+      children: [] // Initialize children as empty array
     };
 
     filteredFiles.forEach((file) => {
-      const parts = file.path.split("/").filter(Boolean);
       let current = root;
+      const parts = file.path.split("/");
 
+      // Create directory nodes
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
         const path = parts.slice(0, i + 1).join("/");
-        let node = current.children.find((n) => n.name === part) as
+        let node = current.children?.find((n) => n.displayName === part) as
           | TreeNode
           | undefined;
 
         if (!node) {
           node = {
-            name: part,
+            displayName: part,
             path,
             type: "directory",
-            children: [],
+            children: [] // Initialize children as empty array
           };
+          if (!current.children) {
+            current.children = [];
+          }
           current.children.push(node);
         }
-
         current = node;
       }
 
+      // Add file node
       const fileName = parts[parts.length - 1];
       const filePath = parts.join("/");
+      if (!current.children) {
+        current.children = [];
+      }
       current.children.push({
-        name: fileName,
+        displayName: fileName,
         path: filePath,
         type: "file",
-        children: [],
-        file,
+        fileInfo: file
       });
     });
 
