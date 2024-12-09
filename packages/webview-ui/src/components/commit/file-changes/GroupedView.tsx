@@ -3,6 +3,7 @@ import { cn } from '../../../lib/utils';
 import { STATUS_COLORS, STATUS_LABELS } from './constants';
 import { FileItem } from './FileItem';
 import type { FileChange } from '../../../state/types';
+import { Checkbox } from '../../common/Checkbox';
 
 interface GroupedViewProps {
   groupedFiles: {
@@ -36,11 +37,18 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
 
     return (
       <div key={status} className="flex flex-col">
-        <div className="flex items-center justify-between h-[22px] px-2">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center h-[22px] px-2 group">
+          <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center justify-center w-8 h-full">
+              <Checkbox
+                checked={files.every((f) => selectedFiles.includes(f.path))}
+                onChange={(checked) => onGroupSelect?.(files, checked)}
+                className="opacity-60 group-hover:opacity-100 transition-opacity"
+              />
+            </div>
             <span
               className={cn(
-                "flex items-center gap-1 text-[12px] font-medium",
+                "flex items-center gap-1 text-[12px] font-medium cursor-default",
                 STATUS_COLORS[status]
               )}
             >
@@ -71,15 +79,17 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
 
         <div className="flex flex-col">
           {files.map((file) => (
-            <FileItem
-              key={file.path}
-              file={file}
-              isSelected={selectedFiles.includes(file.path)}
-              isActive={file.path === selectedPath}
-              searchQuery={searchQuery}
-              onSelect={onSelect}
-              onClick={onFileClick}
-            />
+            <div key={file.path} className="pl-[40px]">
+              <FileItem
+                file={file}
+                isSelected={selectedFiles.includes(file.path)}
+                isActive={file.path === selectedPath}
+                hasOpenedFile={!!selectedPath}
+                searchQuery={searchQuery}
+                onSelect={onSelect}
+                onClick={onFileClick}
+              />
+            </div>
           ))}
         </div>
       </div>

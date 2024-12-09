@@ -3,11 +3,13 @@ import { cn } from '../../../lib/utils';
 import { HighlightText } from '../../common/HighlightText';
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from './constants';
 import type { FileChange } from '../../../state/types';
+import { Checkbox } from '../../common/Checkbox';
 
 interface FileItemProps {
   file: FileChange;
   isSelected: boolean;
   isActive: boolean;
+  hasOpenedFile: boolean;  // 是否有任何文件被打开
   searchQuery?: string;
   onSelect?: (path: string) => void;
   onClick?: (path: string, metaKey: boolean) => void;
@@ -17,10 +19,23 @@ export const FileItem: React.FC<FileItemProps> = ({
   file,
   isSelected,
   isActive,
+  hasOpenedFile,
   searchQuery = '',
   onSelect,
   onClick,
 }) => {
+  const handleCheckboxChange = () => {
+    onSelect?.(file.path);
+    
+    if (isSelected && isActive) {
+      // 如果文件当前是选中且打开的状态，取消选择时也关闭它
+      onClick?.(file.path, false);
+    } else if (!isSelected && !hasOpenedFile) {
+      // 如果没有文件被打开，且当前文件未被选中，选中时也打开它
+      onClick?.(file.path, false);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -33,37 +48,10 @@ export const FileItem: React.FC<FileItemProps> = ({
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
         <div className="flex items-center justify-center w-8 h-full">
-          <div className="w-3 h-3 relative">
-            <input
-              type="checkbox"
-              className="absolute inset-0 cursor-pointer opacity-0 w-full h-full"
-              checked={isSelected}
-              onChange={() => onSelect?.(file.path)}
-            />
-            <div
-              className={cn(
-                "absolute inset-0 border rounded",
-                "border-[var(--vscode-checkbox-border)]",
-                isSelected &&
-                  "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]"
-              )}
-            />
-            {isSelected && (
-              <div className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]">
-                <svg
-                  className="w-2 h-2"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </div>
-            )}
-          </div>
+          <Checkbox
+            checked={isSelected}
+            onChange={handleCheckboxChange}
+          />
         </div>
         <div className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2">
           <span

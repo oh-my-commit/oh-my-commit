@@ -12,6 +12,8 @@ import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
 import { HighlightText } from "../../common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
+import { FileItem } from './FileItem';
+import { Checkbox } from '../../common/Checkbox';
 
 interface TreeViewProps {
   fileTree: TreeNode;
@@ -89,6 +91,26 @@ export const TreeView = ({
     setExpandedDirs(newExpandedDirs);
   };
 
+  const getDirectoryFiles = (node: TreeNode): string[] => {
+    const files: string[] = [];
+    if (node.type === "file" && node.fileInfo) {
+      files.push(node.fileInfo.path);
+    } else if (node.children) {
+      node.children.forEach(child => {
+        files.push(...getDirectoryFiles(child));
+      });
+    }
+    return files;
+  };
+
+  const handleDirSelect = (node: TreeNode, checked: boolean) => {
+    const dirFiles = getDirectoryFiles(node);
+    const newSelectedFiles = checked
+      ? [...new Set([...selectedFiles, ...dirFiles])]
+      : selectedFiles.filter(path => !dirFiles.includes(path));
+    setSelectedFiles(newSelectedFiles);
+  };
+
   const handleClick = (node: TreeNode, path: string) => {
     if (node.type === "file") {
       if (node.fileInfo) {
@@ -111,48 +133,21 @@ export const TreeView = ({
           key={file.path}
           style={{ paddingLeft: `${level * 16}px` }}
           className={cn(
-            "flex items-center gap-2 px-2 py-1 rounded-sm cursor-pointer group",
+            "flex items-center gap-2 rounded-sm cursor-pointer group",
             isActive && "bg-[var(--vscode-list-activeSelectionBackground)]",
             !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]",
           )}
           onClick={() => handleClick(node, file.path)}
         >
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => onFileSelect?.(file.path)}
+          <FileItem
+            file={file}
+            isSelected={isSelected}
+            isActive={isActive}
+            hasOpenedFile={!!lastOpenedFile}
+            searchQuery={searchQuery}
+            onSelect={onFileSelect}
+            onClick={(path, metaKey) => handleClick(node, path)}
           />
-          <span
-            className={cn(
-              STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-              isActive && "text-inherit",
-            )}
-            title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
-          >
-            {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
-          </span>
-          <span className="flex-1 truncate">
-            <HighlightText text={node.displayName} highlight={searchQuery} />
-          </span>
-          <div className="flex items-center gap-1 text-xs opacity-60">
-            {file.additions > 0 && (
-              <span
-                className={cn("text-git-added-fg", isActive && "text-inherit")}
-              >
-                +{file.additions}
-              </span>
-            )}
-            {file.deletions > 0 && (
-              <span
-                className={cn(
-                  "text-git-deleted-fg",
-                  isActive && "text-inherit",
-                )}
-              >
-                −{file.deletions}
-              </span>
-            )}
-          </div>
         </div>
       );
     }
@@ -164,26 +159,47 @@ export const TreeView = ({
       <div key={node.path || "root"}>
         {/* Only show directory node UI if it's not the root or if level > 0 */}
         {(node.path || level > 0) && (
-          <div
+          <div 
             style={{ paddingLeft: `${level * 16}px` }}
-            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)] cursor-pointer hover:bg-[var(--vscode-list-hoverBackground)] rounded-sm"
-            onClick={() => handleClick(node, node.path)}
+            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)] hover:bg-[var(--vscode-list-hoverBackground)] rounded-sm group"
           >
-            {hasChildren && (
-              <i
-                className={cn(
-                  "codicon",
-                  isExpanded ? "codicon-chevron-down" : "codicon-chevron-right",
+            <div className="flex items-center gap-2">
+              <div 
+                className="flex items-center justify-center w-4 h-full cursor-pointer opacity-60 group-hover:opacity-100"
+                onClick={() => handleClick(node, node.path)}
+              >
+                {hasChildren && (
+                  <i
+                    className={cn(
+                      "codicon text-[12px]",
+                      isExpanded ? "codicon-chevron-down" : "codicon-chevron-right",
+                    )}
+                  />
                 )}
-              />
-            )}
-            <i className="codicon codicon-folder" />
-            <span className="truncate">{node.displayName || "/"}</span>
-            {hasChildren && (
-              <span className="ml-1 text-xs text-gray-500">
-                ({node.children && node.children.length})
-              </span>
-            )}
+              </div>
+              <div className="flex items-center justify-center w-8 h-full">
+                <Checkbox
+                  checked={node.children?.length ? node.children.every(child => {
+                    const childFiles = getDirectoryFiles(child);
+                    return childFiles.every(file => selectedFiles.includes(file));
+                  }) : false}
+                  onChange={(checked) => handleDirSelect(node, checked)}
+                  className="opacity-60 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+            </div>
+            <div 
+              className="flex items-center gap-1 flex-1 cursor-pointer min-w-0"
+              onClick={() => handleClick(node, node.path)}
+            >
+              <i className="codicon codicon-folder text-[var(--vscode-gitDecoration-submoduleResourceForeground)] opacity-60 group-hover:opacity-100" />
+              <span className="truncate text-[13px]">{node.displayName || "/"}</span>
+              {hasChildren && (
+                <span className="ml-1 text-[11px] opacity-60 tabular-nums">
+                  {node.children && node.children.length}
+                </span>
+              )}
+            </div>
           </div>
         )}
         {/* Always render children if expanded, regardless of whether this is root */}
