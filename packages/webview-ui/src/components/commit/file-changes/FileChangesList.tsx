@@ -28,7 +28,7 @@ const VIEW_MODES = {
   },
   tree: {
     label: "Tree View",
-    icon: "list-tree",
+    icon: "symbol-class",
   },
 } as const;
 
@@ -132,10 +132,22 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
               "self-end sm:self-auto"
             )}
             onClick={() =>
-              setViewMode(viewMode === "flat" ? "grouped" : viewMode === "grouped" ? "tree" : "flat")
+              setViewMode(
+                viewMode === "flat"
+                  ? "grouped"
+                  : viewMode === "grouped"
+                  ? "tree"
+                  : "flat"
+              )
             }
             title={`Switch to ${
-              VIEW_MODES[viewMode === "flat" ? "grouped" : viewMode === "grouped" ? "tree" : "flat"].label
+              VIEW_MODES[
+                viewMode === "flat"
+                  ? "grouped"
+                  : viewMode === "grouped"
+                  ? "tree"
+                  : "flat"
+              ].label
             }`}
           >
             <i className={`codicon codicon-${VIEW_MODES[viewMode].icon}`} />
