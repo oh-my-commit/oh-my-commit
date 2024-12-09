@@ -11,9 +11,12 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { twj } from "tw-to-css";
 import { HighlightText } from "../common/HighlightText";
+import cn from "classnames";
 
 export const DiffViewer: React.FC = () => {
-  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(lastOpenedFilePathAtom);
+  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
+    lastOpenedFilePathAtom
+  );
   const [files] = useAtom(commitFilesAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
@@ -92,8 +95,18 @@ export const DiffViewer: React.FC = () => {
             appearance="icon"
             title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
             onClick={() => setWrapLine(!wrapLine)}
+            className={cn(
+              wrapLine && "bg-[var(--vscode-toolbar-activeBackground)]",
+              "rounded-[3px]"
+            )}
           >
-            {wrapLine ? "⟲" : "⟳"}
+            <i
+              className={cn(
+                "codicon codicon-word-wrap transition-transform",
+                wrapLine && "opacity-100",
+                !wrapLine && "opacity-60 hover:opacity-100"
+              )}
+            />
           </VSCodeButton>
           <VSCodeButton
             appearance="icon"
@@ -112,7 +125,7 @@ export const DiffViewer: React.FC = () => {
           renderer={({ rows, stylesheet, useInlineStyles }: any) => {
             const renderNode = (
               node: any,
-              searchText?: string,
+              searchText?: string
             ): React.ReactNode => {
               if (node.type === "text") {
                 if (searchText) {
@@ -144,7 +157,7 @@ export const DiffViewer: React.FC = () => {
                     <React.Fragment key={i}>
                       {renderNode(child, searchText)}
                     </React.Fragment>
-                  )),
+                  ))
                 );
               }
 
@@ -171,8 +184,8 @@ export const DiffViewer: React.FC = () => {
                           type === "addition"
                             ? "var(--vscode-diffEditor-insertedTextBackground)"
                             : type === "deletion"
-                              ? "var(--vscode-diffEditor-removedTextBackground)"
-                              : "",
+                            ? "var(--vscode-diffEditor-removedTextBackground)"
+                            : "",
                       },
                       className: "group hover:bg-editor-line-highlight",
                     };
@@ -194,7 +207,7 @@ export const DiffViewer: React.FC = () => {
           customStyle={{}}
           showLineNumbers
           lineNumberStyle={twj(
-            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number",
+            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number"
           )}
           style={vscDarkPlus}
         >
