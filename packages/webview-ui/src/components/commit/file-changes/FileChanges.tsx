@@ -16,7 +16,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
   return (
     <Section
       title="Changed Files"
-      className="text-[11px] font-medium uppercase tracking-wide text-sidebar-title"
+      className="text-[11px] font-medium tracking-wide text-sidebar-title"
     >
       <Section.Content>
         <div className="flex h-full">
