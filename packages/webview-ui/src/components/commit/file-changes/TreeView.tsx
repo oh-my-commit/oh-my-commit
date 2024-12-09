@@ -10,10 +10,8 @@ import { getSubDirectories } from "@/utils/get-sub-directories";
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
-import { HighlightText } from "../../common/HighlightText";
-import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import { FileItem } from './FileItem';
-import { Checkbox } from '../../common/Checkbox';
+import { Checkbox } from "../../common/Checkbox";
+import { FileItem } from "./FileItem";
 
 interface TreeViewProps {
   fileTree: TreeNode;
@@ -96,7 +94,7 @@ export const TreeView = ({
     if (node.type === "file" && node.fileInfo) {
       files.push(node.fileInfo.path);
     } else if (node.children) {
-      node.children.forEach(child => {
+      node.children.forEach((child) => {
         files.push(...getDirectoryFiles(child));
       });
     }
@@ -107,7 +105,7 @@ export const TreeView = ({
     const dirFiles = getDirectoryFiles(node);
     const newSelectedFiles = checked
       ? [...new Set([...selectedFiles, ...dirFiles])]
-      : selectedFiles.filter(path => !dirFiles.includes(path));
+      : selectedFiles.filter((path) => !dirFiles.includes(path));
     setSelectedFiles(newSelectedFiles);
   };
 
@@ -159,12 +157,12 @@ export const TreeView = ({
       <div key={node.path || "root"}>
         {/* Only show directory node UI if it's not the root or if level > 0 */}
         {(node.path || level > 0) && (
-          <div 
+          <div
             style={{ paddingLeft: `${level * 16}px` }}
             className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)] hover:bg-[var(--vscode-list-hoverBackground)] rounded-sm group"
           >
             <div className="flex items-center gap-2">
-              <div 
+              <div
                 className="flex items-center justify-center w-4 h-full cursor-pointer opacity-60 group-hover:opacity-100"
                 onClick={() => handleClick(node, node.path)}
               >
@@ -172,28 +170,38 @@ export const TreeView = ({
                   <i
                     className={cn(
                       "codicon text-[12px]",
-                      isExpanded ? "codicon-chevron-down" : "codicon-chevron-right",
+                      isExpanded
+                        ? "codicon-chevron-down"
+                        : "codicon-chevron-right",
                     )}
                   />
                 )}
               </div>
               <div className="flex items-center justify-center w-8 h-full">
                 <Checkbox
-                  checked={node.children?.length ? node.children.every(child => {
-                    const childFiles = getDirectoryFiles(child);
-                    return childFiles.every(file => selectedFiles.includes(file));
-                  }) : false}
+                  checked={
+                    node.children?.length
+                      ? node.children.every((child) => {
+                          const childFiles = getDirectoryFiles(child);
+                          return childFiles.every((file) =>
+                            selectedFiles.includes(file),
+                          );
+                        })
+                      : false
+                  }
                   onChange={(checked) => handleDirSelect(node, checked)}
                   className="opacity-60 group-hover:opacity-100 transition-opacity"
                 />
               </div>
             </div>
-            <div 
+            <div
               className="flex items-center gap-1 flex-1 cursor-pointer min-w-0"
               onClick={() => handleClick(node, node.path)}
             >
               <i className="codicon codicon-folder text-[var(--vscode-gitDecoration-submoduleResourceForeground)] opacity-60 group-hover:opacity-100" />
-              <span className="truncate text-[13px]">{node.displayName || "/"}</span>
+              <span className="truncate text-[13px]">
+                {node.displayName || "/"}
+              </span>
               {hasChildren && (
                 <span className="ml-1 text-[11px] opacity-60 tabular-nums">
                   {node.children && node.children.length}

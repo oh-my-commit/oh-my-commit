@@ -1,23 +1,20 @@
+import { Checkbox } from "@/components/common/Checkbox";
+import { cn } from "@/lib/utils";
+import type { FileChange } from "@/state/types";
+import { FileStatus } from "@/types/file-change";
 import React from "react";
-import { cn } from "../../../lib/utils";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
-import type { FileChange } from "../../../state/types";
-import { Checkbox } from "../../common/Checkbox";
 
-interface GroupedViewProps {
-  groupedFiles: {
-    added: FileChange[];
-    modified: FileChange[];
-    deleted: FileChange[];
-    renamed: FileChange[];
-  };
+export interface GroupedViewProps {
+  groupedFiles: Record<FileStatus, FileChange[]>;
   selectedFiles: string[];
   selectedPath?: string;
   searchQuery?: string;
+  hasOpenedFile: boolean;
   onSelect?: (path: string) => void;
   onFileClick?: (path: string, metaKey: boolean) => void;
-  onGroupSelect?: (files: FileChange[], selected: boolean) => void;
+  onGroupSelect?: (files: FileChange[], checked: boolean) => void;
 }
 
 export const GroupedView: React.FC<GroupedViewProps> = ({
@@ -25,14 +22,13 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
   selectedFiles,
   selectedPath,
   searchQuery,
+  hasOpenedFile,
   onSelect,
   onFileClick,
   onGroupSelect,
 }) => {
-  const renderFileGroup = (
-    status: keyof typeof STATUS_COLORS,
-    files: FileChange[]
-  ) => {
+  const renderFileGroup = (status: FileStatus) => {
+    const files = groupedFiles[status];
     if (files.length === 0) return null;
 
     return (
@@ -41,7 +37,9 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
           <div className="flex items-center gap-2 flex-1">
             <div className="flex items-center justify-center w-8 h-full">
               <Checkbox
-                checked={files.every((f) => selectedFiles.includes(f.path))}
+                checked={files.every((file: FileChange) =>
+                  selectedFiles.includes(file.path),
+                )}
                 onChange={(checked) => onGroupSelect?.(files, checked)}
                 className="opacity-60 group-hover:opacity-100 transition-opacity"
               />
@@ -49,42 +47,23 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
             <span
               className={cn(
                 "flex items-center gap-1 text-[12px] font-medium cursor-default",
-                STATUS_COLORS[status]
+                STATUS_COLORS[status],
               )}
             >
-              <span className="uppercase">{STATUS_LABELS[status]}</span>
-              <span className="text-[var(--vscode-descriptionForeground)]">
-                ({files.length})
-              </span>
+              {STATUS_LABELS[status]}
+              <span className="text-[11px] opacity-80">({files.length})</span>
             </span>
           </div>
-          <button
-            className={cn(
-              "px-2 py-0.5 text-[11px] rounded",
-              "bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)]",
-              "hover:bg-[var(--vscode-button-secondaryHoverBackground)]"
-            )}
-            onClick={() => {
-              const allSelected = files.every((f) =>
-                selectedFiles.includes(f.path)
-              );
-              onGroupSelect?.(files, !allSelected);
-            }}
-          >
-            {files.every((f) => selectedFiles.includes(f.path))
-              ? "Deselect All"
-              : "Select All"}
-          </button>
         </div>
 
         <div className="flex flex-col">
-          {files.map((file) => (
+          {files.map((file: FileChange) => (
             <div key={file.path} className="pl-[40px]">
               <FileItem
                 file={file}
                 isSelected={selectedFiles.includes(file.path)}
                 isActive={file.path === selectedPath}
-                hasOpenedFile={!!selectedPath}
+                hasOpenedFile={hasOpenedFile}
                 searchQuery={searchQuery}
                 onSelect={onSelect}
                 onClick={onFileClick}
@@ -98,10 +77,9 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
 
   return (
     <div className="flex flex-col">
-      {renderFileGroup("added", groupedFiles.added)}
-      {renderFileGroup("modified", groupedFiles.modified)}
-      {renderFileGroup("deleted", groupedFiles.deleted)}
-      {renderFileGroup("renamed", groupedFiles.renamed)}
+      {(Object.keys(groupedFiles) as FileStatus[]).map((status) =>
+        renderFileGroup(status),
+      )}
     </div>
   );
 };

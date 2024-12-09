@@ -1,5 +1,7 @@
 // File change status colors
-export const STATUS_COLORS = {
+import { FileStatus } from "@/types/file-change";
+
+export const STATUS_COLORS: Record<FileStatus, string> = {
   added: "text-git-added-fg", // Git decoration colors
   modified: "text-git-modified-fg",
   deleted: "text-git-deleted-fg",
@@ -8,7 +10,7 @@ export const STATUS_COLORS = {
 } as const;
 
 // File change status letters (Git-style)
-export const STATUS_LETTERS = {
+export const STATUS_LETTERS: Record<FileStatus, string> = {
   added: "A",
   modified: "M",
   deleted: "D",
@@ -17,7 +19,7 @@ export const STATUS_LETTERS = {
 } as const;
 
 // File change status labels (for tooltips)
-export const STATUS_LABELS = {
+export const STATUS_LABELS: Record<FileStatus, string> = {
   added: "Added",
   modified: "Modified",
   deleted: "Deleted",

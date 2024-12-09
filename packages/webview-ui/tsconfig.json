@@ -19,6 +19,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "global.d.ts", "../examples"],
+  "include": ["src",
+    "src/types/global.d.ts", "../examples"],
   "exclude": ["node_modules"]
 }

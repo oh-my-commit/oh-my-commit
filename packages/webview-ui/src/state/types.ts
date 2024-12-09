@@ -1,8 +1,10 @@
 // 核心业务类型
+import { FileStatus } from "@/types/file-change";
+
 export interface FileChange {
   path: string;
-  type: "added" | "modified" | "deleted";
-  status: "added" | "modified" | "deleted";
+  type: FileStatus;
+  status: FileStatus;
   content?: string;
   oldContent?: string;
   additions: number;

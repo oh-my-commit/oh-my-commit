@@ -1,7 +1,13 @@
+export type FileStatus =
+  | "added"
+  | "modified"
+  | "deleted"
+  | "renamed"
+  | "default";
 export interface FileChange {
   path: string;
-  type: 'added' | 'modified' | 'deleted';
-  status: 'added' | 'modified' | 'deleted';
+  type: FileStatus;
+  status: FileStatus;
   content?: string;
   oldContent?: string;
   additions: number;
