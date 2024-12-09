@@ -5,11 +5,18 @@ import { HighlightText } from "../../common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
 import { atomWithStorage } from "../../../state/storage";
 import { TreeNode } from "@/types/tree-node";
+import { lastOpenedFilePathAtom } from "../../../state/atoms/commit-ui";
 
-// Create atom for expanded directories state
-const expandedDirsAtom = atomWithStorage<string[]>({
+// Create atoms for persistent state
+export const expandedDirsAtom = atomWithStorage<string[]>({
   key: "yaac.webview-ui.treeview.expanded-dirs",
   defaultValue: [""],
+  storageType: "both",
+});
+
+export const selectedFilesAtom = atomWithStorage<string[]>({
+  key: "yaac.webview-ui.treeview.selected-files",
+  defaultValue: [],
   storageType: "both",
 });
 
@@ -24,17 +31,74 @@ interface TreeViewProps {
 
 export const TreeView: React.FC<TreeViewProps> = ({
   fileTree,
-  selectedFiles,
-  selectedPath,
+  selectedFiles: propSelectedFiles,
+  selectedPath: propSelectedPath,
   searchQuery = "",
   onSelect,
   onFileClick,
 }) => {
   const [expandedDirsArray, setExpandedDirsArray] = useAtom(expandedDirsAtom);
+  const [persistedSelectedFiles, setPersistedSelectedFiles] =
+    useAtom(selectedFilesAtom);
+  const [lastOpenedFile, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  );
+
   const expandedDirs = new Set(expandedDirsArray);
+
+  // Use props if provided, otherwise use persisted state
+  const selectedFiles = propSelectedFiles?.length
+    ? propSelectedFiles
+    : persistedSelectedFiles;
+  const selectedPath = propSelectedPath || lastOpenedFile;
 
   const setExpandedDirs = (dirs: Set<string>) => {
     setExpandedDirsArray(Array.from(dirs));
+  };
+
+  // Update persisted state when props change
+  useEffect(() => {
+    if (propSelectedFiles?.length) {
+      setPersistedSelectedFiles(propSelectedFiles);
+    }
+  }, [propSelectedFiles]);
+
+  useEffect(() => {
+    if (propSelectedPath) {
+      setLastOpenedFilePath(propSelectedPath);
+    }
+  }, [propSelectedPath]);
+
+  // Auto-expand parent directories of selected path
+  useEffect(() => {
+    if (selectedPath) {
+      const parts = selectedPath.split("/");
+      const parentDirs = new Set(expandedDirs);
+
+      // Build parent directory paths and add them to expanded set
+      let currentPath = "";
+      for (let i = 0; i < parts.length - 1; i++) {
+        currentPath = currentPath ? `${currentPath}/${parts[i]}` : parts[i];
+        parentDirs.add(currentPath);
+      }
+
+      setExpandedDirs(parentDirs);
+
+      // Auto show diff view if there's a selected file
+      setLastOpenedFilePath(selectedPath);
+    }
+  }, [selectedPath]);
+
+  // Handle file selection
+  const handleFileSelect = (path: string) => {
+    onSelect?.(path);
+    setLastOpenedFilePath(path);
+  };
+
+  // Handle file click
+  const handleFileClick = (path: string) => {
+    onFileClick?.(path);
+    setLastOpenedFilePath(path);
   };
 
   // Function to collect all directory paths from the tree
@@ -77,7 +141,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
     if (node.type === "file") {
       if (node.fileInfo) {
         const file = node.fileInfo;
-        onFileClick?.(path);
+        handleFileClick?.(path);
       }
     } else {
       toggleDir(path);
@@ -104,7 +168,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <input
             type="checkbox"
             checked={isSelected}
-            onChange={() => onSelect?.(file.path)}
+            onChange={() => handleFileSelect?.(file.path)}
           />
           <span
             className={cn(

@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { useAtom } from "jotai";
-import { selectedFileAtom, searchQueryAtom } from "../../state/atoms/commit-ui";
+import {
+  searchQueryAtom,
+  lastOpenedFilePathAtom,
+} from "../../state/atoms/commit-ui";
 import { commitFilesAtom } from "../../state/atoms/commit-core";
-import { selectFileAtom } from "../../state/atoms/commit-ui";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
@@ -11,12 +13,13 @@ import { HighlightText } from "../common/HighlightText";
 import { twj } from "tw-to-css";
 
 export const DiffViewer: React.FC = () => {
-  const [selectedPath] = useAtom(selectedFileAtom);
+  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
+    lastOpenedFilePathAtom
+  );
   const [files] = useAtom(commitFilesAtom);
-  const [, selectFile] = useAtom(selectFileAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
 
-  const selectedFile = files.find((f) => f.path === selectedPath);
+  const selectedFile = files.find((f) => f.path === lastOpenedFilePath);
 
   const { language, processedDiff, lineTypes } = useMemo(() => {
     if (!selectedFile?.diff) {
@@ -61,7 +64,7 @@ export const DiffViewer: React.FC = () => {
   }
 
   const handleClose = () => {
-    selectFile("");
+    setLastOpenedFile("");
   };
 
   return (

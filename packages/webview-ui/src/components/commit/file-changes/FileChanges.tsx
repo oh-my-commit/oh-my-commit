@@ -2,11 +2,9 @@ import React, { useMemo, useState } from "react";
 import { useAtom } from "jotai";
 import { commitStatsAtom } from "../../../state/atoms/commit-core";
 import {
-  selectFileAtom,
-  selectedFileAtom,
-  showDiffAtom,
   searchQueryAtom,
   viewModeAtom,
+  lastOpenedFilePathAtom,
 } from "../../../state/atoms/commit-ui";
 import { DiffViewer } from "../DiffViewer";
 import type { FileChange } from "../../../state/types";
@@ -41,9 +39,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   onFileSelect,
 }) => {
   const [stats] = useAtom(commitStatsAtom);
-  const [selectedPath] = useAtom(selectedFileAtom);
-  const [showDiff, setShowDiff] = useAtom(showDiffAtom);
-  const [, selectFile] = useAtom(selectFileAtom);
+  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
+    lastOpenedFilePathAtom
+  );
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
 
@@ -85,7 +83,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       displayName: "",
       path: "",
       type: "directory",
-      children: [] // Initialize children as empty array
+      children: [], // Initialize children as empty array
     };
 
     filteredFiles.forEach((file) => {
@@ -105,7 +103,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             displayName: part,
             path,
             type: "directory",
-            children: [] // Initialize children as empty array
+            children: [], // Initialize children as empty array
           };
           if (!current.children) {
             current.children = [];
@@ -125,7 +123,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         displayName: fileName,
         path: filePath,
         type: "file",
-        fileInfo: file
+        fileInfo: file,
       });
     });
 
@@ -135,13 +133,13 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   const handleFileClick = (path: string, metaKey: boolean) => {
     if (metaKey) {
       onFileSelect?.(path);
-    } else if (path === selectedPath) {
-      selectFile("");
-      setShowDiff(false);
+    } else if (path === lastOpenedFilePath) {
+      setLastOpenedFile("");
+      setLastOpenedFile("");
       onFileSelect?.(path);
     } else {
-      selectFile(path);
-      setShowDiff(true);
+      setLastOpenedFile(path);
+      setLastOpenedFile(path);
       if (!selectedFiles.includes(path)) {
         onFileSelect?.(path);
       }
@@ -215,7 +213,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             <FlatView
               files={filteredFiles}
               selectedFiles={selectedFiles}
-              selectedPath={selectedPath || undefined}
+              selectedPath={lastOpenedFilePath || undefined}
               searchQuery={searchQuery}
               onSelect={onFileSelect}
               onFileClick={handleFileClick}
@@ -225,7 +223,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             <GroupedView
               groupedFiles={groupedFiles}
               selectedFiles={selectedFiles}
-              selectedPath={selectedPath || undefined}
+              selectedPath={lastOpenedFilePath || undefined}
               searchQuery={searchQuery}
               onSelect={onFileSelect}
               onFileClick={handleFileClick}
@@ -236,7 +234,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             <TreeView
               fileTree={fileTree}
               selectedFiles={selectedFiles}
-              selectedPath={selectedPath || undefined}
+              selectedPath={lastOpenedFilePath || undefined}
               searchQuery={searchQuery}
               onSelect={onFileSelect}
               onFileClick={(path) => handleFileClick(path, false)}
@@ -245,7 +243,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         </div>
       </Section.Content>
 
-      {showDiff && <DiffViewer />}
+      {!!lastOpenedFilePath && <DiffViewer />}
     </Section>
   );
 };

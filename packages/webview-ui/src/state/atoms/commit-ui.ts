@@ -3,14 +3,25 @@ import type { FileUIState } from "../types";
 import { VIEW_MODES } from "../../components/commit/file-changes/constants";
 import { atomWithStorage } from "../storage";
 
-// 选中的文件路径
-export const selectedFileAtom = atom<string | null>(null);
+// 持久化的最后打开的文件
+export const lastOpenedFilePathAtom = atomWithStorage<string>({
+  key: "yaac.webview-ui.treeview.last-opened-file",
+  defaultValue: "",
+  storageType: "both",
+});
 
 // 文件UI状态（展开/折叠等）
 export const fileUIStatesAtom = atom<Record<string, FileUIState>>({});
 
-// 是否显示diff预览
-export const showDiffAtom = atom<boolean>(false);
+// 是否显示diff预览（与lastOpenedFile关联）
+export const showDiffAtom = atom(
+  (get) => !!get(lastOpenedFilePathAtom),
+  (get, set, showDiff: boolean) => {
+    if (!showDiff) {
+      set(lastOpenedFilePathAtom, "");
+    }
+  }
+);
 
 // 搜索查询
 export const searchQueryAtom = atom<string>("");
@@ -25,13 +36,9 @@ export const toggleFileExpansionAtom = atom(null, (get, set, path: string) => {
   });
 });
 
-export const selectFileAtom = atom(null, (get, set, path: string | null) => {
-  set(selectedFileAtom, path);
-  set(showDiffAtom, path !== null);
-});
-
 // View mode atom with persistence
 export const viewModeAtom = atomWithStorage<keyof typeof VIEW_MODES>({
   key: "yaac.webview.viewMode",
   defaultValue: "flat",
+  storageType: "both",
 });
