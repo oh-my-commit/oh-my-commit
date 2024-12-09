@@ -157,7 +157,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
               className="w-full search-input"
               placeholder="Filter"
               value={searchQuery}
-              onChange={(e) => {
+              onInput={(e) => {
                 const target = e.target as HTMLInputElement;
                 setSearchQuery(target.value);
               }}
