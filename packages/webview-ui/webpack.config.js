@@ -37,6 +37,10 @@ module.exports = (env, argv) => {
               loader: "ts-loader",
               options: {
                 transpileOnly: true,
+                compilerOptions: {
+                  sourceMap: true,
+                  noEmit: false
+                }
               },
             },
           ],
