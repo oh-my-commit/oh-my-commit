@@ -35,7 +35,7 @@ const SectionHeader = ({ title, actions }: SectionHeaderProps) => {
 
 const SectionContent = ({ children, className = "" }: SectionContentProps) => {
   return (
-    <div className={`section-content flex flex-col gap-3 ${className}`}>
+    <div className={`section-content flex flex-col ${className}`}>
       {children}
     </div>
   );

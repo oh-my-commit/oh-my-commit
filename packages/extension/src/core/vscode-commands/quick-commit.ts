@@ -79,14 +79,24 @@ export class QuickCommitCommand implements VscodeCommand {
 
     // Handle messages from webview
     panel.webview.onDidReceiveMessage(
-      async (message: { command: string; message: string }) => {
+      async (message: { command: string; message: string; data?: any }) => {
         try {
           switch (message.command) {
+            case "get-files":
+              const files = await this.gitService.getStagedFiles();
+              panel.webview.postMessage({
+                type: "update-files",
+                files,
+              });
+              break;
             case "commit":
               if (isAmendMode) {
                 await this.gitService.amendCommit(message.message);
               } else {
-                await this.gitService.commit(message.message);
+                await this.gitService.commit(message.data.message, {
+                  detail: message.data.detail,
+                  files: message.data.selectedFiles,
+                });
               }
               vscode.window.showInformationMessage(
                 isAmendMode
@@ -97,6 +107,9 @@ export class QuickCommitCommand implements VscodeCommand {
               break;
             case "cancel":
               panel.dispose();
+              break;
+            case "showError":
+              vscode.window.showErrorMessage(message.data);
               break;
           }
         } catch (error) {

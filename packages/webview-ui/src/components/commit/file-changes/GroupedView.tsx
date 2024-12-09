@@ -1,9 +1,9 @@
-import React from 'react';
-import { cn } from '../../../lib/utils';
-import { STATUS_COLORS, STATUS_LABELS } from './constants';
-import { FileItem } from './FileItem';
-import type { FileChange } from '../../../state/types';
-import { Checkbox } from '../../common/Checkbox';
+import React from "react";
+import { cn } from "../../../lib/utils";
+import { STATUS_COLORS, STATUS_LABELS } from "./constants";
+import { FileItem } from "./FileItem";
+import type { FileChange } from "../../../state/types";
+import { Checkbox } from "../../common/Checkbox";
 
 interface GroupedViewProps {
   groupedFiles: {

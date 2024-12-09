@@ -20,7 +20,7 @@ export const FlatView: React.FC<FlatViewProps> = ({
   onFileClick,
 }) => {
   return (
-    <div className="flex flex-col gap-0 p-2">
+    <div className="flex flex-col gap-0.5 p-2">
       {files.map((file) => (
         <FileItem
           key={file.path}

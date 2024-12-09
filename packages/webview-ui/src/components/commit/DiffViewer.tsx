@@ -3,6 +3,7 @@ import {
   lastOpenedFilePathAtom,
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
+import { diffWrapLineAtom } from "@/state/atoms/ui";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import React, { useMemo } from "react";
@@ -12,11 +13,10 @@ import { twj } from "tw-to-css";
 import { HighlightText } from "../common/HighlightText";
 
 export const DiffViewer: React.FC = () => {
-  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom,
-  );
+  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(lastOpenedFilePathAtom);
   const [files] = useAtom(commitFilesAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
+  const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
 
   const selectedFile = files.find((f) => f.path === lastOpenedFilePath);
 
@@ -90,6 +90,13 @@ export const DiffViewer: React.FC = () => {
         <div className="flex items-center gap-1">
           <VSCodeButton
             appearance="icon"
+            title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
+            onClick={() => setWrapLine(!wrapLine)}
+          >
+            {wrapLine ? "⟲" : "⟳"}
+          </VSCodeButton>
+          <VSCodeButton
+            appearance="icon"
             title="Close diff view"
             onClick={handleClose}
           >
@@ -123,6 +130,9 @@ export const DiffViewer: React.FC = () => {
                 const props: any = { ...node.properties };
                 if (useInlineStyles) {
                   props.style = props.style || {};
+                  if (wrapLine) {
+                    props.style.whiteSpace = "pre-wrap";
+                  }
                 } else {
                   props.className = props.className?.join(" ");
                 }
@@ -144,7 +154,10 @@ export const DiffViewer: React.FC = () => {
             return (
               <pre
                 className={"leading-[20px] py-3"}
-                style={stylesheet['pre[class*="language-"]']}
+                style={{
+                  ...stylesheet['pre[class*="language-"]'],
+                  whiteSpace: wrapLine ? "pre-wrap" : "pre",
+                }}
               >
                 <code style={stylesheet['code[class*="language-"]']}>
                   {rows.map((row: { children?: any[] }, i: number) => {
@@ -184,8 +197,9 @@ export const DiffViewer: React.FC = () => {
             "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number",
           )}
           style={vscDarkPlus}
-          children={processedDiff || "No changes"}
-        />
+        >
+          {processedDiff || "No changes"}
+        </SyntaxHighlighter>
       </div>
     </div>
   );

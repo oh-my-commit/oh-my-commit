@@ -7,3 +7,10 @@ export const viewModeAtom = atomWithStorage<keyof typeof VIEW_MODES>({
   defaultValue: "flat",
   storageType: "both",
 });
+
+// Diff viewer settings
+export const diffWrapLineAtom = atomWithStorage<boolean>({
+  key: "yaac.webview.diffWrapLine",
+  defaultValue: true,
+  storageType: "both",
+});

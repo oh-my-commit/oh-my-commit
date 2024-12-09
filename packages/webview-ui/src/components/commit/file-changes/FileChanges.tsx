@@ -9,14 +9,16 @@ import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@/state/types";
 import { TreeNode } from "@/types/tree-node";
-import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import React, { useMemo } from "react";
 import { Section } from "../../layout/Section";
 import { DiffViewer } from "../DiffViewer";
 import { VIEW_MODES } from "./constants";
+import { EmptyState } from "./EmptyState";
+import { FileStats } from "./FileStats";
 import { FlatView } from "./FlatView";
 import { GroupedView } from "./GroupedView";
+import { SearchBar } from "./SearchBar";
 import { TreeView } from "./TreeView";
 
 interface FileChangesProps {
@@ -28,7 +30,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
 
   const [stats] = useAtom(commitStatsAtom);
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom,
+    lastOpenedFilePathAtom
   );
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
@@ -141,93 +143,85 @@ export const FileChanges: React.FC<FileChangesProps> = ({ onFileSelect }) => {
   };
 
   return (
-    <Section title="Changed Files">
-      <Section.Content>
-        <div className="flex items-center gap-2 px-2 py-1.5 sticky top-0 z-10">
-          <div className="relative flex-1 flex items-center">
-            <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10" />
-            <style>
-              {`
-                .search-input::part(control) {
-                  padding-left: 24px !important;
-                }
-              `}
-            </style>
-            <VSCodeTextField
-              className="w-full search-input"
-              placeholder="Filter"
-              value={searchQuery}
-              onInput={(e) => {
-                const target = e.target as HTMLInputElement;
-                setSearchQuery(target.value);
-              }}
-            />
-          </div>
-          <div className="flex items-center gap-2 text-[12px] text-[var(--vscode-descriptionForeground)]">
-            <span>{Object.values(stats).reduce((a, b) => a + b, 0)} files</span>
-            <span>·</span>
-            <span className="text-[var(--vscode-gitDecoration-addedResourceForeground)]">
-              +{stats.added}
-            </span>
-            <span>·</span>
-            <span className="text-[var(--vscode-gitDecoration-deletedResourceForeground)]">
-              -{stats.deleted}
-            </span>
-          </div>
+    <Section
+      title={
+        <div className="flex items-center gap-4">
+          <span>Changed Files</span>
+          <FileStats stats={stats} />
         </div>
-
-        <div className="flex items-center gap-2 px-2">
-          {(Object.keys(VIEW_MODES) as Array<keyof typeof VIEW_MODES>).map(
-            (mode) => (
-              <button
-                key={mode}
-                className={cn(
-                  "px-2 py-1 text-xs rounded-sm",
-                  viewMode === mode
-                    ? "bg-[var(--vscode-toolbar-activeBackground)]"
-                    : "hover:bg-[var(--vscode-toolbar-hoverBackground)]",
+      }
+    >
+      <Section.Content className="">
+        <div className="flex h-full">
+          <div className="w-[300px] flex-none overflow-hidden flex flex-col border-r border-panel-border">
+            <div className="sticky top-0 z-10 bg-[var(--vscode-sideBar-background)] border-b border-[var(--vscode-panel-border)]">
+              <div className="flex items-center justify-between gap-2 px-2 py-1.5">
+                <SearchBar className="w-[240px]" />
+                <div className="flex items-center gap-1 p-0.5 rounded-[3px] bg-[var(--vscode-toolbar-activeBackground)]">
+                  {(
+                    Object.keys(VIEW_MODES) as Array<keyof typeof VIEW_MODES>
+                  ).map((mode) => (
+                    <button
+                      key={mode}
+                      className={cn(
+                        "px-2 py-1 text-xs rounded-[3px] transition-colors duration-100",
+                        viewMode === mode
+                          ? "bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)]"
+                          : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
+                      )}
+                      onClick={() => setViewMode(mode)}
+                    >
+                      {VIEW_MODES[mode]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {filteredFiles.length === 0 && searchQuery ? (
+              <EmptyState
+                searchQuery={searchQuery}
+                onClearSearch={() => setSearchQuery("")}
+              />
+            ) : (
+              <div className="flex-1 min-h-0 overflow-auto scrollbar-gutter-stable">
+                {viewMode === "flat" && (
+                  <FlatView
+                    files={filteredFiles}
+                    selectedFiles={selectedFiles}
+                    selectedPath={lastOpenedFilePath || undefined}
+                    searchQuery={searchQuery}
+                    onSelect={onFileSelect}
+                    onFileClick={handleFileClick}
+                  />
                 )}
-                onClick={() => setViewMode(mode)}
-              >
-                {VIEW_MODES[mode]}
-              </button>
-            ),
-          )}
-        </div>
-
-        <div className="flex-1 overflow-auto px-2">
-          {viewMode === "flat" && (
-            <FlatView
-              files={filteredFiles}
-              selectedFiles={selectedFiles}
-              selectedPath={lastOpenedFilePath || undefined}
-              searchQuery={searchQuery}
-              onSelect={onFileSelect}
-              onFileClick={handleFileClick}
-            />
-          )}
-          {viewMode === "grouped" && (
-            <GroupedView
-              groupedFiles={groupedFiles}
-              selectedFiles={selectedFiles}
-              selectedPath={lastOpenedFilePath || undefined}
-              searchQuery={searchQuery}
-              onSelect={onFileSelect}
-              onFileClick={handleFileClick}
-              onGroupSelect={handleGroupSelect}
-            />
-          )}
-          {viewMode === "tree" && (
-            <TreeView
-              fileTree={fileTree}
-              onFileSelect={onFileSelect}
-              onFileClick={(path) => handleFileClick(path, false)}
-            />
+                {viewMode === "grouped" && (
+                  <GroupedView
+                    groupedFiles={groupedFiles}
+                    selectedFiles={selectedFiles}
+                    selectedPath={lastOpenedFilePath || undefined}
+                    searchQuery={searchQuery}
+                    onSelect={onFileSelect}
+                    onFileClick={handleFileClick}
+                    onGroupSelect={handleGroupSelect}
+                  />
+                )}
+                {viewMode === "tree" && (
+                  <TreeView
+                    fileTree={fileTree}
+                    onFileSelect={onFileSelect}
+                    onFileClick={(path) => handleFileClick(path, false)}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+          {!!lastOpenedFilePath && (
+            <div className="flex-1 min-w-0 overflow-auto">
+              <DiffViewer />
+            </div>
           )}
         </div>
       </Section.Content>
-
-      {!!lastOpenedFilePath && <DiffViewer />}
     </Section>
   );
 };

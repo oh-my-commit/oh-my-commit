@@ -8,7 +8,7 @@ import {
   commitMessageAtom,
 } from "@/state/atoms/commit.message";
 import { useAtom } from "jotai";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { getVSCodeAPI } from "@/utils/vscode";
@@ -20,6 +20,24 @@ export function CommitPage() {
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
 
   const vscode = getVSCodeAPI();
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      const message = event.data;
+      switch (message.type) {
+        case "update-files":
+          setFiles(message.files);
+          break;
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    
+    // Request initial files
+    vscode.postMessage({ command: "get-files" });
+
+    return () => window.removeEventListener("message", handleMessage);
+  }, [setFiles]);
 
   const handleCommit = useCallback(() => {
     if (!message.trim()) {
@@ -52,7 +70,7 @@ export function CommitPage() {
   );
 
   return (
-    <div className="flex flex-col h-full gap-4 mx-auto max-w-[1080px]">
+    <div className="flex flex-col h-full min-h-0 gap-4 mx-auto max-w-[1080px]">
       <CommitMessage
         message={message}
         detail={detail}
