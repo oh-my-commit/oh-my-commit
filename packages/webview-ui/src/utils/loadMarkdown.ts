@@ -10,7 +10,9 @@ export const loadMarkdown = async (name: "commit-specification"): Promise<string
     if (!response.ok) {
       throw new Error(`Failed to fetch markdown: ${response.statusText}`);
     }
-    return await response.text();
+    const text = await response.text();
+    // Remove HTML comments from the markdown content
+    return text.replace(/<!--[\s\S]*?-->/g, '');
   } catch (error) {
     console.error('Error loading markdown:', error);
     return "Failed to load markdown content. Please try again later.";
