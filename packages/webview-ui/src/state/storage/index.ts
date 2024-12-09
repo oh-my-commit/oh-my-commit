@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import { getVSCodeAPI } from "../utils/vscode";
-import type { VSCodeStorageOptions } from "./types";
+import { getVSCodeAPI } from "../../utils/vscode";
+import type { VSCodeStorageOptions } from "../types";
 
 function getFromLocalStorage<T>(key: string, defaultValue: T): T {
   const item = localStorage.getItem(key);
@@ -25,15 +25,14 @@ function setToVSCode<T>(key: string, value: T): void {
 
 export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
   const { key, defaultValue, storageType = "localStorage" } = options;
-
+  
   // Initialize base atom with appropriate default value
   const initialValue = (() => {
     if (storageType === "localStorage") {
       return getFromLocalStorage(key, defaultValue);
     } else if (storageType === "vscode") {
       return getFromVSCode(key, defaultValue);
-    } else {
-      // 'both'
+    } else { // "both"
       // Prefer VSCode state over localStorage
       const vscodeValue = getFromVSCode(key, undefined);
       return vscodeValue ?? getFromLocalStorage(key, defaultValue);
@@ -46,7 +45,7 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
     (get) => get(baseAtom),
     (get, set, update) => {
       set(baseAtom, update);
-
+      
       // Sync to appropriate storage(s)
       if (storageType === "localStorage" || storageType === "both") {
         setToLocalStorage(key, update);
