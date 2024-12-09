@@ -15,8 +15,14 @@ import { viewModeAtom } from "@/state/atoms/ui";
 import type { FileChange } from "@/state/types";
 
 const VIEW_MODES = {
-  flat: "Flat",
-  grouped: "Grouped",
+  flat: {
+    label: "Flat View",
+    icon: "list-flat",
+  },
+  grouped: {
+    label: "Grouped View",
+    icon: "list-tree",
+  },
 } as const;
 
 interface FileChangesListProps {
@@ -100,26 +106,22 @@ export const FileChangesList: React.FC<FileChangesListProps> = ({
   return (
     <div className="flex flex-col h-full">
       <div className="sticky top-0 z-10 bg-[var(--vscode-sideBar-background)] border-b border-[var(--vscode-panel-border)]">
-        <div className="flex items-center justify-between gap-2 px-2 py-1.5">
-          <SearchBar className="w-[240px]" />
-          <div className="flex items-center gap-1 p-0.5 rounded-[3px] bg-[var(--vscode-toolbar-activeBackground)]">
-            {(Object.keys(VIEW_MODES) as Array<keyof typeof VIEW_MODES>).map(
-              (mode) => (
-                <button
-                  key={mode}
-                  className={cn(
-                    "px-2 py-1 text-xs rounded-[3px] transition-colors duration-100",
-                    viewMode === mode
-                      ? "bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)]"
-                      : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
-                  )}
-                  onClick={() => setViewMode(mode)}
-                >
-                  {VIEW_MODES[mode]}
-                </button>
-              )
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2">
+          <SearchBar className="w-full sm:w-[240px] min-w-[120px]" />
+          <button
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
+              "self-end sm:self-auto"
             )}
-          </div>
+            onClick={() =>
+              setViewMode(viewMode === "flat" ? "grouped" : "flat")
+            }
+            title={`Switch to ${
+              VIEW_MODES[viewMode === "flat" ? "grouped" : "flat"].label
+            }`}
+          >
+            <i className={`codicon codicon-${VIEW_MODES[viewMode].icon}`} />
+          </button>
         </div>
       </div>
 
