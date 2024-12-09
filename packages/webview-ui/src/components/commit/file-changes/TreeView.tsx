@@ -162,6 +162,7 @@ export const TreeView = ({
 
     return (
       <div key={node.path || "root"}>
+        {/* Only show directory node UI if it's not the root or if level > 0 */}
         {(node.path || level > 0) && (
           <div
             style={{ paddingLeft: `${level * 16}px` }}
@@ -185,7 +186,8 @@ export const TreeView = ({
             )}
           </div>
         )}
-        {isExpanded &&
+        {/* Always render children if expanded, regardless of whether this is root */}
+        {(isExpanded || !node.path) &&
           node.children?.map((child) => renderTreeNode(child, level + 1))}
       </div>
     );
