@@ -35,7 +35,7 @@ const SectionHeader = ({ title, actions }: SectionHeaderProps) => {
 
 const SectionContent = ({ children, className = "" }: SectionContentProps) => {
   return (
-    <div className={`section-content flex flex-col ${className}`}>
+    <div className={`section-content flex flex-col gap-2 ${className}`}>
       {children}
     </div>
   );
@@ -60,7 +60,7 @@ export const Section = ({
 }: SectionProps) => {
   return (
     <section
-      className={`m-4 flex flex-col gap-3 ${className} bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]`}
+      className={`m-4 flex flex-col gap-4 ${className} bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]`}
     >
       <SectionHeader title={title} actions={actions} />
       {children}
