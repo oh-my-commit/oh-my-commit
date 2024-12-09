@@ -2,7 +2,7 @@ import type { FileChange } from "../state/types";
 
 export const mockFileChanges: FileChange[] = [
   {
-    path: "src/components/commit/CommitForm.tsx",
+    path: "@/components/commit/CommitForm.tsx",
     type: "modified",
     status: "modified",
     additions: 15,
@@ -13,7 +13,7 @@ export const mockFileChanges: FileChange[] = [
 -import { commitState } from '../state/atoms';
 +import { commitMessageAtom, commitDetailAtom } from '../../state/atoms/commit-core';
 +import type { CommitState } from '../../state/types';
- 
+
  interface CommitFormProps {
    onSubmit?: () => void;
 @@ -15,7 +17,7 @@ export const CommitForm: React.FC<CommitFormProps> = ({ onSubmit }) => {
@@ -27,7 +27,7 @@ export const mockFileChanges: FileChange[] = [
              <span className="ai-badge">AI</span>`,
   },
   {
-    path: "src/components/commit/FileChanges.tsx",
+    path: "@/components/commit/FileChanges.tsx",
     type: "added",
     status: "added",
     additions: 73,
@@ -52,7 +52,7 @@ export const mockFileChanges: FileChange[] = [
 +  const [, selectFile] = useAtom(selectFileAtom);`,
   },
   {
-    path: "src/state/atoms/commit-core.ts",
+    path: "@/state/atoms/commit-core.ts",
     type: "modified",
     status: "modified",
     additions: 42,
@@ -75,7 +75,7 @@ export const mockFileChanges: FileChange[] = [
 +export const selectedFilesAtom = atom<string[]>([]);`,
   },
   {
-    path: "src/state/types.ts",
+    path: "@/state/types.ts",
     type: "modified",
     status: "modified",
     additions: 12,
@@ -98,7 +98,7 @@ export const mockFileChanges: FileChange[] = [
 -export type FileStatus = 'added' | 'modified' | 'deleted';`,
   },
   {
-    path: "src/utils/vscode.ts",
+    path: "@/utils/vscode.ts",
     type: "deleted",
     status: "deleted",
     additions: 0,

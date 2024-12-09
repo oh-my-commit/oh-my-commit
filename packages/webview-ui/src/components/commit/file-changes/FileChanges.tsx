@@ -1,17 +1,18 @@
-import React, { useMemo, useState } from "react";
-import { useAtom } from "jotai";
-import { commitStatsAtom } from "../../../state/atoms/commit-core";
+import { cn } from "@/lib/utils";
 import {
-  searchQueryAtom,
-  viewModeAtom,
+  commitStatsAtom,
   lastOpenedFilePathAtom,
-} from "../../../state/atoms/commit-ui";
-import { DiffViewer } from "../DiffViewer";
-import type { FileChange } from "../../../state/types";
-import type { CommitState } from "../../../types/commit-state";
+  selectedFilesAtom,
+} from "@/state/atoms/commit.changed-files";
+import { searchQueryAtom } from "@/state/atoms/search";
+import { viewModeAtom } from "@/state/atoms/ui";
+import { FileChange } from "@/state/types";
+import { TreeNode } from "@/types/tree-node";
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
-import { cn } from "../../../lib/utils";
+import { useAtom } from "jotai";
+import React, { useMemo } from "react";
 import { Section } from "../../layout/Section";
+import { DiffViewer } from "../DiffViewer";
 import { VIEW_MODES } from "./constants";
 import { FlatView } from "./FlatView";
 import { GroupedView } from "./GroupedView";
@@ -19,29 +20,18 @@ import { TreeView } from "./TreeView";
 
 interface FileChangesProps {
   files: FileChange[];
-  selectedFiles: string[];
-  setState: (update: Partial<CommitState>) => void;
   onFileSelect?: (path: string) => void;
-}
-
-interface TreeNode {
-  displayName: string;
-  path: string;
-  type: "file" | "directory";
-  children?: TreeNode[];
-  fileInfo?: FileChange;
 }
 
 export const FileChanges: React.FC<FileChangesProps> = ({
   files,
-  selectedFiles,
-  setState,
   onFileSelect,
 }) => {
   const [stats] = useAtom(commitStatsAtom);
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
 
@@ -150,7 +140,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     const newSelectedFiles = selected
       ? [...new Set([...selectedFiles, ...files.map((f) => f.path)])]
       : selectedFiles.filter((p) => !files.some((f) => f.path === p));
-    setState({ selectedFiles: newSelectedFiles });
+    setSelectedFiles(newSelectedFiles);
   };
 
   return (
@@ -198,13 +188,13 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                   "px-2 py-1 text-xs rounded-sm",
                   viewMode === mode
                     ? "bg-[var(--vscode-toolbar-activeBackground)]"
-                    : "hover:bg-[var(--vscode-toolbar-hoverBackground)]"
+                    : "hover:bg-[var(--vscode-toolbar-hoverBackground)]",
                 )}
                 onClick={() => setViewMode(mode)}
               >
                 {VIEW_MODES[mode]}
               </button>
-            )
+            ),
           )}
         </div>
 

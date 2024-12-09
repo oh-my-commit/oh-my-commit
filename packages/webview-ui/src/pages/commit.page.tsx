@@ -1,21 +1,23 @@
-import React, { useCallback } from "react";
-import { useCommit } from "../state/hooks/useCommit";
-import { FileChanges } from "../components/commit/file-changes/FileChanges";
-import { CommitMessage } from "../components/commit/CommitMessage";
-import { getVSCodeAPI } from "../utils/vscode";
 import { Footer } from "@/components/footer";
-import { Section } from "@/components/layout/Section";
+import {
+  commitFilesAtom,
+  selectedFilesAtom,
+} from "@/state/atoms/commit.changed-files";
+import {
+  commitDetailAtom,
+  commitMessageAtom,
+} from "@/state/atoms/commit.message";
+import { useAtom } from "jotai";
+import React, { useCallback } from "react";
+import { CommitMessage } from "@/components/commit/core/CommitMessage";
+import { FileChanges } from "../components/commit/file-changes/FileChanges";
+import { getVSCodeAPI } from "../utils/vscode";
 
 export function CommitPage() {
-  const {
-    message,
-    detail,
-    files,
-    selectedFiles,
-    setMessage,
-    setDetail,
-    setState,
-  } = useCommit();
+  const [message, setMessage] = useAtom(commitMessageAtom);
+  const [detail, setDetail] = useAtom(commitDetailAtom);
+  const [files] = useAtom(commitFilesAtom);
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
 
   const vscode = getVSCodeAPI();
 
@@ -44,9 +46,9 @@ export function CommitPage() {
       const newSelectedFiles = selectedFiles.includes(path)
         ? selectedFiles.filter((p) => p !== path)
         : [...selectedFiles, path];
-      setState({ selectedFiles: newSelectedFiles });
+      setSelectedFiles(newSelectedFiles);
     },
-    [selectedFiles, setState]
+    [selectedFiles],
   );
 
   return (
@@ -61,12 +63,7 @@ export function CommitPage() {
         disabled={!message.trim() || selectedFiles.length === 0}
       />
 
-      <FileChanges
-        files={files}
-        selectedFiles={selectedFiles}
-        setState={setState}
-        onFileSelect={handleFileSelect}
-      />
+      <FileChanges files={files} onFileSelect={handleFileSelect} />
 
       <Footer />
     </div>

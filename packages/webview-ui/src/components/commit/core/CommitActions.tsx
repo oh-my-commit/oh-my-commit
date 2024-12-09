@@ -1,13 +1,20 @@
-import React from 'react';
-import { useAtom } from 'jotai';
-import { commitMessageAtom, commitDetailAtom, commitFilesAtom } from '../../state/atoms/commit-core';
+import { commitFilesAtom } from "@/state/atoms/commit.changed-files";
+import { useAtom } from "jotai";
+import React from "react";
+import {
+  commitDetailAtom,
+  commitMessageAtom,
+} from "@/state/atoms/commit.message";
 
 interface CommitActionsProps {
   onCommit?: () => void;
   onCancel?: () => void;
 }
 
-export const CommitActions: React.FC<CommitActionsProps> = ({ onCommit, onCancel }) => {
+export const CommitActions: React.FC<CommitActionsProps> = ({
+  onCommit,
+  onCancel,
+}) => {
   const [message] = useAtom(commitMessageAtom);
   const [detail] = useAtom(commitDetailAtom);
   const [files] = useAtom(commitFilesAtom);
@@ -21,11 +28,7 @@ export const CommitActions: React.FC<CommitActionsProps> = ({ onCommit, onCancel
         <span className="hint">AI-powered commit message</span>
       </div>
       <div className="actions-right">
-        <button
-          className="cancel-button"
-          onClick={onCancel}
-          type="button"
-        >
+        <button className="cancel-button" onClick={onCancel} type="button">
           Cancel
         </button>
         <button

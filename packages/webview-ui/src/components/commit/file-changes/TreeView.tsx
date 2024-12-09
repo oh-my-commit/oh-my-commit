@@ -1,24 +1,14 @@
-import React, { useEffect } from "react";
+import {
+  expandedDirsAtom,
+  lastOpenedFilePathAtom,
+  selectedFilesAtom,
+} from "@/state/atoms/commit.changed-files";
+import { TreeNode } from "@/types/tree-node";
 import { useAtom } from "jotai";
+import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
 import { HighlightText } from "../../common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import { atomWithStorage } from "../../../state/storage";
-import { TreeNode } from "@/types/tree-node";
-import { lastOpenedFilePathAtom } from "../../../state/atoms/commit-ui";
-
-// Create atoms for persistent state
-export const expandedDirsAtom = atomWithStorage<string[]>({
-  key: "yaac.webview-ui.treeview.expanded-dirs",
-  defaultValue: [""],
-  storageType: "both",
-});
-
-export const selectedFilesAtom = atomWithStorage<string[]>({
-  key: "yaac.webview-ui.treeview.selected-files",
-  defaultValue: [],
-  storageType: "both",
-});
 
 interface TreeViewProps {
   fileTree: TreeNode;
@@ -41,10 +31,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const [persistedSelectedFiles, setPersistedSelectedFiles] =
     useAtom(selectedFilesAtom);
   const [lastOpenedFile, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
 
-  const expandedDirs = new Set(expandedDirsArray);
+  const expandedDirsSet = new Set(expandedDirsArray);
 
   // Use props if provided, otherwise use persisted state
   const selectedFiles = propSelectedFiles?.length
@@ -73,7 +63,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   useEffect(() => {
     if (selectedPath) {
       const parts = selectedPath.split("/");
-      const parentDirs = new Set(expandedDirs);
+      const parentDirs = new Set(expandedDirsSet);
 
       // Build parent directory paths and add them to expanded set
       let currentPath = "";
@@ -104,7 +94,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   // Function to collect all directory paths from the tree
   const getAllDirectoryPaths = (
     node: TreeNode,
-    parentPath: string = ""
+    parentPath: string = "",
   ): string[] => {
     const currentPath = parentPath
       ? `${parentPath}/${node.displayName}`
@@ -113,28 +103,51 @@ export const TreeView: React.FC<TreeViewProps> = ({
       return [
         currentPath,
         ...node.children.flatMap((child) =>
-          getAllDirectoryPaths(child, currentPath)
+          getAllDirectoryPaths(child, currentPath),
         ),
       ];
     }
     return [];
   };
 
-  // Expand all directories by default
+  // Get all subdirectories under a path
+  const getSubDirectories = (path: string): string[] => {
+    const allDirs = getAllDirectoryPaths(fileTree);
+    return allDirs.filter((dir) => dir.startsWith(path + "/"));
+  };
+
+  // Initialize expanded dirs only when there's no persisted state
   useEffect(() => {
-    const allDirPaths = getAllDirectoryPaths(fileTree);
-    setExpandedDirs(new Set(["", ...allDirPaths]));
-  }, [fileTree]);
+    if (expandedDirsArray.length === 0) {
+      const allDirPaths = getAllDirectoryPaths(fileTree);
+      setExpandedDirs(new Set(allDirPaths));
+    }
+  }, []); // 只在组件首次挂载时执行
 
   // Toggle directory expansion
   const toggleDir = (path: string) => {
-    setExpandedDirs(
-      new Set(
-        [...Array.from(expandedDirs)]
-          .filter((p) => p !== path)
-          .concat(expandedDirs.has(path) ? [] : [path])
-      )
-    );
+    const newExpandedDirs = new Set(expandedDirsSet);
+
+    if (expandedDirsSet.has(path)) {
+      // When collapsing, remove this dir and all its subdirs
+      newExpandedDirs.delete(path);
+      const subDirs = getSubDirectories(path);
+      subDirs.forEach((dir) => newExpandedDirs.delete(dir));
+    } else {
+      // When expanding, only add this dir and its immediate children
+      newExpandedDirs.add(path);
+      const immediateChildren =
+        fileTree.children
+          ?.filter(
+            (node) =>
+              node.type === "directory" && node.path.startsWith(path + "/"),
+          )
+          ?.filter((node) => !node.path.slice(path.length + 1).includes("/"))
+          ?.map((node) => node.path) || [];
+      immediateChildren.forEach((dir) => newExpandedDirs.add(dir));
+    }
+
+    setExpandedDirs(newExpandedDirs);
   };
 
   const handleClick = (node: TreeNode, path: string) => {
@@ -161,7 +174,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           className={cn(
             "flex items-center gap-2 px-2 py-1 rounded-sm cursor-pointer group",
             isActive && "bg-[var(--vscode-list-activeSelectionBackground)]",
-            !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]"
+            !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]",
           )}
           onClick={() => handleClick(node, file.path)}
         >
@@ -173,7 +186,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <span
             className={cn(
               STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-              isActive && "text-inherit"
+              isActive && "text-inherit",
             )}
             title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
           >
@@ -194,7 +207,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
               <span
                 className={cn(
                   "text-git-deleted-fg",
-                  isActive && "text-inherit"
+                  isActive && "text-inherit",
                 )}
               >
                 −{file.deletions}
@@ -205,7 +218,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       );
     }
 
-    const isExpanded = expandedDirs.has(node.path);
+    const isExpanded = expandedDirsSet.has(node.path);
     const hasChildren = node.children && node.children.length > 0;
 
     return (
@@ -220,7 +233,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
               <i
                 className={cn(
                   "codicon",
-                  isExpanded ? "codicon-chevron-down" : "codicon-chevron-right"
+                  isExpanded ? "codicon-chevron-down" : "codicon-chevron-right",
                 )}
               />
             )}
