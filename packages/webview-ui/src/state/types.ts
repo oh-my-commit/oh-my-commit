@@ -33,13 +33,22 @@ export interface FileSelectionState {
 }
 
 // 统计信息（派生状态）
-export interface CommitStats {
+export interface FileStats {
   added: number;
   modified: number;
   deleted: number;
-  total: number;
   additions: number;
   deletions: number;
+}
+
+export interface CommitStats {
+  staged: FileStats;
+  unstaged: FileStats;
+  selected: FileStats;
+  total: {
+    files: number;
+    selectedFiles: number;
+  } & FileStats;
 }
 
 // VSCode存储选项

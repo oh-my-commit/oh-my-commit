@@ -1,5 +1,5 @@
 import {
-  commitFilesAtom,
+  stagedFilesAtom,
   lastOpenedFilePathAtom,
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
@@ -17,11 +17,11 @@ export const DiffViewer: React.FC = () => {
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
     lastOpenedFilePathAtom
   );
-  const [files] = useAtom(commitFilesAtom);
+  const [stagedFiles] = useAtom(stagedFilesAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
 
-  const selectedFile = files.find((f) => f.path === lastOpenedFilePath);
+  const selectedFile = stagedFiles.find((f) => f.path === lastOpenedFilePath);
 
   const { language, processedDiff, lineTypes } = useMemo(() => {
     if (!selectedFile?.diff) {

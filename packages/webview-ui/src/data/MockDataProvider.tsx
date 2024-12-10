@@ -1,17 +1,17 @@
 import { mockFileChanges } from "@/data/mock-changed-files";
-import { commitFilesAtom } from "@/state/atoms/commit.changed-files";
+import { stagedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { useSetAtom } from "jotai";
 import React, { useEffect } from "react";
 
 export const MockDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const setFiles = useSetAtom(commitFilesAtom);
+  const setStagedFiles = useSetAtom(stagedFilesAtom);
 
   useEffect(() => {
     // 加载mock数据
-    setFiles(mockFileChanges);
-  }, [setFiles]);
+    setStagedFiles(mockFileChanges);
+  }, [setStagedFiles]);
 
   return <>{children}</>;
 };

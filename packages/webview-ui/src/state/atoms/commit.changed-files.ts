@@ -4,11 +4,18 @@ import type { CommitStats } from "@/state/types";
 import { FileChange } from "@/types/file-change";
 import { atom } from "jotai/index";
 
-export const commitFilesAtom = atomWithStorage<FileChange[]>({
-  key: "yaac.commit.files",
+export const stagedFilesAtom = atomWithStorage<FileChange[]>({
+  key: "yaac.commit.staged-files",
   defaultValue: [],
   storageType: "localStorage",
 });
+
+export const unstagedFilesAtom = atomWithStorage<FileChange[]>({
+  key: "yaac.commit.unstaged-files",
+  defaultValue: [],
+  storageType: "localStorage",
+});
+
 export const expandedDirsAtom = atomWithStorage<string[]>({
   key: "yaac.webview-ui.treeview.expanded-dirs",
   defaultValue: [],
@@ -29,18 +36,30 @@ export const lastOpenedFilePathAtom = atomWithStorage<string>({
 
 // 派生状态
 export const commitStatsAtom = atom<CommitStats>((get) => {
-  const files = get(commitFilesAtom);
+  const stagedFiles = get(stagedFilesAtom);
+  const unstagedFiles = get(unstagedFilesAtom);
   const selectedPaths = new Set(get(selectedFilesAtom));
 
-  const totalFiles = files.length;
-  const selectedFiles = files.filter((f) => selectedPaths.has(f.path)).length;
-
-  return {
+  const getStats = (files: FileChange[]) => ({
     added: files.filter((f) => f.type === "added").length,
     modified: files.filter((f) => f.type === "modified").length,
     deleted: files.filter((f) => f.type === "deleted").length,
-    total: totalFiles,
     additions: files.reduce((sum, f) => sum + (f.additions || 0), 0),
     deletions: files.reduce((sum, f) => sum + (f.deletions || 0), 0),
+  });
+
+  const stagedStats = getStats(stagedFiles);
+  const unstagedStats = getStats(unstagedFiles);
+  const selectedStats = getStats([...stagedFiles, ...unstagedFiles].filter(f => selectedPaths.has(f.path)));
+
+  return {
+    staged: stagedStats,
+    unstaged: unstagedStats,
+    selected: selectedStats,
+    total: {
+      files: stagedFiles.length + unstagedFiles.length,
+      selectedFiles: selectedPaths.size,
+      ...getStats([...stagedFiles, ...unstagedFiles])
+    }
   };
 });

@@ -1,7 +1,8 @@
 import { Footer } from "@/components/footer";
 import {
-  commitFilesAtom,
+  stagedFilesAtom,
   selectedFilesAtom,
+  unstagedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 import {
   commitDetailAtom,
@@ -16,7 +17,8 @@ import { getVSCodeAPI } from "@/utils/vscode";
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
   const [detail, setDetail] = useAtom(commitDetailAtom);
-  const [files, setFiles] = useAtom(commitFilesAtom);
+  const [stagedFiles, setStagedFiles] = useAtom(stagedFilesAtom);
+  const [unstagedFiles, setUnstagedFiles] = useAtom(unstagedFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
 
   const vscode = getVSCodeAPI();
@@ -25,19 +27,25 @@ export function CommitPage() {
     const handleMessage = (event: MessageEvent) => {
       const message = event.data;
       switch (message.type) {
+        case "init":
+          setStagedFiles(message.stagedFiles.files);
+          setUnstagedFiles(message.unstagedFiles.files);
+          setSelectedFiles(message.stagedFiles.files || []); // Auto-select all staged files initially
+          break;
         case "update-files":
-          setFiles(message.files);
+          setStagedFiles(message.stagedFiles.files);
+          setUnstagedFiles(message.unstagedFiles.files);
           break;
       }
     };
 
     window.addEventListener("message", handleMessage);
-    
+
     // Request initial files
     vscode.postMessage({ command: "get-files" });
 
     return () => window.removeEventListener("message", handleMessage);
-  }, [setFiles]);
+  }, [setStagedFiles, setUnstagedFiles, setSelectedFiles]);
 
   const handleCommit = useCallback(() => {
     if (!message.trim()) {
@@ -53,20 +61,21 @@ export function CommitPage() {
       data: {
         message,
         detail,
-        files,
+        stagedFiles,
+        unstagedFiles,
         selectedFiles,
       },
     });
-  }, [message, detail, files, selectedFiles]);
+  }, [message, detail, stagedFiles, unstagedFiles, selectedFiles]);
 
   const handleFileSelect = useCallback(
-    (path: string) => {
+    (path: string, isStaged: boolean) => {
       const newSelectedFiles = selectedFiles.includes(path)
         ? selectedFiles.filter((p) => p !== path)
         : [...selectedFiles, path];
       setSelectedFiles(newSelectedFiles);
     },
-    [selectedFiles],
+    [selectedFiles]
   );
 
   return (
@@ -81,7 +90,12 @@ export function CommitPage() {
         disabled={!message.trim() || selectedFiles.length === 0}
       />
 
-      <FileChanges onFileSelect={handleFileSelect} />
+      <FileChanges
+        stagedFiles={stagedFiles}
+        unstagedFiles={unstagedFiles}
+        selectedFiles={selectedFiles}
+        onFileSelect={handleFileSelect}
+      />
 
       <Footer />
     </div>

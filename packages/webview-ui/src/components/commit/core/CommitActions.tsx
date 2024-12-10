@@ -1,4 +1,4 @@
-import { commitFilesAtom } from "@/state/atoms/commit.changed-files";
+import { stagedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { useAtom } from "jotai";
 import React from "react";
 import {
@@ -17,9 +17,9 @@ export const CommitActions: React.FC<CommitActionsProps> = ({
 }) => {
   const [message] = useAtom(commitMessageAtom);
   const [detail] = useAtom(commitDetailAtom);
-  const [files] = useAtom(commitFilesAtom);
+  const [stagedFiles] = useAtom(stagedFilesAtom);
 
-  const isValid = message.trim().length > 0 && files.length > 0;
+  const isValid = message.trim().length > 0 && stagedFiles.length > 0;
 
   return (
     <div className="actions-bar">

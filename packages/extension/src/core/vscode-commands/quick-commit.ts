@@ -45,6 +45,9 @@ export class QuickCommitCommand implements VscodeCommand {
    * 无需 handle error，因为最外层 @command.manager.ts 会处理
    */
   async execute(): Promise<void> {
+    // Get all changes before staging
+    const changedFiles = await this.gitService.getChangedFiles();
+
     // 先暂存全部 // todo: is it safe
     await this.gitService.stageAll();
     const diff = await this.gitService.getStagedDiff();
@@ -69,34 +72,33 @@ export class QuickCommitCommand implements VscodeCommand {
     // Create webview panel
     const panel = this.webviewManager.createWebviewPanel();
 
+    console.log("== Initialing data...");
     // Send initial data to webview
-    panel.webview.postMessage({
+    const data = {
       type: "init",
       initialMessage,
       isAmendMode,
       diff,
-    });
+      stagedFiles: changedFiles.staged,
+      unstagedFiles: changedFiles.unstaged,
+      totalAdditions:
+        changedFiles.staged.additions + changedFiles.unstaged.additions,
+      totalDeletions:
+        changedFiles.staged.deletions + changedFiles.unstaged.deletions,
+    };
+    console.log("== Initial data:", data);
+    panel.webview.postMessage(data);
 
     // Handle messages from webview
     panel.webview.onDidReceiveMessage(
-      async (message: { command: string; message: string; data?: any }) => {
+      async (message: { command: string; message: string }) => {
         try {
           switch (message.command) {
-            case "get-files":
-              const files = await this.gitService.getStagedFiles();
-              panel.webview.postMessage({
-                type: "update-files",
-                files,
-              });
-              break;
             case "commit":
               if (isAmendMode) {
                 await this.gitService.amendCommit(message.message);
               } else {
-                await this.gitService.commit(message.data.message, {
-                  detail: message.data.detail,
-                  files: message.data.selectedFiles,
-                });
+                await this.gitService.commit(message.message);
               }
               vscode.window.showInformationMessage(
                 isAmendMode
@@ -107,9 +109,6 @@ export class QuickCommitCommand implements VscodeCommand {
               break;
             case "cancel":
               panel.dispose();
-              break;
-            case "showError":
-              vscode.window.showErrorMessage(message.data);
               break;
           }
         } catch (error) {

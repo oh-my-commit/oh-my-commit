@@ -10,14 +10,14 @@ const App: React.FC = () => {
   const [showApp, setShowApp] = useState(false);
 
   if (!showApp) {
-    return <InitAnimation onEnter={() => setShowApp(true)} />;
+    // return <InitAnimation onEnter={() => setShowApp(true)} />;
   }
 
   return (
     <Provider>
-      <MockDataProvider>
-        <CommitPage />
-      </MockDataProvider>
+      {/* <MockDataProvider> */}
+      <CommitPage />
+      {/* </MockDataProvider> */}
     </Provider>
   );
 };

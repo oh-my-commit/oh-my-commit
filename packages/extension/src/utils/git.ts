@@ -3,10 +3,18 @@ import * as path from "path";
 import simpleGit, { SimpleGit } from "simple-git";
 
 export interface CommitChanges {
-  files: string[];
-  additions: number;
-  deletions: number;
-  summary: string;
+  staged: {
+    files: string[];
+    additions: number;
+    deletions: number;
+    summary: string;
+  };
+  unstaged: {
+    files: string[];
+    additions: number;
+    deletions: number;
+    summary: string;
+  };
 }
 
 export class GitCore {
@@ -83,25 +91,36 @@ export class GitCore {
   public async getChangedFiles(): Promise<CommitChanges> {
     try {
       const status = await this.git.status();
-      const diffSummary = await this.git.diffSummary(["--staged"]);
+      const stagedDiffSummary = await this.git.diffSummary(["--staged"]);
+      const unstagedDiffSummary = await this.git.diffSummary();
+
+      const createSummary = (files: { file: string; insertions?: number; deletions?: number; }[]) => {
+        return files.map((file) => {
+          if ("insertions" in file && "deletions" in file) {
+            return `${file.file} | +${file.insertions} -${file.deletions}`;
+          } else if ("insertions" in file) {
+            return `${file.file} | +${file.insertions}`;
+          } else if ("deletions" in file) {
+            return `${file.file} | -${file.deletions}`;
+          } else {
+            return `${file.file}`;
+          }
+        }).join("\n");
+      };
 
       return {
-        files: status.staged,
-        additions: diffSummary.insertions,
-        deletions: diffSummary.deletions,
-        summary: diffSummary.files
-          .map((file) => {
-            if ("insertions" in file && "deletions" in file) {
-              return `${file.file} | +${file.insertions} -${file.deletions}`;
-            } else if ("insertions" in file) {
-              return `${file.file} | +${file.insertions}`;
-            } else if ("deletions" in file) {
-              return `${file.file} | -${file.deletions}`;
-            } else {
-              return `${file.file}`;
-            }
-          })
-          .join("\n"),
+        staged: {
+          files: status.staged,
+          additions: stagedDiffSummary.insertions,
+          deletions: stagedDiffSummary.deletions,
+          summary: createSummary(stagedDiffSummary.files)
+        },
+        unstaged: {
+          files: status.modified,
+          additions: unstagedDiffSummary.insertions,
+          deletions: unstagedDiffSummary.deletions,
+          summary: createSummary(unstagedDiffSummary.files)
+        }
       };
     } catch (error) {
       throw new Error(`Failed to get changed files: ${error}`);
