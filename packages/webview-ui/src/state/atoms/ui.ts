@@ -1,5 +1,5 @@
+import { atomWithStorage } from "@/lib/storage";
 import { VIEW_MODES } from "../../components/commit/file-changes/constants";
-import { atomWithStorage } from "../storage";
 
 // View mode atom with persistence
 export const viewModeAtom = atomWithStorage<keyof typeof VIEW_MODES>({

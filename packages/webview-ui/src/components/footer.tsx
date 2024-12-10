@@ -1,6 +1,6 @@
+import { getVSCodeAPI } from "@/lib/storage";
 import React from "react";
 import packageJson from "../../package.json";
-import { getVSCodeAPI } from "../utils/vscode";
 
 interface FooterProps {
   className?: string;

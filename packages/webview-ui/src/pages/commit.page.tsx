@@ -8,11 +8,11 @@ import {
   commitDetailAtom,
   commitMessageAtom,
 } from "@/state/atoms/commit.message";
+import { getVSCodeAPI } from "@/lib/storage";
 import { useAtom } from "jotai";
 import React, { useCallback, useEffect } from "react";
 import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
-import { getVSCodeAPI } from "@/utils/vscode";
 
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
@@ -75,7 +75,7 @@ export function CommitPage() {
         : [...selectedFiles, path];
       setSelectedFiles(newSelectedFiles);
     },
-    [selectedFiles]
+    [selectedFiles],
   );
 
   return (

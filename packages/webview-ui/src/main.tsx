@@ -1,9 +1,7 @@
+import { Provider } from "jotai";
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Provider } from "jotai";
 import { CommitPage } from "./pages/commit.page";
-import { MockDataProvider } from "./data/MockDataProvider";
-import { InitAnimation } from "./components/common/InitAnimation";
 import "./styles/global.css";
 
 const App: React.FC = () => {
@@ -33,6 +31,6 @@ window.addEventListener("load", () => {
   root.render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 });

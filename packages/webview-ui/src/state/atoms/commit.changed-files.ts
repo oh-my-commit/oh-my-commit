@@ -1,5 +1,5 @@
 // Create atoms for persistent state
-import { atomWithStorage } from "@/state/storage";
+import { atomWithStorage } from "@/lib/storage";
 import type { CommitStats } from "@/state/types";
 import { FileChange } from "@/types/file-change";
 import { atom } from "jotai/index";
@@ -50,7 +50,9 @@ export const commitStatsAtom = atom<CommitStats>((get) => {
 
   const stagedStats = getStats(stagedFiles);
   const unstagedStats = getStats(unstagedFiles);
-  const selectedStats = getStats([...stagedFiles, ...unstagedFiles].filter(f => selectedPaths.has(f.path)));
+  const selectedStats = getStats(
+    [...stagedFiles, ...unstagedFiles].filter((f) => selectedPaths.has(f.path))
+  );
 
   return {
     staged: stagedStats,
@@ -59,7 +61,7 @@ export const commitStatsAtom = atom<CommitStats>((get) => {
     total: {
       files: stagedFiles.length + unstagedFiles.length,
       selectedFiles: selectedPaths.size,
-      ...getStats([...stagedFiles, ...unstagedFiles])
-    }
+      ...getStats([...stagedFiles, ...unstagedFiles]),
+    },
   };
 });

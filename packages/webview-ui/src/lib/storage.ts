@@ -1,6 +1,29 @@
 import { atom } from "jotai";
-import { getVSCodeAPI } from "../utils/vscode";
-import type { VSCodeStorageOptions } from "./types";
+
+// VSCode存储选项
+export interface VSCodeStorageOptions<T> {
+  key: string;
+  defaultValue: T;
+  // default: 'localStorage'
+  storageType?: "vscode" | "localStorage" | "both";
+  // vscode workspace/global 配置
+  storage?: "global" | "workspace";
+}
+
+// VSCode API类型
+export interface VSCodeAPI {
+  getState: () => Record<string, any>;
+  setState: (state: Record<string, any>) => void;
+  postMessage: (message: any) => void;
+}
+
+declare global {
+  interface Window {
+    acquireVsCodeApi(): VSCodeAPI;
+  }
+}
+
+let vscode: VSCodeAPI | undefined;
 
 function getFromLocalStorage<T>(key: string, defaultValue: T): T {
   const item = localStorage.getItem(key);
@@ -9,6 +32,24 @@ function getFromLocalStorage<T>(key: string, defaultValue: T): T {
 
 function setToLocalStorage<T>(key: string, value: T): void {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function getVSCodeAPI(): VSCodeAPI {
+  if (!vscode) {
+    try {
+      vscode = window.acquireVsCodeApi();
+    } catch (error) {
+      // 在非VSCode环境中提供mock实现
+      console.warn("Running outside VSCode, using mock implementation");
+      const mockState: Record<string, any> = {};
+      vscode = {
+        getState: () => ({ ...mockState }),
+        setState: (state) => Object.assign(mockState, state),
+        postMessage: (message) => console.log("VSCode message:", message),
+      };
+    }
+  }
+  return vscode;
 }
 
 function getFromVSCode<T>(key: string, defaultValue: T): T {
@@ -54,7 +95,7 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
       if (storageType === "vscode" || storageType === "both") {
         setToVSCode(key, update);
       }
-    }
+    },
   );
 }
 

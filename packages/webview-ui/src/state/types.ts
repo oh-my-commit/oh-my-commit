@@ -50,20 +50,3 @@ export interface CommitStats {
     selectedFiles: number;
   } & FileStats;
 }
-
-// VSCode存储选项
-export interface VSCodeStorageOptions<T> {
-  key: string;
-  defaultValue: T;
-  // default: 'localStorage'
-  storageType?: "vscode" | "localStorage" | "both";
-  // vscode workspace/global 配置
-  storage?: "global" | "workspace";
-}
-
-// VSCode API类型
-export interface VSCodeAPI {
-  getState: () => Record<string, any>;
-  setState: (state: Record<string, any>) => void;
-  postMessage: (message: any) => void;
-}
