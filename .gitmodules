@@ -1,0 +1,3 @@
+[submodule "generator-vscode-modern"]
+	path = generator-vscode-modern
+	url = ./generator-vscode-modern
