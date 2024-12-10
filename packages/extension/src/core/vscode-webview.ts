@@ -18,11 +18,6 @@ export class WebviewManager {
    */
   private readonly scriptPath: string;
 
-  /**
-   * 开发模式监听的文件变动位置
-   */
-  private readonly watchDir: string;
-
   constructor(
     context: vscode.ExtensionContext,
     private readonly viewType: string,
@@ -31,8 +26,7 @@ export class WebviewManager {
       "WebviewManager"
     ),
     templatePath: string = "./assets/webview.template.html",
-    scriptPath: string = "./dist/webview-ui/main.js",
-    watchDir: string = "dist/webview-ui"
+    scriptPath: string = "./dist/webview-ui/main.js"
   ) {
     // load template
     this.templatePath = templatePath;
@@ -45,7 +39,6 @@ export class WebviewManager {
     this.scriptUri = vscode.Uri.joinPath(context.extensionUri, this.scriptPath);
 
     // watch for file changes
-    this.watchDir = watchDir;
     const mainJsPath = path.join(
       context.extensionPath,
       "dist",
