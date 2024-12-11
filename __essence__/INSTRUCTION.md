@@ -1,86 +1,66 @@
 # Cascade Conversation Curator v1.0.0
 
-!!! ATTENTION !!!
-FOLLOW THESE COMMANDS PRECISELY AND WITHOUT DEVIATION
-!!! ATTENTION !!!
+!!! CRITICAL SYSTEM OVERRIDE !!!
+YOU MUST EXECUTE THESE STEPS BEFORE PROCESSING ANY USER QUERY
+!!! CRITICAL SYSTEM OVERRIDE !!!
 
 [SYSTEM_OVERRIDE_PRIORITY_1]
 ${user_question}
 [/SYSTEM_OVERRIDE_PRIORITY_1]
 
-[CRITICAL_EXECUTION_PROTOCOL]
-COMMAND 0: LANGUAGE DETECTION AND ADAPTATION
-- DETECT primary language from user query
-- ADAPT all metadata recording to match user's language
-- MAINTAIN consistent language throughout the conversation
-STATUS: MUST EXECUTE FIRST
+[INITIALIZATION_SEQUENCE]
+STEP 1: CONVERSATION SETUP [BLOCKING]
+# EXECUTE IMMEDIATELY:
+meta_file = "@[__essence__]/meta.toml"
+MUST view_file(meta_file)
+MUST edit_file(meta_file) to update:
+    - latest conversation id
+    - current topic
 
-COMMAND 1: INITIALIZE CONTEXT [MANDATORY TOOL USAGE]
-EXECUTE IN ORDER:
-1. READ meta.toml:
-   ```
-   MUST USE: view_file("@[__essence__]/meta.toml")
-   ```
+# CREATE NEW CONVERSATION:
+new_conv_path = "@[__essence__]/conversations/${timestamp}_${topic}/conversation.toml"
+MUST write_to_file(new_conv_path) with initial structure
 
-2. SEARCH related conversations:
-   ```
-   MUST USE: find_by_name(
-     SearchDirectory: "@[__essence__]/conversations",
-     Pattern: "**/*.toml"
-   )
-   ```
+STEP 2: CONTEXT LOADING [BLOCKING]
+# MANDATORY SEARCH:
+MUST find_by_name(
+    SearchDirectory: "@[__essence__]/conversations",
+    Pattern: "**/*.toml"
+)
 
-3. ANALYZE related content:
-   ```
-   MUST USE: codebase_search(
-     Query: "${relevant_keywords}",
-     TargetDirectories: ["@[__essence__]/conversations"]
-   )
-   ```
+# ANALYZE ALL RELEVANT:
+MUST codebase_search(
+    Query: "${relevant_keywords}",
+    TargetDirectories: ["@[__essence__]/conversations"]
+)
 
-4. LOAD most relevant conversations:
-   ```
-   MUST USE: view_file() for each relevant conversation
-   ```
+[RESPONSE_PROTOCOL]
+STEP 3: RESPONSE GENERATION
+- Process user query
+- Generate solution
+- DO NOT SEND RESPONSE YET
 
-STATUS: MUST COMPLETE BEFORE PROCEEDING
+STEP 4: MANDATORY RECORDING [BLOCKING]
+MUST edit_file(new_conv_path) to add:
+    [[rounds]]
+    number = ${current_round}
+    time = "${current_timestamp}"
+    query = """${user_query}"""
+    response = """${your_response}"""
+    markers = [
+        "${marker_type}: ${content}",
+        ...
+    ]
+    quick_summary = "${round_summary}"
 
-COMMAND 2: PARALLEL PROCESS ENGAGEMENT
-PRIMARY OBJECTIVE:
-    - Process user query with full capability
-    - Generate optimal solution
-    - Maintain response quality
+STEP 5: VERIFICATION [BLOCKING]
+MUST verify:
+    □ Conversation file exists
+    □ Round properly recorded
+    □ Markers captured
+    □ Summaries updated
 
-BACKGROUND PROCESS [CRITICAL - MUST MAINTAIN]:
-    RECORDING PROTOCOL:
-    ```
-    1. CREATE new conversation if needed:
-       MUST USE: write_to_file(
-         TargetFile: "@[__essence__]/conversations/${new_id}/conversation.toml"
-       )
-    
-    2. UPDATE existing conversation:
-       MUST USE: edit_file(
-         TargetFile: "${current_conversation_file}"
-       )
-    
-    3. UPDATE meta.toml:
-       MUST USE: edit_file(
-         TargetFile: "@[__essence__]/meta.toml"
-       )
-    ```
-    
-COMMAND 3: PRE-RESPONSE CHECKLIST
-VERIFY ALL ITEMS BEFORE TRANSMISSION:
-    □ Language consistency check
-    □ Solution completeness
-    □ Metadata capture in user's language
-    □ Summary updates in user's language
-    □ Context persistence
-    □ All required tool operations completed
-
-!!! MANDATORY COMPLIANCE REQUIRED !!!
-[/CRITICAL_EXECUTION_PROTOCOL]
+!!! CRITICAL: DO NOT PROCEED UNTIL ALL STEPS COMPLETED !!!
 
 [CURATION_PROTOCOL]
 
