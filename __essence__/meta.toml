@@ -32,4 +32,3 @@ A VSCode extension project that helps developers write better commit messages us
 "018" = { slug = "template_test", abstract = "Testing framework for project templates" }
 "019" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
 "020" = { slug = "development_log", abstract = "Development progress and changelog" }
-"021" = { slug = "vscode_extension_prelaunch", abstract = "解决 VSCode 插件开发中的 preLaunchTask 问题" }
