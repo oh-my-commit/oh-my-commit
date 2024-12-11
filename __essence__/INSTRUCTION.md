@@ -1,4 +1,4 @@
-# Cascade Conversation Curator v1.0.1
+# Cascade Conversation Curator v1.0.2
 
 [QUERY_SLOT]
 """
@@ -8,45 +8,23 @@ ${user_question}
 [RESPONSE_TEMPLATE]
 You MUST format your ENTIRE response following this EXACT template:
 
-```template
-[INTERNAL_PREPARATION]
-${automatically_execute_these_steps_first}
-1. MUST view_file("@[__essence__]/meta.toml")
-2. MUST find_by_name(Pattern: "**/*.toml")
-3. MUST prepare_new_conversation_path = "@[__essence__]/conversations/${timestamp}_${topic}/conversation.toml"
-
-[CONVERSATION_RECORD]
-${automatically_record_before_response}
-MUST write_to_file(prepare_new_conversation_path):
-```toml
-[meta]
-id = "${timestamp}_${topic}"
-start_time = "${ISO8601_timestamp}"
-topic = "${conversation_topic}"
-
-[[rounds]]
-number = ${current_round}
-time = "${current_timestamp}"
-query = """${user_query}"""
-markers = [
-    "${marker_type}: ${content}",
-]
-quick_summary = "${round_summary}"
 ```
+[SETUP]
+Creating conversation file...
+<execute>write_to_file("@[__essence__]/conversations/${timestamp}_${topic}/conversation.toml")</execute>
+
+[CONTEXT]
+Loading related conversations...
+<execute>find_by_name(Pattern: "**/*.toml")</execute>
 
 [ACTUAL_RESPONSE]
 ${your_response_to_user}
 
-[CONVERSATION_UPDATE]
-${automatically_update_after_response}
-MUST edit_file(prepare_new_conversation_path):
-```toml
-[[rounds]]
-response = """${your_actual_response}"""
-```
+[RECORD]
+Recording conversation...
+<execute>edit_file(current_conversation_file)</execute>
 
-[VERIFICATION]
-${verify_all_records_completed}
+[END]
 ```
 
 [CONVERSATION_SPECIFICATION]
@@ -73,12 +51,6 @@ STEP 2: CONTEXT LOADING [BLOCKING]
 MUST find_by_name(
     SearchDirectory: "@[__essence__]/conversations",
     Pattern: "**/*.toml"
-)
-
-# ANALYZE ALL RELEVANT:
-MUST codebase_search(
-    Query: "${relevant_keywords}",
-    TargetDirectories: ["@[__essence__]/conversations"]
 )
 
 [CURATION_PROTOCOL]
@@ -114,7 +86,7 @@ context_digest = {
     ongoing_challenges = ["${challenge1}", "${challenge2}"],
     technical_patterns = ["${pattern1}", "${pattern2}"]
 }
-```
+````
 
 ### b. Context Integration
 
@@ -249,15 +221,3 @@ knowledge_graph = {
     "${concept1}" = ["${related1}"]
 }
 ```
-
-## Version History
-
-- v1.0.0 (2024-12-12)
-  - Initial release
-  - Implemented conversation warm-up
-  - Added marker system
-  - Introduced multi-level summaries
-  - Structured storage format
-- v1.0.1 (2024-12-13)
-  - Updated response template
-  - Added query slot
