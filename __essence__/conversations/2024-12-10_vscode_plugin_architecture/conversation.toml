@@ -81,3 +81,30 @@ timestamp = "2024-12-10T23:46:33+08:00"
 user_input = """应该增加是否 git 初始化的选项与逻辑"""
 assistant_response = """I'll add Git initialization options to the generator, including .gitignore setup and initial commit creation."""
 continuation = true
+
+[[tasks.rounds]]
+timestamp = "2024-12-10T23:53:37+08:00"
+user_input = """我觉得包管理器应该任由用户选择，当然，我个人推荐 pnpm"""
+assistant_response = """I'll add package manager selection to the generator with pnpm as the recommended default option."""
+continuation = true
+
+[[tasks.rounds]]
+timestamp = "2024-12-10T23:58:20+08:00"
+user_input = """/Users/mark/.nvm/versions/node/v18.19.0/bin/pnpm
+
+Installing dependencies using pnpm...
+
+Error detecting the package manager. Falling back to npm."""
+assistant_response = """I'll fix the package manager detection and installation process to properly handle pnpm paths and monorepo environments."""
+continuation = true
+
+[[tasks.rounds]]
+timestamp = "2024-12-11T00:03:45+08:00"
+user_input = """为什么我用不了 pnpm 啊，刚刚尝试又不fallback 到 npm 了，我不想
+
+Installing dependencies using pnpm...
+
+Changes to package.json were detected.
+Error detecting the package manager. Falling back to npm."""
+assistant_response = """I'll fix the issue to ensure pnpm is used consistently and prevent unwanted fallback to npm."""
+continuation = true

@@ -1,3 +1,6 @@
 [submodule "generator-vscode-modern"]
 	path = generator-vscode-modern
 	url = ./generator-vscode-modern
+[submodule "vscode-extension-template"]
+	path = vscode-extension-template
+	url = ./vscode-extension-template
