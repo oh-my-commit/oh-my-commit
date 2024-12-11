@@ -1,0 +1,11 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-12T04:05:44+08:00"
+query_essence = "VSCode 插件开发中的 preLaunchTask watch 任务问题"
+key_points = """
+- 在开发 VSCode 插件模板项目时遇到 F5 调试问题
+- 系统提示等待 preLaunchTask 'watch' 任务
+- 问题与 VSCode 插件的调试配置相关
+"""
