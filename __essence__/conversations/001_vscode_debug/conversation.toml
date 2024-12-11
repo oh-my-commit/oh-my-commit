@@ -1,0 +1,9 @@
+[[rounds]]
+number = 1
+time = "2024-12-12T00:45:36+08:00"
+query_essence = """VSCode扩展F5调试时为什么需要选择调试器"""
+key_points = """
+- VSCode扩展开发支持多种调试器配置
+- F5启动时需要明确使用哪种调试配置
+- 主要选择Extension Development Host配置
+"""

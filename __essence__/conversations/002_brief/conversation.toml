@@ -1,0 +1,11 @@
+rounds.essence = "core-points"
+
+[context]
+previous = "我在参考本项目 @README.md 的技术栈， 做一个 vscode 插件的模板 @vscode-extension-template，以方便未来快速开发"
+current = "F5 之后提示：Waiting for preLaunchTask 'watch'..."
+time = "2024-12-12T01:05:11+08:00"
+
+[files]
+active = "vscode-extension-template/apps/vscode-extension/.vscode/launch.json"
+language = "json"
+cursor_line = 10
