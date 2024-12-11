@@ -1,0 +1,181 @@
+# 会话元数据
+[meta]
+id = "002_template_test"
+start_time = "2024-12-12T01:32:27+0800"
+version = "12.3.0"
+topic = "对话模板系统测试"
+
+# 标记系统配置
+[markers]
+decision = "✦"
+action = "⚡"
+blocker = "⚠"
+solution = "✓"
+reference = "※"
+
+# 摘要配置
+[summary]
+quick_update_interval = 1  # 每轮对话
+structured_update_interval = 3  # 每3轮对话
+semantic_update_interval = 5  # 每5轮对话
+
+# 对话记录
+[[rounds]]
+number = 1
+time = "2024-12-12T01:32:27+0800"
+query = """我们来测试新的对话模板系统"""
+response = """好的，我们开始测试新的对话模板系统的各个功能：
+
+1. 标记系统测试
+2. 多级摘要生成
+3. 上下文维护
+
+让我们先从标记系统开始测试。"""
+markers = [
+    "✦ 决策：开始测试对话模板系统",
+    "⚡ 行动：规划测试步骤",
+    "※ 参考：标记系统/摘要生成/上下文维护"
+]
+quick_summary = "启动对话模板系统测试，制定测试计划"
+
+[[rounds]]
+number = 2
+time = "2024-12-12T01:33:12+0800"
+query = """让我们模拟一个实际的开发场景：我在开发一个 VSCode 插件，遇到了 WebView 加载很慢的问题"""
+response = """这是一个很好的测试场景。让我们分析这个问题：
+
+1. 首先，WebView 加载慢通常与资源加载和初始化有关
+2. 建议采用以下优化策略：
+   - 使用 webpack 优化打包
+   - 实现资源预加载
+   - 添加加载状态提示
+
+我们可以先从 webpack 配置开始优化。"""
+markers = [
+    "⚠ 问题：WebView加载性能问题",
+    "✦ 决策：采用多方面优化策略",
+    "⚡ 行动：优化webpack配置",
+    "※ 参考：资源预加载/加载状态"
+]
+quick_summary = "分析并提出 WebView 性能优化方案"
+
+[[rounds]]
+number = 3
+time = "2024-12-12T01:33:12+0800"
+query = """好的，webpack 配置具体要怎么改？"""
+response = """我们可以通过以下方式优化 webpack 配置：
+
+1. 启用代码分割和懒加载：
+   ```js
+   optimization: {
+     splitChunks: {
+       chunks: 'all'
+     }
+   }
+   ```
+
+2. 使用 production 模式压缩代码：
+   ```js
+   mode: 'production'
+   ```
+
+这些更改已经可以显著提升加载速度了。"""
+markers = [
+    "✓ 解决方案：webpack代码分割",
+    "✓ 解决方案：生产环境优化",
+    "※ 参考：webpack配置示例"
+]
+quick_summary = "提供具体的 webpack 优化配置方案"
+
+[[rounds]]
+number = 4
+time = "2024-12-12T01:34:22+0800"
+query = """webpack 优化后，我发现 WebView 还有一个问题：在暗色主题下，内容闪烁，显示了一下白色背景"""
+response = """这是一个典型的主题适配问题，通常发生在 WebView 初始化过程中。让我们系统地解决这个问题：
+
+1. 首先，我们需要在 HTML 中预设主题类：
+   ```html
+   <body class="vscode-light vscode-dark">
+   ```
+
+2. 然后，通过消息传递获取当前主题：
+   ```typescript
+   window.addEventListener('message', event => {
+     const message = event.data;
+     if (message.type === 'theme-update') {
+       document.body.className = `vscode-${message.theme}`;
+     }
+   });
+   ```
+
+这样可以确保 WebView 在加载时就有正确的主题设置。"""
+markers = [
+    "⚠ 问题：主题切换闪烁",
+    "✓ 解决方案：预设主题类",
+    "✓ 解决方案：主题消息监听",
+    "※ 参考：VSCode主题机制"
+]
+quick_summary = "解决 WebView 主题切换闪烁问题"
+
+[[rounds]]
+number = 5
+time = "2024-12-12T01:34:22+0800"
+query = """这些改动要在哪些文件中进行？"""
+response = """让我们整理需要修改的文件：
+
+1. WebView HTML 模板文件：
+   - 添加预设主题类
+   - 引入主题样式
+
+2. WebView 内容提供者（通常是 xxxViewProvider.ts）：
+   - 实现主题消息发送
+   - 监听 VSCode 主题变化
+
+3. WebView 客户端脚本：
+   - 实现主题消息处理
+   - 添加动态主题切换逻辑
+
+我可以帮你具体实现这些更改。"""
+markers = [
+    "✦ 决策：分文件实现主题适配",
+    "⚡ 行动：修改多个相关文件",
+    "※ 参考：文件职责划分"
+]
+quick_summary = "明确主题适配相关的文件修改范围"
+
+# 结构化摘要（每3轮更新）
+[structured_summary]
+key_decisions = [
+    "开始测试对话模板系统",
+    "采用多方面优化策略",
+    "分文件实现主题适配"
+]
+blockers = [
+    "WebView加载性能问题",
+    "主题切换闪烁问题"
+]
+next_actions = [
+    "修改WebView HTML模板",
+    "更新ViewProvider实现",
+    "添加主题切换逻辑"
+]
+
+# 语义关联（每5轮更新）
+[semantic_summary]
+main_theme = "VSCode WebView优化"
+related_topics = [
+    "性能优化",
+    "主题适配",
+    "用户体验改进"
+]
+technical_context = {
+    "template_version" = "12.3.0",
+    "features" = ["markers", "summaries", "context_tracking"],
+    "technologies" = ["VSCode", "WebView", "Webpack", "TypeScript"],
+    "components" = ["ViewProvider", "WebView Template", "Theme Handler"]
+}
+knowledge_graph = {
+    "performance" = ["webpack", "resource loading"],
+    "theming" = ["vscode-theme", "css-variables"],
+    "architecture" = ["viewprovider", "message-passing"]
+}
