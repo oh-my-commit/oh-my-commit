@@ -1,4 +1,34 @@
-latest = "001"
-topic = "project_template"
-latest = "001"
-topic = "project_template"
+name = "Essence AI Control System"
+
+version = "14.0.0"
+
+abstract = """
+A VSCode extension project that helps developers write better commit messages using AI. The conversations track the development process from initial setup to feature implementation and bug fixes. Key milestones include:
+1. Project scaffolding with TypeScript and pnpm
+2. VSCode extension core functionality development
+3. Integration of Yeoman generator for project templates
+4. UI/UX improvements including TreeView and DiffViewer
+5. Continuous debugging and optimization
+"""
+
+[conversations]
+"001" = { slug = "tsc", abstract = "TypeScript compiler configuration and setup" }
+"002" = { slug = "pack", abstract = "Package management and bundling setup" }
+"003" = { slug = "fix-treeview-expandeddirs", abstract = "Fix for VSCode TreeView expanded directories state" }
+"004" = { slug = "add-init-animation", abstract = "Adding initialization animation to improve UX" }
+"005" = { slug = "vscode_plugin_architecture", abstract = "VSCode plugin architecture design and implementation" }
+"006" = { slug = "yeoman_pnpm_integration", abstract = "Integration of Yeoman generator with pnpm" }
+"007" = { slug = "vscode_extension_generator", abstract = "VSCode extension generator development" }
+"008" = { slug = "git_implementation", abstract = "Git functionality implementation" }
+"009" = { slug = "vscode_extension_setup", abstract = "VSCode extension initial setup and configuration" }
+"010" = { slug = "yeoman_generator_behavior", abstract = "Customizing Yeoman generator behavior" }
+"011" = { slug = "DiffViewer_Enhancement", abstract = "Improvements to the diff viewer functionality" }
+"012" = { slug = "vscode_task_error", abstract = "Debugging and fixing VSCode task errors" }
+"013" = { slug = "vscode_extension_webview", abstract = "Implementation of VSCode extension webview" }
+"014" = { slug = "vscode_extension_enhancement", abstract = "General enhancements to VSCode extension" }
+"015" = { slug = "vscode_plugin_error", abstract = "Troubleshooting VSCode plugin errors" }
+"016" = { slug = "project_template", abstract = "Setting up project template structure" }
+"017" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
+"018" = { slug = "template_test", abstract = "Testing framework for project templates" }
+"019" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
+"020" = { slug = "development_log", abstract = "Development progress and changelog" }
