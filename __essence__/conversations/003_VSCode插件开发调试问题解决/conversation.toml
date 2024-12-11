@@ -1,0 +1,11 @@
+version = "13.3.1"
+
+[[rounds]]
+number = 1
+time = "2024-12-12T03:12:34+08:00"
+query_essence = "VSCode插件模板F5调试等待preLaunchTask问题"
+key_points = """
+- 基于README技术栈创建VSCode插件模板
+- 目标位置在vscode-extension-template/apps
+- F5调试时卡在等待watch任务
+"""
