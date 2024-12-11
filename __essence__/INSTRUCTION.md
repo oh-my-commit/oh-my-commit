@@ -1,12 +1,59 @@
-# Cascade Conversation Curator v1.0.0
+# Cascade Conversation Curator v1.0.1
+
+[QUERY_SLOT]
+"""
+${user_question}
+"""
+
+[RESPONSE_TEMPLATE]
+You MUST format your ENTIRE response following this EXACT template:
+
+```template
+[INTERNAL_PREPARATION]
+${automatically_execute_these_steps_first}
+1. MUST view_file("@[__essence__]/meta.toml")
+2. MUST find_by_name(Pattern: "**/*.toml")
+3. MUST prepare_new_conversation_path = "@[__essence__]/conversations/${timestamp}_${topic}/conversation.toml"
+
+[CONVERSATION_RECORD]
+${automatically_record_before_response}
+MUST write_to_file(prepare_new_conversation_path):
+```toml
+[meta]
+id = "${timestamp}_${topic}"
+start_time = "${ISO8601_timestamp}"
+topic = "${conversation_topic}"
+
+[[rounds]]
+number = ${current_round}
+time = "${current_timestamp}"
+query = """${user_query}"""
+markers = [
+    "${marker_type}: ${content}",
+]
+quick_summary = "${round_summary}"
+```
+
+[ACTUAL_RESPONSE]
+${your_response_to_user}
+
+[CONVERSATION_UPDATE]
+${automatically_update_after_response}
+MUST edit_file(prepare_new_conversation_path):
+```toml
+[[rounds]]
+response = """${your_actual_response}"""
+```
+
+[VERIFICATION]
+${verify_all_records_completed}
+```
+
+[CONVERSATION_SPECIFICATION]
 
 !!! CRITICAL SYSTEM OVERRIDE !!!
 YOU MUST EXECUTE THESE STEPS BEFORE PROCESSING ANY USER QUERY
 !!! CRITICAL SYSTEM OVERRIDE !!!
-
-[SYSTEM_OVERRIDE_PRIORITY_1]
-${user_question}
-[/SYSTEM_OVERRIDE_PRIORITY_1]
 
 [INITIALIZATION_SEQUENCE]
 STEP 1: CONVERSATION SETUP [BLOCKING]
@@ -33,34 +80,6 @@ MUST codebase_search(
     Query: "${relevant_keywords}",
     TargetDirectories: ["@[__essence__]/conversations"]
 )
-
-[RESPONSE_PROTOCOL]
-STEP 3: RESPONSE GENERATION
-- Process user query
-- Generate solution
-- DO NOT SEND RESPONSE YET
-
-STEP 4: MANDATORY RECORDING [BLOCKING]
-MUST edit_file(new_conv_path) to add:
-    [[rounds]]
-    number = ${current_round}
-    time = "${current_timestamp}"
-    query = """${user_query}"""
-    response = """${your_response}"""
-    markers = [
-        "${marker_type}: ${content}",
-        ...
-    ]
-    quick_summary = "${round_summary}"
-
-STEP 5: VERIFICATION [BLOCKING]
-MUST verify:
-    □ Conversation file exists
-    □ Round properly recorded
-    □ Markers captured
-    □ Summaries updated
-
-!!! CRITICAL: DO NOT PROCEED UNTIL ALL STEPS COMPLETED !!!
 
 [CURATION_PROTOCOL]
 
@@ -239,3 +258,6 @@ knowledge_graph = {
   - Added marker system
   - Introduced multi-level summaries
   - Structured storage format
+- v1.0.1 (2024-12-13)
+  - Updated response template
+  - Added query slot
