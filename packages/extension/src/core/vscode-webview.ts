@@ -84,12 +84,19 @@ export class WebviewManager {
     this.webviewPanel = vscode.window.createWebviewPanel(
       this.viewType,
       this.title,
-      vscode.ViewColumn.One,
+      {
+        viewColumn: vscode.ViewColumn.Active,
+        preserveFocus: true
+      },
       {
         enableScripts: true,
         retainContextWhenHidden: true,
+        // 隐藏标题栏
+        showTitleBar: false,
       }
     );
+
+    vscode.commands.executeCommand('workbench.action.moveEditorToNewWindow');
 
     this.webviewPanel.webview.onDidReceiveMessage(
       async (message: any) => {
@@ -154,9 +161,15 @@ export class WebviewManager {
     this.webviewPanel = vscode.window.createWebviewPanel(
       this.viewType,
       this.title,
-      vscode.ViewColumn.Active,
+      {
+        viewColumn: vscode.ViewColumn.Active,
+        preserveFocus: true
+      },
       options
     );
+
+    // Move the webview to a new window
+    vscode.commands.executeCommand('workbench.action.moveEditorToNewWindow');
 
     this.webviewPanel.onDidDispose(() => (this.webviewPanel = undefined));
     this.updateWebview();
