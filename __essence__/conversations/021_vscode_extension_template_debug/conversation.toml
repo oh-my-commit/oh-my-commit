@@ -1,0 +1,32 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-12T04:22:08+08:00"
+query_essence = "VSCode 插件模板 F5 调试任务问题"
+key_points = """
+- 创建 VSCode 插件模板遇到启动问题
+- F5 调试时等待 preLaunchTask 'watch'
+- 需要检查任务配置和调试设置
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-12T04:24:34+08:00"
+query_essence = "VSCode 任务配置错误修复"
+key_points = """
+- 遇到 'Could not find the task pnpm: watch' 错误
+- 更新 tasks.json 配置为使用 shell 类型
+- 添加正确的任务标签和命令参数
+"""
+
+[[rounds]]
+number = 3
+time = "2024-12-12T04:26:26+08:00"
+query_essence = "VSCode watch 任务持续问题"
+key_points = """
+- watch 任务仍然无法正常启动
+- 简化了 tasks.json 的配置
+- 添加了详细的 TypeScript 问题匹配器
+- 验证了 pnpm watch 命令的可用性
+"""
