@@ -1,0 +1,83 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-14 01:26:55"
+query_essence = "Add file line information to logger"
+key_points = [
+    "Enhanced logger.ts to include file and line information in log messages",
+    "Implemented getCallerInfo method to extract caller location from stack trace",
+    "Modified log method to include file:line prefix in messages",
+    "Maintains backward compatibility with existing logger interface"
+]
+
+[[rounds]]
+number = 2
+time = "2024-12-14 01:28:53"
+query_essence = "Support source mapping to TypeScript files in development mode"
+key_points = [
+    "Added development mode detection",
+    "Enhanced getCallerInfo to support source file mapping",
+    "Added column information for more precise location",
+    "Implemented source file existence check through VSCode API",
+    "Added sourceInfo to log payload for better integration"
+]
+
+[[rounds]]
+number = 3
+time = "2024-12-14 01:31:40"
+query_essence = "Fix source file location to show TypeScript files instead of bundled JavaScript"
+key_points = [
+    "Modified stack trace parsing to skip bundled files",
+    "Added filtering to ignore node_modules and main.js frames",
+    "Improved file path extraction to focus on src/*.ts files",
+    "Enhanced file name extraction for better readability"
+]
+
+[[rounds]]
+number = 4
+time = "2024-12-14 01:32:23"
+query_essence = "Implement source map based location tracking"
+key_points = [
+    "Added source-map package for accurate source mapping",
+    "Implemented SourceMapConsumer initialization in development mode",
+    "Added async support for source map loading and position lookup",
+    "Enhanced error handling for source map loading failures",
+    "Made logger methods async to support source map lookups"
+]
+
+[[rounds]]
+number = 5
+time = "2024-12-14 01:35:25"
+query_essence = "Fix TypeScript compilation errors"
+key_points = [
+    "Removed unused private readonly acManager in QuickCommitCommand",
+    "Fixed commit method signature by removing amend parameter",
+    "Corrected method name from cleanupPanel to disposePanel",
+    "Added const assertions to windowModeConfigs for type safety",
+    "Fixed type errors in workspace and user configuration objects"
+]
+
+[[rounds]]
+number = 6
+time = "2024-12-14 01:36:36"
+query_essence = "Fix remaining TypeScript errors"
+key_points = [
+    "Removed private modifier from acManager parameter",
+    "Removed unused _amend parameter from commit handler",
+    "Changed disposePanel to dispose method",
+    "Added type-safe configuration access methods",
+    "Improved type safety for configuration key iteration"
+]
+
+[[rounds]]
+number = 7
+time = "2024-12-14 01:38:33"
+query_essence = "Fix source-map package browser compatibility issues"
+key_points = [
+    "Removed source-map package dependency",
+    "Switched to using webpack's built-in source map support",
+    "Enhanced stack trace parsing to handle webpack-style paths",
+    "Added support for extracting source locations from webpack URLs",
+    "Simplified logger implementation by removing async operations"
+]

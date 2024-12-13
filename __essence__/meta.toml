@@ -39,3 +39,4 @@ A VSCode extension project that helps developers write better commit messages us
 "025" = { slug = "refactor_window_state", abstract = "Refactor window state management" }
 "026" = { slug = "simplify_window_state", abstract = "Further simplify window state management" }
 "027" = { slug = "webview_titlebar_hide", abstract = "Hide titlebar in VSCode webview" }
+"028" = { slug = "logger_enhancement", abstract = "Add file and line information to logger" }

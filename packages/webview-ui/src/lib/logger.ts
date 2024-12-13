@@ -14,15 +14,49 @@ class Logger {
       .join(" ");
   }
 
+  private getCallerInfo(): { file: string; line: number; column: number } {
+    const error = new Error();
+    const stack = error.stack;
+    if (!stack) return { file: "unknown", line: 0, column: 0 };
+
+    // Get the caller's stack frame (index 3 since 0 is Error, 1 is getCallerInfo, 2 is log method)
+    const frames = stack.split("\n");
+    let callerFrame = frames[3] || "";
+
+    if (!callerFrame) return { file: "unknown", line: 0, column: 0 };
+
+    // Extract file and line info from the frame
+    // Format: "    at SomeFunction (webpack://yaac-webview/./src/components/FileChanges.tsx?:46:14)"
+    const match = callerFrame.match(
+      /webpack:\/\/[^/]+\/\.\/src\/(.+?)(?:\?[^:]*)?:(\d+):(\d+)/
+    );
+    if (!match) return { file: "unknown", line: 0, column: 0 };
+
+    const [, relativePath, line, column] = match;
+    return {
+      file: relativePath,
+      line: parseInt(line, 10),
+      column: parseInt(column, 10),
+    };
+  }
+
   private log(level: LogLevel, ...args: any[]) {
+    const { file, line, column } = this.getCallerInfo();
     const rawMessage = this.formatMessage(...args);
+    const messageWithLocation = `[${file}:${line}:${column}] ${rawMessage}`;
 
     this.vscode.postMessage({
       command: "log",
       payload: {
         channel: this.channel,
         level,
-        rawMessage,
+        rawMessage: messageWithLocation,
+        sourceInfo: {
+          file,
+          line,
+          column,
+          isDevelopment: process.env.NODE_ENV === "development",
+        },
       },
     });
   }

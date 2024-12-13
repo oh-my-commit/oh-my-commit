@@ -28,17 +28,25 @@ export class WebviewManager {
   private readonly windowModeConfigs = {
     // 工作区级别配置
     workspace: {
-      "workbench.editor.showTabs": "none",
-      "workbench.editor.editorActionsLocation": "hidden",
-      "workbench.activityBar.location": "hidden",
-      "workbench.auxiliaryActivityBar.location": "hidden",
+      "workbench.editor.showTabs": "none" as const,
+      "workbench.editor.editorActionsLocation": "hidden" as const,
+      "workbench.activityBar.location": "hidden" as const,
+      "workbench.auxiliaryActivityBar.location": "hidden" as const,
     },
     // 用户级别配置
     user: {
-      "window.titleBarStyle": "native",
-      "window.customTitleBarVisibility": "never",
+      "window.titleBarStyle": "native" as const,
+      "window.customTitleBarVisibility": "never" as const,
     },
-  } as const;
+  };
+
+  private getWorkspaceConfig(key: keyof typeof this.windowModeConfigs.workspace) {
+    return this.windowModeConfigs.workspace[key];
+  }
+
+  private getUserConfig(key: keyof typeof this.windowModeConfigs.user) {
+    return this.windowModeConfigs.user[key];
+  }
 
   constructor(
     context: vscode.ExtensionContext,
@@ -230,7 +238,7 @@ export class WebviewManager {
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.windowModeConfigs.workspace[key],
+          this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
           vscode.ConfigurationTarget.Workspace
         );
       }
@@ -245,7 +253,7 @@ export class WebviewManager {
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.windowModeConfigs.user[key],
+          this.getUserConfig(key as keyof typeof this.windowModeConfigs.user),
           vscode.ConfigurationTarget.Global
         );
       }
@@ -260,15 +268,20 @@ export class WebviewManager {
       this.persistWindowState &&
       Object.keys(this.savedStates).length > 0
     ) {
-      for (const [key, savedValue] of Object.entries(this.savedStates)) {
-        if (savedValue !== undefined) {
-          this.logger.trace(`Restoring window state: ${key}=${savedValue}`);
-          // 根据配置类型选择目标
-          const target = Object.keys(this.windowModeConfigs.user).includes(key)
-            ? vscode.ConfigurationTarget.Global
-            : vscode.ConfigurationTarget.Workspace;
-          await this.updateWorkspaceConfig(key, savedValue, target);
-        }
+      for (const key of Object.keys(this.windowModeConfigs.workspace) as Array<keyof typeof this.windowModeConfigs.workspace>) {
+        await vscode.workspace.getConfiguration().update(
+          key,
+          this.getWorkspaceConfig(key),
+          vscode.ConfigurationTarget.Workspace
+        );
+      }
+
+      for (const key of Object.keys(this.windowModeConfigs.user) as Array<keyof typeof this.windowModeConfigs.user>) {
+        await vscode.workspace.getConfiguration().update(
+          key,
+          this.getUserConfig(key),
+          vscode.ConfigurationTarget.Global
+        );
       }
 
       // 清空保存的状态
