@@ -208,7 +208,7 @@ export class WebviewManager {
         this.webviewPanel = undefined;
       });
 
-      // Handle visibility changes and focus changes
+      // Handle keyboard shortcuts and window state changes
       let lastVisible = true;
       let lastActive = false;
       let isMovingToNewWindow = true; // Flag to track window mode transition
@@ -233,14 +233,16 @@ export class WebviewManager {
 
         // Close when:
         // 1. Visibility changes from true to false, or
-        // 2. Focus changes from active to inactive (after window transition)
+        // 2. Focus changes from active to inactive (after window transition), or
+        // 3. Panel becomes hidden (handles cmd+w)
         if (
           (lastVisible && !currentVisible) ||
-          (!active && lastActive && !isMovingToNewWindow)
+          (!active && lastActive && !isMovingToNewWindow) ||
+          !e.webviewPanel.visible
         ) {
           this.outputChannel.appendLine(
             `[onDidChangeViewState] Panel lost ${
-              !currentVisible ? "visibility" : "focus"
+              !currentVisible ? "visibility" : !active ? "focus" : "shown state"
             }, cleaning up panel`
           );
           this.cleanupPanel();
@@ -251,13 +253,16 @@ export class WebviewManager {
         lastActive = active;
       });
 
-      // Clean up event listeners when panel is disposed
-      panel.onDidDispose(() => {
-        this.outputChannel.appendLine(
-          "[onDidDispose] Panel disposed event triggered"
-        );
-        this.webviewPanel = undefined;
+      // Register keyboard shortcut handler
+      const disposable = vscode.commands.registerCommand('workbench.action.closeActiveEditor', () => {
+        if (this.webviewPanel && this.webviewPanel.active) {
+          this.outputChannel.appendLine("[closeActiveEditor] Handling cmd+w");
+          this.cleanupPanel();
+        }
       });
+
+      // Clean up the command registration when panel is disposed
+      panel.onDidDispose(() => disposable.dispose());
     }
   }
 
