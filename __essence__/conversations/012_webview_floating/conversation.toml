@@ -1,0 +1,11 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-13T04:04:53+08:00"
+query_essence = "优化 Quick Commit 窗口显示方式"
+key_points = [
+  "修改 WebviewManager 使其创建无标题栏的浮动窗口",
+  "在 createWebviewPanel 和 show 方法中添加 showTitleBar: false",
+  "保持窗口浮动功能不变"
+]

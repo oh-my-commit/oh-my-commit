@@ -23,13 +23,14 @@ A VSCode extension project that helps developers write better commit messages us
 "009" = { slug = "vscode_extension_setup", abstract = "VSCode extension initial setup and configuration" }
 "010" = { slug = "yeoman_generator_behavior", abstract = "Customizing Yeoman generator behavior" }
 "011" = { slug = "DiffViewer_Enhancement", abstract = "Improvements to the diff viewer functionality" }
-"012" = { slug = "vscode_task_error", abstract = "Debugging and fixing VSCode task errors" }
-"013" = { slug = "vscode_extension_webview", abstract = "Implementation of VSCode extension webview" }
-"014" = { slug = "vscode_extension_enhancement", abstract = "General enhancements to VSCode extension" }
-"015" = { slug = "vscode_plugin_error", abstract = "Troubleshooting VSCode plugin errors" }
-"016" = { slug = "project_template", abstract = "Setting up project template structure" }
-"017" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
-"018" = { slug = "template_test", abstract = "Testing framework for project templates" }
-"019" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
-"020" = { slug = "development_log", abstract = "Development progress and changelog" }
-"021" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
+"012" = { slug = "webview_floating", abstract = "Optimize Quick Commit window display with floating mode" }
+"013" = { slug = "vscode_task_error", abstract = "Debugging and fixing VSCode task errors" }
+"014" = { slug = "vscode_extension_webview", abstract = "Implementation of VSCode extension webview" }
+"015" = { slug = "vscode_extension_enhancement", abstract = "General enhancements to VSCode extension" }
+"016" = { slug = "vscode_plugin_error", abstract = "Troubleshooting VSCode plugin errors" }
+"017" = { slug = "project_template", abstract = "Setting up project template structure" }
+"018" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
+"019" = { slug = "template_test", abstract = "Testing framework for project templates" }
+"020" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
+"021" = { slug = "development_log", abstract = "Development progress and changelog" }
+"022" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }

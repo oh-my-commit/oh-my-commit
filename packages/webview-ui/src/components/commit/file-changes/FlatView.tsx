@@ -1,6 +1,6 @@
-import React from 'react';
-import { FileItem } from './FileItem';
-import type { FileChange } from '../../../state/types';
+import React from "react";
+import { FileItem } from "./FileItem";
+import type { FileChange } from "../../../state/types";
 
 export interface FlatViewProps {
   files: FileChange[];
@@ -23,9 +23,9 @@ export const FlatView: React.FC<FlatViewProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-0.5 p-2">
-      {files.map((file) => (
+      {files.map((file, index) => (
         <FileItem
-          key={file.path}
+          key={index}
           file={file}
           isSelected={selectedFiles.includes(file.path)}
           isActive={file.path === selectedPath}
