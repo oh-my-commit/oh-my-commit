@@ -18,6 +18,8 @@ export class WebviewManager {
    */
   private readonly scriptPath: string;
 
+  private originalTabSetting?: string | null;
+
   constructor(
     context: vscode.ExtensionContext,
     private readonly viewType: string,
@@ -89,16 +91,19 @@ export class WebviewManager {
         preserveFocus: true,
       },
       {
+        ...options,
         enableScripts: true,
         enableFindWidget: false,
         retainContextWhenHidden: this.uiMode !== "window",
-        ...options,
       }
     );
 
     // Only move to new window in window mode
     if (this.uiMode === "window") {
       vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
+      // Store original setting and hide tab bar in the new window
+      this.originalTabSetting = vscode.workspace.getConfiguration().get("workbench.editor.showTabs");
+      vscode.workspace.getConfiguration().update("workbench.editor.showTabs", "none", vscode.ConfigurationTarget.Window);
     }
 
     this.handleWindowModeStateChange(this.webviewPanel);
@@ -130,6 +135,15 @@ export class WebviewManager {
   private cleanupPanel() {
     if (this.webviewPanel) {
       this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
+      // Restore original tab setting if in window mode
+      if (this.uiMode === "window" && this.originalTabSetting !== undefined) {
+        vscode.workspace.getConfiguration().update(
+          "workbench.editor.showTabs",
+          this.originalTabSetting,
+          vscode.ConfigurationTarget.Window
+        );
+        this.originalTabSetting = undefined;
+      }
       this.webviewPanel.dispose();
       this.webviewPanel = undefined;
       this.outputChannel.appendLine(
@@ -151,7 +165,9 @@ export class WebviewManager {
             `[onDidReceiveMessage] Received message: ${JSON.stringify(message)}`
           );
           if (message.type === "window-close") {
-            this.outputChannel.appendLine("[onDidReceiveMessage] Handling window close");
+            this.outputChannel.appendLine(
+              "[onDidReceiveMessage] Handling window close"
+            );
             this.cleanupPanel();
           }
         },
@@ -192,7 +208,9 @@ export class WebviewManager {
     if (!this.webviewPanel?.webview) return;
 
     const templateData = {
-      scriptUri: this.webviewPanel.webview.asWebviewUri(this.scriptUri).toString(),
+      scriptUri: this.webviewPanel.webview
+        .asWebviewUri(this.scriptUri)
+        .toString(),
       cspSource: this.webviewPanel.webview.cspSource,
       windowMode: this.uiMode === "window",
     };
