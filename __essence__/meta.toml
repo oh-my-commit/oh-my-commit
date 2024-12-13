@@ -36,3 +36,5 @@ A VSCode extension project that helps developers write better commit messages us
 "022" = { slug = "development_log", abstract = "Development progress and changelog" }
 "023" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
 "024" = { slug = "fix_editor_actions", abstract = "Fix editor actions location restoration" }
+"025" = { slug = "refactor_window_state", abstract = "Refactor window state management" }
+"026" = { slug = "simplify_window_state", abstract = "Further simplify window state management" }

@@ -18,11 +18,14 @@ export class WebviewManager {
    */
   private readonly scriptPath: string;
 
-  // /defaultSettings.json:2058
-  private originalTabSetting?: "multiple" | "single" | "none" = undefined;
-  // /defaultSettings.json:1954
-  private originalEditorActionsLocation?: "default" | "titleBar" | "hidden" =
-    undefined;
+  // 窗口模式下的目标配置
+  private readonly windowModeConfigs = {
+    "workbench.editor.showTabs": "none",
+    "workbench.editor.editorActionsLocation": "hidden",
+  } as const;
+
+  // 保存的原始状态
+  private savedStates: Partial<Record<string, unknown>> = {};
 
   constructor(
     context: vscode.ExtensionContext,
@@ -138,65 +141,46 @@ export class WebviewManager {
     return panel;
   }
 
+  private async updateWorkspaceConfig(key: string, value: unknown) {
+    this.outputChannel.appendLine(
+      `[updateWorkspaceConfig] Setting ${key} to ${value}`
+    );
+    await vscode.workspace
+      .getConfiguration()
+      .update(key, value, vscode.ConfigurationTarget.Workspace);
+  }
+
   private async saveWindowState() {
     if (this.uiMode === "window") {
-      // Store original setting and hide tab bar in the new window
-      this.originalTabSetting = vscode.workspace
-        .getConfiguration()
-        .get("workbench.editor.showTabs");
+      for (const [key, targetValue] of Object.entries(this.windowModeConfigs)) {
+        // 保存当前值
+        this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
 
-      await vscode.workspace
-        .getConfiguration()
-        .update(
-          "workbench.editor.showTabs",
-          "none",
-          vscode.ConfigurationTarget.Workspace
+        this.outputChannel.appendLine(
+          `[saveWindowState] Saved ${key}: ${this.savedStates[key]}`
         );
 
-      this.originalEditorActionsLocation = vscode.workspace
-        .getConfiguration()
-        .get("workbench.editor.editorActionsLocation");
-      this.outputChannel.appendLine(
-        `[EditorActions Save] this.originalEditorActionsLocation: ${this.originalEditorActionsLocation}`
-      );
-      await vscode.workspace
-        .getConfiguration()
-        .update(
-          "workbench.editor.editorActionsLocation",
-          "hidden",
-          vscode.ConfigurationTarget.Workspace
-        );
+        // 设置目标值
+        await this.updateWorkspaceConfig(key, targetValue);
+      }
 
-      this.outputChannel.appendLine(
-        "[saveWindowState] Window state saved and tabs hidden"
-      );
+      this.outputChannel.appendLine("[saveWindowState] Window state saved");
     }
   }
 
   private async restoreWindowState() {
-    if (
-      this.uiMode === "window" &&
-      this.originalTabSetting !== undefined &&
-      this.originalEditorActionsLocation !== undefined
-    ) {
-      await vscode.workspace
-        .getConfiguration()
-        .update(
-          "workbench.editor.showTabs",
-          this.originalTabSetting,
-          vscode.ConfigurationTarget.Workspace
-        );
-      this.originalTabSetting = undefined;
+    if (this.uiMode === "window" && Object.keys(this.savedStates).length > 0) {
+      for (const [key, savedValue] of Object.entries(this.savedStates)) {
+        if (savedValue !== undefined) {
+          this.outputChannel.appendLine(
+            `[restoreWindowState] Restoring ${key} to ${savedValue}`
+          );
+          await this.updateWorkspaceConfig(key, savedValue);
+        }
+      }
 
-      this.outputChannel.appendLine(
-        `[EditorActions Restore] this.originalEditorActionsLocation: ${this.originalEditorActionsLocation}`
-      );
-      await vscode.workspace.getConfiguration().update(
-        "workbench.editor.editorActionsLocation", // 修正配置键名，之前错写成了 workbench.action.editorActionsLocation
-        this.originalEditorActionsLocation,
-        vscode.ConfigurationTarget.Workspace
-      );
-      this.originalEditorActionsLocation = undefined;
+      // 清空保存的状态
+      this.savedStates = {};
 
       this.outputChannel.appendLine(
         "[restoreWindowState] Window state restored"
