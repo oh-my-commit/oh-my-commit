@@ -15,6 +15,7 @@ import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { uiModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@yaac/shared";
+import { logger } from "@/lib/logger";
 
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
@@ -42,21 +43,39 @@ export function CommitPage() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const message = event.data;
+
+      const validateFiles = (files: any[]): FileChange[] => {
+        if (!Array.isArray(files)) {
+          logger.warn('Files data is not an array:', files);
+          return [];
+        }
+
+        return files.filter((file): file is FileChange => {
+          if (!file || typeof file === 'string' || !file.path) {
+            logger.warn('Invalid file data:', file);
+            return false;
+          }
+          return true;
+        });
+      };
+
       switch (message.type) {
         case "init":
-          setStagedFiles(message.stagedFiles.files);
-          setUnstagedFiles(message.unstagedFiles.files);
+          const stagedFiles = validateFiles(message.stagedFiles?.files || []);
+          const unstagedFiles = validateFiles(message.unstagedFiles?.files || []);
+          setStagedFiles(stagedFiles);
+          setUnstagedFiles(unstagedFiles);
           setSelectedFiles(
-            message.stagedFiles.files.map((f: FileChange) => f.path) || []
+            stagedFiles.map((f) => f.path) || []
           ); // Auto-select all staged files initially
           break;
         case "update-files":
-          setStagedFiles(message.stagedFiles.files);
-          setUnstagedFiles(message.unstagedFiles.files);
+          setStagedFiles(validateFiles(message.stagedFiles?.files || []));
+          setUnstagedFiles(validateFiles(message.unstagedFiles?.files || []));
           break;
         case "get-files":
-          setStagedFiles(message.stagedFiles.files);
-          setUnstagedFiles(message.unstagedFiles.files);
+          setStagedFiles(validateFiles(message.stagedFiles?.files || []));
+          setUnstagedFiles(validateFiles(message.unstagedFiles?.files || []));
           break;
       }
     };

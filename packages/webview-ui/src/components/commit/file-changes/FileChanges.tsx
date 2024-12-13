@@ -32,7 +32,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   selectedFiles,
   onFileSelect,
 }) => {
-  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(lastOpenedFilePathAtom);
+  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
+    lastOpenedFilePathAtom
+  );
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -53,9 +55,31 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       stagedCount: filteredStagedFiles.length,
       unstagedCount: filteredUnstagedFiles.length,
     });
+
+    // Filter out any invalid files
+    const validStagedFiles = filteredStagedFiles.filter(
+      (file): file is FileChange => {
+        if (!file || typeof file === "string" || !file.path) {
+          logger.warn("Invalid staged file:", file);
+          return false;
+        }
+        return true;
+      }
+    );
+
+    const validUnstagedFiles = filteredUnstagedFiles.filter(
+      (file): file is FileChange => {
+        if (!file || typeof file === "string" || !file.path) {
+          logger.warn("Invalid unstaged file:", file);
+          return false;
+        }
+        return true;
+      }
+    );
+
     return [
-      ...filteredStagedFiles.map((file) => ({ ...file, isStaged: true })),
-      ...filteredUnstagedFiles.map((file) => ({ ...file, isStaged: false })),
+      ...validStagedFiles.map((file) => ({ ...file, isStaged: true })),
+      ...validUnstagedFiles.map((file) => ({ ...file, isStaged: false })),
     ] as FileChangeWithStaged[];
   }, [filteredStagedFiles, filteredUnstagedFiles]);
 
@@ -79,18 +103,17 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   const renderStatus = (file: FileChangeWithStaged) => (
     <div className="flex items-center gap-1">
-      <span className={cn(
-        "mr-1",
-        file.isStaged 
-          ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]"
-          : "text-[var(--vscode-descriptionForeground)]"
-      )}>
+      <span
+        className={cn(
+          "mr-1",
+          file.isStaged
+            ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]"
+            : "text-[var(--vscode-descriptionForeground)]"
+        )}
+      >
         {file.isStaged ? "●" : "○"}
       </span>
-      <span className={cn(
-        "text-xs font-medium",
-        STATUS_COLORS[file.type]
-      )}>
+      <span className={cn("text-xs font-medium", STATUS_COLORS[file.type])}>
         {STATUS_LETTERS[file.type]}
       </span>
     </div>
