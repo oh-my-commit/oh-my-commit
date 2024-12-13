@@ -4,9 +4,7 @@
 export type FileStatus =
   | "added"
   | "modified"
-  | "deleted"
-  | "renamed"
-  | "default";
+  | "deleted";
 
 /**
  * Git 文件变更信息
@@ -30,6 +28,4 @@ export interface FileChange {
   displayName?: string;
   /** diff 内容 */
   diff?: string;
-  /** 是否已暂存 */
-  isStaged?: boolean;
 }

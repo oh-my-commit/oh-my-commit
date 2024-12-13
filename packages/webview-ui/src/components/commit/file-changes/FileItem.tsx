@@ -10,13 +10,10 @@ import { viewModeAtom } from "@/state/atoms/ui";
 import { basename } from "@/utils/path";
 
 interface FileItemProps {
-  file: FileChange & {
-    hasStaged?: boolean;
-    hasUnstaged?: boolean;
-  };
+  file: FileChange;
   isSelected: boolean;
   isActive: boolean;
-  hasOpenedFile: boolean; // 是否有任何文件被打开
+  hasOpenedFile: boolean;
   searchQuery?: string;
   onSelect?: (path: string) => void;
   onClick?: (path: string, metaKey: boolean) => void;
@@ -31,16 +28,14 @@ export const FileItem: React.FC<FileItemProps> = ({
   onSelect,
   onClick,
 }) => {
-  const [viewMode, setViewMode] = useAtom(viewModeAtom);
+  const [viewMode] = useAtom(viewModeAtom);
 
   const handleCheckboxChange = () => {
     onSelect?.(file.path);
 
     if (isSelected && isActive) {
-      // 如果文件当前是选中且打开的状态，取消选择时也关闭它
       onClick?.(file.path, false);
     } else if (!isSelected && !hasOpenedFile) {
-      // 如果没有文件被打开，且当前文件未被选中，选中时也打开它
       onClick?.(file.path, false);
     }
   };
@@ -66,38 +61,6 @@ export const FileItem: React.FC<FileItemProps> = ({
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
-                file.hasStaged
-                  ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]"
-                  : "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)] opacity-20",
-                isActive && "text-inherit opacity-50"
-              )}
-              title={
-                file.hasStaged ? "Has staged changes" : "No staged changes"
-              }
-            >
-              ●
-            </span>
-
-            <span
-              className={cn(
-                "font-mono font-medium text-[12px]",
-                file.hasUnstaged
-                  ? "text-[var(--vscode-gitDecoration-untrackedResourceForeground)]"
-                  : "text-[var(--vscode-gitDecoration-untrackedResourceForeground)] opacity-20",
-                isActive && "text-inherit opacity-50"
-              )}
-              title={
-                file.hasUnstaged
-                  ? "Has unstaged changes"
-                  : "No unstaged changes"
-              }
-            >
-              ○
-            </span>
-
-            <span
-              className={cn(
-                "font-mono font-medium text-[12px] w-4 text-center",
                 STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
                 isActive && "text-inherit"
               )}

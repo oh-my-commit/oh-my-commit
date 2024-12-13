@@ -1,0 +1,11 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-14T03:27:18+0800"
+query_essence = "简化 FileItem 组件，只保留 AMD 三种状态"
+key_points = [
+  "移除了 staged/unstaged 相关的 UI 和类型",
+  "简化为仅保留 Added/Modified/Deleted 三种状态",
+  "保持了核心的文件变更显示功能"
+]
