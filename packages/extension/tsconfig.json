@@ -5,7 +5,6 @@
     "outDir": "dist",
     "lib": ["ES2020"],
     "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -13,11 +12,15 @@
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "moduleResolution": "node",
     "types": ["vscode"],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@yaac/shared": ["../shared/src"],
+      "@yaac/shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../shared/src"],
   "exclude": ["node_modules", ".vscode-test", "webview-ui"]
 }
