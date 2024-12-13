@@ -70,7 +70,7 @@ export class QuickCommitCommand implements VscodeCommand {
     }
 
     // Create webview panel
-    const panel = this.webviewManager.createWebviewPanel();
+    const panel = await this.webviewManager.createWebviewPanel();
 
     console.log("== Initialing data...");
     // Send initial data to webview
