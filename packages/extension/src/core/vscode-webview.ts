@@ -102,8 +102,16 @@ export class WebviewManager {
     if (this.uiMode === "window") {
       vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
       // Store original setting and hide tab bar in the new window
-      this.originalTabSetting = vscode.workspace.getConfiguration().get("workbench.editor.showTabs");
-      vscode.workspace.getConfiguration().update("workbench.editor.showTabs", "none", vscode.ConfigurationTarget.Window);
+      this.originalTabSetting = vscode.workspace
+        .getConfiguration()
+        .get("workbench.editor.showTabs");
+      vscode.workspace
+        .getConfiguration()
+        .update(
+          "workbench.editor.showTabs",
+          "none",
+          vscode.ConfigurationTarget.Workspace
+        );
     }
 
     this.handleWindowModeStateChange(this.webviewPanel);
@@ -137,11 +145,13 @@ export class WebviewManager {
       this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
       // Restore original tab setting if in window mode
       if (this.uiMode === "window" && this.originalTabSetting !== undefined) {
-        vscode.workspace.getConfiguration().update(
-          "workbench.editor.showTabs",
-          this.originalTabSetting,
-          vscode.ConfigurationTarget.Window
-        );
+        vscode.workspace
+          .getConfiguration()
+          .update(
+            "workbench.editor.showTabs",
+            this.originalTabSetting,
+            vscode.ConfigurationTarget.Workspace
+          );
         this.originalTabSetting = undefined;
       }
       this.webviewPanel.dispose();
@@ -183,23 +193,70 @@ export class WebviewManager {
         this.webviewPanel = undefined;
       });
 
-      // Handle visibility changes
+      // Handle visibility changes and focus changes
       let lastVisible = true;
+      let lastActive = false;
+      let isMovingToNewWindow = true; // Flag to track window mode transition
+
+      // Handle window focus events
+      const handleWindowFocus = () => {
+        this.outputChannel.appendLine("[Window] Window gained focus");
+      };
+
+      const handleWindowBlur = () => {
+        this.outputChannel.appendLine("[Window] Window lost focus");
+        if (!isMovingToNewWindow) {
+          this.outputChannel.appendLine(
+            "[Window] Closing panel due to window focus loss"
+          );
+          this.cleanupPanel();
+        }
+      };
+
       panel.onDidChangeViewState((e) => {
         const currentVisible = e.webviewPanel.visible;
         const active = e.webviewPanel.active;
         this.outputChannel.appendLine(
-          `[onDidChangeViewState] State changed - visible: ${currentVisible}, active: ${active}, lastVisible: ${lastVisible}`
+          `[onDidChangeViewState] State changed - visible: ${currentVisible}, active: ${active}, lastVisible: ${lastVisible}, lastActive: ${lastActive}, isMovingToNewWindow: ${isMovingToNewWindow}`
         );
 
-        // Only trigger on visibility change from true to false
-        if (lastVisible && !currentVisible) {
+        // Ignore the first active:false event when moving to new window
+        if (isMovingToNewWindow && !active) {
           this.outputChannel.appendLine(
-            "[onDidChangeViewState] Visibility changed from true to false, cleaning up panel"
+            "[onDidChangeViewState] Ignoring focus loss during window transition"
+          );
+          isMovingToNewWindow = false;
+          lastActive = true; // Force lastActive to true since we're ignoring this transition
+          lastVisible = currentVisible;
+          return;
+        }
+
+        // Close when:
+        // 1. Visibility changes from true to false, or
+        // 2. Focus changes from active to inactive (after window transition)
+        if (
+          (lastVisible && !currentVisible) ||
+          (!active && lastActive && !isMovingToNewWindow)
+        ) {
+          this.outputChannel.appendLine(
+            `[onDidChangeViewState] Panel lost ${
+              !currentVisible ? "visibility" : "focus"
+            }, cleaning up panel`
           );
           this.cleanupPanel();
+          return;
         }
+
         lastVisible = currentVisible;
+        lastActive = active;
+      });
+
+      // Clean up event listeners when panel is disposed
+      panel.onDidDispose(() => {
+        this.outputChannel.appendLine(
+          "[onDidDispose] Panel disposed event triggered"
+        );
+        this.webviewPanel = undefined;
       });
     }
   }
