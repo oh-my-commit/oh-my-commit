@@ -77,10 +77,16 @@ export class WebviewManager {
     context.subscriptions.push(watcher, this);
   }
 
-  public show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
+  public async show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
     if (this.webviewPanel) {
       this.webviewPanel.reveal();
       return this.webviewPanel;
+    }
+
+    // Only move to new window in window mode
+    if (this.uiMode === "window") {
+      await vscode.commands.executeCommand("workbench.action.newEmptyEditorWindow");
+      await this.saveWindowState();
     }
 
     this.webviewPanel = vscode.window.createWebviewPanel(
@@ -98,29 +104,13 @@ export class WebviewManager {
       }
     );
 
-    // Only move to new window in window mode
-    if (this.uiMode === "window") {
-      vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
-      // Store original setting and hide tab bar in the new window
-      this.originalTabSetting = vscode.workspace
-        .getConfiguration()
-        .get("workbench.editor.showTabs");
-      vscode.workspace
-        .getConfiguration()
-        .update(
-          "workbench.editor.showTabs",
-          "none",
-          vscode.ConfigurationTarget.Workspace
-        );
-    }
-
-    this.handleWindowModeStateChange(this.webviewPanel);
-    this.updateWebview();
+    await this.handleWindowModeStateChange(this.webviewPanel);
+    await this.updateWebview();
     return this.webviewPanel;
   }
 
-  public createWebviewPanel(): vscode.WebviewPanel {
-    const panel = this.show({});
+  public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
+    const panel = await this.show({});
 
     // Add message handling
     panel.webview.onDidReceiveMessage(
@@ -128,7 +118,7 @@ export class WebviewManager {
         switch (message.command) {
           case "openExternal":
             if (message.url) {
-              vscode.env.openExternal(vscode.Uri.parse(message.url));
+              await vscode.env.openExternal(vscode.Uri.parse(message.url));
             }
             break;
         }
@@ -140,42 +130,54 @@ export class WebviewManager {
     return panel;
   }
 
-  private cleanupPanel() {
-    if (this.webviewPanel) {
-      this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
-      // Restore original tab setting if in window mode
-      if (this.uiMode === "window" && this.originalTabSetting !== undefined) {
-        vscode.workspace
-          .getConfiguration()
-          .update(
-            "workbench.editor.showTabs",
-            this.originalTabSetting,
-            vscode.ConfigurationTarget.Workspace
-          )
-          .then(() => {
-            this.outputChannel.appendLine(
-              "[cleanupPanel] Tab setting restored"
-            );
-            // Only dispose the panel after the setting is restored
-            this.webviewPanel?.dispose();
-            this.webviewPanel = undefined;
-            this.originalTabSetting = undefined;
-            this.outputChannel.appendLine(
-              "[cleanupPanel] Panel disposed and reference cleared"
-            );
-          });
-      } else {
-        // If not in window mode or no tab setting to restore, just dispose
-        this.webviewPanel.dispose();
-        this.webviewPanel = undefined;
-        this.outputChannel.appendLine(
-          "[cleanupPanel] Panel disposed and reference cleared"
+  private async saveWindowState() {
+    if (this.uiMode === "window") {
+      // Store original setting and hide tab bar in the new window
+      this.originalTabSetting = vscode.workspace
+        .getConfiguration()
+        .get("workbench.editor.showTabs");
+      
+      await vscode.workspace
+        .getConfiguration()
+        .update(
+          "workbench.editor.showTabs",
+          "none",
+          vscode.ConfigurationTarget.Workspace
         );
-      }
+      
+      this.outputChannel.appendLine("[saveWindowState] Window state saved and tabs hidden");
     }
   }
 
-  private handleWindowModeStateChange(panel: vscode.WebviewPanel) {
+  private async restoreWindowState() {
+    if (this.uiMode === "window" && this.originalTabSetting !== undefined) {
+      await vscode.workspace
+        .getConfiguration()
+        .update(
+          "workbench.editor.showTabs",
+          this.originalTabSetting,
+          vscode.ConfigurationTarget.Workspace
+        );
+      
+      this.originalTabSetting = undefined;
+      this.outputChannel.appendLine("[restoreWindowState] Window state restored");
+    }
+  }
+
+  private async cleanupPanel() {
+    if (this.webviewPanel) {
+      this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
+      
+      await this.restoreWindowState();
+      
+      // Dispose the panel
+      this.webviewPanel.dispose();
+      this.webviewPanel = undefined;
+      this.outputChannel.appendLine("[cleanupPanel] Panel disposed and reference cleared");
+    }
+  }
+
+  private async handleWindowModeStateChange(panel: vscode.WebviewPanel) {
     if (this.uiMode === "window") {
       this.outputChannel.appendLine(
         "[handleWindowModeStateChange] Setting up window mode handlers"
@@ -259,7 +261,7 @@ export class WebviewManager {
     }
   }
 
-  private updateWebview() {
+  private async updateWebview() {
     if (!this.webviewPanel?.webview) return;
 
     const templateData = {
@@ -274,14 +276,11 @@ export class WebviewManager {
     this.webviewPanel.webview.html = html;
   }
 
-  public get uiMode() {
-    return (
-      vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ||
-      "panel"
-    );
+  public get uiMode(): string {
+    return vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ?? "panel";
   }
 
-  public dispose() {
-    this.webviewPanel?.dispose();
+  public async dispose() {
+    await this.cleanupPanel();
   }
 }
