@@ -14,3 +14,10 @@ export const diffWrapLineAtom = atomWithStorage<boolean>({
   defaultValue: true,
   storageType: "both",
 });
+
+export type UiMode = "silent" | "notification" | "window" | "panel";
+export const uiModeAtom = atomWithStorage<UiMode>({
+  key: "yaac.ui.mode",
+  defaultValue: "window",
+  storageType: "both",
+});

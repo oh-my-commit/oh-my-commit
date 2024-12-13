@@ -28,9 +28,10 @@ A VSCode extension project that helps developers write better commit messages us
 "014" = { slug = "vscode_extension_webview", abstract = "Implementation of VSCode extension webview" }
 "015" = { slug = "vscode_extension_enhancement", abstract = "General enhancements to VSCode extension" }
 "016" = { slug = "vscode_plugin_error", abstract = "Troubleshooting VSCode plugin errors" }
-"017" = { slug = "project_template", abstract = "Setting up project template structure" }
-"018" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
-"019" = { slug = "template_test", abstract = "Testing framework for project templates" }
-"020" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
-"021" = { slug = "development_log", abstract = "Development progress and changelog" }
-"022" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
+"017" = { slug = "ui_mode_enhancement", abstract = "Enhancing UI modes with silent, notification, window, and panel options" }
+"018" = { slug = "project_template", abstract = "Setting up project template structure" }
+"019" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
+"020" = { slug = "template_test", abstract = "Testing framework for project templates" }
+"021" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
+"022" = { slug = "development_log", abstract = "Development progress and changelog" }
+"023" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }

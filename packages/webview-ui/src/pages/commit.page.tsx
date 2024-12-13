@@ -13,6 +13,7 @@ import { useAtom } from "jotai";
 import React, { useCallback, useEffect } from "react";
 import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
+import { uiModeAtom } from "@/state/atoms/ui";
 
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
@@ -20,6 +21,7 @@ export function CommitPage() {
   const [stagedFiles, setStagedFiles] = useAtom(stagedFilesAtom);
   const [unstagedFiles, setUnstagedFiles] = useAtom(unstagedFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
+  const [uiMode] = useAtom(uiModeAtom);
 
   const vscode = getVSCodeAPI();
 
@@ -75,7 +77,7 @@ export function CommitPage() {
         : [...selectedFiles, path];
       setSelectedFiles(newSelectedFiles);
     },
-    [selectedFiles],
+    [selectedFiles]
   );
 
   return (
@@ -90,14 +92,18 @@ export function CommitPage() {
         disabled={!message.trim() || selectedFiles.length === 0}
       />
 
-      <FileChanges
-        stagedFiles={stagedFiles}
-        unstagedFiles={unstagedFiles}
-        selectedFiles={selectedFiles}
-        onFileSelect={handleFileSelect}
-      />
+      {uiMode === "panel" && (
+        <>
+          <FileChanges
+            stagedFiles={stagedFiles}
+            unstagedFiles={unstagedFiles}
+            selectedFiles={selectedFiles}
+            onFileSelect={handleFileSelect}
+          />
 
-      <Footer />
+          <Footer />
+        </>
+      )}
     </div>
   );
 }

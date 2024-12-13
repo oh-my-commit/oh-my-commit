@@ -145,6 +145,24 @@
           "markdownDescription": "Git 提交信息的语言",
           "order": 22
         },
+        "yaac.ui.mode": {
+          "type": "string",
+          "enum": [
+            "silent",
+            "notification",
+            "window",
+            "panel"
+          ],
+          "enumDescriptions": [
+            "仅在状态栏显示提交信息和状态",
+            "弹出通知，支持修改按钮",
+            "以浮动窗口显示提交界面",
+            "在面板中显示完整提交界面"
+          ],
+          "default": "panel",
+          "markdownDescription": "提交界面显示模式",
+          "order": 23
+        },
         "yaac.ai.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
@@ -166,20 +184,6 @@
             }
           },
           "order": 30
-        },
-        "yaac.ui.mode": {
-          "type": "string",
-          "default": "webview",
-          "enum": [
-            "quickInput",
-            "webview"
-          ],
-          "enumDescriptions": [
-            "Quick & Simple: Single-line input box for fast commits",
-            "Professional: Full-featured editor with preview and formatting"
-          ],
-          "markdownDescription": "提交界面模式选择",
-          "order": 40
         },
         "yaac.telemetry.enabled": {
           "type": "boolean",
