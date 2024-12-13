@@ -19,7 +19,7 @@ interface CommitMessageProps {
   onCommit: () => void;
   onFeedback?: (
     type: "type" | "content" | "regenerate" | "other",
-    details?: string,
+    details?: string
   ) => void;
   disabled?: boolean;
 }
