@@ -4,7 +4,7 @@ import {
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
-import { TreeNode } from "@/types/tree-node";
+
 import { getAllDirectoryPaths } from "@/utils/get-all-directory-paths";
 import { getSubDirectories } from "@/utils/get-sub-directories";
 import { useAtom } from "jotai";
@@ -12,7 +12,7 @@ import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
 import { Checkbox } from "../../common/Checkbox";
 import { FileItem } from "./FileItem";
-import { FileChange } from "@/types/file-change";
+import { FileChange, TreeNode } from "@yaac/shared";
 
 interface TreeViewProps {
   fileTree: TreeNode;

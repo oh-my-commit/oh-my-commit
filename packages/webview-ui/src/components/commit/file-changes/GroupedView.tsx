@@ -1,10 +1,11 @@
 import { Checkbox } from "@/components/common/Checkbox";
 import { cn } from "@/lib/utils";
 import type { FileChange } from "@/state/types";
-import { FileStatus } from "@/types/file-change";
+
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
+import { FileStatus } from "@yaac/shared";
 
 export interface GroupedViewProps {
   groupedFiles: Record<FileStatus, FileChange[]>;
@@ -38,7 +39,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
             <div className="flex items-center justify-center w-8 h-full">
               <Checkbox
                 checked={files.every((file: FileChange) =>
-                  selectedFiles.includes(file.path),
+                  selectedFiles.includes(file.path)
                 )}
                 onChange={(checked) => onGroupSelect?.(files, checked)}
                 className="opacity-60 group-hover:opacity-100 transition-opacity"
@@ -47,7 +48,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
             <span
               className={cn(
                 "flex items-center gap-1 text-[12px] font-medium cursor-default",
-                STATUS_COLORS[status],
+                STATUS_COLORS[status]
               )}
             >
               {STATUS_LABELS[status]}
@@ -78,7 +79,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
   return (
     <div className="flex flex-col">
       {(Object.keys(groupedFiles) as FileStatus[]).map((status) =>
-        renderFileGroup(status),
+        renderFileGroup(status)
       )}
     </div>
   );

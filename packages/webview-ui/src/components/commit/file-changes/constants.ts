@@ -1,5 +1,7 @@
 // File change status colors
-import { FileStatus } from "@/types/file-change";
+
+import { FileStatus } from "@yaac/shared";
+
 
 export const STATUS_COLORS: Record<FileStatus, string> = {
   added: "text-git-added-fg", // Git decoration colors

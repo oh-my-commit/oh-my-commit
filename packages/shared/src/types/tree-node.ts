@@ -1,4 +1,4 @@
-import { FileChange } from './file-change';
+import { FileChange } from './git';
 
 export interface TreeNode {
   path: string;

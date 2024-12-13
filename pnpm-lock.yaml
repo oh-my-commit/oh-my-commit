@@ -59,6 +59,9 @@ importers:
 
   packages/extension:
     dependencies:
+      '@yaac/shared':
+        specifier: workspace:*
+        version: link:../shared
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -121,6 +124,12 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
+  packages/shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.2
+
   packages/webview-ui:
     dependencies:
       '@types/marked':
@@ -138,6 +147,9 @@ importers:
       '@vscode/webview-ui-toolkit':
         specifier: ^1.4.0
         version: 1.4.0(react@18.2.0)
+      '@yaac/shared':
+        specifier: workspace:*
+        version: link:../shared
       classnames:
         specifier: ^2.5.1
         version: 2.5.1

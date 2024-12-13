@@ -1,7 +1,9 @@
 import { CommitState } from "@/types/commit-state";
-import { TreeNode } from "@/types/tree-node";
+import { TreeNode } from "@yaac/shared";
 
-export const buildFileTree = (files: CommitState["filesChanged"]): TreeNode[] => {
+export const buildFileTree = (
+  files: CommitState["filesChanged"]
+): TreeNode[] => {
   const root: { [key: string]: TreeNode } = {};
 
   files.forEach((file) => {
@@ -39,8 +41,7 @@ export const buildFileTree = (files: CommitState["filesChanged"]): TreeNode[] =>
             displayName: parts[index + 1],
             type: index === parts.length - 2 ? "file" : "directory",
             children: [],
-            fileInfo:
-              index === parts.length - 2 ? file : undefined,
+            fileInfo: index === parts.length - 2 ? file : undefined,
           };
         }
 

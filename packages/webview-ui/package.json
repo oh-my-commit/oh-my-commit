@@ -9,6 +9,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@yaac/shared": "workspace:*",
     "@types/marked": "^6.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@uiw/react-md-editor": "^4.0.4",

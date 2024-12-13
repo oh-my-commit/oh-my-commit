@@ -3,6 +3,7 @@ import { AcManager } from "@/core/ac";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
 import * as vscode from "vscode";
+import { FileChange, FileStatus } from "@yaac/shared";
 
 export class QuickCommitCommand implements VscodeCommand {
   public id = "yaac.quickCommit";
@@ -65,6 +66,28 @@ export class QuickCommitCommand implements VscodeCommand {
     // Get all changes before staging
     const changedFiles = await this.gitService.getChangedFiles();
 
+    // Transform file paths to FileChange objects
+    const transformFiles = (
+      files: string[],
+      isStaged: boolean
+    ): FileChange[] => {
+      return files.map((path) => ({
+        path,
+        type: "modified" as FileStatus, // Default to modified, we can enhance this later
+        status: "modified" as FileStatus,
+        additions: 0, // We'll need to enhance this to get actual numbers
+        deletions: 0,
+        displayName: path.split("/").pop() || path,
+        isStaged,
+      }));
+    };
+
+    const stagedFileChanges = transformFiles(changedFiles.staged.files, true);
+    const unstagedFileChanges = transformFiles(
+      changedFiles.unstaged.files,
+      false
+    );
+
     // 先暂存全部 // todo: is it safe
     await this.gitService.stageAll();
     const diff = await this.gitService.getStagedDiff();
@@ -95,7 +118,18 @@ export class QuickCommitCommand implements VscodeCommand {
       type: "init",
       message: lastMessage,
       isAmendMode,
-      changedFiles,
+      stagedFiles: {
+        files: stagedFileChanges,
+        additions: changedFiles.staged.additions,
+        deletions: changedFiles.staged.deletions,
+        summary: changedFiles.staged.summary,
+      },
+      unstagedFiles: {
+        files: unstagedFileChanges,
+        additions: changedFiles.unstaged.additions,
+        deletions: changedFiles.unstaged.deletions,
+        summary: changedFiles.unstaged.summary,
+      },
       totalAdditions:
         changedFiles.staged.additions + changedFiles.unstaged.additions,
       totalDeletions:

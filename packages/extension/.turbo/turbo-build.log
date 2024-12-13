@@ -1,8 +1,9 @@
 
-> @yaac/extension@0.1.0 build /Users/mark/coding/apps/YetAnotherAutoCommit/packages/extension
+
+> @yaac/extension@0.1.0 build /Users/mark/coding/apps/YAAC-YourArtisticAide4Commits/packages/extension
 > cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify
 
 
-  ../../dist/extension.js  206.6kb
+  [37m../../dist/[0m[1mextension.js[0m  [36m210.7kb[0m
 
-⚡ Done in 35ms
+⚡ [32mDone in 39ms[0m

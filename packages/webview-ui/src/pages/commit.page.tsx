@@ -14,6 +14,7 @@ import React, { useCallback, useEffect } from "react";
 import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { uiModeAtom } from "@/state/atoms/ui";
+import { FileChange } from "@yaac/shared";
 
 export function CommitPage() {
   const [message, setMessage] = useAtom(commitMessageAtom);
@@ -45,9 +46,15 @@ export function CommitPage() {
         case "init":
           setStagedFiles(message.stagedFiles.files);
           setUnstagedFiles(message.unstagedFiles.files);
-          setSelectedFiles(message.stagedFiles.files || []); // Auto-select all staged files initially
+          setSelectedFiles(
+            message.stagedFiles.files.map((f: FileChange) => f.path) || []
+          ); // Auto-select all staged files initially
           break;
         case "update-files":
+          setStagedFiles(message.stagedFiles.files);
+          setUnstagedFiles(message.unstagedFiles.files);
+          break;
+        case "get-files":
           setStagedFiles(message.stagedFiles.files);
           setUnstagedFiles(message.unstagedFiles.files);
           break;

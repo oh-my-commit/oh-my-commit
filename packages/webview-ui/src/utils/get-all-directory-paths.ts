@@ -1,8 +1,8 @@
-import { TreeNode } from "@/types/tree-node";
+import { TreeNode } from "@yaac/shared";
 
 export const getAllDirectoryPaths = (
   node: TreeNode,
-  parentPath: string = "",
+  parentPath: string = ""
 ): string[] => {
   const currentPath = parentPath
     ? `${parentPath}/${node.displayName}`
@@ -11,7 +11,7 @@ export const getAllDirectoryPaths = (
     return [
       currentPath,
       ...node.children.flatMap((child) =>
-        getAllDirectoryPaths(child, currentPath),
+        getAllDirectoryPaths(child, currentPath)
       ),
     ];
   }

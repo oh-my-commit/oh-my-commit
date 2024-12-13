@@ -1,7 +1,7 @@
 // Create atoms for persistent state
 import { atomWithStorage } from "@/lib/storage";
-import type { CommitStats } from "@/state/types";
-import { FileChange } from "@/types/file-change";
+import type { CommitStats, FileChange } from "@/state/types";
+
 import { atom } from "jotai/index";
 
 export const stagedFilesAtom = atomWithStorage<FileChange[]>({

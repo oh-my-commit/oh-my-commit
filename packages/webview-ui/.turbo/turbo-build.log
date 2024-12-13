@@ -1,25 +1,27 @@
 
-> @yaac/webview@0.1.0 build /Users/mark/coding/apps/YetAnotherAutoCommit/packages/webview-ui
+
+> @yaac/webview@0.1.0 build /Users/mark/coding/apps/YAAC-YourArtisticAide4Commits/packages/webview-ui
 > webpack --mode production
 
-asset main.js 1.38 MiB [compared for emit] [javascript module] [minimized] [big] (name: main) 2 related assets
-asset 8f3abbcbc983396e1f13.ttf?38dcd33a732ebca5a557e04831e9e235 78.3 KiB [emitted] [immutable] [from: ../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/codicons/dist/codicon.ttf?38dcd33a732ebca5a557e04831e9e235] (auxiliary name: main)
-orphan modules 3.1 MiB [orphan] 594 modules
+asset [1m[33mmain.js[39m[22m [1m[33m1.39 MiB[39m[22m [1m[32m[emitted][39m[22m [javascript module] [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 2 related assets
+asset [1m[32m8f3abbcbc983396e1f13.ttf?38dcd33a732ebca5a557e04831e9e235[39m[22m 78.3 KiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m [from: ../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/codicons/dist/codicon.ttf?38dcd33a732ebca5a557e04831e9e235] (auxiliary name: main)
+orphan modules 3.11 MiB [1m[33m[orphan][39m[22m 608 modules
 runtime modules 1.83 KiB 7 modules
-cacheable modules 2.26 MiB (javascript) 78.3 KiB (asset) 335 modules
+cacheable modules 2.28 MiB (javascript) 78.3 KiB (asset) 335 modules
 
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+[1m[33mWARNING[39m[22m in [1masset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (1.38 MiB)
+  main.js (1.39 MiB)[39m[22m
 
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+[1m[33mWARNING[39m[22m in [1mentrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (1.38 MiB)
+  main (1.39 MiB)
       main.js
+[39m[22m
 
-WARNING in webpack performance recommendations: 
+[1m[33mWARNING[39m[22m in [1mwebpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
+For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.97.1 compiled with 3 warnings in 6910 ms
+webpack 5.97.1 compiled with [1m[33m3 warnings[39m[22m in 5894 ms

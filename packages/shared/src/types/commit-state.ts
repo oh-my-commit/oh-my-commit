@@ -1,4 +1,4 @@
-import { FileChange } from "@yaac/shared";
+import { FileChange } from './git';
 
 export interface CommitState {
   message: string;

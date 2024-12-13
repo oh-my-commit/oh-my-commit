@@ -15,11 +15,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@yaac/shared": ["../shared/src"],
+      "@yaac/shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src",
-    "src/types/global.d.ts", "../examples"],
+  "include": ["src", "../shared/src"],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,6 @@
 // 核心业务类型
-import { FileStatus } from "@/types/file-change";
+
+import { FileStatus } from "@yaac/shared";
 
 export interface FileChange {
   path: string;
