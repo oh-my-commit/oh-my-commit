@@ -12,8 +12,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
 
   return (
     <div className={className}>
-      <div className="relative flex items-center">
-        <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10" />
+      <div className="relative flex items-center  border border-[var(--vscode-input-border)] rounded-sm">
+        <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10 " />
         <style>
           {`
             .search-input::part(control) {
@@ -21,6 +21,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
             }
           `}
         </style>
+
         <VSCodeTextField
           className="w-full search-input"
           placeholder="Filter"

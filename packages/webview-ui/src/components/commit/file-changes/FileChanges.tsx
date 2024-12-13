@@ -139,22 +139,66 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between px-2 py-1 sticky top-0 z-10 bg-[var(--vscode-sideBar-background)]">
-        <div className="flex items-center gap-2">
-          <SearchBar className="w-full sm:w-[240px] min-w-[120px]" />
-          <div className="flex items-center gap-1 text-xs text-[var(--vscode-descriptionForeground)]">
-            <span className="text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]">
-              {filteredStagedFiles.length} staged
-            </span>
-            <span>·</span>
-            <span>{filteredUnstagedFiles.length} unstaged</span>
-          </div>
+    <Section
+      title="Changed Files"
+      actions={
+        <div
+          ref={tooltipContainerRef}
+          className="relative inline-flex items-center"
+        >
+          <button
+            className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
+            onClick={() => setShowTooltip(!showTooltip)}
+          >
+            <InfoIcon />
+          </button>
+
+          {showTooltip && (
+            <div className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]">
+              <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3">
+                <div>
+                  <p className="font-semibold mb-1">About Changed Files</p>
+                  <p>Files are marked with their status and staging state:</p>
+                  <ul className="ml-2 mt-1 space-y-1">
+                    <li>
+                      <span className="text-git-added-fg">A</span> - Added (new
+                      file)
+                    </li>
+                    <li>
+                      <span className="text-git-modified-fg">M</span> - Modified
+                    </li>
+                    <li>
+                      <span className="text-git-deleted-fg">D</span> - Deleted
+                    </li>
+                    <li>
+                      <span className="text-git-renamed-fg">R</span> - Renamed
+                    </li>
+                    <li className="mt-2">
+                      <span className="text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]">
+                        ●
+                      </span>{" "}
+                      - Staged for commit
+                    </li>
+                    <li>
+                      <span className="text-[var(--vscode-descriptionForeground)]">
+                        ○
+                      </span>{" "}
+                      - Not staged
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+      }
+    >
+      <div className="flex items-center gap-4 px-4 py-2 sticky top-0 z-10 bg-input-bg border-b border-[var(--vscode-panel-border)]">
+        <SearchBar className="flex-1 min-w-[200px]" />
         <button
           className={cn(
             "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
-            "self-end sm:self-auto"
+            "shrink-0"
           )}
           onClick={() => setViewMode(viewMode === "flat" ? "tree" : "flat")}
           title={`Switch to ${viewMode === "flat" ? "Tree" : "Flat"} View`}
@@ -169,95 +213,43 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         </button>
       </div>
 
-      <Section
-        title="Changed Files"
-        actions={
-          <div
-            ref={tooltipContainerRef}
-            className="relative inline-flex items-center"
-          >
-            <button
-              className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
-              onClick={() => setShowTooltip(!showTooltip)}
-            >
-              <InfoIcon />
-            </button>
+      {filteredStagedFiles.length === 0 &&
+      filteredUnstagedFiles.length === 0 ? (
+        <EmptyState
+          searchQuery={searchQuery}
+          onClearSearch={() => setSearchQuery("")}
+        />
+      ) : (
+        <div className="flex-1 overflow-auto">
+          {viewMode === "tree" && (
+            <TreeView
+              fileTree={fileTree}
+              onFileClick={handleFileClick}
+              onFileSelect={(path) => onFileSelect(path, true)}
+              renderStatus={renderStatus}
+            />
+          )}
 
-            {showTooltip && (
-              <div className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]">
-                <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3">
-                  <div>
-                    <p className="font-semibold mb-1">About Changed Files</p>
-                    <p>Files are marked with their status and staging state:</p>
-                    <ul className="ml-2 mt-1 space-y-1">
-                      <li>
-                        <span className="text-git-added-fg">A</span> - Added
-                        (new file)
-                      </li>
-                      <li>
-                        <span className="text-git-modified-fg">M</span> -
-                        Modified
-                      </li>
-                      <li>
-                        <span className="text-git-deleted-fg">D</span> - Deleted
-                      </li>
-                      <li>
-                        <span className="text-git-renamed-fg">R</span> - Renamed
-                      </li>
-                      <li className="mt-2">
-                        <span className="text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]">
-                          ●
-                        </span>{" "}
-                        - Staged for commit
-                      </li>
-                      <li>
-                        <span className="text-[var(--vscode-descriptionForeground)]">
-                          ○
-                        </span>{" "}
-                        - Not staged
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        }
-      >
-        {filteredStagedFiles.length === 0 &&
-        filteredUnstagedFiles.length === 0 ? (
-          <EmptyState
-            searchQuery={searchQuery}
-            onClearSearch={() => setSearchQuery("")}
-          />
-        ) : (
-          <div className="flex-1 overflow-auto">
-            {viewMode === "tree" && (
-              <TreeView
-                fileTree={fileTree}
-                onFileClick={handleFileClick}
-                onFileSelect={(path) => onFileSelect(path, true)}
-                renderStatus={renderStatus}
-              />
-            )}
+          {viewMode === "flat" && (
+            <FlatView
+              files={allFiles}
+              selectedFiles={selectedFiles}
+              selectedPath={lastOpenedFilePath}
+              searchQuery={searchQuery}
+              onSelect={(path) => onFileSelect(path, true)}
+              onFileClick={(path) => handleFileClick(path)}
+              hasOpenedFile={!!lastOpenedFilePath}
+              renderStatus={renderStatus}
+            />
+          )}
+        </div>
+      )}
 
-            {viewMode === "flat" && (
-              <FlatView
-                files={allFiles}
-                selectedFiles={selectedFiles}
-                selectedPath={lastOpenedFilePath}
-                searchQuery={searchQuery}
-                onSelect={(path) => onFileSelect(path, true)}
-                onFileClick={(path) => handleFileClick(path)}
-                hasOpenedFile={!!lastOpenedFilePath}
-                renderStatus={renderStatus}
-              />
-            )}
-          </div>
-        )}
-      </Section>
-
-      {lastOpenedFilePath && <DiffViewer />}
-    </div>
+      {lastOpenedFilePath && (
+        <div className="flex-1 min-h-0 border-t border-[var(--vscode-panel-border)]">
+          <DiffViewer />
+        </div>
+      )}
+    </Section>
   );
 };
