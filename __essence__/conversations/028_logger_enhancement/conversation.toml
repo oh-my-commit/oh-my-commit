@@ -81,3 +81,15 @@ key_points = [
     "Added support for extracting source locations from webpack URLs",
     "Simplified logger implementation by removing async operations"
 ]
+
+[[rounds]]
+number = 8
+time = "2024-12-14 01:41:06"
+query_essence = "Debug and improve stack trace parsing"
+key_points = [
+    "Added detailed debug logging for stack trace analysis",
+    "Implemented support for multiple stack trace formats",
+    "Enhanced frame filtering to skip internal frames",
+    "Improved webpack source map configuration",
+    "Changed devtool to eval-source-map for better debugging"
+]

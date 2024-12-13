@@ -21,7 +21,7 @@ module.exports = (env, argv) => {
     experiments: {
       outputModule: isProduction,
     },
-    devtool: isDevelopment ? "inline-source-map" : "source-map",
+    devtool: isDevelopment ? "eval" : "source-map",
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
@@ -39,8 +39,8 @@ module.exports = (env, argv) => {
                 transpileOnly: true,
                 compilerOptions: {
                   sourceMap: true,
-                  noEmit: false
-                }
+                  noEmit: false,
+                },
               },
             },
           ],
@@ -78,6 +78,5 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
-    plugins: [],
   };
 };
