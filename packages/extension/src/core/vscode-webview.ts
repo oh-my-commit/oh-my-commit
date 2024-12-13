@@ -20,8 +20,18 @@ export class WebviewManager {
 
   // 窗口模式下的目标配置
   private readonly windowModeConfigs = {
-    "workbench.editor.showTabs": "none",
-    "workbench.editor.editorActionsLocation": "hidden",
+    // 工作区级别配置
+    workspace: {
+      "workbench.editor.showTabs": "none",
+      "workbench.editor.editorActionsLocation": "hidden",
+      "workbench.activityBar.location": "hidden",
+      "workbench.auxiliaryActivityBar.location": "hidden",
+    },
+    // 用户级别配置
+    user: {
+      "window.titleBarStyle": "native",
+      "window.customTitleBarVisibility": "never",
+    }
   } as const;
 
   // 保存的原始状态
@@ -141,27 +151,35 @@ export class WebviewManager {
     return panel;
   }
 
-  private async updateWorkspaceConfig(key: string, value: unknown) {
+  private async updateWorkspaceConfig(
+    key: string,
+    value: unknown,
+    target: vscode.ConfigurationTarget
+  ) {
     this.outputChannel.appendLine(
-      `[updateWorkspaceConfig] Setting ${key} to ${value}`
+      `[updateWorkspaceConfig] Setting ${key} to ${value} (target: ${target})`
     );
-    await vscode.workspace
-      .getConfiguration()
-      .update(key, value, vscode.ConfigurationTarget.Workspace);
+    await vscode.workspace.getConfiguration().update(key, value, target);
   }
 
   private async saveWindowState() {
     if (this.uiMode === "window") {
-      for (const [key, targetValue] of Object.entries(this.windowModeConfigs)) {
+      // 保存和设置工作区配置
+      for (const [key, targetValue] of Object.entries(this.windowModeConfigs.workspace)) {
         // 保存当前值
         this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
-
-        this.outputChannel.appendLine(
-          `[saveWindowState] Saved ${key}: ${this.savedStates[key]}`
-        );
-
+        this.outputChannel.appendLine(`[saveWindowState] Saved ${key}: ${this.savedStates[key]}`);
         // 设置目标值
-        await this.updateWorkspaceConfig(key, targetValue);
+        await this.updateWorkspaceConfig(key, targetValue, vscode.ConfigurationTarget.Workspace);
+      }
+
+      // 保存和设置用户配置
+      for (const [key, targetValue] of Object.entries(this.windowModeConfigs.user)) {
+        // 保存当前值
+        this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
+        this.outputChannel.appendLine(`[saveWindowState] Saved ${key}: ${this.savedStates[key]}`);
+        // 设置目标值
+        await this.updateWorkspaceConfig(key, targetValue, vscode.ConfigurationTarget.Global);
       }
 
       this.outputChannel.appendLine("[saveWindowState] Window state saved");
@@ -172,19 +190,18 @@ export class WebviewManager {
     if (this.uiMode === "window" && Object.keys(this.savedStates).length > 0) {
       for (const [key, savedValue] of Object.entries(this.savedStates)) {
         if (savedValue !== undefined) {
-          this.outputChannel.appendLine(
-            `[restoreWindowState] Restoring ${key} to ${savedValue}`
-          );
-          await this.updateWorkspaceConfig(key, savedValue);
+          this.outputChannel.appendLine(`[restoreWindowState] Restoring ${key} to ${savedValue}`);
+          // 根据配置类型选择目标
+          const target = Object.keys(this.windowModeConfigs.user).includes(key)
+            ? vscode.ConfigurationTarget.Global
+            : vscode.ConfigurationTarget.Workspace;
+          await this.updateWorkspaceConfig(key, savedValue, target);
         }
       }
 
       // 清空保存的状态
       this.savedStates = {};
-
-      this.outputChannel.appendLine(
-        "[restoreWindowState] Window state restored"
-      );
+      this.outputChannel.appendLine("[restoreWindowState] Window state restored");
     }
   }
 
