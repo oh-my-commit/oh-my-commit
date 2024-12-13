@@ -8,22 +8,39 @@ export class QuickCommitCommand implements VscodeCommand {
   public id = "yaac.quickCommit";
 
   private gitService: VscodeGitService;
-  private outputChannel: vscode.OutputChannel;
+  private logger: vscode.LogOutputChannel;
   private webviewManager: WebviewManager;
 
   constructor(
     gitService: VscodeGitService,
-    _acManager: AcManager,
-    context: vscode.ExtensionContext
+    private readonly acManager: AcManager,
+    context: vscode.ExtensionContext,
+    logger: vscode.LogOutputChannel
   ) {
     this.gitService = gitService;
-    this.outputChannel = vscode.window.createOutputChannel("YAAC");
+    this.logger = logger;
+    // Clear log file on extension startup
+    this.logger.clear();
+
     this.webviewManager = new WebviewManager(
       context,
       "yaacCommit",
-      "Commit Changes",
-      this.outputChannel
+      "YAAC Commit",
+      this.logger
     );
+
+    // Register message handlers
+    this.webviewManager.registerMessageHandler("commit", async (message) => {
+      try {
+        const { message: commitMessage, amend } = message;
+        await this.gitService.commit(commitMessage, amend);
+        vscode.window.showInformationMessage("Changes committed successfully!");
+        this.webviewManager.cleanupPanel();
+      } catch (error) {
+        this.logger.error(error as Error);
+        vscode.window.showErrorMessage(`Failed to commit: ${error}`);
+      }
+    });
 
     // Clean up file watcher when extension is deactivated
     context.subscriptions.push(this);
@@ -54,17 +71,17 @@ export class QuickCommitCommand implements VscodeCommand {
 
     // 仅在未改变且在 amend 模式下才执行 amend
     const isAmendMode = !diff && this.emptyChangeBehavior === "amend";
-    console.log({ diff, isAmendMode });
+    // this.outputChannel.info({ diff, isAmendMode });
 
     if (!diff && !isAmendMode) {
       throw new Error("No changes to commit");
     }
 
-    let initialMessage = "";
+    let lastMessage = "";
     if (isAmendMode) {
       // Amend mode - get last commit message
-      initialMessage = await this.gitService.getLastCommitMessage();
-      if (!initialMessage) {
+      lastMessage = await this.gitService.getLastCommitMessage();
+      if (!lastMessage) {
         throw new Error("No previous commit found to amend");
       }
     }
@@ -72,50 +89,19 @@ export class QuickCommitCommand implements VscodeCommand {
     // Create webview panel
     const panel = await this.webviewManager.createWebviewPanel();
 
-    console.log("== Initialing data...");
+    this.logger.info("== Initialing data...");
     // Send initial data to webview
     const data = {
       type: "init",
-      initialMessage,
+      message: lastMessage,
       isAmendMode,
-      diff,
-      stagedFiles: changedFiles.staged,
-      unstagedFiles: changedFiles.unstaged,
+      changedFiles,
       totalAdditions:
         changedFiles.staged.additions + changedFiles.unstaged.additions,
       totalDeletions:
         changedFiles.staged.deletions + changedFiles.unstaged.deletions,
     };
-    console.log("== Initial data:", data);
+    this.logger.info("== Initial data:", JSON.stringify(data, null, 2));
     panel.webview.postMessage(data);
-
-    // Handle messages from webview
-    panel.webview.onDidReceiveMessage(
-      async (message: { command: string; message: string }) => {
-        try {
-          switch (message.command) {
-            case "commit":
-              if (isAmendMode) {
-                await this.gitService.amendCommit(message.message);
-              } else {
-                await this.gitService.commit(message.message);
-              }
-              vscode.window.showInformationMessage(
-                isAmendMode
-                  ? "Last commit amended successfully"
-                  : "Changes committed successfully"
-              );
-              panel.dispose();
-              break;
-            case "cancel":
-              panel.dispose();
-              break;
-          }
-        } catch (error) {
-          this.outputChannel.appendLine(`Error: ${error}`);
-          vscode.window.showErrorMessage(`Failed to commit: ${error}`);
-        }
-      }
-    );
   }
 }

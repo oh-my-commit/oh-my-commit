@@ -26,12 +26,23 @@ declare global {
 let vscode: VSCodeAPI | undefined;
 
 function getFromLocalStorage<T>(key: string, defaultValue: T): T {
-  const item = localStorage.getItem(key);
-  return item ? JSON.parse(item) : defaultValue;
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return defaultValue;
+    const parsed = JSON.parse(item);
+    return parsed === undefined ? defaultValue : parsed;
+  } catch (error) {
+    console.warn(`Error reading from localStorage for key "${key}":`, error);
+    return defaultValue;
+  }
 }
 
 function setToLocalStorage<T>(key: string, value: T): void {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn(`Error writing to localStorage for key "${key}":`, error);
+  }
 }
 
 export function getVSCodeAPI(): VSCodeAPI {

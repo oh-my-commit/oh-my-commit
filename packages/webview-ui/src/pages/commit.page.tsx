@@ -105,18 +105,18 @@ export function CommitPage() {
         disabled={!message.trim() || selectedFiles.length === 0}
       />
 
-      {uiMode === "panel" && (
-        <>
-          <FileChanges
-            stagedFiles={stagedFiles}
-            unstagedFiles={unstagedFiles}
-            selectedFiles={selectedFiles}
-            onFileSelect={handleFileSelect}
-          />
+      {/* {uiMode === "panel" && ( */}
+      <>
+        <FileChanges
+          stagedFiles={stagedFiles}
+          unstagedFiles={unstagedFiles}
+          selectedFiles={selectedFiles}
+          onFileSelect={handleFileSelect}
+        />
 
-          <Footer />
-        </>
-      )}
+        <Footer />
+      </>
+      {/* )} */}
     </div>
   );
 }

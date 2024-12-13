@@ -12,22 +12,27 @@ import React, { useEffect } from "react";
 import { cn } from "../../../lib/utils";
 import { Checkbox } from "../../common/Checkbox";
 import { FileItem } from "./FileItem";
+import { FileChange } from "@/types/file-change";
 
 interface TreeViewProps {
   fileTree: TreeNode;
   onFileSelect?: (path: string) => void;
   onFileClick?: (path: string) => void;
+  renderStatus?: (file: FileChange & { isStaged: boolean }) => React.ReactNode;
+  className?: string;
 }
 
 export const TreeView = ({
   fileTree,
   onFileClick,
   onFileSelect,
+  renderStatus,
+  className,
 }: TreeViewProps) => {
   const [expandedDirsArray, setExpandedDirsArray] = useAtom(expandedDirsAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFile, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom,
+    lastOpenedFilePathAtom
   );
   const expandedDirsSet = new Set(expandedDirsArray);
   const setExpandedDirs = (dirs: Set<string>) => {
@@ -79,7 +84,7 @@ export const TreeView = ({
         fileTree.children
           ?.filter(
             (node) =>
-              node.type === "directory" && node.path.startsWith(path + "/"),
+              node.type === "directory" && node.path.startsWith(path + "/")
           )
           ?.filter((node) => !node.path.slice(path.length + 1).includes("/"))
           ?.map((node) => node.path) || [];
@@ -133,7 +138,7 @@ export const TreeView = ({
           className={cn(
             "flex items-center gap-2 rounded-sm cursor-pointer group",
             isActive && "bg-[var(--vscode-list-activeSelectionBackground)]",
-            !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]",
+            !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]"
           )}
           onClick={() => handleClick(node, file.path)}
         >
@@ -172,7 +177,7 @@ export const TreeView = ({
                       "codicon text-[12px]",
                       isExpanded
                         ? "codicon-chevron-down"
-                        : "codicon-chevron-right",
+                        : "codicon-chevron-right"
                     )}
                   />
                 )}
@@ -184,7 +189,7 @@ export const TreeView = ({
                       ? node.children.every((child) => {
                           const childFiles = getDirectoryFiles(child);
                           return childFiles.every((file) =>
-                            selectedFiles.includes(file),
+                            selectedFiles.includes(file)
                           );
                         })
                       : false
@@ -217,5 +222,9 @@ export const TreeView = ({
     );
   };
 
-  return <div className="flex flex-col">{renderTreeNode(fileTree)}</div>;
+  return (
+    <div className={cn("flex flex-col", className)}>
+      {renderTreeNode(fileTree)}
+    </div>
+  );
 };

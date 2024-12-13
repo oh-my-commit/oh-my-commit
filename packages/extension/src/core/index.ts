@@ -15,53 +15,67 @@ export class AppManager {
   private acManager: AcManager;
   private commandManager: CommandManager;
   private statusBarManager: StatusBarManager;
+  private logger: vscode.LogOutputChannel;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
+    
+    // Create a single logger instance for the entire extension
+    this.logger = vscode.window.createOutputChannel("YAAC", { log: true });
+    
     this.gitService = new VscodeGitService();
     this.acManager = new AcManager(this);
     this.commandManager = new CommandManager(context);
     this.statusBarManager = new StatusBarManager(this.acManager);
   }
 
+  public getLogger(): vscode.LogOutputChannel {
+    return this.logger;
+  }
+
   public async initialize(): Promise<void> {
+    // Clear log on startup
+    this.logger.clear();
+    this.logger.info("Initializing YAAC...");
+    
     const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!workspaceRoot) {
-      console.log("No workspace found");
+      this.logger.error("No workspace found");
       throw new Error(
         "YAAC needs to be run in a workspace with a git repository"
       );
     }
-    console.log(`Workspace root: ${workspaceRoot}`);
+    this.logger.info(`Workspace root: ${workspaceRoot}`);
 
     try {
       // Initialize UI
       await this.statusBarManager.initialize();
-      console.log("Core managers initialized");
+      this.logger.info("Core managers initialized");
 
       // Register commands
       this.registerCommands();
-      console.log("Commands registered");
+      this.logger.info("Commands registered");
 
       // Setup Git integration
       await this.setupGitIntegration();
-      console.log("Git integration setup completed");
+      this.logger.info("Git integration setup completed");
 
-      console.log("YAAC initialization completed");
+      this.logger.info("YAAC initialization completed");
     } catch (error) {
-      console.error("Failed to initialize app:", error);
+      this.logger.error(error as Error);
       throw error;
     }
   }
 
   public dispose(): void {
+    this.logger.info("Disposing YAAC...");
     this.commandManager.dispose();
-    // 添加其他需要清理的资源
+    this.logger.dispose();
   }
 
   private registerCommands(): void {
     this.commandManager.register(
-      new QuickCommitCommand(this.gitService, this.acManager, this.context)
+      new QuickCommitCommand(this.gitService, this.acManager, this.context, this.logger)
     );
     this.commandManager.register(new SelectModelCommand(this.acManager));
     this.commandManager.register(new OpenPreferencesCommand());

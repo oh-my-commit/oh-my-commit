@@ -10,6 +10,8 @@ export interface FlatViewProps {
   hasOpenedFile: boolean;
   onSelect?: (path: string) => void;
   onFileClick?: (path: string, metaKey: boolean) => void;
+  renderStatus?: (file: FileChange & { isStaged: boolean }) => React.ReactNode;
+  className?: string;
 }
 
 export const FlatView: React.FC<FlatViewProps> = ({
@@ -20,9 +22,11 @@ export const FlatView: React.FC<FlatViewProps> = ({
   hasOpenedFile,
   onSelect,
   onFileClick,
+  renderStatus,
+  className,
 }) => {
   return (
-    <div className="flex flex-col gap-0.5 p-2">
+    <div className={className ? className : "flex flex-col gap-0.5 p-2"}>
       {files.map((file, index) => (
         <FileItem
           key={index}
