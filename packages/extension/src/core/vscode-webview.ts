@@ -75,7 +75,7 @@ export class WebviewManager {
     context.subscriptions.push(watcher, this);
   }
 
-  public createWebviewPanel(): vscode.WebviewPanel {
+  public show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
     if (this.webviewPanel) {
       this.webviewPanel.reveal();
       return this.webviewPanel;
@@ -90,10 +90,9 @@ export class WebviewManager {
       },
       {
         enableScripts: true,
-        retainContextWhenHidden: false,
         enableFindWidget: false,
-        // 隐藏标题栏
-        // showTitleBar: false,
+        retainContextWhenHidden: this.uiMode !== "window",
+        ...options,
       }
     );
 
@@ -102,7 +101,17 @@ export class WebviewManager {
       vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
     }
 
-    this.webviewPanel.webview.onDidReceiveMessage(
+    this.webviewPanel.onDidDispose(() => this.cleanupPanel());
+    this.handleWindowModeStateChange(this.webviewPanel);
+    this.updateWebview();
+    return this.webviewPanel;
+  }
+
+  public createWebviewPanel(): vscode.WebviewPanel {
+    const panel = this.show({});
+
+    // Add message handling
+    panel.webview.onDidReceiveMessage(
       async (message: any) => {
         switch (message.command) {
           case "openExternal":
@@ -116,13 +125,25 @@ export class WebviewManager {
       []
     );
 
-    this.updateWebview();
+    return panel;
+  }
 
-    this.webviewPanel.onDidDispose(() => {
+  private cleanupPanel() {
+    if (this.webviewPanel) {
+      this.webviewPanel.dispose();
       this.webviewPanel = undefined;
-    });
+    }
+  }
 
-    return this.webviewPanel;
+  private handleWindowModeStateChange(panel: vscode.WebviewPanel) {
+    if (this.uiMode === "window") {
+      panel.onDidChangeViewState((e) => {
+        // Only close when visibility changes to false
+        if (!e.webviewPanel.visible) {
+          this.cleanupPanel();
+        }
+      });
+    }
   }
 
   private updateWebview() {
@@ -161,34 +182,6 @@ export class WebviewManager {
       vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ||
       "panel"
     );
-  }
-
-  public show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
-    if (this.webviewPanel) {
-      this.webviewPanel.reveal();
-      return this.webviewPanel;
-    }
-
-    this.webviewPanel = vscode.window.createWebviewPanel(
-      this.viewType,
-      this.title,
-      {
-        viewColumn: vscode.ViewColumn.Active,
-        preserveFocus: true,
-      },
-      {
-        ...options,
-      }
-    );
-
-    // Only move to new window in window mode
-    if (this.uiMode === "window") {
-      vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
-    }
-
-    this.webviewPanel.onDidDispose(() => (this.webviewPanel = undefined));
-    this.updateWebview();
-    return this.webviewPanel;
   }
 
   public dispose() {

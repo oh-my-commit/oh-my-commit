@@ -19,3 +19,46 @@ key_points = [
     "添加 UI 模式配置的读取逻辑",
     "保持其他模式下的默认窗口行为"
 ]
+
+[[rounds]]
+number = 3
+time = "2024-12-13 11:58:41"
+query_essence = "修复 window 模式下关闭窗口的行为"
+key_points = [
+    "修改 webview panel 创建选项，在 window 模式下禁用 retainContextWhenHidden",
+    "确保窗口关闭时完全销毁，不会转换为面板",
+    "优化用户体验，使关闭行为更符合预期"
+]
+
+[[rounds]]
+number = 4
+time = "2024-12-13 12:00:20"
+query_essence = "重构 WebviewManager 中的面板创建逻辑"
+key_points = [
+    "分析 createWebviewPanel 和 show 函数的关系和重复代码",
+    "重构 show 函数作为基础函数，处理通用的面板创建逻辑",
+    "重构 createWebviewPanel 函数，复用 show 函数并添加特定功能",
+    "优化代码结构，提高可维护性"
+]
+
+[[rounds]]
+number = 5
+time = "2024-12-13 12:10:15"
+query_essence = "优化 window 模式下的状态管理"
+key_points = [
+    "添加 cleanupPanel 方法统一处理面板销毁和状态清理",
+    "添加 handleWindowModeStateChange 方法专门处理窗口状态变化",
+    "在失去焦点或不可见时自动关闭窗口",
+    "优化代码结构，提高状态管理的可维护性"
+]
+
+[[rounds]]
+number = 6
+time = "2024-12-13 12:03:16"
+query_essence = "修复窗口模式下的闪关问题"
+key_points = [
+    "移除 !active 条件，只在 !visible 时关闭窗口",
+    "允许窗口失去焦点但保持打开",
+    "保持点击关闭按钮时的完全关闭行为",
+    "优化用户体验，使窗口行为更符合预期"
+]
