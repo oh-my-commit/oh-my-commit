@@ -3,10 +3,16 @@ import * as fs from "fs";
 import * as path from "path";
 import * as Handlebars from "handlebars";
 
+type MessageHandler = (message: any) => Promise<void>;
+type LogLevel = "debug" | "info" | "warn" | "error" | "trace";
+
 export class WebviewManager {
   private webviewPanel?: vscode.WebviewPanel;
   private readonly scriptUri: vscode.Uri;
   private readonly template: HandlebarsTemplateDelegate;
+  private persistWindowState: boolean;
+  private savedStates: Record<string, any> = {};
+  private messageHandlers: Map<string, MessageHandler> = new Map();
 
   /**
    * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
@@ -34,21 +40,57 @@ export class WebviewManager {
     },
   } as const;
 
-  // 保存的原始状态
-  private savedStates: Partial<Record<string, unknown>> = {};
-  private readonly persistWindowState: boolean;
-
   constructor(
     context: vscode.ExtensionContext,
     private readonly viewType: string,
     private readonly title: string,
-    private readonly outputChannel: vscode.OutputChannel,
+    private readonly logger: vscode.LogOutputChannel,
     templatePath: string = "./assets/webview.template.html",
     scriptPath: string = "./dist/webview-ui/main.js",
     persistWindowState: boolean = false
   ) {
-    this.outputChannel.appendLine("[WebviewManager] Initializing...");
+    this.logger = logger;
+    this.logger.info(`Creating ${viewType} webview`);
     this.persistWindowState = persistWindowState;
+
+    // Register default handlers
+    this.registerMessageHandler("openExternal", async (message) => {
+      if (message.url) {
+        await vscode.env.openExternal(vscode.Uri.parse(message.url));
+      }
+    });
+
+    this.registerMessageHandler("window-close", async () => {
+      this.logger.info("Handling window close");
+      await this.cleanupPanel();
+    });
+
+    // Register log handler
+    this.registerMessageHandler("log", async (message) => {
+      if (message.payload) {
+        const { channel, level, rawMessage } = message.payload;
+        const normalizedLevel = this.normalizeLogLevel(level);
+        const webviewChannel = channel ? `webview-${channel}` : 'webview';
+        
+        switch (normalizedLevel) {
+          case "debug":
+            this.logger.debug(`[${webviewChannel}] ${rawMessage}`);
+            break;
+          case "info":
+            this.logger.info(`[${webviewChannel}] ${rawMessage}`);
+            break;
+          case "warn":
+            this.logger.warn(`[${webviewChannel}] ${rawMessage}`);
+            break;
+          case "error":
+            this.logger.error(`[${webviewChannel}] ${rawMessage}`);
+            break;
+          case "trace":
+            this.logger.trace(`[${webviewChannel}] ${rawMessage}`);
+            break;
+        }
+      }
+    });
 
     // load template
     this.templatePath = templatePath;
@@ -67,7 +109,7 @@ export class WebviewManager {
       "webview-ui",
       "main.js"
     );
-    this.outputChannel.appendLine(`Watching file: ${mainJsPath}`);
+    this.logger.debug(`Watching file: ${mainJsPath}`);
 
     const watcher = vscode.workspace.createFileSystemWatcher(
       new vscode.RelativePattern(
@@ -84,17 +126,38 @@ export class WebviewManager {
     events.forEach((event) => {
       const watcherEvent = watcher[event] as vscode.Event<vscode.Uri>;
       watcherEvent((uri) => {
-        this.outputChannel.appendLine(`File ${event}: ${uri.fsPath}`);
+        this.logger.debug(`File ${event}: ${uri.fsPath}`);
         if (this.webviewPanel?.webview) {
           this.updateWebview();
         } else {
-          this.outputChannel.appendLine("Webview panel not available");
+          this.logger.warn("Webview panel not available");
         }
       });
     });
 
     // register webview
     context.subscriptions.push(watcher, this);
+  }
+
+  public registerMessageHandler(command: string, handler: MessageHandler) {
+    this.messageHandlers.set(command, handler);
+  }
+
+  private async handleMessage(message: any) {
+    const handler = this.messageHandlers.get(message.command);
+    if (handler) {
+      try {
+        // 不记录日志消息，避免循环记录
+        if (message.command !== "log") {
+          this.logger.debug("Received message:", message);
+        }
+        await handler(message);
+      } catch (error) {
+        this.logger.error(`Error handling message ${message.command}:`, error);
+      }
+    } else {
+      this.logger.warn(`No handler registered for command: ${message.command}`);
+    }
   }
 
   public async show(
@@ -138,15 +201,7 @@ export class WebviewManager {
 
     // Add message handling
     panel.webview.onDidReceiveMessage(
-      async (message: any) => {
-        switch (message.command) {
-          case "openExternal":
-            if (message.url) {
-              await vscode.env.openExternal(vscode.Uri.parse(message.url));
-            }
-            break;
-        }
-      },
+      (message) => this.handleMessage(message),
       undefined,
       []
     );
@@ -159,49 +214,43 @@ export class WebviewManager {
     value: unknown,
     target: vscode.ConfigurationTarget
   ) {
-    this.outputChannel.appendLine(
-      `[updateWorkspaceConfig] Setting ${key} to ${value} (target: ${target})`
-    );
+    this.logger.debug(`Setting ${key} to ${value} (target: ${target})`);
     await vscode.workspace.getConfiguration().update(key, value, target);
   }
 
   private async saveWindowState() {
     if (this.uiMode === "window" && this.persistWindowState) {
-      // 保存和设置工作区配置
-      for (const [key, targetValue] of Object.entries(
-        this.windowModeConfigs.workspace
-      )) {
+      this.logger.info("Saving window state");
+      for (const key of Object.keys(this.windowModeConfigs.workspace)) {
         // 保存当前值
         this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
-        this.outputChannel.appendLine(
-          `[saveWindowState] Saved ${key}: ${this.savedStates[key]}`
+        this.logger.trace(
+          `Saved window state: ${key}=${this.savedStates[key]}`
         );
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          targetValue,
+          this.windowModeConfigs.workspace[key],
           vscode.ConfigurationTarget.Workspace
         );
       }
 
       // 保存和设置用户配置
-      for (const [key, targetValue] of Object.entries(
-        this.windowModeConfigs.user
-      )) {
+      for (const key of Object.keys(this.windowModeConfigs.user)) {
         // 保存当前值
         this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
-        this.outputChannel.appendLine(
-          `[saveWindowState] Saved ${key}: ${this.savedStates[key]}`
+        this.logger.trace(
+          `Saved window state: ${key}=${this.savedStates[key]}`
         );
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          targetValue,
+          this.windowModeConfigs.user[key],
           vscode.ConfigurationTarget.Global
         );
       }
 
-      this.outputChannel.appendLine("[saveWindowState] Window state saved");
+      this.logger.info("Window state saved");
     }
   }
 
@@ -213,9 +262,7 @@ export class WebviewManager {
     ) {
       for (const [key, savedValue] of Object.entries(this.savedStates)) {
         if (savedValue !== undefined) {
-          this.outputChannel.appendLine(
-            `[restoreWindowState] Restoring ${key} to ${savedValue}`
-          );
+          this.logger.trace(`Restoring window state: ${key}=${savedValue}`);
           // 根据配置类型选择目标
           const target = Object.keys(this.windowModeConfigs.user).includes(key)
             ? vscode.ConfigurationTarget.Global
@@ -226,15 +273,13 @@ export class WebviewManager {
 
       // 清空保存的状态
       this.savedStates = {};
-      this.outputChannel.appendLine(
-        "[restoreWindowState] Window state restored"
-      );
+      this.logger.info("Window state restored");
     }
   }
 
   private async cleanupPanel() {
     if (this.webviewPanel) {
-      this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
+      this.logger.info("Disposing webview panel");
 
       await this.restoreWindowState();
 
@@ -242,40 +287,17 @@ export class WebviewManager {
       this.webviewPanel.dispose();
       this.webviewPanel = undefined;
 
-      this.outputChannel.appendLine(
-        "[cleanupPanel] Panel disposed and reference cleared"
-      );
+      this.logger.debug("Panel disposed and reference cleared");
     }
   }
 
   private async handleWindowModeStateChange(panel: vscode.WebviewPanel) {
     if (this.uiMode === "window") {
-      this.outputChannel.appendLine(
-        "[handleWindowModeStateChange] Setting up window mode handlers"
-      );
-
-      // Handle close button via message
-      panel.webview.onDidReceiveMessage(
-        (message: any) => {
-          this.outputChannel.appendLine(
-            `[onDidReceiveMessage] Received message: ${JSON.stringify(message)}`
-          );
-          if (message.type === "window-close") {
-            this.outputChannel.appendLine(
-              "[onDidReceiveMessage] Handling window close"
-            );
-            this.cleanupPanel();
-          }
-        },
-        undefined,
-        []
-      );
+      this.logger.info("Setting up window mode");
 
       // Handle window close
       panel.onDidDispose(() => {
-        this.outputChannel.appendLine(
-          "[onDidDispose] Panel disposed event triggered"
-        );
+        this.logger.debug("Panel disposed event triggered");
         this.webviewPanel = undefined;
       });
 
@@ -287,15 +309,13 @@ export class WebviewManager {
       panel.onDidChangeViewState((e) => {
         const currentVisible = e.webviewPanel.visible;
         const active = e.webviewPanel.active;
-        this.outputChannel.appendLine(
-          `[onDidChangeViewState] State changed - visible: ${currentVisible}, active: ${active}, lastVisible: ${lastVisible}, lastActive: ${lastActive}, isMovingToNewWindow: ${isMovingToNewWindow}`
+        this.logger.trace(
+          `View state changed - visible: ${currentVisible}, active: ${active}, lastVisible: ${lastVisible}, lastActive: ${lastActive}, isMovingToNewWindow: ${isMovingToNewWindow}`
         );
 
         // Ignore the first active:false event when moving to new window
         if (isMovingToNewWindow && !active) {
-          this.outputChannel.appendLine(
-            "[onDidChangeViewState] Ignoring focus loss during window transition"
-          );
+          this.logger.debug("Ignoring focus loss during window transition");
           isMovingToNewWindow = false;
           lastActive = true; // Force lastActive to true since we're ignoring this transition
           lastVisible = currentVisible;
@@ -311,10 +331,10 @@ export class WebviewManager {
           (!active && lastActive && !isMovingToNewWindow) ||
           !e.webviewPanel.visible
         ) {
-          this.outputChannel.appendLine(
-            `[onDidChangeViewState] Panel lost ${
+          this.logger.info(
+            `Panel lost ${
               !currentVisible ? "visibility" : !active ? "focus" : "shown state"
-            }, cleaning up panel`
+            }`
           );
           this.cleanupPanel();
           return;
@@ -329,7 +349,7 @@ export class WebviewManager {
         "workbench.action.closeActiveEditor",
         () => {
           if (this.webviewPanel && this.webviewPanel.active) {
-            this.outputChannel.appendLine("[closeActiveEditor] Handling cmd+w");
+            this.logger.info("Handling cmd+w");
             this.cleanupPanel();
           }
         }
@@ -353,6 +373,20 @@ export class WebviewManager {
 
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;
+  }
+
+  private normalizeLogLevel(level: string): LogLevel {
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
+      case "debug":
+      case "info":
+      case "warn":
+      case "error":
+      case "trace":
+        return normalizedLevel as LogLevel;
+      default:
+        return "info"; // 默认使用 info 级别
+    }
   }
 
   public get uiMode(): string {
