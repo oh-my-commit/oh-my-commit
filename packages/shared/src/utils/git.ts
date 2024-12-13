@@ -36,19 +36,26 @@ export function parseGitStatusCode(code: string): FileStatus {
  * 统计文件变更
  */
 export function calculateChanges(files: FileChange[]) {
-  return files.reduce((stats, file) => {
-    stats.total++;
-    stats[file.status]++;
-    stats.additions += file.additions;
-    stats.deletions += file.deletions;
-    return stats;
-  }, {
+  const stats: Record<FileStatus, number> & {
+    total: number;
+    additions: number;
+    deletions: number;
+  } = {
     added: 0,
     modified: 0,
     deleted: 0,
     renamed: 0,
+    default: 0,
     total: 0,
     additions: 0,
     deletions: 0
-  });
+  };
+
+  return files.reduce((acc, file) => {
+    acc.total++;
+    acc[file.status]++;
+    acc.additions += file.additions;
+    acc.deletions += file.deletions;
+    return acc;
+  }, stats);
 }

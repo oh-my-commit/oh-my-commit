@@ -15,7 +15,6 @@ import { searchQueryAtom } from "@/state/atoms/search";
 import { buildFileTree } from "@/utils/build-file-tree";
 import { Section } from "@/components/layout/Section";
 import { InfoIcon } from "@/components/commit/info-icon";
-import { STATUS_COLORS, STATUS_LETTERS } from "./constants";
 
 interface FileChangesProps {
   stagedFiles: FileChange[];
@@ -24,7 +23,11 @@ interface FileChangesProps {
   onFileSelect: (path: string, isStaged: boolean) => void;
 }
 
-type FileChangeWithStaged = FileChange & { isStaged: boolean };
+interface FileWithStatus extends FileChange {
+  hasStaged: boolean;
+  hasUnstaged: boolean;
+  isStaged: boolean;
+}
 
 export const FileChanges: React.FC<FileChangesProps> = ({
   stagedFiles,
@@ -56,41 +59,60 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       unstagedCount: filteredUnstagedFiles.length,
     });
 
-    // Filter out any invalid files
-    const validStagedFiles = filteredStagedFiles.filter(
-      (file): file is FileChange => {
-        if (!file || typeof file === "string" || !file.path) {
-          logger.warn("Invalid staged file:", file);
-          return false;
-        }
-        return true;
-      }
-    );
+    // Create a map to track unique files and their states
+    const fileMap = new Map<string, FileWithStatus>();
 
-    const validUnstagedFiles = filteredUnstagedFiles.filter(
-      (file): file is FileChange => {
-        if (!file || typeof file === "string" || !file.path) {
-          logger.warn("Invalid unstaged file:", file);
-          return false;
-        }
-        return true;
-      }
-    );
+    // Track staged files
+    filteredStagedFiles.forEach((file) => {
+      fileMap.set(file.path, {
+        ...file,
+        hasStaged: true,
+        hasUnstaged: false,
+        isStaged: true,
+      });
+    });
 
-    return [
-      ...validStagedFiles.map((file) => ({ ...file, isStaged: true })),
-      ...validUnstagedFiles.map((file) => ({ ...file, isStaged: false })),
-    ] as FileChangeWithStaged[];
+    // Update or add unstaged files
+    filteredUnstagedFiles.forEach((file) => {
+      const existing = fileMap.get(file.path);
+      if (existing) {
+        existing.hasUnstaged = true;
+      } else {
+        fileMap.set(file.path, {
+          ...file,
+          hasStaged: false,
+          hasUnstaged: true,
+          isStaged: false,
+        });
+      }
+    });
+
+    return Array.from(fileMap.values());
   }, [filteredStagedFiles, filteredUnstagedFiles]);
 
-  const buildTreeData = (files: FileChangeWithStaged[]) => {
+  const renderStatus = (file: FileChange & { isStaged: boolean }) => {
+    const fileWithStatus = file as FileWithStatus;
+    const statusClasses = cn(
+      "flex items-center gap-1 text-xs",
+      fileWithStatus.hasStaged && "text-green-500",
+      fileWithStatus.hasUnstaged && "text-yellow-500"
+    );
+
+    return (
+      <div className={statusClasses}>
+        {fileWithStatus.hasStaged && <span>●</span>}
+        {fileWithStatus.hasUnstaged && <span>○</span>}
+      </div>
+    );
+  };
+
+  const buildTreeData = (files: FileWithStatus[]) => {
     logger.debug("Building tree data for files:", files.length);
-    const children = buildFileTree(files);
     return {
       path: "",
       type: "directory" as const,
       displayName: "",
-      children,
+      children: buildFileTree(files),
     };
   };
 
@@ -100,24 +122,6 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     logger.info("File clicked:", path);
     setLastOpenedFile(path === lastOpenedFilePath ? "" : path);
   };
-
-  const renderStatus = (file: FileChangeWithStaged) => (
-    <div className="flex items-center gap-1">
-      <span
-        className={cn(
-          "mr-1",
-          file.isStaged
-            ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]"
-            : "text-[var(--vscode-descriptionForeground)]"
-        )}
-      >
-        {file.isStaged ? "●" : "○"}
-      </span>
-      <span className={cn("text-xs font-medium", STATUS_COLORS[file.type])}>
-        {STATUS_LETTERS[file.type]}
-      </span>
-    </div>
-  );
 
   useEffect(() => {
     logger.setChannel("FileChanges");
@@ -152,13 +156,15 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
             "self-end sm:self-auto"
           )}
-          onClick={() => setViewMode(viewMode === "flat" ? "grouped" : "flat")}
-          title={`Switch to ${viewMode === "flat" ? "Grouped" : "Flat"} View`}
+          onClick={() => setViewMode(viewMode === "flat" ? "tree" : "flat")}
+          title={`Switch to ${viewMode === "flat" ? "Tree" : "Flat"} View`}
         >
           <i
-            className={`codicon codicon-${
-              viewMode === "flat" ? "list-tree" : "list-flat"
-            }`}
+            className={cn(
+              `codicon`,
+              viewMode === "flat" && "codicon-list-flat",
+              viewMode === "tree" && "codicon-list-tree"
+            )}
           />
         </button>
       </div>
@@ -176,6 +182,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             >
               <InfoIcon />
             </button>
+
             {showTooltip && (
               <div className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]">
                 <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3">
@@ -217,38 +224,31 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           </div>
         }
       >
-        {allFiles.length === 0 ? (
+        {filteredStagedFiles.length === 0 &&
+        filteredUnstagedFiles.length === 0 ? (
           <EmptyState
             searchQuery={searchQuery}
             onClearSearch={() => setSearchQuery("")}
           />
         ) : (
           <div className="flex-1 overflow-auto">
-            {viewMode === "grouped" ? (
+            {viewMode === "tree" && (
               <TreeView
                 fileTree={fileTree}
                 onFileClick={handleFileClick}
-                onFileSelect={(path) => {
-                  const file = allFiles.find((f) => f.path === path);
-                  if (file) {
-                    onFileSelect(path, !file.isStaged);
-                  }
-                }}
+                onFileSelect={(path) => onFileSelect(path, true)}
                 renderStatus={renderStatus}
               />
-            ) : (
+            )}
+
+            {viewMode === "flat" && (
               <FlatView
                 files={allFiles}
                 selectedFiles={selectedFiles}
                 selectedPath={lastOpenedFilePath}
                 searchQuery={searchQuery}
-                onSelect={(path) => {
-                  const file = allFiles.find((f) => f.path === path);
-                  if (file) {
-                    onFileSelect(path, !file.isStaged);
-                  }
-                }}
-                onFileClick={handleFileClick}
+                onSelect={(path) => onFileSelect(path, true)}
+                onFileClick={(path) => handleFileClick(path)}
                 hasOpenedFile={!!lastOpenedFilePath}
                 renderStatus={renderStatus}
               />

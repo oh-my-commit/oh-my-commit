@@ -2,12 +2,15 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { HighlightText } from "../../common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import type { FileChange } from '@yaac/shared';
+import type { FileChange } from "@yaac/shared";
 import { Checkbox } from "../../common/Checkbox";
 import { logger } from "@/lib/logger";
 
 interface FileItemProps {
-  file: FileChange;
+  file: FileChange & {
+    hasStaged?: boolean;
+    hasUnstaged?: boolean;
+  };
   isSelected: boolean;
   isActive: boolean;
   hasOpenedFile: boolean; // 是否有任何文件被打开
@@ -54,16 +57,44 @@ export const FileItem: React.FC<FileItemProps> = ({
           <Checkbox checked={isSelected} onChange={handleCheckboxChange} />
         </div>
         <div className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2">
-          <span
-            className={cn(
-              "font-mono font-medium text-[12px] w-4 text-center",
-              STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-              isActive && "text-inherit"
-            )}
-            title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
-          >
-            {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
-          </span>
+          <div className="flex items-center gap-0.5 w-8">
+            <span
+              className={cn(
+                "font-mono font-medium text-[12px]",
+                file.hasStaged 
+                  ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]" 
+                  : "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)] opacity-20",
+                isActive && "text-inherit opacity-50"
+              )}
+              title={file.hasStaged ? "Has staged changes" : "No staged changes"}
+            >
+              ●
+            </span>
+
+            <span
+              className={cn(
+                "font-mono font-medium text-[12px]",
+                file.hasUnstaged 
+                  ? "text-[var(--vscode-gitDecoration-untrackedResourceForeground)]" 
+                  : "text-[var(--vscode-gitDecoration-untrackedResourceForeground)] opacity-20",
+                isActive && "text-inherit opacity-50"
+              )}
+              title={file.hasUnstaged ? "Has unstaged changes" : "No unstaged changes"}
+            >
+              ○
+            </span>
+
+            <span
+              className={cn(
+                "font-mono font-medium text-[12px] w-4 text-center",
+                STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                isActive && "text-inherit"
+              )}
+              title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
+            >
+              {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
+            </span>
+          </div>
           <span className="truncate">
             <HighlightText text={file.path} highlight={searchQuery} />
           </span>
