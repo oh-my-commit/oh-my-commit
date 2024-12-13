@@ -127,23 +127,22 @@ export const TreeView = ({
 
   const renderTreeNode = (node: TreeNode, level: number = 0) => {
     if (node.type === "file" && node.fileInfo) {
-      const file = node.fileInfo;
-      const isActive = lastOpenedFile === file.path;
-      const isSelected = selectedFiles.includes(file.path);
+      const { path } = node.fileInfo;
+      const isActive = lastOpenedFile === path;
+      const isSelected = selectedFiles.includes(path);
 
       return (
         <div
-          key={file.path}
-          style={{ paddingLeft: `${level * 16}px` }}
+          key={path}
           className={cn(
             "flex items-center gap-2 rounded-sm cursor-pointer group",
             isActive && "bg-[var(--vscode-list-activeSelectionBackground)]",
             !isActive && "hover:bg-[var(--vscode-list-hoverBackground)]"
           )}
-          onClick={() => handleClick(node, file.path)}
+          style={{ paddingLeft: `${level * 16}px` }}
         >
           <FileItem
-            file={file}
+            file={node.fileInfo}
             isSelected={isSelected}
             isActive={isActive}
             hasOpenedFile={!!lastOpenedFile}
@@ -156,28 +155,36 @@ export const TreeView = ({
     }
 
     const isExpanded = expandedDirsSet.has(node.path);
-    const hasChildren = node.children && node.children.length > 0;
+    const hasChildren = node.children?.length > 0;
+    const nodeKey = node.path || "root";
+    const showDirUI = node.path || level > 0;
 
     return (
-      <div key={node.path || "root"}>
-        {/* Only show directory node UI if it's not the root or if level > 0 */}
-        {(node.path || level > 0) && (
+      <div key={nodeKey}>
+        {showDirUI && (
           <div
-            style={{ paddingLeft: `${level * 16}px` }}
-            className="flex items-center gap-2 px-2 py-1 text-[var(--vscode-descriptionForeground)] hover:bg-[var(--vscode-list-hoverBackground)] rounded-sm group"
+            className={cn(
+              "flex items-center gap-2 rounded-sm group",
+              "text-[var(--vscode-descriptionForeground)]",
+              "hover:bg-[var(--vscode-list-hoverBackground)]"
+            )}
           >
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center"
+              style={{ marginLeft: `${level * 16}px` }}
+            >
               <div
-                className="flex items-center justify-center w-4 h-full cursor-pointer opacity-60 group-hover:opacity-100"
+                className={cn(
+                  "flex items-center justify-center w-4 h-full",
+                  "cursor-pointer opacity-60 group-hover:opacity-100"
+                )}
                 onClick={() => handleClick(node, node.path)}
               >
                 {hasChildren && (
                   <i
                     className={cn(
                       "codicon text-[12px]",
-                      isExpanded
-                        ? "codicon-chevron-down"
-                        : "codicon-chevron-right"
+                      isExpanded ? "codicon-chevron-down" : "codicon-chevron-right"
                     )}
                   />
                 )}
@@ -185,7 +192,7 @@ export const TreeView = ({
               <div className="flex items-center justify-center w-8 h-full">
                 <Checkbox
                   checked={
-                    node.children?.length
+                    hasChildren
                       ? node.children.every((child) => {
                           const childFiles = getDirectoryFiles(child);
                           return childFiles.every((file) =>
@@ -199,25 +206,34 @@ export const TreeView = ({
                 />
               </div>
             </div>
+
             <div
-              className="flex items-center gap-1 flex-1 cursor-pointer min-w-0"
+              className="flex items-center gap-1 flex-1 cursor-pointer min-w-0 py-1"
               onClick={() => handleClick(node, node.path)}
             >
-              <i className="codicon codicon-folder text-[var(--vscode-gitDecoration-submoduleResourceForeground)] opacity-60 group-hover:opacity-100" />
+              <i
+                className={cn(
+                  "codicon codicon-folder",
+                  "text-[var(--vscode-gitDecoration-submoduleResourceForeground)]",
+                  "opacity-60 group-hover:opacity-100"
+                )}
+              />
               <span className="truncate text-[13px]">
                 {node.displayName || "/"}
               </span>
               {hasChildren && (
                 <span className="ml-1 text-[11px] opacity-60 tabular-nums">
-                  {node.children && node.children.length}
+                  {node.children.length}
                 </span>
               )}
             </div>
           </div>
         )}
-        {/* Always render children if expanded, regardless of whether this is root */}
+
         {(isExpanded || !node.path) &&
-          node.children?.map((child) => renderTreeNode(child, level + 1))}
+          node.children?.map((child) => (
+            renderTreeNode(child, level + 1)
+          ))}
       </div>
     );
   };

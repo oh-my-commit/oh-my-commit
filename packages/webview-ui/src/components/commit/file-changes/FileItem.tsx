@@ -56,8 +56,9 @@ export const FileItem: React.FC<FileItemProps> = ({
         <div className="flex items-center justify-center w-8 h-full">
           <Checkbox checked={isSelected} onChange={handleCheckboxChange} />
         </div>
-        <div className="flex-1 flex items-center gap-1.5 truncate text-[13px] pl-1 pr-2">
-          <div className="flex items-center gap-0.5 w-8">
+
+        <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
+          <div className="flex items-center gap-0.5">
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
@@ -71,13 +72,14 @@ export const FileItem: React.FC<FileItemProps> = ({
           </div>
 
           <span className="truncate">
-            <HighlightText 
-              text={viewMode === "tree" ? basename(file.path) : file.path} 
-              highlight={searchQuery} 
+            <HighlightText
+              text={viewMode === "tree" ? basename(file.path) : file.path}
+              highlight={searchQuery}
             />
           </span>
         </div>
       </div>
+
       <div
         className={cn(
           "flex items-center gap-2 px-2 text-[12px] tabular-nums",
