@@ -35,3 +35,4 @@ A VSCode extension project that helps developers write better commit messages us
 "021" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
 "022" = { slug = "development_log", abstract = "Development progress and changelog" }
 "023" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
+"024" = { slug = "fix_editor_actions", abstract = "Fix editor actions location restoration" }

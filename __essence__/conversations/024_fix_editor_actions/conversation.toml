@@ -1,0 +1,11 @@
+version = "14.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-13T20:30:03+0800"
+query_essence = "修复编辑器操作按钮位置恢复问题"
+key_points = [
+    "修正配置键名从 workbench.action.editorActionsLocation 到 workbench.editor.editorActionsLocation",
+    "确保编辑器操作按钮位置设置能正确恢复",
+    "保持保存和恢复操作的配置键名一致性"
+]

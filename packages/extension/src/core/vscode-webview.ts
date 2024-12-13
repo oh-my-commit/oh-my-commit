@@ -18,7 +18,11 @@ export class WebviewManager {
    */
   private readonly scriptPath: string;
 
-  private originalTabSetting?: string | null;
+  // /defaultSettings.json:2058
+  private originalTabSetting?: "multiple" | "single" | "none" = undefined;
+  // /defaultSettings.json:1954
+  private originalEditorActionsLocation?: "default" | "titleBar" | "hidden" =
+    undefined;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -149,6 +153,20 @@ export class WebviewManager {
           vscode.ConfigurationTarget.Workspace
         );
 
+      this.originalEditorActionsLocation = vscode.workspace
+        .getConfiguration()
+        .get("workbench.editor.editorActionsLocation");
+      this.outputChannel.appendLine(
+        `[EditorActions Save] this.originalEditorActionsLocation: ${this.originalEditorActionsLocation}`
+      );
+      await vscode.workspace
+        .getConfiguration()
+        .update(
+          "workbench.editor.editorActionsLocation",
+          "hidden",
+          vscode.ConfigurationTarget.Workspace
+        );
+
       this.outputChannel.appendLine(
         "[saveWindowState] Window state saved and tabs hidden"
       );
@@ -156,7 +174,11 @@ export class WebviewManager {
   }
 
   private async restoreWindowState() {
-    if (this.uiMode === "window" && this.originalTabSetting !== undefined) {
+    if (
+      this.uiMode === "window" &&
+      this.originalTabSetting !== undefined &&
+      this.originalEditorActionsLocation !== undefined
+    ) {
       await vscode.workspace
         .getConfiguration()
         .update(
@@ -164,8 +186,18 @@ export class WebviewManager {
           this.originalTabSetting,
           vscode.ConfigurationTarget.Workspace
         );
-
       this.originalTabSetting = undefined;
+
+      this.outputChannel.appendLine(
+        `[EditorActions Restore] this.originalEditorActionsLocation: ${this.originalEditorActionsLocation}`
+      );
+      await vscode.workspace.getConfiguration().update(
+        "workbench.editor.editorActionsLocation", // 修正配置键名，之前错写成了 workbench.action.editorActionsLocation
+        this.originalEditorActionsLocation,
+        vscode.ConfigurationTarget.Workspace
+      );
+      this.originalEditorActionsLocation = undefined;
+
       this.outputChannel.appendLine(
         "[restoreWindowState] Window state restored"
       );
@@ -181,6 +213,7 @@ export class WebviewManager {
       // Dispose the panel
       this.webviewPanel.dispose();
       this.webviewPanel = undefined;
+
       this.outputChannel.appendLine(
         "[cleanupPanel] Panel disposed and reference cleared"
       );
