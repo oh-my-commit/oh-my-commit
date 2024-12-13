@@ -1,0 +1,47 @@
+version = "1.0.0"
+
+[[rounds]]
+number = 1
+time = "2024-12-13 21:12:40"
+query_essence = "Hide titlebar in VSCode webview"
+key_points = [
+    "Added CSS to hide titlebar element using display: none !important",
+    "Added CSS to remove body margins and padding to prevent empty space",
+    "CSS added directly in webview.template.html to apply to all webview instances",
+    "No changes needed in webview manager as template system handles CSS injection"
+]
+
+[[rounds]]
+number = 2
+time = "2024-12-13 21:47:42"
+query_essence = "Hide titlebar in VSCode window (not webview)"
+key_points = [
+    "Added VSCode window configuration to hide titlebar",
+    "Set window.titleBarStyle to custom",
+    "Set window.customTitleBarVisibility to never",
+    "Disabled window.titleBarOverlay",
+    "These settings are applied when opening new window in window mode"
+]
+
+[[rounds]]
+number = 3
+time = "2024-12-13 21:50:58"
+query_essence = "Fix configuration target for window settings"
+key_points = [
+    "Restructured windowModeConfigs to separate workspace and user level settings",
+    "Window titlebar settings now correctly write to user settings (Global)",
+    "Workspace settings (tabs, activity bar) still write to workspace settings",
+    "Updated state save/restore logic to handle different configuration targets",
+    "Added better logging for configuration changes"
+]
+
+[[rounds]]
+number = 4
+time = "2024-12-13 21:52:41"
+query_essence = "Fix invalid window configuration"
+key_points = [
+    "Removed invalid window.titleBarOverlay configuration",
+    "Changed window.titleBarStyle from custom to native for macOS compatibility",
+    "Kept window.customTitleBarVisibility as never",
+    "Simplified window-related configurations to only use valid settings"
+]
