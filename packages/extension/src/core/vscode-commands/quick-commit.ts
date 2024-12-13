@@ -13,7 +13,7 @@ export class QuickCommitCommand implements VscodeCommand {
 
   constructor(
     gitService: VscodeGitService,
-    private readonly acManager: AcManager,
+    _acManager: AcManager,
     context: vscode.ExtensionContext,
     logger: vscode.LogOutputChannel
   ) {
@@ -32,10 +32,10 @@ export class QuickCommitCommand implements VscodeCommand {
     // Register message handlers
     this.webviewManager.registerMessageHandler("commit", async (message) => {
       try {
-        const { message: commitMessage, amend } = message;
-        await this.gitService.commit(commitMessage, amend);
+        const { message: commitMessage } = message;
+        await this.gitService.commit(commitMessage);
         vscode.window.showInformationMessage("Changes committed successfully!");
-        this.webviewManager.cleanupPanel();
+        this.webviewManager.dispose();
       } catch (error) {
         this.logger.error(error as Error);
         vscode.window.showErrorMessage(`Failed to commit: ${error}`);
