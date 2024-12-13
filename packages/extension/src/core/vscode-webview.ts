@@ -77,7 +77,9 @@ export class WebviewManager {
     context.subscriptions.push(watcher, this);
   }
 
-  public async show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
+  public async show(
+    options: vscode.WebviewPanelOptions & vscode.WebviewOptions
+  ) {
     if (this.webviewPanel) {
       this.webviewPanel.reveal();
       return this.webviewPanel;
@@ -85,7 +87,9 @@ export class WebviewManager {
 
     // Only move to new window in window mode
     if (this.uiMode === "window") {
-      await vscode.commands.executeCommand("workbench.action.newEmptyEditorWindow");
+      await vscode.commands.executeCommand(
+        "workbench.action.newEmptyEditorWindow"
+      );
       await this.saveWindowState();
     }
 
@@ -136,7 +140,7 @@ export class WebviewManager {
       this.originalTabSetting = vscode.workspace
         .getConfiguration()
         .get("workbench.editor.showTabs");
-      
+
       await vscode.workspace
         .getConfiguration()
         .update(
@@ -144,8 +148,10 @@ export class WebviewManager {
           "none",
           vscode.ConfigurationTarget.Workspace
         );
-      
-      this.outputChannel.appendLine("[saveWindowState] Window state saved and tabs hidden");
+
+      this.outputChannel.appendLine(
+        "[saveWindowState] Window state saved and tabs hidden"
+      );
     }
   }
 
@@ -158,22 +164,26 @@ export class WebviewManager {
           this.originalTabSetting,
           vscode.ConfigurationTarget.Workspace
         );
-      
+
       this.originalTabSetting = undefined;
-      this.outputChannel.appendLine("[restoreWindowState] Window state restored");
+      this.outputChannel.appendLine(
+        "[restoreWindowState] Window state restored"
+      );
     }
   }
 
   private async cleanupPanel() {
     if (this.webviewPanel) {
       this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
-      
+
       await this.restoreWindowState();
-      
+
       // Dispose the panel
       this.webviewPanel.dispose();
       this.webviewPanel = undefined;
-      this.outputChannel.appendLine("[cleanupPanel] Panel disposed and reference cleared");
+      this.outputChannel.appendLine(
+        "[cleanupPanel] Panel disposed and reference cleared"
+      );
     }
   }
 
@@ -254,12 +264,15 @@ export class WebviewManager {
       });
 
       // Register keyboard shortcut handler
-      const disposable = vscode.commands.registerCommand('workbench.action.closeActiveEditor', () => {
-        if (this.webviewPanel && this.webviewPanel.active) {
-          this.outputChannel.appendLine("[closeActiveEditor] Handling cmd+w");
-          this.cleanupPanel();
+      const disposable = vscode.commands.registerCommand(
+        "workbench.action.closeActiveEditor",
+        () => {
+          if (this.webviewPanel && this.webviewPanel.active) {
+            this.outputChannel.appendLine("[closeActiveEditor] Handling cmd+w");
+            this.cleanupPanel();
+          }
         }
-      });
+      );
 
       // Clean up the command registration when panel is disposed
       panel.onDidDispose(() => disposable.dispose());
@@ -282,7 +295,10 @@ export class WebviewManager {
   }
 
   public get uiMode(): string {
-    return vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ?? "panel";
+    return (
+      vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ??
+      "panel"
+    );
   }
 
   public async dispose() {
