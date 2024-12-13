@@ -159,7 +159,7 @@
             "以浮动窗口显示提交界面",
             "在面板中显示完整提交界面"
           ],
-          "default": "panel",
+          "default": "window",
           "markdownDescription": "提交界面显示模式",
           "order": 23
         },

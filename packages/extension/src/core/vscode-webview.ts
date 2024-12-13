@@ -97,7 +97,10 @@ export class WebviewManager {
       }
     );
 
-    vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
+    // Only move to new window in window mode
+    if (this.uiMode === "window") {
+      vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
+    }
 
     this.webviewPanel.webview.onDidReceiveMessage(
       async (message: any) => {
@@ -153,6 +156,13 @@ export class WebviewManager {
     }
   }
 
+  public get uiMode() {
+    return (
+      vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ||
+      "panel"
+    );
+  }
+
   public show(options: vscode.WebviewPanelOptions & vscode.WebviewOptions) {
     if (this.webviewPanel) {
       this.webviewPanel.reveal();
@@ -168,13 +178,13 @@ export class WebviewManager {
       },
       {
         ...options,
-        // 隐藏标题栏
-        showTitleBar: false,
       }
     );
 
-    // Move the webview to a new window
-    vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
+    // Only move to new window in window mode
+    if (this.uiMode === "window") {
+      vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
+    }
 
     this.webviewPanel.onDidDispose(() => (this.webviewPanel = undefined));
     this.updateWebview();
