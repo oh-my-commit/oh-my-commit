@@ -5,6 +5,9 @@ import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
 import type { FileChange } from "@yaac/shared";
 import { Checkbox } from "../../common/Checkbox";
 import { logger } from "@/lib/logger";
+import { useAtom } from "jotai";
+import { viewModeAtom } from "@/state/atoms/ui";
+import { basename } from "@/utils/path";
 
 interface FileItemProps {
   file: FileChange & {
@@ -28,6 +31,8 @@ export const FileItem: React.FC<FileItemProps> = ({
   onSelect,
   onClick,
 }) => {
+  const [viewMode, setViewMode] = useAtom(viewModeAtom);
+
   const handleCheckboxChange = () => {
     onSelect?.(file.path);
 
@@ -61,12 +66,14 @@ export const FileItem: React.FC<FileItemProps> = ({
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
-                file.hasStaged 
-                  ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]" 
+                file.hasStaged
+                  ? "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)]"
                   : "text-[var(--vscode-gitDecoration-stageModifiedResourceForeground)] opacity-20",
                 isActive && "text-inherit opacity-50"
               )}
-              title={file.hasStaged ? "Has staged changes" : "No staged changes"}
+              title={
+                file.hasStaged ? "Has staged changes" : "No staged changes"
+              }
             >
               ●
             </span>
@@ -74,12 +81,16 @@ export const FileItem: React.FC<FileItemProps> = ({
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
-                file.hasUnstaged 
-                  ? "text-[var(--vscode-gitDecoration-untrackedResourceForeground)]" 
+                file.hasUnstaged
+                  ? "text-[var(--vscode-gitDecoration-untrackedResourceForeground)]"
                   : "text-[var(--vscode-gitDecoration-untrackedResourceForeground)] opacity-20",
                 isActive && "text-inherit opacity-50"
               )}
-              title={file.hasUnstaged ? "Has unstaged changes" : "No unstaged changes"}
+              title={
+                file.hasUnstaged
+                  ? "Has unstaged changes"
+                  : "No unstaged changes"
+              }
             >
               ○
             </span>
@@ -95,8 +106,12 @@ export const FileItem: React.FC<FileItemProps> = ({
               {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
             </span>
           </div>
+
           <span className="truncate">
-            <HighlightText text={file.path} highlight={searchQuery} />
+            <HighlightText 
+              text={viewMode === "tree" ? basename(file.path) : file.path} 
+              highlight={searchQuery} 
+            />
           </span>
         </div>
       </div>
