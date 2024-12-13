@@ -151,14 +151,27 @@ export class WebviewManager {
             "workbench.editor.showTabs",
             this.originalTabSetting,
             vscode.ConfigurationTarget.Workspace
-          );
-        this.originalTabSetting = undefined;
+          )
+          .then(() => {
+            this.outputChannel.appendLine(
+              "[cleanupPanel] Tab setting restored"
+            );
+            // Only dispose the panel after the setting is restored
+            this.webviewPanel?.dispose();
+            this.webviewPanel = undefined;
+            this.originalTabSetting = undefined;
+            this.outputChannel.appendLine(
+              "[cleanupPanel] Panel disposed and reference cleared"
+            );
+          });
+      } else {
+        // If not in window mode or no tab setting to restore, just dispose
+        this.webviewPanel.dispose();
+        this.webviewPanel = undefined;
+        this.outputChannel.appendLine(
+          "[cleanupPanel] Panel disposed and reference cleared"
+        );
       }
-      this.webviewPanel.dispose();
-      this.webviewPanel = undefined;
-      this.outputChannel.appendLine(
-        "[cleanupPanel] Panel disposed and reference cleared"
-      );
     }
   }
 
@@ -197,21 +210,6 @@ export class WebviewManager {
       let lastVisible = true;
       let lastActive = false;
       let isMovingToNewWindow = true; // Flag to track window mode transition
-
-      // Handle window focus events
-      const handleWindowFocus = () => {
-        this.outputChannel.appendLine("[Window] Window gained focus");
-      };
-
-      const handleWindowBlur = () => {
-        this.outputChannel.appendLine("[Window] Window lost focus");
-        if (!isMovingToNewWindow) {
-          this.outputChannel.appendLine(
-            "[Window] Closing panel due to window focus loss"
-          );
-          this.cleanupPanel();
-        }
-      };
 
       panel.onDidChangeViewState((e) => {
         const currentVisible = e.webviewPanel.visible;
