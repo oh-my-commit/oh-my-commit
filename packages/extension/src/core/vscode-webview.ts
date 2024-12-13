@@ -22,12 +22,12 @@ export class WebviewManager {
     context: vscode.ExtensionContext,
     private readonly viewType: string,
     private readonly title: string,
-    private readonly outputChannel = vscode.window.createOutputChannel(
-      "WebviewManager"
-    ),
+    private readonly outputChannel: vscode.OutputChannel,
     templatePath: string = "./assets/webview.template.html",
     scriptPath: string = "./dist/webview-ui/main.js"
   ) {
+    this.outputChannel.appendLine("[WebviewManager] Initializing...");
+
     // load template
     this.templatePath = templatePath;
     this.templatePath = path.join(context.extensionPath, this.templatePath);
@@ -101,7 +101,6 @@ export class WebviewManager {
       vscode.commands.executeCommand("workbench.action.moveEditorToNewWindow");
     }
 
-    this.webviewPanel.onDidDispose(() => this.cleanupPanel());
     this.handleWindowModeStateChange(this.webviewPanel);
     this.updateWebview();
     return this.webviewPanel;
@@ -130,18 +129,61 @@ export class WebviewManager {
 
   private cleanupPanel() {
     if (this.webviewPanel) {
+      this.outputChannel.appendLine("[cleanupPanel] Disposing webview panel");
       this.webviewPanel.dispose();
       this.webviewPanel = undefined;
+      this.outputChannel.appendLine(
+        "[cleanupPanel] Panel disposed and reference cleared"
+      );
     }
   }
 
   private handleWindowModeStateChange(panel: vscode.WebviewPanel) {
     if (this.uiMode === "window") {
+      this.outputChannel.appendLine(
+        "[handleWindowModeStateChange] Setting up window mode handlers"
+      );
+
+      // Handle close button via message
+      panel.webview.onDidReceiveMessage(
+        (message: any) => {
+          this.outputChannel.appendLine(
+            `[onDidReceiveMessage] Received message: ${JSON.stringify(message)}`
+          );
+          if (message.type === "window-close") {
+            this.outputChannel.appendLine("[onDidReceiveMessage] Handling window close");
+            this.cleanupPanel();
+          }
+        },
+        undefined,
+        []
+      );
+
+      // Handle window close
+      panel.onDidDispose(() => {
+        this.outputChannel.appendLine(
+          "[onDidDispose] Panel disposed event triggered"
+        );
+        this.webviewPanel = undefined;
+      });
+
+      // Handle visibility changes
+      let lastVisible = true;
       panel.onDidChangeViewState((e) => {
-        // Only close when visibility changes to false
-        if (!e.webviewPanel.visible) {
+        const currentVisible = e.webviewPanel.visible;
+        const active = e.webviewPanel.active;
+        this.outputChannel.appendLine(
+          `[onDidChangeViewState] State changed - visible: ${currentVisible}, active: ${active}, lastVisible: ${lastVisible}`
+        );
+
+        // Only trigger on visibility change from true to false
+        if (lastVisible && !currentVisible) {
+          this.outputChannel.appendLine(
+            "[onDidChangeViewState] Visibility changed from true to false, cleaning up panel"
+          );
           this.cleanupPanel();
         }
+        lastVisible = currentVisible;
       });
     }
   }
@@ -149,32 +191,14 @@ export class WebviewManager {
   private updateWebview() {
     if (!this.webviewPanel?.webview) return;
 
-    try {
-      // Force clear cache by adding timestamp
-      const timestamp = Date.now();
-      this.outputChannel.appendLine(`Updating webview at ${timestamp}`);
+    const templateData = {
+      scriptUri: this.webviewPanel.webview.asWebviewUri(this.scriptUri).toString(),
+      cspSource: this.webviewPanel.webview.cspSource,
+      windowMode: this.uiMode === "window",
+    };
 
-      const templateData = {
-        csp: [
-          "default-src 'none'",
-          `style-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
-          `script-src ${this.webviewPanel.webview.cspSource} 'unsafe-inline'`,
-          `font-src ${this.webviewPanel.webview.cspSource}`,
-          `img-src ${this.webviewPanel.webview.cspSource} https: data:`,
-          `connect-src ${this.webviewPanel.webview.cspSource} https:`,
-          "frame-src https:",
-        ].join(";"),
-        title: this.title,
-        scriptUri: `${this.webviewPanel.webview.asWebviewUri(
-          this.scriptUri
-        )}?v=${timestamp}`,
-      };
-
-      this.webviewPanel.webview.html = this.template(templateData);
-      this.outputChannel.appendLine("Webview refreshed successfully");
-    } catch (error) {
-      this.outputChannel.appendLine(`Refresh error: ${error}`);
-    }
+    const html = this.template(templateData);
+    this.webviewPanel.webview.html = html;
   }
 
   public get uiMode() {

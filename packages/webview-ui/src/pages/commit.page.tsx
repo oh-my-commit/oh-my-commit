@@ -26,6 +26,19 @@ export function CommitPage() {
   const vscode = getVSCodeAPI();
 
   useEffect(() => {
+    // Handle window close button in window mode
+    if (uiMode === "window") {
+      const handleClose = () => {
+        vscode.postMessage({ type: "window-close" });
+      };
+
+      // Listen for the close button click
+      window.addEventListener("beforeunload", handleClose);
+      return () => window.removeEventListener("beforeunload", handleClose);
+    }
+  }, [uiMode]);
+
+  useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const message = event.data;
       switch (message.type) {

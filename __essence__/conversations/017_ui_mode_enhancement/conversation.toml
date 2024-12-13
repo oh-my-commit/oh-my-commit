@@ -62,3 +62,14 @@ key_points = [
     "保持点击关闭按钮时的完全关闭行为",
     "优化用户体验，使窗口行为更符合预期"
 ]
+
+[[rounds]]
+number = 7
+time = "2024-12-13 12:29:51"
+query_essence = "实现完美的窗口关闭行为"
+key_points = [
+    "使用浏览器原生的 beforeunload 事件监听关闭操作",
+    "在窗口模式下发送 window-close 消息给扩展",
+    "扩展收到消息后主动调用 cleanupPanel 销毁面板",
+    "同时支持点击关闭按钮和 cmd+w 快捷键"
+]
