@@ -193,63 +193,71 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         </div>
       }
     >
-      <div className="flex items-center gap-4 px-4 py-2 sticky top-0 z-10 bg-input-bg border-b border-[var(--vscode-panel-border)]">
-        <SearchBar className="flex-1 min-w-[200px]" />
-        <button
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
-            "shrink-0"
-          )}
-          onClick={() => setViewMode(viewMode === "flat" ? "tree" : "flat")}
-          title={`Switch to ${viewMode === "flat" ? "Tree" : "Flat"} View`}
-        >
-          <i
-            className={cn(
-              `codicon`,
-              viewMode === "flat" && "codicon-list-flat",
-              viewMode === "tree" && "codicon-list-tree"
-            )}
-          />
-        </button>
-      </div>
+      <div className="flex flex-row h-full">
+        <div className="flex flex-col w-[300px] min-w-[200px] border-r border-[var(--vscode-panel-border)]">
+          <div className="flex items-center gap-4 px-4 py-2 sticky top-0 z-10 bg-input-bg border-b border-[var(--vscode-panel-border)]">
+            <SearchBar className="flex-1 min-w-[200px]" />
+            <button
+              className={cn(
+                "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
+                "shrink-0"
+              )}
+              onClick={() => setViewMode(viewMode === "flat" ? "tree" : "flat")}
+              title={`Switch to ${viewMode === "flat" ? "Tree" : "Flat"} View`}
+            >
+              <i
+                className={cn(
+                  `codicon`,
+                  viewMode === "flat" && "codicon-list-flat",
+                  viewMode === "tree" && "codicon-list-tree"
+                )}
+              />
+            </button>
+          </div>
 
-      {filteredStagedFiles.length === 0 &&
-      filteredUnstagedFiles.length === 0 ? (
-        <EmptyState
-          searchQuery={searchQuery}
-          onClearSearch={() => setSearchQuery("")}
-        />
-      ) : (
-        <div className="flex-1 overflow-auto">
-          {viewMode === "tree" && (
-            <TreeView
-              fileTree={fileTree}
-              onFileClick={handleFileClick}
-              onFileSelect={(path) => onFileSelect(path, true)}
-              renderStatus={renderStatus}
-            />
-          )}
-
-          {viewMode === "flat" && (
-            <FlatView
-              files={allFiles}
-              selectedFiles={selectedFiles}
-              selectedPath={lastOpenedFilePath}
+          {filteredStagedFiles.length === 0 &&
+          filteredUnstagedFiles.length === 0 ? (
+            <EmptyState
               searchQuery={searchQuery}
-              onSelect={(path) => onFileSelect(path, true)}
-              onFileClick={(path) => handleFileClick(path)}
-              hasOpenedFile={!!lastOpenedFilePath}
-              renderStatus={renderStatus}
+              onClearSearch={() => setSearchQuery("")}
             />
+          ) : (
+            <div className="flex-1 overflow-auto">
+              {viewMode === "tree" && (
+                <TreeView
+                  fileTree={fileTree}
+                  onFileClick={handleFileClick}
+                  onFileSelect={(path) => onFileSelect(path, true)}
+                  renderStatus={renderStatus}
+                />
+              )}
+
+              {viewMode === "flat" && (
+                <FlatView
+                  files={allFiles}
+                  selectedFiles={selectedFiles}
+                  selectedPath={lastOpenedFilePath}
+                  searchQuery={searchQuery}
+                  onSelect={(path) => onFileSelect(path, true)}
+                  onFileClick={(path) => handleFileClick(path)}
+                  hasOpenedFile={!!lastOpenedFilePath}
+                  renderStatus={renderStatus}
+                />
+              )}
+            </div>
           )}
         </div>
-      )}
 
-      {lastOpenedFilePath && (
-        <div className="flex-1 min-h-0 border-t border-[var(--vscode-panel-border)]">
-          <DiffViewer />
-        </div>
-      )}
+        {lastOpenedFilePath ? (
+          <div className="flex-1 min-w-0">
+            <DiffViewer />
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-[var(--vscode-descriptionForeground)] text-sm">
+            Select a file to view changes
+          </div>
+        )}
+      </div>
     </Section>
   );
 };
