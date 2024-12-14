@@ -15,127 +15,169 @@ abstract = "Resolving webpack source map configuration and TypeScript compilatio
 [conversations.003]
 slug = "fix-treeview-expandeddirs"
 title = "Fix TreeView expandedDirs type error XXX"
-status = { state = "ongoing", satisfaction = 2 }
-abstract = "Fix TreeView expandedDirs type error XXX"
+abstract = ""
 
 [conversations.004]
 slug = "add-init-animation"
 title = "Add cool initialization animation"
-status = { state = "completed", satisfaction = 3 }
-abstract = "Add cool initialization animation"
+abstract = ""
 
 [conversations.005]
-slug = "vscode_plugin_architecture"
-status = { state = "ongoing" }
+slug = "highlight-active-file"
+title = "Highlight Active File in FileItem Component"
+abstract = "为 FileItem 组件添加当前打开文件的高亮显示功能"
+
+[conversations.006]
+slug = "improve-diff-viewer"
+title = "Improve DiffViewer Scroll Experience"
+abstract = "优化文件差异查看器的滚动体验，解决切换文件时视图跳动的问题"
 
 [conversations.007]
-slug = "vscode_extension_generator"
-
-[conversations.008]
-slug = "git_implementation"
+slug = "vscode_plugin_architecture"
+title = ""
+abstract = ""
 
 [conversations.009]
-slug = "vscode_extension_setup"
+slug = "vscode_extension_generator"
+title = ""
+abstract = ""
 
 [conversations.010]
-slug = "yeoman_generator_behavior"
+slug = "git_implementation"
+title = ""
+abstract = ""
 
 [conversations.011]
-slug = "vscode_task_error"
+slug = "vscode_extension_setup"
+title = ""
+abstract = ""
 
 [conversations.012]
-slug = "vscode_extension_webview"
+slug = "yeoman_generator_behavior"
+title = ""
+abstract = ""
 
 [conversations.013]
-slug = "vscode_extension_enhancement"
-title = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
-abstract = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
+slug = "vscode_task_error"
+title = ""
+abstract = ""
 
 [conversations.014]
-slug = "vscode_plugin_error"
+slug = "vscode_extension_webview"
+title = ""
+abstract = ""
+
+[conversations.015]
+slug = "vscode_extension_enhancement"
+title = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
+abstract = ""
 
 [conversations.016]
-slug = "vscode_debug"
+slug = "vscode_plugin_error"
+title = ""
+abstract = ""
 
 [conversations.018]
-slug = "vscode_plugin_debug_solution"
-
-[conversations.019]
-slug = "vscode_extension_template_debug"
+slug = "vscode_debug"
+title = ""
+abstract = ""
 
 [conversations.020]
-slug = "webview_floating"
+slug = "vscode_plugin_debug_solution"
+title = ""
+abstract = ""
 
 [conversations.021]
-slug = "ui_mode_enhancement"
+slug = "vscode_extension_template_debug"
+title = ""
+abstract = ""
 
 [conversations.022]
-slug = "fix_editor_actions"
+slug = "webview_floating"
+title = ""
+abstract = ""
 
 [conversations.023]
-slug = "refactor_window_state"
+slug = "ui_mode_enhancement"
+title = ""
+abstract = ""
 
 [conversations.024]
-slug = "simplify_window_state"
+slug = "fix_editor_actions"
+title = ""
+abstract = ""
 
 [conversations.025]
-slug = "webview_titlebar_hide"
+slug = "refactor_window_state"
+title = ""
+abstract = ""
 
 [conversations.026]
-slug = "logger_enhancement"
+slug = "simplify_window_state"
+title = ""
+abstract = ""
 
 [conversations.027]
-slug = "simplify_fileitem"
+slug = "webview_titlebar_hide"
+title = ""
+abstract = ""
 
 [conversations.028]
-slug = "optimize_file_changes_layout"
-title = "Optimize File Changes Layout"
-status = "active"
-abstract = "Optimize File Changes Layout"
+slug = "logger_enhancement"
+title = ""
+abstract = ""
 
 [conversations.029]
-slug = "diffviewer_no_changes"
-title = "DiffViewer No Changes Investigation 3"
-status = "active"
-abstract = "DiffViewer No Changes Investigation 3"
+slug = "simplify_fileitem"
+title = ""
+abstract = ""
 
 [conversations.030]
+slug = "optimize_file_changes_layout"
+title = "Optimize File Changes Layout"
+abstract = ""
+
+[conversations.031]
+slug = "diffviewer_no_changes"
+title = "DiffViewer No Changes Investigation 3"
+abstract = ""
+
+[conversations.032]
 slug = "git_changes"
 title = "Git Changes Implementation"
 abstract = "Implementing GitCore functionality for handling git changes and project structure setup"
 
-[conversations.031]
+[conversations.033]
 slug = "typescript_errors"
 title = "typescript_errors"
 abstract = "Resolving multiple TypeScript errors across components including import issues and type definition problems"
 
-[conversations.032]
+[conversations.034]
 slug = "git_staged_files"
 title = "Git Staged Files Enhancement"
 abstract = "改进 Git 暂存文件的展示功能，提供更详细的文件变更信息"
 
-[conversations.033]
+[conversations.035]
 slug = "commit_event_logging"
 title = "Commit Event Logging Debug"
 abstract = "调试提交事件的日志记录问题，分析为什么 commit.page.tsx 中的日志没有执行"
 
-[conversations.034]
+[conversations.036]
 slug = "commit_page_state"
 title = "Commit Page State Update Issue"
 abstract = "解决提交页面状态更新问题，包括消息接收后状态未更新的问题"
 
-[conversations.035]
+[conversations.037]
 slug = "git_file_status"
 title = "Git File Status Structure"
 abstract = "分析 simple-git 库中的文件状态变更标识数据结构，以及在项目中的应用实现"
 
-[conversations.036]
+[conversations.038]
 slug = "diffview_position"
 title = "Adjust DiffView Position"
 abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与VSCode风格保持一致"
 
-[conversations.037]
+[conversations.039]
 slug = "fileitem_uiux"
 title = "FileItem UI/UX Enhancement"
 abstract = "改进文件项组件的选中状态和交互效果"
-
