@@ -106,14 +106,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           >
             {lines.map((line, index) => {
               const bgColor = line.startsWith("+")
-                ? "bg-green-100 dark:bg-green-900"
+                ? "bg-opacity-20 bg-[var(--vscode-diffEditor-insertedTextBackground)]"
                 : line.startsWith("-")
-                ? "bg-red-100 dark:bg-red-900"
+                ? "bg-opacity-20 bg-[var(--vscode-diffEditor-removedTextBackground)]"
                 : "";
 
               return (
                 <tr key={index}>
-                  <td className={cn("pl-2", bgColor)}>
+                  <td className={cn("pl-2 py-[1px]", bgColor)}>
                     <HighlightText text={line} highlight="" />
                   </td>
                 </tr>
