@@ -2,44 +2,24 @@ import { CommitFormatTooltip } from "@/components/commit/commit-format-tooltip";
 import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import React, { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/layout/Section";
+import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { useAtom } from "jotai";
+import React, { useEffect, useRef, useState } from "react";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
 
-interface CommitMessageProps {
-  message: string;
-  detail: string;
-  selectedFilesCount: number;
-  commitType?: string;
-  onMessageChange: (value: string) => void;
-  onDetailChange: (value: string) => void;
-  onCommit: () => void;
-  onFeedback?: (
-    type: "type" | "content" | "regenerate" | "other",
-    details?: string
-  ) => void;
-  disabled?: boolean;
-}
-
-export function CommitMessage({
-  message,
-  detail,
-  selectedFilesCount,
-  commitType = "feat",
-  onMessageChange,
-  onDetailChange,
-  onCommit,
-  onFeedback,
-  disabled,
-}: CommitMessageProps) {
+export function CommitMessage() {
+  const [title, setTitle] = useAtom(commitTitleAtom);
+  const [body, setBody] = useAtom(commitBodyAtom);
   const [showTooltip, setShowTooltip] = useState(false);
   const tooltipContainerRef = useRef<HTMLDivElement>(null);
-  const subjectLength = message.length;
+  const subjectLength = title.length;
   const isSubjectValid =
     subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH;
+  const disabled = !title.trim();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,10 +56,10 @@ export function CommitMessage({
             Summary
           </div>
           <MessageInput
-            value={message}
+            value={title}
             maxLength={MAX_SUBJECT_LENGTH}
             placeholder="Write a brief description of your changes"
-            onChange={onMessageChange}
+            onChange={setTitle}
             className="h-[32px]"
           />
         </div>
@@ -89,10 +69,10 @@ export function CommitMessage({
             Details
           </div>
           <MessageInput
-            value={detail}
+            value={body}
             maxLength={MAX_DETAIL_LENGTH}
             placeholder="Add a detailed description of your changes (optional)"
-            onChange={onDetailChange}
+            onChange={setBody}
             className="min-h-[120px]"
             multiline
           />
@@ -105,8 +85,18 @@ export function CommitMessage({
             Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
           </span>
         )}
-        <FeedbackButton onFeedback={onFeedback} disabled={disabled} />
-        <VSCodeButton disabled={!isSubjectValid || disabled} onClick={onCommit}>
+        <FeedbackButton
+          onFeedback={() => {
+            // todo: feedback
+          }}
+          disabled={disabled}
+        />
+        <VSCodeButton
+          disabled={!isSubjectValid || disabled}
+          onClick={() => {
+            // todo: commit
+          }}
+        >
           Commit Changes
         </VSCodeButton>
       </Section.Footer>

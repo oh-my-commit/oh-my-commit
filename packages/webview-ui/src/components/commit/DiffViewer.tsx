@@ -1,5 +1,5 @@
 import {
-  stagedFilesAtom,
+  changedFilesAtom,
   lastOpenedFilePathAtom,
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
@@ -15,13 +15,13 @@ import cn from "classnames";
 
 export const DiffViewer: React.FC = () => {
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
-  const [stagedFiles] = useAtom(stagedFilesAtom);
+  const [files] = useAtom(changedFilesAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
 
-  const selectedFile = stagedFiles.find((f) => f.path === lastOpenedFilePath);
+  const selectedFile = files?.files.find((f) => f.file === lastOpenedFilePath);
 
   const { language, processedDiff, lineTypes } = useMemo(() => {
     if (!selectedFile?.diff) {
@@ -97,14 +97,14 @@ export const DiffViewer: React.FC = () => {
             onClick={() => setWrapLine(!wrapLine)}
             className={cn(
               wrapLine && "bg-[var(--vscode-toolbar-activeBackground)]",
-              "rounded-[3px]"
+              "rounded-[3px]",
             )}
           >
             <i
               className={cn(
                 "codicon codicon-word-wrap transition-transform",
                 wrapLine && "opacity-100",
-                !wrapLine && "opacity-60 hover:opacity-100"
+                !wrapLine && "opacity-60 hover:opacity-100",
               )}
             />
           </VSCodeButton>
@@ -125,7 +125,7 @@ export const DiffViewer: React.FC = () => {
           renderer={({ rows, stylesheet, useInlineStyles }: any) => {
             const renderNode = (
               node: any,
-              searchText?: string
+              searchText?: string,
             ): React.ReactNode => {
               if (node.type === "text") {
                 if (searchText) {
@@ -157,7 +157,7 @@ export const DiffViewer: React.FC = () => {
                     <React.Fragment key={i}>
                       {renderNode(child, searchText)}
                     </React.Fragment>
-                  ))
+                  )),
                 );
               }
 
@@ -184,8 +184,8 @@ export const DiffViewer: React.FC = () => {
                           type === "addition"
                             ? "var(--vscode-diffEditor-insertedTextBackground)"
                             : type === "deletion"
-                            ? "var(--vscode-diffEditor-removedTextBackground)"
-                            : "",
+                              ? "var(--vscode-diffEditor-removedTextBackground)"
+                              : "",
                       },
                       className: "group hover:bg-editor-line-highlight",
                     };
@@ -207,7 +207,7 @@ export const DiffViewer: React.FC = () => {
           customStyle={{}}
           showLineNumbers
           lineNumberStyle={twj(
-            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number"
+            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number",
           )}
           style={vscDarkPlus}
         >

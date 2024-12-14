@@ -16,27 +16,9 @@ import { buildFileTree } from "@/utils/build-file-tree";
 import { Section } from "@/components/layout/Section";
 import { InfoIcon } from "@/components/commit/info-icon";
 
-interface FileChangesProps {
-  stagedFiles: FileChange[];
-  unstagedFiles: FileChange[];
-  selectedFiles: string[];
-  onFileSelect: (path: string, isStaged: boolean) => void;
-}
-
-interface FileWithStatus extends FileChange {
-  hasStaged: boolean;
-  hasUnstaged: boolean;
-  isStaged: boolean;
-}
-
-export const FileChanges: React.FC<FileChangesProps> = ({
-  stagedFiles,
-  unstagedFiles,
-  selectedFiles,
-  onFileSelect,
-}) => {
+export const FileChanges: React.FC<{}> = ({}) => {
   const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
@@ -95,7 +77,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     const statusClasses = cn(
       "flex items-center gap-1 text-xs",
       fileWithStatus.hasStaged && "text-green-500",
-      fileWithStatus.hasUnstaged && "text-yellow-500"
+      fileWithStatus.hasUnstaged && "text-yellow-500",
     );
 
     return (
@@ -125,13 +107,6 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   useEffect(() => {
     logger.setChannel("FileChanges");
-    logger.info("Component mounted with:", {
-      stagedFiles: stagedFiles.length,
-      unstagedFiles: unstagedFiles.length,
-      selectedFiles: selectedFiles.length,
-      viewMode,
-      lastOpenedFilePath,
-    });
 
     return () => {
       logger.info("Component unmounting");
@@ -200,7 +175,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             <button
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 text-xs rounded-[3px] transition-colors duration-100 hover:bg-[var(--vscode-toolbar-hoverBackground)]",
-                "shrink-0"
+                "shrink-0",
               )}
               onClick={() => setViewMode(viewMode === "flat" ? "tree" : "flat")}
               title={`Switch to ${viewMode === "flat" ? "Tree" : "Flat"} View`}
@@ -209,7 +184,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
                 className={cn(
                   `codicon`,
                   viewMode === "flat" && "codicon-list-flat",
-                  viewMode === "tree" && "codicon-list-tree"
+                  viewMode === "tree" && "codicon-list-tree",
                 )}
               />
             </button>

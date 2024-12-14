@@ -216,5 +216,8 @@
       }
     }
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "neverthrow": "^8.1.1"
+  }
 }

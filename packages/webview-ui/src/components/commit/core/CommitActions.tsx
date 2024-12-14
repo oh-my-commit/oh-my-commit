@@ -1,10 +1,7 @@
 import { stagedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { useAtom } from "jotai";
 import React from "react";
-import {
-  commitDetailAtom,
-  commitMessageAtom,
-} from "@/state/atoms/commit.message";
+import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 
 interface CommitActionsProps {
   onCommit?: () => void;
@@ -15,8 +12,8 @@ export const CommitActions: React.FC<CommitActionsProps> = ({
   onCommit,
   onCancel,
 }) => {
-  const [message] = useAtom(commitMessageAtom);
-  const [detail] = useAtom(commitDetailAtom);
+  const [message] = useAtom(commitTitleAtom);
+  const [detail] = useAtom(commitBodyAtom);
   const [stagedFiles] = useAtom(stagedFilesAtom);
 
   const isValid = message.trim().length > 0 && stagedFiles.length > 0;

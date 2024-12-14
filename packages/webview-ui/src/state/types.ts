@@ -1,17 +1,18 @@
 // 核心业务类型
 
-import { FileStatus } from "@yaac/shared";
+import { GitChangeType } from "@yaac/shared";
 
 export interface FileChange {
   path: string;
-  type: FileStatus;
-  status: FileStatus;
+  type: GitChangeType;
+  status: GitChangeType;
   content?: string;
   oldContent?: string;
   additions: number;
   deletions: number;
   displayName?: string;
   diff?: string;
+  isStaged?: boolean;
 }
 
 // 核心提交状态
