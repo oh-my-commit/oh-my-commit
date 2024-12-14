@@ -5,7 +5,7 @@ import { DiffResult } from "simple-git";
 import * as vscode from "vscode";
 import { presetAiProviders, Provider } from "../types/provider";
 import { isEqual, pick } from "lodash-es";
-import { AppManager } from "@/core"; // Add this line
+import { AppManager } from "@/core"; 
 
 import { YaacProvider } from "../providers/yaac";
 
@@ -13,16 +13,14 @@ export const getWorkspaceConfig = () =>
   vscode.workspace.getConfiguration("yaac");
 
 export class AcManager {
-  private app: AppManager; // Add this line
+  private app: AppManager; 
   private currentModelId: string | undefined;
   private providers: Provider[] = [
-    new YaacProvider(), // 添加更多providers
+    new YaacProvider(), 
   ];
 
   constructor(app: AppManager) {
-    // Modify this line
     this.app = app;
-    // 从配置中加载provider状态和当前model
     this.loadConfig();
   }
 
@@ -30,11 +28,12 @@ export class AcManager {
     const models: Model[] = [];
 
     for (const provider of this.providers) {
-      if (!provider.enabled) {
+      const providerClass = provider.constructor as typeof Provider;
+      if (!providerClass.enabled) {
         continue;
       }
 
-      const providerModels = provider.models.map((model) => ({
+      const providerModels = providerClass.models.map((model: Model) => ({
         ...model,
         description: `${model.description} (API Required)`,
       }));
@@ -63,15 +62,12 @@ export class AcManager {
       return false;
     }
 
-    // 立即更新 currentModelId 并通知订阅者
     this.currentModelId = modelId;
 
-    // 保存到配置
     await getWorkspaceConfig().update("ac.model", modelId, true);
 
     const aiProviderId = model.aiProviderId as string;
     if (presetAiProviders.includes(aiProviderId)) {
-      // todo: 检查是否有 yaac.apiKeys.${aiProviderId}，没有的话就引导用户去填写
       const configureNow = "Configure Now";
       const configureLater = "Configure Later";
       const response = await vscode.window.showErrorMessage(
@@ -95,7 +91,7 @@ export class AcManager {
     }
 
     const provider = this.providers.find(
-      (p) => p.id === currentModel.providerId
+      (p) => (p.constructor as typeof Provider).id === currentModel.providerId
     );
     if (!provider) {
       throw new Error(`Provider ${currentModel.providerId} not found`);
@@ -107,13 +103,13 @@ export class AcManager {
   }
 
   public registerProvider(provider: Provider) {
-    if (!this.providers.find((p) => p.id === provider.id)) {
+    if (!this.providers.find((p) => (p.constructor as typeof Provider).id === (provider.constructor as typeof Provider).id)) {
       this.providers.push(provider);
     }
   }
 
   public removeProvider(providerId: string) {
-    const index = this.providers.findIndex((p) => p.id === providerId);
+    const index = this.providers.findIndex((p) => (p.constructor as typeof Provider).id === providerId);
     if (index !== -1) {
       this.providers.splice(index, 1);
     }
@@ -124,18 +120,16 @@ export class AcManager {
   }
 
   private loadConfig() {
-    // 加载 provider 状态
     const providersConfig = this.config.get<Record<string, boolean>>(
       "providers",
       {}
     );
 
-    // 设置 providers 的启用状态
     for (const provider of this.providers) {
-      provider.enabled = providersConfig[provider.id] ?? true;
+      const providerClass = provider.constructor as typeof Provider;
+      providerClass.enabled = providersConfig[providerClass.id] ?? true;
     }
 
-    // 加载当前 model
     this.currentModelId = this.config.get<string>("ac.model");
   }
 
@@ -153,7 +147,7 @@ export class AcManager {
       "yaac.ac.model",
       target,
       (raw, target) => {
-        const keys = Object.keys(target).filter((k) => k !== "default"); // except default
+        const keys = Object.keys(target).filter((k) => k !== "default"); 
         return isEqual(pick(raw, keys), pick(target, keys));
       }
     );

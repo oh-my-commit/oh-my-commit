@@ -28,9 +28,9 @@ title = "Highlight Active File in FileItem Component"
 abstract = "为 FileItem 组件添加当前打开文件的高亮显示功能"
 
 [conversations.006]
-slug = "improve-diff-viewer"
-title = "Improve DiffViewer Scroll Experience"
-abstract = "优化文件差异查看器的滚动体验，解决切换文件时视图跳动的问题"
+slug = "provider-interface"
+title = "Provider Interface Implementation"
+abstract = "Fixing TypeScript compilation errors related to Provider interface implementation"
 
 [conversations.007]
 slug = "vscode_plugin_architecture"

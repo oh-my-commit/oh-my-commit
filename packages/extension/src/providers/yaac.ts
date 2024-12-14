@@ -1,7 +1,7 @@
 import { Model } from "@/types/model";
 import { CommitData } from "@yaac/shared/src/types/commit";
 import { GenerateCommitResult } from "@yaac/shared/types/commit";
-import { Result, Ok, Err } from "neverthrow";
+import { Ok, Err } from "neverthrow";
 import { DiffResult } from "simple-git";
 import { Provider } from "../types/provider";
 import Anthropic from "@anthropic-ai/sdk";

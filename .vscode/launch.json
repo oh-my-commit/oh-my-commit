@@ -11,7 +11,8 @@
       "env": {
         "NODE_ENV": "development",
         "VSCODE_DEBUG": "true"
-      }
+      },
+      "envFile": "${workspaceFolder}/.env"
     }
   ],
   "compounds": []
