@@ -37,20 +37,22 @@ export const FileItem: React.FC<FileItemProps> = ({
   return (
     <div
       className={cn(
-        "group flex items-center h-[32px] select-none",
-        selected
-          ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]"
-          : "hover:bg-[var(--vscode-list-hoverBackground)]"
+        "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out",
+        isOpen
+          ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)] shadow-sm"
+          : selected
+          ? "bg-[var(--vscode-list-inactiveSelectionBackground)] text-[var(--vscode-list-inactiveSelectionForeground)]"
+          : "hover:bg-[var(--vscode-list-hoverBackground)] active:bg-[var(--vscode-list-activeSelectionBackground)] active:bg-opacity-50"
       )}
       onClick={handleClick}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
-        <div className="flex items-center justify-center w-8 h-full">
+        <div className="flex items-center justify-center w-8 h-full transition-opacity duration-100">
           <Checkbox checked={selected} onChange={handleSelect} />
         </div>
 
         <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5 transition-colors duration-100">
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
@@ -74,7 +76,7 @@ export const FileItem: React.FC<FileItemProps> = ({
 
       <div
         className={cn(
-          "flex items-center gap-2 px-2 text-[12px] tabular-nums",
+          "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100",
           !selected && "text-[var(--vscode-descriptionForeground)]"
         )}
       >

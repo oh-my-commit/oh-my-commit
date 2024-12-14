@@ -1,0 +1,26 @@
+version = "3.5.0"
+
+created_at = "2024-12-15T03:22:17+08:00"
+title = "Highlight Active File in FileItem Component"
+abstract = "为 FileItem 组件添加当前打开文件的高亮显示功能"
+
+[[rounds]]
+number = 1
+time = "2024-12-15T03:22:17+08:00"
+query_essence = "实现 FileItem 组件的当前文件高亮功能"
+key_points = """
+- 需要在 FileItem 组件中添加当前文件高亮逻辑
+- 使用 VSCode 的 list-inactiveSelectionBackground 和 list-inactiveSelectionForeground 变量实现高亮效果
+- 通过 isOpen 属性控制高亮状态
+- 保持与 VSCode 原生列表样式一致
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-15T03:25:52+08:00"
+query_essence = "调整文件高亮样式的层级关系"
+key_points = """
+- 将当前打开文件(isOpen)的高亮样式调整为最明显的效果
+- 选中状态(selected)的样式改为较淡的效果
+- 优化视觉层级，使当前打开的文件更容易识别
+"""

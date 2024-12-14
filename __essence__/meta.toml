@@ -166,3 +166,8 @@ abstract = "分析 simple-git 库中的文件状态变更标识数据结构，�
 slug = "diffview_position"
 title = "Adjust DiffView Position"
 abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与VSCode风格保持一致"
+
+[conversations.037]
+slug = "fileitem_uiux"
+title = "FileItem UI/UX Enhancement"
+abstract = "改进文件项组件的选中状态和交互效果"
