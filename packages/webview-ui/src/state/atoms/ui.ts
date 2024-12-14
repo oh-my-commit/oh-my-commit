@@ -1,18 +1,16 @@
 import { atomWithStorage } from "@/lib/storage";
-import { VIEW_MODES } from "../../components/commit/file-changes/constants";
+import { ViewMode, VIEW_MODES } from "@/components/commit/file-changes/constants";
 
-// View mode atom with persistence
-export const viewModeAtom = atomWithStorage<keyof typeof VIEW_MODES>({
-  key: "yaac.webview.viewMode",
-  defaultValue: "flat",
-  storageType: "both",
+// 视图模式
+export const viewModeAtom = atomWithStorage<ViewMode>({
+  key: "yaac.commit.view-mode",
+  defaultValue: VIEW_MODES.FLAT,
 });
 
-// Diff viewer settings
+// 是否换行
 export const diffWrapLineAtom = atomWithStorage<boolean>({
-  key: "yaac.webview.diffWrapLine",
-  defaultValue: true,
-  storageType: "both",
+  key: "yaac.commit.diff-wrap-line",
+  defaultValue: false,
 });
 
 export type UiMode = "silent" | "notification" | "window" | "panel";

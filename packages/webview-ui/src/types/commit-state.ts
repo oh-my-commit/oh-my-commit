@@ -1,11 +1,11 @@
-import { FileChange } from "@yaac/shared";
+import { GitFileChange } from "@yaac/shared";
 
 export interface CommitState {
   message: string;
   detail: string;
-  files: FileChange[];
+  files: GitFileChange[];
   selectedFiles: string[];
-  filesChanged: FileChange[];
+  filesChanged: GitFileChange[];
 }
 
 export interface CommitStats {

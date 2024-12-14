@@ -1,0 +1,50 @@
+version = "3.0.0"
+
+# Conversation Metadata
+created_at = "2024-12-14T13:12:33+08:00"
+title = "typescript_errors"
+abstract = "Resolving multiple TypeScript errors across components including import issues and type definition problems"
+
+# Conversation History
+[[rounds]]
+number = 1
+time = "2024-12-14T13:12:33+08:00"
+query_essence = "TypeScript compilation errors in multiple components"
+key_points = """
+- Multiple import errors found in components (stagedFilesAtom, FileStatus)
+- Type definition issues with DiffFile properties
+- Missing module declarations for components
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-14T13:14:52+08:00"
+query_essence = "Continuing TypeScript error fixes"
+key_points = """
+- Updated imports from FileStatus to GitFileStatus
+- Updated imports from FileChange to GitFileChange
+- Fixed stagedFilesAtom to changedFilesAtom
+- Updated type references in multiple components
+"""
+
+[[rounds]]
+number = 3
+time = "2024-12-14T13:14:52+08:00"
+query_essence = "Fixing DiffViewer and TreeNode types"
+key_points = """
+- Updated DiffViewer to use correct GitFileChange properties
+- Updated TreeNode type to use GitFileChange instead of DiffFile
+- Fixed file path access in DiffViewer
+- Verified get-directory-stats utility compatibility
+"""
+
+[[rounds]]
+number = 4
+time = "2024-12-14T13:19:18+08:00"
+query_essence = "Refactoring FileChanges to remove staged/unstaged separation"
+key_points = """
+- Removed staged/unstaged separation from FileChanges
+- Updated GroupedView to use GitFileChange directly
+- Simplified file filtering and selection logic
+- Removed TreeView component as it's no longer needed
+"""

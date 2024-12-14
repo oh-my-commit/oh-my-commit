@@ -1,10 +1,21 @@
-import { FileChange } from './git';
+import {
+  DiffResult,
+  DiffResultBinaryFile,
+  DiffResultNameStatusFile,
+  DiffResultTextFile,
+} from "simple-git";
+import { GitFileChange } from "./git";
+
+export type DiffFile =
+  | DiffResultTextFile
+  | DiffResultBinaryFile
+  | DiffResultNameStatusFile;
 
 export interface TreeNode {
   path: string;
-  type: 'file' | 'directory';
+  type: "file" | "directory";
   children?: TreeNode[];
-  fileInfo?: FileChange;
+  fileInfo?: GitFileChange;
   expanded?: boolean;
   displayName: string;
 }

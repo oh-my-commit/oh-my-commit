@@ -8,8 +8,8 @@ export interface FlatViewProps {
   selectedPath?: string;
   searchQuery?: string;
   hasOpenedFile: boolean;
-  onSelect?: (path: string) => void;
-  onFileClick?: (path: string, metaKey: boolean) => void;
+  onSelect: (path: string) => void;
+  onFileClick: (path: string) => void;
   renderStatus?: (file: FileChange & { isStaged: boolean }) => React.ReactNode;
   className?: string;
 }
@@ -22,18 +22,17 @@ export const FlatView: React.FC<FlatViewProps> = ({
   hasOpenedFile,
   onSelect,
   onFileClick,
-  renderStatus,
   className,
 }) => {
   return (
-    <div className={className ? className : "flex flex-col gap-0.5 p-2"}>
-      {files.map((file, index) => (
+    <div className={className}>
+      {files.map((file) => (
         <FileItem
-          key={index}
+          key={file.path}
           file={file}
-          isSelected={selectedFiles.includes(file.path)}
-          isActive={file.path === selectedPath}
-          hasOpenedFile={hasOpenedFile}
+          selected={selectedFiles.includes(file.path)}
+          isOpen={selectedPath === file.path}
+          viewMode="flat"
           searchQuery={searchQuery}
           onSelect={onSelect}
           onClick={onFileClick}

@@ -5,92 +5,83 @@ import {
 import { searchQueryAtom } from "@/state/atoms/search";
 import { diffWrapLineAtom } from "@/state/atoms/ui";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { twj } from "tw-to-css";
-import { HighlightText } from "../common/HighlightText";
+import { HighlightText } from "@/components/common/HighlightText";
 import cn from "classnames";
+import { GitChangeSummary, GitFileChange } from "@yaac/shared";
 
-export const DiffViewer: React.FC = () => {
-  const [lastOpenedFilePath, setLastOpenedFile] = useAtom(
-    lastOpenedFilePathAtom,
-  );
-  const [files] = useAtom(changedFilesAtom);
-  const [searchQuery] = useAtom(searchQueryAtom);
+interface DiffViewerProps {
+  files: GitChangeSummary | null;
+  lastOpenedFilePath: string | null;
+}
+
+export const DiffViewer: React.FC<DiffViewerProps> = ({ files, lastOpenedFilePath }) => {
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
+  const [searchQuery] = useAtom(searchQueryAtom);
+  const setLastOpenedFilePath = useSetAtom(lastOpenedFilePathAtom);
 
-  const selectedFile = files?.files.find((f) => f.file === lastOpenedFilePath);
-
-  const { language, processedDiff, lineTypes } = useMemo(() => {
-    if (!selectedFile?.diff) {
-      return { language: "text", processedDiff: "", lineTypes: [] };
-    }
-
-    // Detect file language from extension
-    const ext = selectedFile.path.split(".").pop()?.toLowerCase() || "text";
-    const languageMap: Record<string, string> = {
-      ts: "typescript",
-      tsx: "typescript",
-      js: "javascript",
-      jsx: "javascript",
-      py: "python",
-      // Add more mappings as needed
-    };
-
-    // Process diff to add line classes
-    const lines: string[] = selectedFile.diff.split("\n");
-    const processedLines = lines.map((line) => {
-      if (line.startsWith("+")) {
-        return { line: line.slice(1), type: "addition" };
-      } else if (line.startsWith("-")) {
-        return { line: line.slice(1), type: "deletion" };
-      }
-      return { line, type: "context" };
-    });
-
-    return {
-      language: languageMap[ext] || "text",
-      processedDiff: processedLines.map(({ line }) => line).join("\n"),
-      lineTypes: processedLines.map(({ type }) => type),
-    };
-  }, [selectedFile]);
+  const selectedFile = files?.files?.find((f) => f.path === lastOpenedFilePath) as GitFileChange | undefined;
 
   if (!selectedFile) {
+    return null;
+  }
+
+  if (!selectedFile.diff) {
     return (
-      <div className="diff-viewer empty">
-        <p>Select a file to view changes</p>
+      <div className="flex items-center justify-center h-full">
+        No diff available
       </div>
     );
   }
 
+  const ext = selectedFile.path.split(".").pop()?.toLowerCase() || "text";
+  const language = useMemo(() => getLanguageFromExtension(ext), [ext]);
+
+  const renderDiff = () => {
+    if (!selectedFile.diff) {
+      return null;
+    }
+
+    const lines: string[] = selectedFile.diff.split("\n");
+    return lines.map((line, index) => {
+      let className = "pl-2";
+      if (line.startsWith("+")) {
+        className += " bg-green-100 dark:bg-green-900";
+      } else if (line.startsWith("-")) {
+        className += " bg-red-100 dark:bg-red-900";
+      }
+
+      return (
+        <div key={index} className={className}>
+          <HighlightText text={line} highlight="" />
+        </div>
+      );
+    });
+  };
+
   const handleClose = () => {
-    setLastOpenedFile("");
+    setLastOpenedFilePath("");
   };
 
   return (
-    <div className="grow overflow-hidden h-full flex flex-col">
-      <div className="flex-none h-[35px] flex items-center justify-between pl-[20px] pr-2 select-none border-b border-panel-border">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-sidebar-title">
-              Changes
-            </span>
-            <span className="text-[11px] opacity-80">
-              ({selectedFile.path})
-            </span>
-          </div>
-          <div className="flex items-center gap-2 text-[12px] tabular-nums">
-            <span className="text-git-added-fg" title="Lines added">
-              +{selectedFile.additions}
-            </span>
-            <span className="text-git-deleted-fg" title="Lines removed">
-              -{selectedFile.deletions}
-            </span>
-          </div>
+    <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between p-2 border-b">
+        <div className="flex items-center space-x-2">
+          <span className="font-medium">
+            {selectedFile.path}
+          </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center space-x-4">
+          <span className="text-green-600 dark:text-green-400">
+            +{selectedFile.additions}
+          </span>
+          <span className="text-red-600 dark:text-red-400">
+            -{selectedFile.deletions}
+          </span>
           <VSCodeButton
             appearance="icon"
             title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
@@ -117,103 +108,22 @@ export const DiffViewer: React.FC = () => {
           </VSCodeButton>
         </div>
       </div>
-
-      <div className="flex-1 overflow-x-auto">
-        <SyntaxHighlighter
-          language={language}
-          wrapLines={true}
-          renderer={({ rows, stylesheet, useInlineStyles }: any) => {
-            const renderNode = (
-              node: any,
-              searchText?: string,
-            ): React.ReactNode => {
-              if (node.type === "text") {
-                if (searchText) {
-                  return (
-                    <HighlightText
-                      text={String(node.value || "")}
-                      highlight={searchText}
-                    />
-                  );
-                }
-                return node.value;
-              }
-
-              if (node.tagName) {
-                const props: any = { ...node.properties };
-                if (useInlineStyles) {
-                  props.style = props.style || {};
-                  if (wrapLine) {
-                    props.style.whiteSpace = "pre-wrap";
-                  }
-                } else {
-                  props.className = props.className?.join(" ");
-                }
-
-                return React.createElement(
-                  node.tagName,
-                  props,
-                  node.children?.map((child: any, i: number) => (
-                    <React.Fragment key={i}>
-                      {renderNode(child, searchText)}
-                    </React.Fragment>
-                  )),
-                );
-              }
-
-              return null;
-            };
-
-            return (
-              <pre
-                className={"leading-[20px] py-3"}
-                style={{
-                  ...stylesheet['pre[class*="language-"]'],
-                  whiteSpace: wrapLine ? "pre-wrap" : "pre",
-                }}
-              >
-                <code style={stylesheet['code[class*="language-"]']}>
-                  {rows.map((row: { children?: any[] }, i: number) => {
-                    const type = lineTypes[i];
-                    const lineProps = {
-                      key: i,
-                      style: {
-                        display: "block",
-                        width: "100%",
-                        backgroundColor:
-                          type === "addition"
-                            ? "var(--vscode-diffEditor-insertedTextBackground)"
-                            : type === "deletion"
-                              ? "var(--vscode-diffEditor-removedTextBackground)"
-                              : "",
-                      },
-                      className: "group hover:bg-editor-line-highlight",
-                    };
-
-                    return (
-                      <div {...lineProps}>
-                        {row.children?.map((child: any, j: number) => (
-                          <React.Fragment key={j}>
-                            {renderNode(child, searchQuery || undefined)}
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    );
-                  })}
-                </code>
-              </pre>
-            );
-          }}
-          customStyle={{}}
-          showLineNumbers
-          lineNumberStyle={twj(
-            "min-w-[3em] pl-4 pr-4 text-right select-none text-editor-line-number",
-          )}
-          style={vscDarkPlus}
-        >
-          {processedDiff || "No changes"}
-        </SyntaxHighlighter>
+      <div className="flex-1 overflow-auto">
+        <div className="font-mono text-sm">{renderDiff()}</div>
       </div>
     </div>
   );
+};
+
+const getLanguageFromExtension = (ext: string): string => {
+  const languageMap: Record<string, string> = {
+    ts: "typescript",
+    tsx: "typescript",
+    js: "javascript",
+    jsx: "javascript",
+    py: "python",
+    // Add more mappings as needed
+  };
+
+  return languageMap[ext] || "text";
 };

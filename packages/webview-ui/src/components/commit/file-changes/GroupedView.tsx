@@ -1,75 +1,74 @@
-import { Checkbox } from "@/components/common/Checkbox";
 import { cn } from "@/lib/utils";
-import type { FileChange } from "@/state/types";
-
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
-import { FileStatus } from "@yaac/shared";
+import { GitFileChange, GitFileStatus } from "@yaac/shared";
 
 export interface GroupedViewProps {
-  groupedFiles: Record<FileStatus, FileChange[]>;
+  files: GitFileChange[];
   selectedFiles: string[];
   selectedPath?: string;
   searchQuery?: string;
-  hasOpenedFile: boolean;
-  onSelect?: (path: string) => void;
-  onFileClick?: (path: string, metaKey: boolean) => void;
-  onGroupSelect?: (files: FileChange[], checked: boolean) => void;
+  onSelect: (path: string) => void;
+  onFileClick: (path: string) => void;
 }
 
 export const GroupedView: React.FC<GroupedViewProps> = ({
-  groupedFiles,
+  files,
   selectedFiles,
   selectedPath,
   searchQuery,
-  hasOpenedFile,
   onSelect,
   onFileClick,
-  onGroupSelect,
 }) => {
-  const renderFileGroup = (status: FileStatus) => {
+  // Group files by status
+  const groupedFiles = React.useMemo(() => {
+    const groups: Record<GitFileStatus, GitFileChange[]> = {
+      untracked: [],
+      modified: [],
+      deleted: [],
+      renamed: [],
+      copied: [],
+      unmerged: [],
+    };
+
+    files.forEach((file) => {
+      groups[file.status].push(file);
+    });
+
+    return groups;
+  }, [files]);
+
+  const renderFileGroup = (status: GitFileStatus) => {
     const files = groupedFiles[status];
     if (files.length === 0) return null;
 
     return (
-      <div key={status} className="flex flex-col">
-        <div className="flex items-center h-[22px] px-2 group">
-          <div className="flex items-center gap-2 flex-1">
-            <div className="flex items-center justify-center w-8 h-full">
-              <Checkbox
-                checked={files.every((file: FileChange) =>
-                  selectedFiles.includes(file.path)
-                )}
-                onChange={(checked) => onGroupSelect?.(files, checked)}
-                className="opacity-60 group-hover:opacity-100 transition-opacity"
-              />
-            </div>
-            <span
-              className={cn(
-                "flex items-center gap-1 text-[12px] font-medium cursor-default",
-                STATUS_COLORS[status]
-              )}
-            >
-              {STATUS_LABELS[status]}
-              <span className="text-[11px] opacity-80">({files.length})</span>
-            </span>
-          </div>
+      <div key={status} className="mb-4">
+        <div
+          className={cn(
+            "flex items-center gap-2 px-3 py-1.5 text-xs font-medium",
+            STATUS_COLORS[status],
+          )}
+        >
+          <span>{STATUS_LABELS[status]}</span>
+          <span className="text-[var(--vscode-descriptionForeground)]">
+            ({files.length})
+          </span>
         </div>
 
-        <div className="flex flex-col">
-          {files.map((file: FileChange) => (
-            <div key={file.path} className="pl-[40px]">
-              <FileItem
-                file={file}
-                isSelected={selectedFiles.includes(file.path)}
-                isActive={file.path === selectedPath}
-                hasOpenedFile={hasOpenedFile}
-                searchQuery={searchQuery}
-                onSelect={onSelect}
-                onClick={onFileClick}
-              />
-            </div>
+        <div className="space-y-0.5">
+          {files.map((file) => (
+            <FileItem
+              key={file.path}
+              file={file}
+              selected={selectedFiles.includes(file.path)}
+              isOpen={selectedPath === file.path}
+              viewMode="grouped"
+              searchQuery={searchQuery}
+              onClick={() => onFileClick(file.path)}
+              onSelect={() => onSelect(file.path)}
+            />
           ))}
         </div>
       </div>
@@ -78,7 +77,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
 
   return (
     <div className="flex flex-col">
-      {(Object.keys(groupedFiles) as FileStatus[]).map((status) =>
+      {(Object.keys(groupedFiles) as GitFileStatus[]).map((status) =>
         renderFileGroup(status)
       )}
     </div>

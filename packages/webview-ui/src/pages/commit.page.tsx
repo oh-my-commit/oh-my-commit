@@ -2,18 +2,60 @@ import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
 import { useCloseWindow } from "@/hooks/use-close-window";
-import { changedFilesAtom } from "@/state/atoms/commit.changed-files";
+import {
+  changedFilesAtom,
+  lastOpenedFilePathAtom,
+  selectedFilesAtom,
+} from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { CommitEvent } from "@yaac/shared/types/commit";
-import { useSetAtom } from "jotai";
+import { GitChangeType, GitChangeSummary, GitFileChange } from "@yaac/shared";
+import type { DiffResultTextFile } from "simple-git";
+import { useAtom } from "jotai";
 import React, { useEffect } from "react";
 
-export function CommitPage() {
-  const setTitle = useSetAtom(commitTitleAtom);
-  const setBody = useSetAtom(commitBodyAtom);
-  const setChangedFiles = useSetAtom(changedFilesAtom);
+interface GitDiffFile {
+  file: string;
+  changes: number;
+  insertions: number;
+  deletions: number;
+  binary: boolean;
+  type: "A" | "D" | "M";
+}
+
+export const CommitPage = () => {
+  const [title, setTitle] = useAtom(commitTitleAtom);
+  const [body, setBody] = useAtom(commitBodyAtom);
+  const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  );
 
   useCloseWindow();
+
+  const convertDiffToFileChange = (file: GitDiffFile): GitFileChange => {
+    return {
+      path: file.file,
+      status:
+        file.type === "A"
+          ? GitChangeType.Added
+          : file.type === "D"
+          ? GitChangeType.Deleted
+          : GitChangeType.Modified,
+      additions: file.binary ? 0 : file.insertions,
+      deletions: file.binary ? 0 : file.deletions,
+      diff: "",
+    };
+  };
+
+  const handleSetSelectedFiles = (files: string[]) => {
+    setSelectedFiles(files);
+  };
+
+  const handleSetLastOpenedFilePath = (path: string | null) => {
+    setLastOpenedFilePath(path);
+  };
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -26,9 +68,19 @@ export function CommitPage() {
         case "commit":
           const data = message.data as CommitEvent;
           if (data.message.isOk()) {
-            setTitle(data.message.value.title); // Clear commit message after successful commit
-            setBody(data.message.value.body ?? ""); // Clear commit detail
-            setChangedFiles(data.diffSummary); // Update changed files with new diff summary
+            setTitle(data.message.value.title);
+            setBody(data.message.value.body ?? "");
+            if (data.diffSummary.files) {
+              const summary: GitChangeSummary = {
+                changed: data.diffSummary.files.length,
+                files: data.diffSummary.files.map((file) =>
+                  convertDiffToFileChange(file as GitDiffFile)
+                ),
+                insertions: data.diffSummary.insertions,
+                deletions: data.diffSummary.deletions,
+              };
+              setChangedFiles(summary);
+            }
           }
           break;
       }
@@ -36,15 +88,21 @@ export function CommitPage() {
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [setTitle, setBody, setChangedFiles]);
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-grow overflow-auto">
+      <div className="flex-1 overflow-auto">
         <CommitMessage />
-        <FileChanges />
+        <FileChanges
+          changedFiles={changedFiles}
+          selectedFiles={selectedFiles}
+          setSelectedFiles={handleSetSelectedFiles}
+          lastOpenedFilePath={lastOpenedFilePath}
+          setLastOpenedFilePath={handleSetLastOpenedFilePath}
+        />
       </div>
       <Footer />
     </div>
   );
-}
+};
