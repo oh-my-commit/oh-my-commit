@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { HighlightText } from "@/components/common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
@@ -25,6 +25,9 @@ export const FileItem: React.FC<FileItemProps> = ({
   onSelect,
   onClick,
 }) => {
+  const [pathMatchCount, setPathMatchCount] = React.useState(0);
+  const [contentMatchCount, setContentMatchCount] = React.useState(0);
+
   const handleSelect = () => {
     onSelect(file.path);
   };
@@ -33,6 +36,37 @@ export const FileItem: React.FC<FileItemProps> = ({
     e.stopPropagation();
     onClick(file.path);
   };
+
+  // 检查文件内容中的匹配
+  useEffect(() => {
+    if (!searchQuery || !file.diff) {
+      setContentMatchCount(0);
+      return;
+    }
+
+    const lines = file.diff.split('\n');
+    let count = 0;
+    try {
+      const regex = new RegExp(searchQuery, 'gi');
+      lines.forEach(line => {
+        const matches = line.match(regex);
+        if (matches) {
+          count += matches.length;
+        }
+      });
+    } catch (error) {
+      // 如果正则表达式无效，忽略错误
+      console.warn('Invalid regex in search query:', error);
+    }
+    
+    setContentMatchCount(count);
+  }, [searchQuery, file.diff]);
+
+  // 只要有任何一种匹配就显示
+  const hasMatch = !searchQuery || pathMatchCount > 0 || contentMatchCount > 0;
+  if (!hasMatch) {
+    return null;
+  }
 
   return (
     <div
@@ -69,6 +103,7 @@ export const FileItem: React.FC<FileItemProps> = ({
             <HighlightText
               text={viewMode === "tree" ? basename(file.path) : file.path}
               highlight={searchQuery}
+              onMatchCount={setPathMatchCount}
             />
           </span>
         </div>
@@ -80,6 +115,26 @@ export const FileItem: React.FC<FileItemProps> = ({
           !selected && "text-[var(--vscode-descriptionForeground)]"
         )}
       >
+        {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
+          <span className={cn(
+            "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1", 
+            selected && "opacity-80"
+          )}>
+            {pathMatchCount > 0 && (
+              <span title="Matches in filename">
+                {pathMatchCount}
+              </span>
+            )}
+            {pathMatchCount > 0 && contentMatchCount > 0 && (
+              <span className="opacity-40">·</span>
+            )}
+            {contentMatchCount > 0 && (
+              <span title="Matches in content">
+                {contentMatchCount}
+              </span>
+            )}
+          </span>
+        )}
         {file.additions > 0 && (
           <span className={cn("text-git-added-fg", selected && "text-inherit")}>
             +{file.additions}

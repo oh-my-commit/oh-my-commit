@@ -5,19 +5,24 @@ interface HighlightTextProps {
   text: string;
   highlight: string;
   className?: string;
+  onMatchCount?: (count: number) => void;
 }
 
 export const HighlightText: React.FC<HighlightTextProps> = ({
   text,
   highlight,
   className,
+  onMatchCount,
 }) => {
   if (!highlight?.trim()) {
+    onMatchCount?.(0);
     return <span className={className}>{text}</span>;
   }
 
   try {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+    const matchCount = (parts.length - 1) / 2;
+    onMatchCount?.(matchCount);
 
     return (
       <span className={className}>

@@ -63,13 +63,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
       return <EmptyState />;
     }
 
-    const filteredFiles = searchQuery
-      ? changedFiles.files.filter((file) =>
-          file.path.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      : changedFiles.files;
-
-    const fileChanges: FileChange[] = filteredFiles.map((file) => ({
+    // 移除文件名过滤，让 FileItem 组件处理所有匹配逻辑
+    const fileChanges: FileChange[] = changedFiles.files.map((file) => ({
       ...file,
       type: file.status,
       isStaged: false,
