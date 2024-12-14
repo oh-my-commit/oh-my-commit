@@ -1,0 +1,47 @@
+version = "3.0.0"
+
+# Conversation Metadata
+created_at = "2024-12-09T10:23:15+08:00"
+title = "Webpack Source Map Configuration"
+abstract = "Resolving webpack source map configuration and TypeScript compilation issues in webview development environment"
+
+# Conversation History
+[[rounds]]
+number = 1
+time = "2024-12-09T10:23:15+08:00"
+query_essence = "Understanding source map differences"
+key_points = """
+- Explained differences between inline-source-map and source-map
+- Analyzed webpack configuration options
+- Discussed impact on development debugging
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-09T10:24:30+08:00"
+query_essence = "Debugging source code mapping issues"
+key_points = """
+- Modified source-map type to eval-source-map
+- Optimized ts-loader configuration
+- Enhanced source code information preservation
+"""
+
+[[rounds]]
+number = 3
+time = "2024-12-09T10:28:46+08:00"
+query_essence = "Resolving TypeScript compilation errors"
+key_points = """
+- Re-enabled transpileOnly option
+- Override noEmit setting in ts-loader
+- Maintained sourceMap for debugging
+"""
+
+[[rounds]]
+number = 4
+time = "2024-12-09T10:30:44+08:00"
+query_essence = "Fixing CSP restrictions in VSCode Webview"
+key_points = """
+- Addressed Content Security Policy limitations
+- Reverted to inline-source-map from eval-source-map
+- Maintained debugging capabilities while ensuring CSP compliance
+"""

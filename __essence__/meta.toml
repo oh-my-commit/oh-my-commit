@@ -1,111 +1,138 @@
 name = "YAAC - Your Artistic Aide for Commits"
 version = "2.0.0"
-abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（YAAC），帮助开发者快速实现高质量的代码提交。\n"
+abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（YAAC），帮助开发者快速实现高质量的代码提交。"
 
 [conversations.001]
 slug = "tsc"
-abstract = ""
+title = "TypeScript Compilation Fixes"
+abstract = "Resolving TypeScript compilation errors in TreeView and FileChanges components"
 
 [conversations.002]
 slug = "pack"
-abstract = ""
+title = "Webpack Source Map Configuration"
+abstract = "Resolving webpack source map configuration and TypeScript compilation issues in webview development environment"
 
 [conversations.003]
 slug = "fix-treeview-expandeddirs"
+title = "Fix TreeView expandedDirs type error XXX"
 abstract = ""
 
 [conversations.004]
 slug = "add-init-animation"
+title = "Add cool initialization animation"
 abstract = ""
 
 [conversations.005]
 slug = "vscode_plugin_architecture"
+title = ""
 abstract = ""
 
 [conversations.007]
 slug = "vscode_extension_generator"
+title = ""
 abstract = ""
 
 [conversations.008]
 slug = "git_implementation"
+title = ""
 abstract = ""
 
 [conversations.009]
 slug = "vscode_extension_setup"
+title = ""
 abstract = ""
 
 [conversations.010]
 slug = "yeoman_generator_behavior"
+title = ""
 abstract = ""
 
 [conversations.011]
 slug = "vscode_task_error"
+title = ""
 abstract = ""
 
 [conversations.012]
 slug = "vscode_extension_webview"
+title = ""
 abstract = ""
 
 [conversations.013]
 slug = "vscode_extension_enhancement"
+title = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
 abstract = ""
 
 [conversations.014]
 slug = "vscode_plugin_error"
+title = ""
 abstract = ""
 
 [conversations.016]
 slug = "vscode_debug"
+title = ""
 abstract = ""
 
 [conversations.018]
 slug = "vscode_plugin_debug_solution"
+title = ""
 abstract = ""
 
 [conversations.019]
 slug = "vscode_extension_template_debug"
+title = ""
 abstract = ""
 
 [conversations.020]
 slug = "webview_floating"
+title = ""
 abstract = ""
 
 [conversations.021]
 slug = "ui_mode_enhancement"
+title = ""
 abstract = ""
 
 [conversations.022]
 slug = "fix_editor_actions"
+title = ""
 abstract = ""
 
 [conversations.023]
 slug = "refactor_window_state"
+title = ""
 abstract = ""
 
 [conversations.024]
 slug = "simplify_window_state"
+title = ""
 abstract = ""
 
 [conversations.025]
 slug = "webview_titlebar_hide"
+title = ""
 abstract = ""
 
 [conversations.026]
 slug = "logger_enhancement"
+title = ""
 abstract = ""
 
 [conversations.027]
 slug = "simplify_fileitem"
+title = ""
 abstract = ""
 
 [conversations.028]
 slug = "optimize_file_changes_layout"
-abstract = "Optimize File Changes Layout"
+title = "Optimize File Changes Layout"
+abstract = ""
 
 [conversations.029]
 slug = "diffviewer_no_changes"
-abstract = "DiffViewer No Changes Investigation"
+title = "DiffViewer No Changes Investigation 3"
+abstract = ""
 
 [conversations.030]
 slug = "git_changes"
-abstract = "Git Changes Implementation"
+title = "Git Changes Implementation"
+abstract = "Implementing GitCore functionality for handling git changes and project structure setup"

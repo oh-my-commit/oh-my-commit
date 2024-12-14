@@ -1,6 +1,7 @@
 id = "add-init-animation"
 created_at = "2024-12-09T19:02:18+08:00"
 updated_at = "2024-12-09T19:09:33+08:00"
+title = "Add cool initialization animation"
 
 [status]
 state = "completed"

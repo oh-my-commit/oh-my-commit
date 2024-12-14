@@ -1,6 +1,7 @@
 id = "fix-treeview-expandeddirs"
 created_at = "2024-12-09T10:57:11+08:00"
 updated_at = "2024-12-09T11:06:42+08:00"
+title = "Fix TreeView expandedDirs type error XXX"
 
 [status]
 state = "ongoing"
