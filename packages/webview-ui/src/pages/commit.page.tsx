@@ -50,15 +50,14 @@ export const CommitPage = () => {
     const handleMessage = (event: MessageEvent<CommitEvent>) => {
       logger.info("Received message event:", event);
       const { data } = event;
+      logger.info("Received message data:", data);
       switch (data.type) {
         case "commit":
           logger.info("received commit event: ", data);
-          if (data.message.isOk()) {
-            setTitle(data.message.value.title);
-            setBody(data.message.value.body ?? "");
-            if (data.diffSummary.files) {
-              setChangedFiles(data.diffSummary);
-            }
+          setTitle(data.message.title);
+          setBody(data.message.body ?? "");
+          if (data.diffSummary.files) {
+            setChangedFiles(data.diffSummary);
           }
           break;
         default:

@@ -50,10 +50,14 @@ export class QuickCommitCommand implements VscodeCommand {
       const diffSummary = await this.gitService.getDiffSummary();
       const changeSummary = await this.gitService.getChangeSummary();
       const message = await this.acManager.generateCommit(diffSummary);
+      if (!message.isOk()) {
+        this.logger.error("Failed to generate commit message");
+        return;
+      }
       const commitData: CommitEvent = {
         type: "commit",
         diffSummary: changeSummary,
-        message,
+        message: message.value,
       };
       this.logger.info(this.name, commitData);
 

@@ -1,5 +1,11 @@
 import { useAtom } from "jotai";
-import React, { useCallback, useMemo, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { EmptyState } from "./EmptyState";
 import { FileStats } from "./FileStats";
 import { FlatView } from "./FlatView";
@@ -99,35 +105,19 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <Section>
-        <div className="flex items-center gap-2">
-          <SearchBar />
-          <div
-            ref={useRef<HTMLDivElement>(null)}
-            className="relative"
-            onMouseEnter={() => useState(true)}
-            onMouseLeave={() => useState(false)}
-          >
-            <InfoIcon />
-            {useState(false) && (
-              <div className="absolute z-10 p-2 text-xs bg-white border rounded shadow-lg">
-                <p>Search in file paths</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </Section>
+    <Section title="Changed Files">
+      <div className="flex items-center gap-2">
+        <SearchBar />
+      </div>
 
-      <Section className="flex-1 overflow-auto">
-        {renderFileView()}
-      </Section>
+      {renderFileView()}
 
       {lastOpenedFilePath && (
-        <Section>
-          <DiffViewer files={changedFiles} lastOpenedFilePath={lastOpenedFilePath} />
-        </Section>
+        <DiffViewer
+          files={changedFiles}
+          lastOpenedFilePath={lastOpenedFilePath}
+        />
       )}
-    </div>
+    </Section>
   );
 };

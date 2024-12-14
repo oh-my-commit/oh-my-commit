@@ -151,3 +151,8 @@ abstract = "改进 Git 暂存文件的展示功能，提供更详细的文件变
 slug = "commit_event_logging"
 title = "Commit Event Logging Debug"
 abstract = "调试提交事件的日志记录问题，分析为什么 commit.page.tsx 中的日志没有执行"
+
+[conversations.034]
+slug = "commit_page_state"
+title = "Commit Page State Update Issue"
+abstract = "解决提交页面状态更新问题，包括消息接收后状态未更新的问题"
