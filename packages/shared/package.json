@@ -15,13 +15,17 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/*"]
+      "*": [
+        "./dist/*"
+      ]
     }
   },
   "scripts": {
     "build": "tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "simple-git": "^3.27.0"
+  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }

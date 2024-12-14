@@ -1,6 +1,5 @@
 export interface VscodeCommand {
-    id: string
+  id: string;
 
-    execute(): Promise<void>;
-
+  execute(): Promise<void>;
 }

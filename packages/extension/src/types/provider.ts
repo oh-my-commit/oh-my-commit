@@ -1,4 +1,6 @@
 import { Model } from "@/types/model";
+import { GenerateCommitResult } from "@yaac/shared/types/commit";
+import { DiffResult } from "simple-git";
 
 export const presetAiProviders = [
   "openai",
@@ -8,11 +10,6 @@ export const presetAiProviders = [
   "groq",
 ];
 
-export interface CommitGenerationResult {
-  message: string;
-  error?: string;
-}
-
 export interface Provider {
   id: string; // 提供者ID
   name: string; // 提供者名称
@@ -20,5 +17,5 @@ export interface Provider {
   enabled: boolean; // 是否启用
   models: Model[];
 
-  generateCommit(diff: string, model: Model): Promise<CommitGenerationResult>;
+  generateCommit(diff: DiffResult, model: Model): Promise<GenerateCommitResult>;
 }

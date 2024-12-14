@@ -1,16 +1,13 @@
 // Types
-export * from './types/git';
-export * from './types/tree-node';
-export * from './types/commit-state';
+export * from "./types/git";
+export * from "./types/tree-node";
+export * from "./types/commit-state";
 
 // Constants
-export * from './constants/git';
-
-// Utils
-export * from './utils/git';
+export * from "./constants/git";
 
 // Config
-export * from './config/validation';
+export * from "./config/validation";
 
 // Events
-export * from './events/git';
+export * from "./events/git";

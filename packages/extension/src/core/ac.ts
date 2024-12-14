@@ -1,5 +1,7 @@
 import { Model } from "@/types/model";
 import { openPreferences } from "@/utils/open-preference";
+import { GenerateCommitResult } from "@yaac/shared/types/commit";
+import { DiffResult } from "simple-git";
 import * as vscode from "vscode";
 import { OpenAIProvider } from "../providers/open-ai";
 import { presetAiProviders, Provider } from "../types/provider";
@@ -74,7 +76,7 @@ export class AcManager {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater
+        configureLater,
       );
 
       if (response === configureNow) {
@@ -85,16 +87,14 @@ export class AcManager {
     return true;
   }
 
-  public async generateCommit(
-    diff: string
-  ): Promise<{ message: string; error?: string }> {
+  public async generateCommit(diff: DiffResult): Promise<GenerateCommitResult> {
     const currentModel = await this.getCurrentModel();
     if (!currentModel) {
       throw new Error("No model selected");
     }
 
     const provider = this.providers.find(
-      (p) => p.id === currentModel.providerId
+      (p) => p.id === currentModel.providerId,
     );
     if (!provider) {
       throw new Error(`Provider ${currentModel.providerId} not found`);
@@ -121,7 +121,7 @@ export class AcManager {
     const config = getWorkspaceConfig();
     const providersConfig = config.get<Record<string, boolean>>(
       "providers",
-      {}
+      {},
     );
 
     // 设置 providers 的启用状态
@@ -149,7 +149,7 @@ export class AcManager {
       (raw, target) => {
         const keys = Object.keys(target).filter((k) => k !== "default"); // except default
         return isEqual(pick(raw, keys), pick(target, keys));
-      }
+      },
     );
   }
 }

@@ -1,21 +1,7 @@
+import { GitChangeSummary } from "@yaac/shared";
 import * as fs from "fs";
 import * as path from "path";
 import simpleGit, { SimpleGit } from "simple-git";
-
-export interface CommitChanges {
-  staged: {
-    files: string[];
-    additions: number;
-    deletions: number;
-    summary: string;
-  };
-  unstaged: {
-    files: string[];
-    additions: number;
-    deletions: number;
-    summary: string;
-  };
-}
 
 export class GitCore {
   protected git: SimpleGit;
@@ -24,6 +10,28 @@ export class GitCore {
   constructor(workspaceRoot: string) {
     this.workspaceRoot = workspaceRoot;
     this.git = simpleGit(workspaceRoot);
+  }
+
+  /**
+   * 本版本为简洁设计，只做 AMD 的分析处理
+   * 因此在执行本函数之前，我们会先执行 stageAll
+   * @returns GitChangeSummary 包含文件变更列表和统计信息
+   */
+  public async getDiffSummary(): Promise<GitChangeSummary> {
+    return this.git.diffSummary();
+  }
+
+  /**
+   * 暂存所有变更，包括新增、修改和删除的文件
+   * 这是 getChanges 的前置操作，确保所有文件都被 git 跟踪
+   * @throws 如果暂存操作失败
+   */
+  public async stageAll(): Promise<void> {
+    try {
+      await this.git.add("-A");
+    } catch (error) {
+      throw new Error(`Failed to stage changes: ${error}`);
+    }
   }
 
   public async isGitRepository(): Promise<boolean> {
@@ -37,34 +45,6 @@ export class GitCore {
       return stats.isDirectory();
     } catch (error) {
       return false;
-    }
-  }
-
-  public async getStagedDiff(): Promise<string> {
-    console.log("[GitCore] Getting diff");
-    try {
-      const result = await this.git.diff(["--staged"]);
-      console.log("[GitCore] Got diff, length:", result?.length || 0);
-      return result;
-    } catch (error) {
-      console.error("[GitCore] Failed to get diff:", error);
-      throw error;
-    }
-  }
-
-  public async getUnstagedDiff(): Promise<string> {
-    try {
-      return await this.git.diff();
-    } catch (error) {
-      throw new Error(`Failed to get unstaged changes: ${error}`);
-    }
-  }
-
-  public async stageAll(): Promise<void> {
-    try {
-      await this.git.add("-A");
-    } catch (error) {
-      throw new Error(`Failed to stage changes: ${error}`);
     }
   }
 
@@ -85,45 +65,6 @@ export class GitCore {
       return !status.isClean();
     } catch (error) {
       throw new Error(`Failed to check changes: ${error}`);
-    }
-  }
-
-  public async getChangedFiles(): Promise<CommitChanges> {
-    try {
-      const status = await this.git.status();
-      const stagedDiffSummary = await this.git.diffSummary(["--staged"]);
-      const unstagedDiffSummary = await this.git.diffSummary();
-
-      const createSummary = (files: { file: string; insertions?: number; deletions?: number; }[]) => {
-        return files.map((file) => {
-          if ("insertions" in file && "deletions" in file) {
-            return `${file.file} | +${file.insertions} -${file.deletions}`;
-          } else if ("insertions" in file) {
-            return `${file.file} | +${file.insertions}`;
-          } else if ("deletions" in file) {
-            return `${file.file} | -${file.deletions}`;
-          } else {
-            return `${file.file}`;
-          }
-        }).join("\n");
-      };
-
-      return {
-        staged: {
-          files: status.staged,
-          additions: stagedDiffSummary.insertions,
-          deletions: stagedDiffSummary.deletions,
-          summary: createSummary(stagedDiffSummary.files)
-        },
-        unstaged: {
-          files: status.modified,
-          additions: unstagedDiffSummary.insertions,
-          deletions: unstagedDiffSummary.deletions,
-          summary: createSummary(unstagedDiffSummary.files)
-        }
-      };
-    } catch (error) {
-      throw new Error(`Failed to get changed files: ${error}`);
     }
   }
 
