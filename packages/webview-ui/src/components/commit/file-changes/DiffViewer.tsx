@@ -19,12 +19,17 @@ interface DiffViewerProps {
   lastOpenedFilePath: string | null;
 }
 
-export const DiffViewer: React.FC<DiffViewerProps> = ({ files, lastOpenedFilePath }) => {
+export const DiffViewer: React.FC<DiffViewerProps> = ({
+  files,
+  lastOpenedFilePath,
+}) => {
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
   const setLastOpenedFilePath = useSetAtom(lastOpenedFilePathAtom);
 
-  const selectedFile = files?.files?.find((f) => f.path === lastOpenedFilePath) as GitFileChange | undefined;
+  const selectedFile = files?.files?.find(
+    (f) => f.path === lastOpenedFilePath
+  ) as GitFileChange | undefined;
 
   if (!selectedFile) {
     return null;
@@ -41,75 +46,81 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ files, lastOpenedFilePat
   const ext = selectedFile.path.split(".").pop()?.toLowerCase() || "text";
   const language = useMemo(() => getLanguageFromExtension(ext), [ext]);
 
-  const renderDiff = () => {
-    if (!selectedFile.diff) {
-      return null;
-    }
-
-    const lines: string[] = selectedFile.diff.split("\n");
-    return lines.map((line, index) => {
-      let className = "pl-2";
-      if (line.startsWith("+")) {
-        className += " bg-green-100 dark:bg-green-900";
-      } else if (line.startsWith("-")) {
-        className += " bg-red-100 dark:bg-red-900";
-      }
-
-      return (
-        <div key={index} className={className}>
-          <HighlightText text={line} highlight="" />
-        </div>
-      );
-    });
-  };
+  const lines: string[] = selectedFile.diff.split("\n");
 
   const handleClose = () => {
     setLastOpenedFilePath("");
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-2 border-b">
-        <div className="flex items-center space-x-2">
-          <span className="font-medium">
-            {selectedFile.path}
-          </span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-green-600 dark:text-green-400">
-            +{selectedFile.additions}
-          </span>
-          <span className="text-red-600 dark:text-red-400">
-            -{selectedFile.deletions}
-          </span>
-          <VSCodeButton
-            appearance="icon"
-            title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
-            onClick={() => setWrapLine(!wrapLine)}
-            className={cn(
-              wrapLine && "bg-[var(--vscode-toolbar-activeBackground)]",
-              "rounded-[3px]",
-            )}
-          >
-            <i
+    <div className="grid grid-rows-[auto_1fr] h-full overflow-hidden">
+      <div className="border-b min-w-0">
+        <div className="flex items-center justify-between p-2 gap-2">
+          <div className="min-w-0">
+            <span className="font-medium truncate block">
+              {selectedFile.path}
+            </span>
+          </div>
+          <div className="flex items-center gap-4 shrink-0">
+            <span className="text-green-600 dark:text-green-400">
+              +{selectedFile.additions}
+            </span>
+            <span className="text-red-600 dark:text-red-400">
+              -{selectedFile.deletions}
+            </span>
+            <VSCodeButton
+              appearance="icon"
+              title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
+              onClick={() => setWrapLine(!wrapLine)}
               className={cn(
-                "codicon codicon-word-wrap transition-transform",
-                wrapLine && "opacity-100",
-                !wrapLine && "opacity-60 hover:opacity-100",
+                wrapLine && "bg-[var(--vscode-toolbar-activeBackground)]",
+                "rounded-[3px]"
               )}
-            />
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="icon"
-            title="Close diff view"
-            onClick={handleClose}
-          >
-            <span className="codicon codicon-close" />
-          </VSCodeButton>
+            >
+              <i
+                className={cn(
+                  "codicon codicon-word-wrap transition-transform",
+                  wrapLine && "opacity-100",
+                  !wrapLine && "opacity-60 hover:opacity-100"
+                )}
+              />
+            </VSCodeButton>
+            <VSCodeButton
+              appearance="icon"
+              title="Close diff view"
+              onClick={handleClose}
+            >
+              <span className="codicon codicon-close" />
+            </VSCodeButton>
+          </div>
         </div>
       </div>
-      <div className="flex-1 overflow-auto">
-        <div className="font-mono text-sm">{renderDiff()}</div>
+      <div className="min-w-0 overflow-auto">
+        <table className="w-full border-collapse">
+          <tbody
+            className={cn(
+              "font-mono text-sm",
+              wrapLine && "whitespace-pre-wrap",
+              !wrapLine && "whitespace-pre"
+            )}
+          >
+            {lines.map((line, index) => {
+              const bgColor = line.startsWith("+")
+                ? "bg-green-100 dark:bg-green-900"
+                : line.startsWith("-")
+                ? "bg-red-100 dark:bg-red-900"
+                : "";
+
+              return (
+                <tr key={index}>
+                  <td className={cn("pl-2", bgColor)}>
+                    <HighlightText text={line} highlight="" />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

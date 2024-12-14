@@ -97,8 +97,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   return (
     <Section title="Changed Files">
-      <div className="flex flex-row h-full relative">
-        <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px]">
+      <div className="flex flex-col sm:flex-row h-full relative">
+        <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
           <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
             <SearchBar />
           </div>
@@ -114,7 +114,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
           )}
         >
           {lastOpenedFilePath && (
-            <div className="sticky top-0 overflow-y-auto vscode-scrollbar">
+            <div className="sticky top-0 h-full">
               <DiffViewer
                 files={changedFiles}
                 lastOpenedFilePath={lastOpenedFilePath}
