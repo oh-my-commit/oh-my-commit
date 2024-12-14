@@ -1,21 +1,14 @@
 /**
- * Git 文件状态 // todo: 以后再做这么细
- */
-export type GitFileStatus =
-  | "untracked" // 未跟踪的新文件
-  | "modified" // 已修改
-  | "deleted" // 已删除
-  | "renamed" // 已重命名
-  | "copied" // 已复制
-  | "unmerged"; // 未合并
-
-/**
- * Git 文件变更类型 (AMD)
+ * Git 文件变更类型
  */
 export enum GitChangeType {
   Added = "added", // A: 新增的文件
   Modified = "modified", // M: 修改的文件
   Deleted = "deleted", // D: 删除的文件
+  Renamed = "renamed", // R: 重命名的文件
+  Copied = "copied", // C: 复制的文件
+  Unmerged = "unmerged", // U: 未合并的文件
+  Unknown = "unknown", // ?: 未知状态
 }
 
 /**

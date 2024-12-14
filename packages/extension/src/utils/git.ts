@@ -32,6 +32,7 @@ export class GitCore {
     // 获取每个文件的详细信息
     for (const file of diff.files) {
       const fileDiff = await this.git.diff(["--staged", "--", file.file]);
+      // @ts-expect-error 未来可以支持 content
       const content = await this.getFileContent(file.file);
 
       // 使用类型断言来处理 insertions 和 deletions
@@ -73,26 +74,38 @@ export class GitCore {
    * @param file 文件信息
    * @returns GitChangeType 文件变更类型
    */
-  private async getChangeType(file: DiffResult["files"][0]): Promise<GitChangeType> {
-    // 获取文件状态
+  private async getChangeType(
+    file: DiffResult["files"][0]
+  ): Promise<GitChangeType> {
     const status = await this.git.status();
-    const fileStatus = status.files.find(f => f.path === file.file);
-    
+    const fileStatus = status.files.find((f) => f.path === file.file);
+
     if (!fileStatus) {
-      return GitChangeType.Modified; // 默认为修改
+      return GitChangeType.Unknown;
     }
 
-    // 根据 git status 的结果判断
-    if (fileStatus.working_dir === 'D' || fileStatus.index === 'D') {
+    // 组合 index 和 working_dir 状态
+    const indexState = fileStatus.index;
+    const workingState = fileStatus.working_dir;
+
+    // 处理重命名和复制的情况
+    if (indexState === "R") return GitChangeType.Renamed;
+    if (indexState === "C") return GitChangeType.Copied;
+
+    // 处理未合并的冲突
+    if (indexState === "U" || workingState === "U") {
+      return GitChangeType.Unmerged;
+    }
+
+    // 处理基本状态
+    if (indexState === "A" || workingState === "A") return GitChangeType.Added;
+    if (indexState === "D" || workingState === "D")
       return GitChangeType.Deleted;
-    }
-    if (fileStatus.working_dir === 'A' || fileStatus.index === 'A') {
-      return GitChangeType.Added;
-    }
-    
-    return GitChangeType.Modified;
-  }
+    if (indexState === "M" || workingState === "M")
+      return GitChangeType.Modified;
 
+    return GitChangeType.Unknown;
+  }
   /**
    * 暂存所有变更，包括新增、修改和删除的文件
    * 这是 getChanges 的前置操作，确保所有文件都被 git 跟踪

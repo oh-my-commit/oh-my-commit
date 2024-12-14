@@ -4,6 +4,6 @@
 > cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify
 
 
-  [37m../../dist/[0m[1mextension.js[0m  [36m210.7kb[0m
+  [37m../../dist/[0m[1mextension.js[0m  [36m216.8kb[0m
 
-⚡ [32mDone in 39ms[0m
+⚡ [32mDone in 51ms[0m
