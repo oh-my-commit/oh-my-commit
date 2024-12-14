@@ -13,6 +13,7 @@ import { GitChangeType, GitChangeSummary, GitFileChange } from "@yaac/shared";
 import type { DiffResultTextFile } from "simple-git";
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 interface GitDiffFile {
   file: string;
@@ -67,6 +68,7 @@ export const CommitPage = () => {
 
         case "commit":
           const data = message.data as CommitEvent;
+          logger.info("received commit event: ", data);
           if (data.message.isOk()) {
             setTitle(data.message.value.title);
             setBody(data.message.value.body ?? "");
