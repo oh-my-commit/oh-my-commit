@@ -1,42 +1,111 @@
-name = "Essence AI Control System"
-
+name = "YAAC - Your Artistic Aide for Commits"
 version = "2.0.0"
+abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（YAAC），帮助开发者快速实现高质量的代码提交。\n"
 
-abstract = """
-A VSCode extension project that helps developers write better commit messages using AI. The conversations track the development process from initial setup to feature implementation and bug fixes. Key milestones include:
-1. Project scaffolding with TypeScript and pnpm
-2. VSCode extension core functionality development
-3. Integration of Yeoman generator for project templates
-4. UI/UX improvements including TreeView and DiffViewer
-5. Continuous debugging and optimization
-"""
+[conversations.001]
+slug = "tsc"
+abstract = ""
 
-[conversations]
-"001" = { slug = "tsc", abstract = "TypeScript compiler configuration and setup" }
-"002" = { slug = "pack", abstract = "Package management and bundling setup" }
-"003" = { slug = "fix-treeview-expandeddirs", abstract = "Fix for VSCode TreeView expanded directories state" }
-"004" = { slug = "add-init-animation", abstract = "Adding initialization animation to improve UX" }
-"005" = { slug = "vscode_plugin_architecture", abstract = "VSCode plugin architecture design and implementation" }
-"006" = { slug = "yeoman_pnpm_integration", abstract = "Integration of Yeoman generator with pnpm" }
-"007" = { slug = "vscode_extension_generator", abstract = "VSCode extension generator development" }
-"008" = { slug = "git_implementation", abstract = "Git functionality implementation" }
-"009" = { slug = "vscode_extension_setup", abstract = "VSCode extension initial setup and configuration" }
-"010" = { slug = "yeoman_generator_behavior", abstract = "Customizing Yeoman generator behavior" }
-"011" = { slug = "DiffViewer_Enhancement", abstract = "Improvements to the diff viewer functionality" }
-"012" = { slug = "webview_floating", abstract = "Optimize Quick Commit window display with floating mode" }
-"013" = { slug = "vscode_task_error", abstract = "Debugging and fixing VSCode task errors" }
-"014" = { slug = "vscode_extension_webview", abstract = "Implementation of VSCode extension webview" }
-"015" = { slug = "vscode_extension_enhancement", abstract = "General enhancements to VSCode extension" }
-"016" = { slug = "vscode_plugin_error", abstract = "Troubleshooting VSCode plugin errors" }
-"017" = { slug = "ui_mode_enhancement", abstract = "Enhancing UI modes with silent, notification, window, and panel options" }
-"018" = { slug = "project_template", abstract = "Setting up project template structure" }
-"019" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
-"020" = { slug = "template_test", abstract = "VSCode debugging setup and configuration" }
-"021" = { slug = "git_changes", abstract = "Implementation of GitCore.getChanges functionality" }
-"022" = { slug = "development_log", abstract = "Development progress and changelog" }
-"023" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
-"024" = { slug = "fix_editor_actions", abstract = "Fix editor actions location restoration" }
-"025" = { slug = "refactor_window_state", abstract = "Refactor window state management" }
-"026" = { slug = "simplify_window_state", abstract = "Further simplify window state management" }
-"027" = { slug = "webview_titlebar_hide", abstract = "Hide titlebar in VSCode webview" }
-"028" = { slug = "logger_enhancement", abstract = "Add file and line information to logger" }
+[conversations.002]
+slug = "pack"
+abstract = ""
+
+[conversations.003]
+slug = "fix-treeview-expandeddirs"
+abstract = ""
+
+[conversations.004]
+slug = "add-init-animation"
+abstract = ""
+
+[conversations.005]
+slug = "vscode_plugin_architecture"
+abstract = ""
+
+[conversations.007]
+slug = "vscode_extension_generator"
+abstract = ""
+
+[conversations.008]
+slug = "git_implementation"
+abstract = ""
+
+[conversations.009]
+slug = "vscode_extension_setup"
+abstract = ""
+
+[conversations.010]
+slug = "yeoman_generator_behavior"
+abstract = ""
+
+[conversations.011]
+slug = "vscode_task_error"
+abstract = ""
+
+[conversations.012]
+slug = "vscode_extension_webview"
+abstract = ""
+
+[conversations.013]
+slug = "vscode_extension_enhancement"
+abstract = ""
+
+[conversations.014]
+slug = "vscode_plugin_error"
+abstract = ""
+
+[conversations.016]
+slug = "vscode_debug"
+abstract = ""
+
+[conversations.018]
+slug = "vscode_plugin_debug_solution"
+abstract = ""
+
+[conversations.019]
+slug = "vscode_extension_template_debug"
+abstract = ""
+
+[conversations.020]
+slug = "webview_floating"
+abstract = ""
+
+[conversations.021]
+slug = "ui_mode_enhancement"
+abstract = ""
+
+[conversations.022]
+slug = "fix_editor_actions"
+abstract = ""
+
+[conversations.023]
+slug = "refactor_window_state"
+abstract = ""
+
+[conversations.024]
+slug = "simplify_window_state"
+abstract = ""
+
+[conversations.025]
+slug = "webview_titlebar_hide"
+abstract = ""
+
+[conversations.026]
+slug = "logger_enhancement"
+abstract = ""
+
+[conversations.027]
+slug = "simplify_fileitem"
+abstract = ""
+
+[conversations.028]
+slug = "optimize_file_changes_layout"
+abstract = "Optimize File Changes Layout"
+
+[conversations.029]
+slug = "diffviewer_no_changes"
+abstract = "DiffViewer No Changes Investigation"
+
+[conversations.030]
+slug = "git_changes"
+abstract = "Git Changes Implementation"
