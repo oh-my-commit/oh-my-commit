@@ -35,21 +35,6 @@ export const CommitPage = () => {
 
   useCloseWindow();
 
-  const convertDiffToFileChange = (file: GitDiffFile): GitFileChange => {
-    return {
-      path: file.file,
-      status:
-        file.type === "A"
-          ? GitChangeType.Added
-          : file.type === "D"
-          ? GitChangeType.Deleted
-          : GitChangeType.Modified,
-      additions: file.binary ? 0 : file.insertions,
-      deletions: file.binary ? 0 : file.deletions,
-      diff: "",
-    };
-  };
-
   const handleSetSelectedFiles = (files: string[]) => {
     setSelectedFiles(files);
   };
@@ -59,29 +44,16 @@ export const CommitPage = () => {
   };
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      const message = event.data;
-
-      switch (message.type) {
-        case "git-changes":
-          break;
-
+    const handleMessage = (event: MessageEvent<CommitEvent>) => {
+      const { data } = event;
+      switch (data.type) {
         case "commit":
-          const data = message.data as CommitEvent;
           logger.info("received commit event: ", data);
           if (data.message.isOk()) {
             setTitle(data.message.value.title);
             setBody(data.message.value.body ?? "");
             if (data.diffSummary.files) {
-              const summary: GitChangeSummary = {
-                changed: data.diffSummary.files.length,
-                files: data.diffSummary.files.map((file) =>
-                  convertDiffToFileChange(file as GitDiffFile)
-                ),
-                insertions: data.diffSummary.insertions,
-                deletions: data.diffSummary.deletions,
-              };
-              setChangedFiles(summary);
+              setChangedFiles(data.diffSummary);
             }
           }
           break;

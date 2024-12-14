@@ -1,5 +1,4 @@
 import {
-  DiffResult,
   DiffResultBinaryFile,
   DiffResultNameStatusFile,
   DiffResultTextFile,

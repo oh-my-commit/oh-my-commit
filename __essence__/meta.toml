@@ -141,3 +141,8 @@ abstract = "Implementing GitCore functionality for handling git changes and proj
 slug = "typescript_errors"
 title = "typescript_errors"
 abstract = "Resolving multiple TypeScript errors across components including import issues and type definition problems"
+
+[conversations.032]
+slug = "git_staged_files"
+title = "Git Staged Files Enhancement"
+abstract = "改进 Git 暂存文件的展示功能，提供更详细的文件变更信息"
