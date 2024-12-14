@@ -66,7 +66,7 @@ export class AcManager {
     this.currentModelId = modelId;
 
     // 保存到配置
-    await getWorkspaceConfig().update("currentModel", modelId, true);
+    await getWorkspaceConfig().update("ac.model", modelId, true);
 
     const aiProviderId = model.aiProviderId as string;
     if (presetAiProviders.includes(aiProviderId)) {
@@ -76,7 +76,7 @@ export class AcManager {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater,
+        configureLater
       );
 
       if (response === configureNow) {
@@ -94,7 +94,7 @@ export class AcManager {
     }
 
     const provider = this.providers.find(
-      (p) => p.id === currentModel.providerId,
+      (p) => p.id === currentModel.providerId
     );
     if (!provider) {
       throw new Error(`Provider ${currentModel.providerId} not found`);
@@ -121,7 +121,7 @@ export class AcManager {
     const config = getWorkspaceConfig();
     const providersConfig = config.get<Record<string, boolean>>(
       "providers",
-      {},
+      {}
     );
 
     // 设置 providers 的启用状态
@@ -149,7 +149,7 @@ export class AcManager {
       (raw, target) => {
         const keys = Object.keys(target).filter((k) => k !== "default"); // except default
         return isEqual(pick(raw, keys), pick(target, keys));
-      },
+      }
     );
   }
 }
