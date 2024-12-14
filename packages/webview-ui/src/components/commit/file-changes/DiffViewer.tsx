@@ -139,7 +139,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
               return (
                 <tr key={index}>
                   <td className={cn("pl-2 py-[1px]", bgColor)}>
-                    <HighlightText text={line} highlight="" />
+                    <HighlightText text={line} highlight={searchQuery || ""} />
                   </td>
                 </tr>
               );
