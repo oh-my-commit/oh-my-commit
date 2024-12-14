@@ -72,6 +72,17 @@ export class QuickCommitCommand implements VscodeCommand {
     // Create webview panel
     const panel = await this.webviewManager.createWebviewPanel();
 
+    // 等待 webview 加载完成
+    await new Promise<void>((resolve) => {
+      const handler = panel.webview.onDidReceiveMessage((message) => {
+        if (message.command === "webview-ready") {
+          this.logger.info("Webview is ready to receive messages");
+          handler.dispose();
+          resolve();
+        }
+      });
+    });
+
     // Send initial data to webview
     const commitEvent: CommitEvent = {
       type: "commit",

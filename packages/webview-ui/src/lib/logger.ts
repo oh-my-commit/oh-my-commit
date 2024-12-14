@@ -96,6 +96,9 @@ class Logger {
     const rawMessage = this.formatMessage(...args);
     const messageWithLocation = `[${file}:${line}:${column}] ${rawMessage}`;
 
+    // 同时输出到控制台，方便调试
+    console.log(`[${level}] ${messageWithLocation}`);
+
     this.vscode.postMessage({
       command: "log",
       payload: {

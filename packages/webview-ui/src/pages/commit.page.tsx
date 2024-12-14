@@ -14,6 +14,7 @@ import type { DiffResultTextFile } from "simple-git";
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";
 import { logger } from "@/lib/logger";
+import { getVSCodeAPI } from "@/lib/storage";
 
 interface GitDiffFile {
   file: string;
@@ -44,7 +45,10 @@ export const CommitPage = () => {
   };
 
   useEffect(() => {
+    logger.info("Setting up message event listener");
+
     const handleMessage = (event: MessageEvent<CommitEvent>) => {
+      logger.info("Received message event:", event);
       const { data } = event;
       switch (data.type) {
         case "commit":
@@ -57,12 +61,26 @@ export const CommitPage = () => {
             }
           }
           break;
+        default:
+          logger.info("Unknown event type:", data.type);
       }
     };
 
+    // 添加事件监听器
     window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [setTitle, setBody, setChangedFiles]);
+    logger.info("Message event listener added");
+
+    // 通知 VSCode 扩展 webview 已准备就绪
+    const vscode = getVSCodeAPI();
+    vscode.postMessage({ command: "webview-ready" });
+    logger.info("Sent webview-ready message");
+
+    // 清理函数
+    return () => {
+      logger.info("Removing message event listener");
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
