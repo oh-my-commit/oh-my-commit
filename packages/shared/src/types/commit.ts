@@ -9,6 +9,6 @@ export type GenerateCommitResult = Result<CommitData, string>;
 
 export type CommitEvent = {
   type: "commit";
-  message: GenerateCommitResult;
+  message: CommitData;
   diffSummary: GitChangeSummary;
 };
