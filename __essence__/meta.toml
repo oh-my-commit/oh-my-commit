@@ -1,6 +1,6 @@
 name = "Essence AI Control System"
 
-version = "14.0.0"
+version = "2.0.0"
 
 abstract = """
 A VSCode extension project that helps developers write better commit messages using AI. The conversations track the development process from initial setup to feature implementation and bug fixes. Key milestones include:
@@ -31,8 +31,8 @@ A VSCode extension project that helps developers write better commit messages us
 "017" = { slug = "ui_mode_enhancement", abstract = "Enhancing UI modes with silent, notification, window, and panel options" }
 "018" = { slug = "project_template", abstract = "Setting up project template structure" }
 "019" = { slug = "vscode_debug", abstract = "VSCode debugging setup and configuration" }
-"020" = { slug = "template_test", abstract = "Testing framework for project templates" }
-"021" = { slug = "vscode_plugin_debug_solution", abstract = "Solutions for VSCode plugin debugging issues" }
+"020" = { slug = "template_test", abstract = "VSCode debugging setup and configuration" }
+"021" = { slug = "git_changes", abstract = "Implementation of GitCore.getChanges functionality" }
 "022" = { slug = "development_log", abstract = "Development progress and changelog" }
 "023" = { slug = "vscode_extension_template_debug", abstract = "Debugging VSCode extension template launch issues" }
 "024" = { slug = "fix_editor_actions", abstract = "Fix editor actions location restoration" }

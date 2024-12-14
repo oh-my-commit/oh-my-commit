@@ -1,0 +1,17 @@
+version = "2.0.0"
+
+# 会话基本信息
+title = "Git Changes Implementation"
+created_at = "2024-12-14T10:22:35+0800"
+status = "active"
+
+# 对话记录
+[[rounds]]
+number = 1
+time = "2024-12-14T10:22:35+0800"
+query_essence = "Implementing getChanges function in GitCore"
+key_points = """
+- Started new conversation for implementing git changes functionality
+- Setting up project structure according to new guidelines
+- Focus on GitCore.getChanges implementation
+"""
