@@ -21,6 +21,6 @@
       "@yaac/shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src", "../shared/src"],
-  "exclude": ["node_modules", ".vscode-test", "webview-ui"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

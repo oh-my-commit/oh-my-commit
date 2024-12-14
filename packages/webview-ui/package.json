@@ -2,6 +2,7 @@
   "name": "@yaac/webview",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "main": "../../dist/webview-ui/main.js",
   "scripts": {
     "build": "webpack --mode production",

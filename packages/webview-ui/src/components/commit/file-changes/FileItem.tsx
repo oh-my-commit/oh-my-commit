@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { HighlightText } from "@/components/common/HighlightText";
-import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS, VIEW_MODES } from "./constants";
+import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
 import { GitFileChange } from "@yaac/shared";
 import { Checkbox } from "../../common/Checkbox";
 import { basename } from "path";
@@ -46,10 +46,7 @@ export const FileItem: React.FC<FileItemProps> = ({
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
         <div className="flex items-center justify-center w-8 h-full">
-          <Checkbox
-            checked={selected}
-            onChange={handleSelect}
-          />
+          <Checkbox checked={selected} onChange={handleSelect} />
         </div>
 
         <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
@@ -68,7 +65,7 @@ export const FileItem: React.FC<FileItemProps> = ({
 
           <span className="truncate">
             <HighlightText
-              text={viewMode === VIEW_MODES.GROUPED ? basename(file.path) : file.path}
+              text={viewMode === "tree" ? basename(file.path) : file.path}
               highlight={searchQuery}
             />
           </span>

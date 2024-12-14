@@ -156,3 +156,8 @@ abstract = "调试提交事件的日志记录问题，分析为什么 commit.pag
 slug = "commit_page_state"
 title = "Commit Page State Update Issue"
 abstract = "解决提交页面状态更新问题，包括消息接收后状态未更新的问题"
+
+[conversations.035]
+slug = "git_file_status"
+title = "Git File Status Structure"
+abstract = "分析 simple-git 库中的文件状态变更标识数据结构，以及在项目中的应用实现"

@@ -1,10 +1,10 @@
 import { atomWithStorage } from "@/lib/storage";
-import { ViewMode, VIEW_MODES } from "@/components/commit/file-changes/constants";
+import { ViewMode } from "@/components/commit/file-changes/constants";
 
 // 视图模式
 export const viewModeAtom = atomWithStorage<ViewMode>({
   key: "yaac.commit.view-mode",
-  defaultValue: VIEW_MODES.FLAT,
+  defaultValue: "flat",
 });
 
 // 是否换行

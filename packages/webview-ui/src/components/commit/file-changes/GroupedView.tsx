@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
-import { GitFileChange, GitFileStatus } from "@yaac/shared";
+import { GitFileChange, GitChangeType } from "@yaac/shared";
 
 export interface GroupedViewProps {
   files: GitFileChange[];
@@ -21,65 +21,53 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
   onSelect,
   onFileClick,
 }) => {
-  // Group files by status
+  // 按状态分组文件
   const groupedFiles = React.useMemo(() => {
-    const groups: Record<GitFileStatus, GitFileChange[]> = {
-      untracked: [],
-      modified: [],
-      deleted: [],
-      renamed: [],
-      copied: [],
-      unmerged: [],
-    };
+    const groups = new Map<GitChangeType, GitFileChange[]>();
 
     files.forEach((file) => {
-      groups[file.status].push(file);
+      const status = file.status;
+      if (!groups.has(status)) {
+        groups.set(status, []);
+      }
+      groups.get(status)?.push(file);
     });
 
     return groups;
   }, [files]);
 
-  const renderFileGroup = (status: GitFileStatus) => {
-    const files = groupedFiles[status];
-    if (files.length === 0) return null;
-
-    return (
-      <div key={status} className="mb-4">
-        <div
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 text-xs font-medium",
-            STATUS_COLORS[status],
-          )}
-        >
-          <span>{STATUS_LABELS[status]}</span>
-          <span className="text-[var(--vscode-descriptionForeground)]">
-            ({files.length})
-          </span>
-        </div>
-
-        <div className="space-y-0.5">
-          {files.map((file) => (
-            <FileItem
-              key={file.path}
-              file={file}
-              selected={selectedFiles.includes(file.path)}
-              isOpen={selectedPath === file.path}
-              viewMode="grouped"
-              searchQuery={searchQuery}
-              onClick={() => onFileClick(file.path)}
-              onSelect={() => onSelect(file.path)}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div className="flex flex-col">
-      {(Object.keys(groupedFiles) as GitFileStatus[]).map((status) =>
-        renderFileGroup(status)
-      )}
+    <div className="flex flex-col gap-2">
+      {Array.from(groupedFiles.entries()).map(([status, files]) => (
+        <div key={status} className="flex flex-col">
+          <div
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 text-[12px] font-medium",
+              STATUS_COLORS[status]
+            )}
+          >
+            <span>{STATUS_LABELS[status]}</span>
+            <span className="text-[11px] text-muted-foreground">
+              {files.length} {files.length === 1 ? "file" : "files"}
+            </span>
+          </div>
+
+          <div className="flex flex-col">
+            {files.map((file) => (
+              <FileItem
+                key={file.path}
+                file={file}
+                selected={selectedFiles.includes(file.path)}
+                isOpen={selectedPath === file.path}
+                searchQuery={searchQuery}
+                onSelect={onSelect}
+                onClick={onFileClick}
+                viewMode="grouped"
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

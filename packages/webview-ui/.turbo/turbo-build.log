@@ -1,37 +1,46 @@
 
+
 > @yaac/webview@0.1.0 build /Users/mark/coding/apps/YAAC-YourArtisticAide4Commits/packages/webview-ui
 > webpack --mode production
 
-asset main.js 528 KiB [emitted] [javascript module] [minimized] [big] (name: main) 2 related assets
-asset 8f3abbcbc983396e1f13.ttf?38dcd33a732ebca5a557e04831e9e235 78.3 KiB [emitted] [immutable] [from: ../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/codicons/dist/codicon.ttf?38dcd33a732ebca5a557e04831e9e235] (auxiliary name: main)
-orphan modules 1.1 MiB [orphan] 324 modules
-runtime modules 1.61 KiB 6 modules
+asset [1m[33mmain.js[39m[22m [1m[33m527 KiB[39m[22m [1m[32m[emitted][39m[22m [javascript module] [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 2 related assets
+asset [1m[32m8f3abbcbc983396e1f13.ttf?38dcd33a732ebca5a557e04831e9e235[39m[22m 78.3 KiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m [from: ../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/codicons/dist/codicon.ttf?38dcd33a732ebca5a557e04831e9e235] (auxiliary name: main)
+orphan modules 1.1 MiB [1m[33m[orphan][39m[22m 324 modules
+runtime modules 1.88 KiB 7 modules
 cacheable modules 1.03 MiB (javascript) 78.3 KiB (asset)
-  modules by path ../../node_modules/.pnpm/ 243 KiB (javascript) 78.3 KiB (asset) 22 modules
-  modules by path ../shared/dist/ 2.93 KiB
-    modules by path ../shared/dist/types/*.js 464 bytes
-      ../shared/dist/types/git.js 387 bytes [built] [code generated]
-      ../shared/dist/types/tree-node.js 77 bytes [built] [code generated]
-    ../shared/dist/index.js 995 bytes [built] [code generated]
-    ../shared/dist/constants/git.js 423 bytes [built] [code generated]
-    ../shared/dist/config/validation.js 1.09 KiB [built] [code generated]
-  modules by path ./src/ 813 KiB
-    ./src/main.tsx + 175 modules 775 KiB [built] [code generated]
-    ../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.97.1/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!../../node_modules/.pnpm/postcss-loader@8.1.1_postcss@8.4.49_typescript@5.7.2_webpack@5.97.1/node_modules/postcss-loader/dist/cjs.js!./src/styles/global.css 32.4 KiB [built] [code generated]
-    ../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.97.1/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!../../node_modules/.pnpm/postcss-loader@8.1.1_postcss@8.4.49_typescript@5.7.2_webpack@5.97.1/node_modules/postcss-loader/dist/cjs.js!./src/styles/markdown.css 5.02 KiB [built] [code generated]
+  modules by path [1m../../node_modules/.pnpm/[39m[22m 243 KiB (javascript) 78.3 KiB (asset)
+    modules by path [1m../../node_modules/.pnpm/style-loader@3.3.4_webpack@5.97.1/node_modules/style-lo...(truncated)[39m[22m 5.84 KiB 6 modules
+    modules by path [1m../../node_modules/.pnpm/react@18.2.0/node_modules/react/[39m[22m 7.98 KiB 4 modules
+    modules by path [1m../../node_modules/.pnpm/react-dom@18.2.0_react@18.2.0/node_modules/react-dom/[39m[22m 131 KiB 3 modules
+    modules by path [1m../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.97.1/node_modules/css-loade...(truncated)[39m[22m 3.33 KiB 3 modules
+    modules by path [1m../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/...(truncated)[39m[22m 73.4 KiB (javascript) 78.3 KiB (asset) 2 modules
+    modules by path [1m../../node_modules/.pnpm/scheduler@0.23.2/node_modules/scheduler/[39m[22m 4.33 KiB 2 modules
+    + 2 modules
+  modules by path [1m./src/[39m[22m 814 KiB
+    [1m./src/main.tsx + 175 modules[39m[22m 777 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+    ../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.97.1/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!../../node_modules/.pnpm/postcss-loader@8.1.1_postcss@8.4.49_typescript@5.7.2_webpack@5.97.1/node_modules/postcss-loader/dist/cjs.js![1m./src/styles/global.css[39m[22m 31.9 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+    ../../node_modules/.pnpm/css-loader@6.11.0_webpack@5.97.1/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!../../node_modules/.pnpm/postcss-loader@8.1.1_postcss@8.4.49_typescript@5.7.2_webpack@5.97.1/node_modules/postcss-loader/dist/cjs.js![1m./src/styles/markdown.css[39m[22m 5.02 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
 
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+[1m[33mWARNING[39m[22m in [1m./src/components/commit/file-changes/FileItem.tsx[39m[22m [1m[32m18:783-801[39m[22m
+[1mexport 'VIEW_MODES' (imported as 'VIEW_MODES') was [1m[31mnot found[39m[22m[1m in './constants' (possible exports: [1m[32mSTATUS_COLORS, STATUS_LABELS, STATUS_LETTERS[39m[22m[1m)[39m[22m
+ @ ./src/components/commit/file-changes/FlatView.tsx 3:0-38 5:84-92
+ @ ./src/components/commit/file-changes/FileChanges.tsx 5:0-38 36:29-37
+ @ ./src/pages/commit.page.tsx 3:0-75 57:166-177
+ @ ./src/main.tsx 5:0-49 12:44-54
+
+[1m[33mWARNING[39m[22m in [1masset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (528 KiB)
+  main.js (527 KiB)[39m[22m
 
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+[1m[33mWARNING[39m[22m in [1mentrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (528 KiB)
+  main (527 KiB)
       main.js
+[39m[22m
 
-WARNING in webpack performance recommendations: 
+[1m[33mWARNING[39m[22m in [1mwebpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
+For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.97.1 compiled with 3 warnings in 4218 ms
+webpack 5.97.1 compiled with [1m[33m4 warnings[39m[22m in 4318 ms

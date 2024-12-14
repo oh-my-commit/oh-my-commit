@@ -9,7 +9,7 @@ import React, {
 import { EmptyState } from "./EmptyState";
 import { FileStats } from "./FileStats";
 import { FlatView } from "./FlatView";
-import { GroupedView } from "./GroupedView";
+
 import { DiffViewer } from "./DiffViewer";
 import { SearchBar } from "./SearchBar";
 import {
@@ -21,7 +21,7 @@ import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
 import { GitChangeSummary, GitFileChange } from "@yaac/shared";
 import { logger } from "@/lib/logger";
-import { VIEW_MODES } from "./constants";
+
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/layout/Section";
 import { InfoIcon } from "@/components/commit/info-icon";
@@ -76,7 +76,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     }));
 
     switch (viewMode) {
-      case VIEW_MODES.FLAT:
+      case "flat":
         return (
           <FlatView
             files={fileChanges}
@@ -88,17 +88,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             onFileClick={(path) => handleFileClick(path)}
           />
         );
-      case VIEW_MODES.GROUPED:
-        return (
-          <GroupedView
-            files={filteredFiles}
-            selectedFiles={selectedFiles}
-            selectedPath={lastOpenedFilePath || undefined}
-            searchQuery={searchQuery || ""}
-            onSelect={handleFileSelect}
-            onFileClick={handleFileClick}
-          />
-        );
+      case "tree":
+        return "todo";
       default:
         return null;
     }

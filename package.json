@@ -22,11 +22,12 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky install",
-    "build": "turbo build",
+    "type-check": "tsc --build",
     "dev": "turbo dev",
     "watch": "turbo watch",
-    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts"
+    "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
+    "prepare": "husky install",
+    "build": "turbo build"
   },
   "devDependencies": {
     "@cs-magic/md-toc": "^0.5.1",

@@ -2,6 +2,7 @@
   "name": "@yaac/extension",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify",
     "dev": "cross-env NODE_ENV=development esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
