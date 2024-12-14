@@ -3,10 +3,11 @@ import { openPreferences } from "@/utils/open-preference";
 import { GenerateCommitResult } from "@yaac/shared/types/commit";
 import { DiffResult } from "simple-git";
 import * as vscode from "vscode";
-import { OpenAIProvider } from "../providers/open-ai";
 import { presetAiProviders, Provider } from "../types/provider";
 import { isEqual, pick } from "lodash-es";
 import { AppManager } from "@/core"; // Add this line
+
+import { YaacProvider } from "../providers/yaac";
 
 export const getWorkspaceConfig = () =>
   vscode.workspace.getConfiguration("yaac");
@@ -15,7 +16,7 @@ export class AcManager {
   private app: AppManager; // Add this line
   private currentModelId: string | undefined;
   private providers: Provider[] = [
-    new OpenAIProvider(), // 添加更多providers
+    new YaacProvider(), // 添加更多providers
   ];
 
   constructor(app: AppManager) {
@@ -100,7 +101,9 @@ export class AcManager {
       throw new Error(`Provider ${currentModel.providerId} not found`);
     }
 
-    return provider.generateCommit(diff, currentModel);
+    return provider.generateCommit(diff, currentModel, {
+      lang: this.config.get("git.commitLanguage"),
+    });
   }
 
   public registerProvider(provider: Provider) {
@@ -116,10 +119,13 @@ export class AcManager {
     }
   }
 
+  public get config() {
+    return getWorkspaceConfig();
+  }
+
   private loadConfig() {
     // 加载 provider 状态
-    const config = getWorkspaceConfig();
-    const providersConfig = config.get<Record<string, boolean>>(
+    const providersConfig = this.config.get<Record<string, boolean>>(
       "providers",
       {}
     );
@@ -130,7 +136,7 @@ export class AcManager {
     }
 
     // 加载当前 model
-    this.currentModelId = config.get<string>("ac.model");
+    this.currentModelId = this.config.get<string>("ac.model");
   }
 
   protected async registerConfiguration() {
