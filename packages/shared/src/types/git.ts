@@ -1,5 +1,3 @@
-import { DiffResult } from "simple-git";
-
 /**
  * Git 文件状态 // todo: 以后再做这么细
  */

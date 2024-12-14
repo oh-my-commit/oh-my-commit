@@ -66,6 +66,7 @@ export class QuickCommitCommand implements VscodeCommand {
    */
   async execute(): Promise<void> {
     const diffSummary = await this.gitService.getDiffSummary();
+    const changeSummary = await this.gitService.getChangeSummary();
     const message = await this.acManager.generateCommit(diffSummary);
 
     // Create webview panel
@@ -74,7 +75,7 @@ export class QuickCommitCommand implements VscodeCommand {
     // Send initial data to webview
     const commitEvent: CommitEvent = {
       type: "commit",
-      diffSummary,
+      diffSummary: changeSummary,
       message,
     };
     this.logger.info(this.name, commitEvent);

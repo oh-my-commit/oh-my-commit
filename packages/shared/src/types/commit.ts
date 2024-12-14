@@ -1,5 +1,5 @@
 import { Result } from "neverthrow";
-import { DiffSummary } from "simple-git/dist/src/lib/responses/DiffSummary";
+import { GitChangeSummary } from "./git";
 
 export type CommitData = {
   title: string;
@@ -10,5 +10,5 @@ export type GenerateCommitResult = Result<CommitData, string>;
 export type CommitEvent = {
   type: "commit";
   message: GenerateCommitResult;
-  diffSummary: DiffSummary;
+  diffSummary: GitChangeSummary;
 };

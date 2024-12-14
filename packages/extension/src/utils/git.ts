@@ -1,7 +1,7 @@
-import { GitChangeSummary } from "@yaac/shared";
 import * as fs from "fs";
 import * as path from "path";
-import simpleGit, { SimpleGit } from "simple-git";
+import simpleGit, { SimpleGit, DiffResult } from "simple-git";
+import { GitChangeSummary, GitFileChange, GitChangeType } from "@yaac/shared";
 
 export class GitCore {
   protected git: SimpleGit;
@@ -13,12 +13,84 @@ export class GitCore {
   }
 
   /**
-   * 本版本为简洁设计，只做 AMD 的分析处理
-   * 因此在执行本函数之前，我们会先执行 stageAll
-   * @returns GitChangeSummary 包含文件变更列表和统计信息
+   * 获取已暂存文件的统计摘要，用于生成提交信息
    */
-  public async getDiffSummary(): Promise<GitChangeSummary> {
-    return this.git.diffSummary();
+  public async getDiffSummary(): Promise<DiffResult> {
+    return this.git.diffSummary("--staged");
+  }
+
+  /**
+   * 获取已暂存文件的详细信息，用于文件差异展示
+   */
+  public async getChangeSummary(): Promise<GitChangeSummary> {
+    // todo: think this later
+    await this.stageAll();
+
+    const diff = await this.git.diffSummary("--staged");
+    const files: GitFileChange[] = [];
+
+    // 获取每个文件的详细信息
+    for (const file of diff.files) {
+      const fileDiff = await this.git.diff(["--staged", "--", file.file]);
+      const content = await this.getFileContent(file.file);
+
+      // 使用类型断言来处理 insertions 和 deletions
+      const insertions = (file as any).insertions || 0;
+      const deletions = (file as any).deletions || 0;
+
+      files.push({
+        path: file.file,
+        status: await this.getChangeType(file),
+        diff: fileDiff,
+        // content,
+        additions: insertions,
+        deletions: deletions,
+      });
+    }
+
+    return {
+      files,
+      changed: diff.changed,
+      insertions: diff.insertions,
+      deletions: diff.deletions,
+    };
+  }
+
+  /**
+   * 获取文件当前内容
+   */
+  private async getFileContent(filePath: string): Promise<string> {
+    try {
+      const fullPath = path.join(this.workspaceRoot, filePath);
+      return await fs.promises.readFile(fullPath, "utf-8");
+    } catch (error) {
+      return ""; // 文件可能已被删除
+    }
+  }
+
+  /**
+   * 判断文件变更类型
+   * @param file 文件信息
+   * @returns GitChangeType 文件变更类型
+   */
+  private async getChangeType(file: DiffResult["files"][0]): Promise<GitChangeType> {
+    // 获取文件状态
+    const status = await this.git.status();
+    const fileStatus = status.files.find(f => f.path === file.file);
+    
+    if (!fileStatus) {
+      return GitChangeType.Modified; // 默认为修改
+    }
+
+    // 根据 git status 的结果判断
+    if (fileStatus.working_dir === 'D' || fileStatus.index === 'D') {
+      return GitChangeType.Deleted;
+    }
+    if (fileStatus.working_dir === 'A' || fileStatus.index === 'A') {
+      return GitChangeType.Added;
+    }
+    
+    return GitChangeType.Modified;
   }
 
   /**
