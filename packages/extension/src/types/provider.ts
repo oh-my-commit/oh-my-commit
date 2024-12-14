@@ -10,12 +10,16 @@ export const presetAiProviders = [
   "groq",
 ];
 
-export interface Provider {
-  id: string; // 提供者ID
-  name: string; // 提供者名称
-  description: string; // 提供者描述
-  enabled: boolean; // 是否启用
-  models: Model[];
+export abstract class Provider {
+  static id: string; // 提供者ID
+  static displayName: string; // 提供者名称
+  static description: string; // 提供者描述
+  static enabled: boolean; // 是否启用
+  static models: Model[];
 
-  generateCommit(diff: DiffResult, model: Model): Promise<GenerateCommitResult>;
+  public abstract generateCommit(
+    diff: DiffResult,
+    model: Model,
+    options?: { lang?: string }
+  ): Promise<GenerateCommitResult>;
 }
