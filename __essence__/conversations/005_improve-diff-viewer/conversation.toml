@@ -1,0 +1,43 @@
+version = "3.5.0"
+
+# 会话元数据
+created_at = "2024-12-15T03:30:25+08:00"
+title = "Improve DiffViewer Scroll Experience"
+abstract = "优化文件差异查看器的滚动体验，解决切换文件时视图跳动的问题"
+
+# 轮次记录
+[[rounds]]
+number = 1
+time = "2024-12-15T03:30:25+08:00"
+query_essence = "解决 DiffViewer 组件在切换文件时的视图跳动问题"
+key_points = """
+- 当前 DiffViewer 在切换文件时会完全重新渲染
+- 没有保持滚动位置的功能
+- 不同文件的 diff 内容高度差异导致视图跳变
+- 建议添加滚动位置记忆和使用固定高度容器优化
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-15T03:48:37+08:00"
+query_essence = "继续优化 DiffViewer 组件"
+key_points = """
+- 等待文件可编辑状态
+- 计划使用 useRef 保存滚动容器引用
+- 实现文件切换时的滚动位置记忆
+- 添加固定高度容器避免跳动
+- 考虑使用虚拟滚动优化性能
+"""
+
+[[rounds]]
+number = 3
+time = "2024-12-15T03:49:19+08:00"
+query_essence = "实现 DiffViewer 组件优化"
+key_points = """
+- 添加 scrollContainerRef 引用滚动容器
+- 使用 scrollPositionRef 记忆滚动位置
+- 实现 saveScrollPosition 保存功能
+- 添加 useEffect 恢复滚动位置
+- 设置固定容器高度避免跳动
+- 在关闭和滚动时保存位置
+"""

@@ -6,7 +6,7 @@ import { searchQueryAtom } from "@/state/atoms/search";
 import { diffWrapLineAtom } from "@/state/atoms/ui";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { twj } from "tw-to-css";
@@ -48,7 +48,28 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
 
   const lines: string[] = selectedFile.diff.split("\n");
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef<{ [key: string]: number }>({});
+
+  const saveScrollPosition = useCallback(() => {
+    if (scrollContainerRef.current && lastOpenedFilePath) {
+      scrollPositionRef.current[lastOpenedFilePath] = scrollContainerRef.current.scrollTop;
+    }
+  }, [lastOpenedFilePath]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current && lastOpenedFilePath) {
+      const savedPosition = scrollPositionRef.current[lastOpenedFilePath];
+      if (savedPosition !== undefined) {
+        scrollContainerRef.current.scrollTop = savedPosition;
+      } else {
+        scrollContainerRef.current.scrollTop = 0;
+      }
+    }
+  }, [lastOpenedFilePath]);
+
   const handleClose = () => {
+    saveScrollPosition();
     setLastOpenedFilePath("");
   };
 
@@ -95,7 +116,11 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           </div>
         </div>
       </div>
-      <div className="min-w-0 overflow-auto">
+      <div 
+        ref={scrollContainerRef}
+        className="min-w-0 overflow-auto h-[calc(100vh-120px)]"
+        onScroll={() => saveScrollPosition()}
+      >
         <table className="w-full border-collapse">
           <tbody
             className={cn(

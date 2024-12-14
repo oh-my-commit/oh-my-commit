@@ -15,122 +15,89 @@ abstract = "Resolving webpack source map configuration and TypeScript compilatio
 [conversations.003]
 slug = "fix-treeview-expandeddirs"
 title = "Fix TreeView expandedDirs type error XXX"
-abstract = ""
+status = { state = "ongoing", satisfaction = 2 }
+abstract = "Fix TreeView expandedDirs type error XXX"
 
 [conversations.004]
 slug = "add-init-animation"
 title = "Add cool initialization animation"
-abstract = ""
+status = { state = "completed", satisfaction = 3 }
+abstract = "Add cool initialization animation"
 
 [conversations.005]
 slug = "vscode_plugin_architecture"
-title = ""
-abstract = ""
+status = { state = "ongoing" }
 
 [conversations.007]
 slug = "vscode_extension_generator"
-title = ""
-abstract = ""
 
 [conversations.008]
 slug = "git_implementation"
-title = ""
-abstract = ""
 
 [conversations.009]
 slug = "vscode_extension_setup"
-title = ""
-abstract = ""
 
 [conversations.010]
 slug = "yeoman_generator_behavior"
-title = ""
-abstract = ""
 
 [conversations.011]
 slug = "vscode_task_error"
-title = ""
-abstract = ""
 
 [conversations.012]
 slug = "vscode_extension_webview"
-title = ""
-abstract = ""
 
 [conversations.013]
 slug = "vscode_extension_enhancement"
 title = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
-abstract = ""
+abstract = "VS Code Extension Enhancement with Tailwind and Jotai Integration"
 
 [conversations.014]
 slug = "vscode_plugin_error"
-title = ""
-abstract = ""
 
 [conversations.016]
 slug = "vscode_debug"
-title = ""
-abstract = ""
 
 [conversations.018]
 slug = "vscode_plugin_debug_solution"
-title = ""
-abstract = ""
 
 [conversations.019]
 slug = "vscode_extension_template_debug"
-title = ""
-abstract = ""
 
 [conversations.020]
 slug = "webview_floating"
-title = ""
-abstract = ""
 
 [conversations.021]
 slug = "ui_mode_enhancement"
-title = ""
-abstract = ""
 
 [conversations.022]
 slug = "fix_editor_actions"
-title = ""
-abstract = ""
 
 [conversations.023]
 slug = "refactor_window_state"
-title = ""
-abstract = ""
 
 [conversations.024]
 slug = "simplify_window_state"
-title = ""
-abstract = ""
 
 [conversations.025]
 slug = "webview_titlebar_hide"
-title = ""
-abstract = ""
 
 [conversations.026]
 slug = "logger_enhancement"
-title = ""
-abstract = ""
 
 [conversations.027]
 slug = "simplify_fileitem"
-title = ""
-abstract = ""
 
 [conversations.028]
 slug = "optimize_file_changes_layout"
 title = "Optimize File Changes Layout"
-abstract = ""
+status = "active"
+abstract = "Optimize File Changes Layout"
 
 [conversations.029]
 slug = "diffviewer_no_changes"
 title = "DiffViewer No Changes Investigation 3"
-abstract = ""
+status = "active"
+abstract = "DiffViewer No Changes Investigation 3"
 
 [conversations.030]
 slug = "git_changes"
@@ -171,3 +138,4 @@ abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与
 slug = "fileitem_uiux"
 title = "FileItem UI/UX Enhancement"
 abstract = "改进文件项组件的选中状态和交互效果"
+
