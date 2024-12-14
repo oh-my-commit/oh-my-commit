@@ -24,10 +24,10 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
         {parts.map((part, i) =>
           part.toLowerCase() === highlight?.toLowerCase() ? (
             <span key={i} className="relative">
-              <span className="relative z-10">{part}</span>
+              <span className="relative z-10 font-semibold">{part}</span>
               <span
-                className="absolute inset-0 bg-list-active-bg"
-                style={{ margin: "-1px -1px" }}
+                className="absolute inset-0 bg-yellow-500/30 dark:bg-yellow-400/40 rounded-sm"
+                style={{ margin: "-1px -2px", padding: "1px 2px" }}
               />
             </span>
           ) : (
