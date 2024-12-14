@@ -97,18 +97,32 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 
   return (
     <Section title="Changed Files">
-      <div className="flex items-center gap-2">
-        <SearchBar />
+      <div className="flex flex-row h-full relative">
+        <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px]">
+          <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
+            <SearchBar />
+          </div>
+          <div className="overflow-y-auto vscode-scrollbar">
+            {renderFileView()}
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
+            !lastOpenedFilePath && "opacity-0"
+          )}
+        >
+          {lastOpenedFilePath && (
+            <div className="sticky top-0 overflow-y-auto vscode-scrollbar">
+              <DiffViewer
+                files={changedFiles}
+                lastOpenedFilePath={lastOpenedFilePath}
+              />
+            </div>
+          )}
+        </div>
       </div>
-
-      {renderFileView()}
-
-      {lastOpenedFilePath && (
-        <DiffViewer
-          files={changedFiles}
-          lastOpenedFilePath={lastOpenedFilePath}
-        />
-      )}
     </Section>
   );
 };

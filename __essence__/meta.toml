@@ -161,3 +161,8 @@ abstract = "解决提交页面状态更新问题，包括消息接收后状态�
 slug = "git_file_status"
 title = "Git File Status Structure"
 abstract = "分析 simple-git 库中的文件状态变更标识数据结构，以及在项目中的应用实现"
+
+[conversations.036]
+slug = "diffview_position"
+title = "Adjust DiffView Position"
+abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与VSCode风格保持一致"

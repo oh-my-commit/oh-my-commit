@@ -43,3 +43,31 @@ body {
   font-family: var(--vscode-font-family);
   background-color: var(--vscode-editor-background);
 }
+
+/* VSCode-style scrollbar */
+.vscode-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+.vscode-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 4px;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+.vscode-scrollbar::-webkit-scrollbar-thumb:active {
+  background: var(--vscode-scrollbarSlider-activeBackground);
+}

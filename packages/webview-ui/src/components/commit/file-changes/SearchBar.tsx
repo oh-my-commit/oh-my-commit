@@ -11,27 +11,25 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
 
   return (
-    <div className={className}>
-      <div className="relative flex items-center  border border-[var(--vscode-input-border)] rounded-sm">
-        <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10 " />
-        <style>
-          {`
+    <div className="relative w-full flex items-center  border border-[var(--vscode-input-border)] rounded-sm">
+      <i className="codicon codicon-search absolute left-2 translate-y-[2px] text-[12px] opacity-50 pointer-events-none z-10 " />
+      <style>
+        {`
             .search-input::part(control) {
               padding-left: 24px !important;
             }
           `}
-        </style>
+      </style>
 
-        <VSCodeTextField
-          className="w-full search-input"
-          placeholder="Filter"
-          value={searchQuery}
-          onInput={(e) => {
-            const target = e.target as HTMLInputElement;
-            setSearchQuery(target.value);
-          }}
-        />
-      </div>
+      <VSCodeTextField
+        className="w-full search-input"
+        placeholder="Filter"
+        value={searchQuery}
+        onInput={(e) => {
+          const target = e.target as HTMLInputElement;
+          setSearchQuery(target.value);
+        }}
+      />
     </div>
   );
 };
