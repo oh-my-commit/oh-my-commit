@@ -412,4 +412,13 @@ export class WebviewManager {
   public async dispose() {
     await this.cleanupPanel();
   }
+
+  public async postMessage(message: any) {
+    if (this.webviewPanel?.webview) {
+      this.logger.debug("Posting message to webview:", message);
+      await this.webviewPanel.webview.postMessage(message);
+    } else {
+      this.logger.error("Cannot post message: webview panel not available");
+    }
+  }
 }

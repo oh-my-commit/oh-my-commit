@@ -70,10 +70,10 @@ export const CommitPage = () => {
     window.addEventListener("message", handleMessage);
     logger.info("Message event listener added");
 
-    // 通知 VSCode 扩展 webview 已准备就绪
+    // 请求提交数据
     const vscode = getVSCodeAPI();
-    vscode.postMessage({ command: "webview-ready" });
-    logger.info("Sent webview-ready message");
+    vscode.postMessage({ command: "get-commit-data" });
+    logger.info("Requested commit data");
 
     // 清理函数
     return () => {

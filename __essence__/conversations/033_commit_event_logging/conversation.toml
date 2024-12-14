@@ -56,3 +56,13 @@ key_points = """
 - 在 createWebviewPanel() 之后立即发送消息
 - 需要等待 webview 加载完成后再发送消息
 """
+
+[[rounds]]
+number = 6
+time = "2024-12-15T00:30:17+08:00"
+query_essence = "优化消息传递机制"
+key_points = """
+- 改进消息传递流程
+- webview 加载后主动请求数据
+- 减少一次消息交互
+"""

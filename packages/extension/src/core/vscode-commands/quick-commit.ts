@@ -45,6 +45,22 @@ export class QuickCommitCommand implements VscodeCommand {
       }
     });
 
+    this.webviewManager.registerMessageHandler("get-commit-data", async () => {
+      logger.info("Received request for commit data");
+      const diffSummary = await this.gitService.getDiffSummary();
+      const changeSummary = await this.gitService.getChangeSummary();
+      const message = await this.acManager.generateCommit(diffSummary);
+      const commitData: CommitEvent = {
+        type: "commit",
+        diffSummary: changeSummary,
+        message,
+      };
+      this.logger.info(this.name, commitData);
+
+      // 发送消息给 webview
+      await this.webviewManager.postMessage(commitData);
+    });
+
     // Clean up file watcher when extension is deactivated
     context.subscriptions.push(this);
   }
@@ -65,31 +81,6 @@ export class QuickCommitCommand implements VscodeCommand {
    * 无需 handle error，因为最外层 @command.manager.ts 会处理
    */
   async execute(): Promise<void> {
-    const diffSummary = await this.gitService.getDiffSummary();
-    const changeSummary = await this.gitService.getChangeSummary();
-    const message = await this.acManager.generateCommit(diffSummary);
-
-    // Create webview panel
-    const panel = await this.webviewManager.createWebviewPanel();
-
-    // 等待 webview 加载完成
-    await new Promise<void>((resolve) => {
-      const handler = panel.webview.onDidReceiveMessage((message) => {
-        if (message.command === "webview-ready") {
-          this.logger.info("Webview is ready to receive messages");
-          handler.dispose();
-          resolve();
-        }
-      });
-    });
-
-    // Send initial data to webview
-    const commitEvent: CommitEvent = {
-      type: "commit",
-      diffSummary: changeSummary,
-      message,
-    };
-    this.logger.info(this.name, commitEvent);
-    panel.webview.postMessage(commitEvent);
+    await this.webviewManager.createWebviewPanel();
   }
 }
