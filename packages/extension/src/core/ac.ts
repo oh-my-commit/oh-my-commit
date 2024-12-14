@@ -130,7 +130,7 @@ export class AcManager {
     }
 
     // 加载当前 model
-    this.currentModelId = config.get<string>("currentModel");
+    this.currentModelId = config.get<string>("ac.model");
   }
 
   protected async registerConfiguration() {
