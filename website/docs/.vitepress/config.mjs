@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: "YAAC",
-  description: "Your Artistic Aide for Commits - 一款专注用户体验的 VSCode Git 提交插件",
+  title: "Oh My Commit",
+  description: "Your AI-Powered Git Commit Assistant - 让 Git 提交变得优雅而智能",
   lang: 'zh-CN',
   
   markdown: {

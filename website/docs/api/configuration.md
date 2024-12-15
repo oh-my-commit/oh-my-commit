@@ -1,22 +1,22 @@
 # 配置项
 
-YAAC 提供了丰富的配置选项，让你可以根据需要自定义插件行为。
+Oh My Commit 提供了丰富的配置选项，让你可以根据需要自定义插件行为。
 
 ## 基础配置
 
-### `yaac.commitMode`
+### `oh-my-commit.commitMode`
 
 - 类型: `'panel' | 'window' | 'notification' | 'silent'`
 - 默认值: `'panel'`
 - 说明: 设置提交消息的显示模式
 
-### `yaac.language`
+### `oh-my-commit.language`
 
 - 类型: `'zh-CN' | 'en-US'`
 - 默认值: `'zh-CN'`
 - 说明: 设置界面语言
 
-### `yaac.autoCommit`
+### `oh-my-commit.autoCommit`
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -24,26 +24,26 @@ YAAC 提供了丰富的配置选项，让你可以根据需要自定义插件行
 
 ## AI 配置
 
-### `yaac.ai.provider`
+### `oh-my-commit.ai.provider`
 
 - 类型: `'openai' | 'anthropic' | 'custom'`
 - 默认值: `'openai'`
 - 说明: 选择 AI 服务提供商
 
-### `yaac.ai.model`
+### `oh-my-commit.ai.model`
 
 - 类型: `string`
 - 默认值: `'gpt-4'`
 - 说明: 指定使用的 AI 模型
 
-### `yaac.ai.temperature`
+### `oh-my-commit.ai.temperature`
 
 - 类型: `number`
 - 默认值: `0.7`
 - 范围: `0.0 - 1.0`
 - 说明: 控制 AI 输出的创造性程度
 
-### `yaac.ai.apiKey`
+### `oh-my-commit.ai.apiKey`
 
 - 类型: `string`
 - 默认值: `''`
@@ -55,19 +55,19 @@ YAAC 提供了丰富的配置选项，让你可以根据需要自定义插件行
 
 ## 提交规范
 
-### `yaac.commit.convention`
+### `oh-my-commit.commit.convention`
 
 - 类型: `'conventional' | 'gitmoji' | 'custom'`
 - 默认值: `'conventional'`
 - 说明: 选择提交消息的规范格式
 
-### `yaac.commit.scopes`
+### `oh-my-commit.commit.scopes`
 
 - 类型: `string[]`
 - 默认值: `[]`
 - 说明: 预设的提交范围列表
 
-### `yaac.commit.template`
+### `oh-my-commit.commit.template`
 
 - 类型: `string`
 - 默认值: `'<type>(<scope>): <subject>'`
@@ -79,13 +79,13 @@ YAAC 提供了丰富的配置选项，让你可以根据需要自定义插件行
 以下配置项将在团队协作功能发布后可用。
 :::
 
-### `yaac.team.configPath`
+### `oh-my-commit.team.configPath`
 
 - 类型: `string`
-- 默认值: `'.yaac/team.json'`
+- 默认值: `'.oh-my-commit/team.json'`
 - 说明: 团队配置文件路径
 
-### `yaac.team.syncEnabled`
+### `oh-my-commit.team.syncEnabled`
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -95,15 +95,15 @@ YAAC 提供了丰富的配置选项，让你可以根据需要自定义插件行
 
 ```json
 {
-  "yaac.commitMode": "panel",
-  "yaac.language": "zh-CN",
-  "yaac.autoCommit": false,
-  "yaac.ai": {
+  "oh-my-commit.commitMode": "panel",
+  "oh-my-commit.language": "zh-CN",
+  "oh-my-commit.autoCommit": false,
+  "oh-my-commit.ai": {
     "provider": "openai",
     "model": "gpt-4",
     "temperature": 0.7
   },
-  "yaac.commit": {
+  "oh-my-commit.commit": {
     "convention": "conventional",
     "scopes": ["feat", "fix", "docs", "style", "refactor"],
     "template": "<type>(<scope>): <subject>"
