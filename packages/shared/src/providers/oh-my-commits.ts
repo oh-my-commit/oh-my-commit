@@ -61,7 +61,6 @@ export class OhMyCommitsProvider extends Provider {
     if (!this.anthropic) {
       return err("Anthropic API key not configured");
     }
-    this.logger.info("Generating commit message using Anthropic...");
 
     try {
       const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
@@ -92,6 +91,8 @@ Please analyze the diff carefully and provide:
 2. A blank line
 3. A detailed body explaining what changes were made and why`;
 
+      this.logger.info("Generating commit message using Anthropic...");
+
       const response = await this.anthropic.messages.create({
         model: "claude-3-sonnet-20240229",
         max_tokens: 1000,
@@ -103,6 +104,8 @@ Please analyze the diff carefully and provide:
           },
         ],
       });
+
+      this.logger.info("Commit message generated: ", response);
 
       const message =
         response.content[0].type === "text" ? response.content[0].text : "";
