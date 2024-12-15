@@ -16,6 +16,17 @@
       "cache": false,
       "persistent": true
     },
+    "docs:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "docs:build": {
+      "outputs": ["website/.vitepress/dist/**"]
+    },
+    "docs:preview": {
+      "cache": false,
+      "persistent": true
+    },
     "test": {
       "dependsOn": ["build"],
       "inputs": ["src/**/*.ts", "test/**/*.ts"],

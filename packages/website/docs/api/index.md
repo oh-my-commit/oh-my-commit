@@ -4,36 +4,54 @@ Oh My Commit 提供了丰富的 API，让您可以根据需求自定义和扩展
 
 ## 命令行接口
 
-### 基本命令
+### 主命令
 
 ```bash
-# 初始化配置
-oh-my-commit init
+# 直接执行提交（最常用操作）
+omc
+```
 
-# 生成提交信息
-oh-my-commit generate
+### 子命令
 
-# 执行提交
-oh-my-commit commit
+```bash
+# 基础操作
+omc-init              # 初始化配置
+omc-gen               # 生成提交信息
+omc-check             # 检查提交信息
 
-# 检查提交信息
-oh-my-commit check
+# 模式选择
+omc-conventional      # 使用 conventional 模式
+omc-simple           # 使用简单模式
+
+# 语言选择
+omc-en               # 使用英文
+omc-zh               # 使用中文
+
+# 团队相关
+omc-team             # 团队模式
+omc-team-init        # 团队配置初始化
+omc-team-check       # 团队规范检查
+
+# 其他功能
+omc-debug            # 调试模式
 ```
 
 ### 选项参数
 
+每个命令都支持以下选项：
+
 ```bash
 # 使用特定模式
-oh-my-commit --mode <mode>
+--mode <mode>
 
 # 指定语言
-oh-my-commit --lang <language>
+--lang <language>
 
 # 应用团队配置
-oh-my-commit --team
+--team
 
 # 启用调试模式
-oh-my-commit --debug
+--debug
 ```
 
 ## Node.js API

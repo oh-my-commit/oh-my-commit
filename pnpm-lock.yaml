@@ -141,8 +141,17 @@ importers:
         specifier: ^5.0.0
         version: 5.7.2
 
+  packages/website:
+    devDependencies:
+      vitepress:
+        specifier: 1.5.0
+        version: 1.5.0(@algolia/client-search@5.17.1)(@types/node@22.10.1)(search-insights@2.17.3)(typescript@5.7.2)
+
   packages/webview-ui:
     dependencies:
+      '@oh-my-commit/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/marked':
         specifier: ^6.0.0
         version: 6.0.0
@@ -158,9 +167,6 @@ importers:
       '@vscode/webview-ui-toolkit':
         specifier: ^1.4.0
         version: 1.4.0(react@18.2.0)
-      '@oh-my-commit/shared':
-        specifier: workspace:*
-        version: link:../shared
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -267,12 +273,6 @@ importers:
       webpack-dev-server:
         specifier: ^4.15.1
         version: 4.15.1(webpack-cli@5.1.4)(webpack@5.89.0)
-
-  website:
-    devDependencies:
-      vitepress:
-        specifier: 1.5.0
-        version: 1.5.0(@algolia/client-search@5.17.1)(search-insights@2.17.3)
 
 packages:
 
@@ -1973,8 +1973,8 @@ packages:
       vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.4.11
-      vue: 3.5.13
+      vite: 5.4.11(@types/node@22.10.1)
+      vue: 3.5.13(typescript@5.7.2)
     dev: true
 
   /@vscode/codicons@0.0.36:
@@ -2084,7 +2084,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.5.13
       '@vue/shared': 3.5.13
-      vue: 3.5.13
+      vue: 3.5.13(typescript@5.7.2)
     dev: true
 
   /@vue/shared@3.5.13:
@@ -6898,7 +6898,7 @@ packages:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  /vite@5.4.11:
+  /vite@5.4.11(@types/node@22.10.1):
     resolution: {integrity: sha512-c7jFQRklXua0mTzneGW9QVyxFjUgwcihC4bXEtujIo2ouWCe1Ajt/amn2PCxYnhYfd5k09JX3SB7OYWFKYqj8Q==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -6929,6 +6929,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 22.10.1
       esbuild: 0.21.5
       postcss: 8.4.49
       rollup: 4.28.1
@@ -6936,7 +6937,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress@1.5.0(@algolia/client-search@5.17.1)(search-insights@2.17.3):
+  /vitepress@1.5.0(@algolia/client-search@5.17.1)(@types/node@22.10.1)(search-insights@2.17.3)(typescript@5.7.2):
     resolution: {integrity: sha512-q4Q/G2zjvynvizdB3/bupdYkCJe2umSAMv9Ju4d92E6/NXJ59z70xB0q5p/4lpRyAwflDsbwy1mLV9Q5+nlB+g==}
     hasBin: true
     peerDependencies:
@@ -6964,8 +6965,8 @@ packages:
       mark.js: 8.11.1
       minisearch: 7.1.1
       shiki: 1.24.2
-      vite: 5.4.11
-      vue: 3.5.13
+      vite: 5.4.11(@types/node@22.10.1)
+      vue: 3.5.13(typescript@5.7.2)
     transitivePeerDependencies:
       - '@algolia/client-search'
       - '@types/node'
@@ -7013,10 +7014,10 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      vue: 3.5.13
+      vue: 3.5.13(typescript@5.7.2)
     dev: true
 
-  /vue@3.5.13:
+  /vue@3.5.13(typescript@5.7.2):
     resolution: {integrity: sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==}
     peerDependencies:
       typescript: '*'
@@ -7029,6 +7030,7 @@ packages:
       '@vue/runtime-dom': 3.5.13
       '@vue/server-renderer': 3.5.13(vue@3.5.13)
       '@vue/shared': 3.5.13
+      typescript: 5.7.2
     dev: true
 
   /watchpack@2.4.2:

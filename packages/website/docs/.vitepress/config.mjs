@@ -62,7 +62,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/yourusername/Oh My Commit' }
+      { icon: 'github', link: 'https://github.com/cs-magic-open/oh-my-commit' }
     ],
 
     footer: {

@@ -1,0 +1,148 @@
+version = "3.5.0"
+
+# 会话元数据
+created_at = "2024-12-15T12:36:43+08:00"
+title = "Git CLI Integration"
+abstract = "探讨将 Oh My Commit 功能集成到 Git 命令行的可能性"
+
+# 轮次记录
+[[rounds]]
+number = 1
+time = "2024-12-15T12:36:43+08:00"
+query_essence = "探讨扩展 Git 命令行功能"
+key_points = """
+- 用户建议将 Oh My Commit 功能集成到 Git 命令行
+- 考虑通过 Git 别名机制实现命令映射
+- 需要评估实现的可行性和用户体验
+"""
+
+[[rounds]]
+number = 2
+time = "2024-12-15T12:40:44+08:00"
+query_essence = "列举可能的 Git 命令映射"
+key_points = """
+- 整理所有可用的 Oh My Commit 命令
+- 设计对应的 Git 别名映射
+- 考虑命令的直观性和易用性
+"""
+
+[[rounds]]
+number = 3
+time = "2024-12-15T12:42:51+08:00"
+query_essence = "分析命令集成方案的优劣"
+key_points = """
+- 对比 Git alias 和独立命令两种方案
+- 分析各自的优势和局限性
+- 考虑用户使用习惯和工作流程
+"""
+
+[[rounds]]
+number = 4
+time = "2024-12-15T12:47:18+08:00"
+query_essence = "简化并统一命令体系"
+key_points = """
+- 采用 omc 作为主命令（直接提交）
+- 使用 omc-xx 作为子命令格式
+- 保持命令体系的一致性和直观性
+"""
+
+[[rounds]]
+number = 5
+time = "2024-12-15T12:48:01+08:00"
+query_essence = "确认命令体系方案"
+key_points = """
+- 确定采用独立的命令行工具方案
+- omc 作为主命令直接执行提交
+- omc-xx 作为统一的子命令格式
+- 命令体系清晰直观，易于使用
+"""
+
+[[rounds]]
+number = 6
+time = "2024-12-15T12:49:27+08:00"
+query_essence = "配置 Turborepo 的文档任务"
+key_points = """
+- 检查当前的 Turborepo 配置
+- 规划文档构建任务
+- 确保根目录可运行文档命令
+"""
+
+[[rounds]]
+number = 7
+time = "2024-12-15T12:51:07+08:00"
+query_essence = "修复文档命令打开 GitHub 的问题"
+key_points = """
+- 发现 website 包使用的是 VitePress
+- 需要调整命令名称以匹配 website 包的脚本
+- 确保命令正确映射到文档开发服务器
+"""
+
+[[rounds]]
+number = 8
+time = "2024-12-15T12:53:56+08:00"
+query_essence = "修复 Turborepo 工作空间配置"
+key_points = """
+- 发现 website 目录未包含在工作空间中
+- 更新 package.json 的 workspaces 配置
+- 添加 website 到工作空间列表
+"""
+
+[[rounds]]
+number = 9
+time = "2024-12-15T12:55:20+08:00"
+query_essence = "修复文档包配置"
+key_points = """
+- 检查 website 包的名称和配置
+- 调整 Turborepo 的过滤规则
+- 确保正确识别文档任务
+"""
+
+[[rounds]]
+number = 10
+time = "2024-12-15T12:56:38+08:00"
+query_essence = "修正文档包名称"
+key_points = """
+- 将文档包名改为简单的 'website'
+- 更新根目录的 turbo 命令过滤器
+- 保持包名与目录结构一致
+"""
+
+[[rounds]]
+number = 11
+time = "2024-12-15T12:58:10+08:00"
+query_essence = "恢复包名的 scope"
+key_points = """
+- 将包名改为 @oh-my-commit/website
+- 更新根目录命令的过滤器
+- 保持命名空间的一致性
+"""
+
+[[rounds]]
+number = 12
+time = "2024-12-15T12:59:54+08:00"
+query_essence = "分析包名问题"
+key_points = """
+- 发现其他包都使用 @cs-magic 作为 scope
+- 需要保持命名空间一致性
+- 调整文档包的命名空间
+"""
+
+[[rounds]]
+number = 13
+time = "2024-12-15T13:01:50+08:00"
+query_essence = "调整命名空间策略"
+key_points = """
+- 项目根目录使用 @cs-magic/oh-my-commit
+- 子包统一使用 @oh-my-commit/* 命名空间
+- 保持命名的层次结构
+"""
+
+[[rounds]]
+number = 14
+time = "2024-12-15T13:03:02+08:00"
+query_essence = "调整包的目录结构"
+key_points = """
+- 发现 website 包不在 packages 目录下
+- 需要保持与其他子包相同的目录结构
+- 调整工作空间的配置
+"""
