@@ -1,11 +1,6 @@
 # Commit Specification
 
-<!-- toc -->
-
-[Examples](#examples)
-
-<!-- tocstop -->
-
+<!-- toc -->[Examples](#examples)<!-- tocstop -->
 
 Write clear and meaningful commit messages that describe your changes.
 

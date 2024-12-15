@@ -202,3 +202,13 @@ title = "Simplify CLI Command Structure"
 abstract = "简化 CLI 命令结构，使 gen 成为默认命令，并添加 -y 标志用于自动提交"
 status = { state = "ongoing" }
 
+[conversations.053]
+slug = "typescript_build_fix"
+abstract = "修复 TypeScript 构建配置，解决 DTS 生成错误"
+
+[conversations.054]
+slug = "cli_module_update"
+title = "CLI Module Update and Project Structure"
+abstract = "Update CLI module from oh-my-commit to oh-my-commits and maintain project structure"
+status = { state = "ongoing" }
+
