@@ -8,7 +8,7 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cs-magic/oh-my-commit"
+    "url": "https://github.com/cs-magic-open/oh-my-commit"
   },
   "keywords": [
     "git",
@@ -27,7 +27,10 @@
     "watch": "turbo watch",
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
     "prepare": "husky install",
-    "build": "turbo build"
+    "build": "turbo build",
+    "docs:dev": "turbo run docs:dev --filter=@oh-my-commit/website",
+    "docs:build": "turbo run docs:build --filter=@oh-my-commit/website",
+    "docs:preview": "turbo run docs:preview --filter=@oh-my-commit/website"
   },
   "devDependencies": {
     "@cs-magic/md-toc": "^0.5.1",

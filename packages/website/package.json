@@ -1,5 +1,5 @@
 {
-  "name": "oh-my-commit-website",
+  "name": "@oh-my-commit/website",
   "version": "1.0.0",
   "description": "Oh My Commit Documentation Website",
   "type": "module",
