@@ -176,36 +176,48 @@ export class WebviewManager
   public async show(
     options: vscode.WebviewPanelOptions & vscode.WebviewOptions
   ) {
+    // 检查 webviewPanel 是否存在且可用
     if (this.webviewPanel) {
-      this.webviewPanel.reveal();
-      return this.webviewPanel;
-    }
-
-    // Only move to new window in window mode
-    if (this.uiMode === "window") {
-      await vscode.commands.executeCommand(
-        "workbench.action.newEmptyEditorWindow"
-      );
-      await this.saveWindowState();
-    }
-
-    this.webviewPanel = vscode.window.createWebviewPanel(
-      this.viewType,
-      this.title,
-      {
-        viewColumn: vscode.ViewColumn.Active,
-        preserveFocus: true,
-      },
-      {
-        ...options,
-        enableScripts: true,
-        enableFindWidget: false,
-        retainContextWhenHidden: this.uiMode !== "window",
+      try {
+        // 尝试访问 webview 属性，如果 panel 已被销毁会抛出异常
+        const _ = this.webviewPanel.webview;
+        this.webviewPanel.reveal();
+        return this.webviewPanel;
+      } catch (error) {
+        this.logger.debug("Webview panel is disposed, creating new one");
+        this.webviewPanel = undefined;
       }
-    );
+    }
 
-    await this.handleWindowModeStateChange(this.webviewPanel);
-    await this.updateWebview();
+    // 创建新的 webview panel
+    if (!this.webviewPanel) {
+      // Only move to new window in window mode
+      if (this.uiMode === "window") {
+        await vscode.commands.executeCommand(
+          "workbench.action.newEmptyEditorWindow"
+        );
+        await this.saveWindowState();
+      }
+
+      this.webviewPanel = vscode.window.createWebviewPanel(
+        this.viewType,
+        this.title,
+        {
+          viewColumn: vscode.ViewColumn.Active,
+          preserveFocus: true,
+        },
+        {
+          ...options,
+          enableScripts: true,
+          enableFindWidget: false,
+          retainContextWhenHidden: this.uiMode !== "window",
+        }
+      );
+
+      await this.handleWindowModeStateChange(this.webviewPanel);
+      await this.updateWebview();
+    }
+
     return this.webviewPanel;
   }
 
