@@ -186,6 +186,22 @@ export class WebviewManager
       this.getWebviewOptions()
     );
 
+    // Set up message handler
+    panel.webview.onDidReceiveMessage(async (message) => {
+      this.logger.info("Received message from webview:", message);
+      const handler = this.messageHandlers.get(message.command);
+      if (handler) {
+        try {
+          await handler(message);
+          this.logger.info("Message handled successfully");
+        } catch (error) {
+          this.logger.error("Error handling message:", error);
+        }
+      } else {
+        this.logger.warn(`No handler found for command: ${message.command}`);
+      }
+    });
+
     // Set up file watcher
     const watcher = this.setupFileWatcher(panel);
 
@@ -491,7 +507,12 @@ export class WebviewManager
   public async postMessage(message: any) {
     if (this.webviewPanel?.webview) {
       this.logger.debug("Posting message to webview:", message);
-      await this.webviewPanel.webview.postMessage(message);
+      try {
+        await this.webviewPanel.webview.postMessage(message);
+        this.logger.debug("Message posted successfully");
+      } catch (error) {
+        this.logger.error("Error posting message:", error);
+      }
     } else {
       this.logger.error("Cannot post message: webview panel not available");
     }
