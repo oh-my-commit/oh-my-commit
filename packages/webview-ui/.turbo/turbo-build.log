@@ -3,7 +3,7 @@
 > @oh-my-commits/webview@0.1.0 build /Users/mark/coding/apps/oh-my-commits/packages/webview-ui
 > webpack --mode production
 
-asset [1m[33mmain.js[39m[22m [1m[33m532 KiB[39m[22m [1m[33m[compared for emit][39m[22m [javascript module] [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 2 related assets
+asset [1m[33mmain.js[39m[22m [1m[33m532 KiB[39m[22m [1m[32m[emitted][39m[22m [javascript module] [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 2 related assets
 asset [1m[32m8f3abbcbc983396e1f13.ttf?38dcd33a732ebca5a557e04831e9e235[39m[22m 78.3 KiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m [from: ../../node_modules/.pnpm/@vscode+codicons@0.0.36/node_modules/@vscode/codicons/dist/codicon.ttf?38dcd33a732ebca5a557e04831e9e235] (auxiliary name: main)
 orphan modules 1.11 MiB [1m[33m[orphan][39m[22m 324 modules
 runtime modules 1.61 KiB 6 modules
@@ -36,4 +36,4 @@ Entrypoints:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.97.1 compiled with [1m[33m3 warnings[39m[22m in 3639 ms
+webpack 5.97.1 compiled with [1m[33m3 warnings[39m[22m in 4226 ms

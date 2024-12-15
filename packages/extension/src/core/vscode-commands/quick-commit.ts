@@ -2,7 +2,11 @@ import { AcManager } from "@/core/ac";
 import { BaseCommand } from "@/core/vscode-commands/types";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
-import { COMMAND_QUICK_COMMIT, CommitEvent } from "@oh-my-commits/shared";
+import {
+  APP_NAME,
+  COMMAND_QUICK_COMMIT,
+  CommitEvent,
+} from "@oh-my-commits/shared";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
@@ -22,11 +26,7 @@ export class QuickCommitCommand extends BaseCommand {
     this.gitService = gitService;
     this.acManager = _acManager;
 
-    this.webviewManager = new WebviewManager(
-      context,
-      "webview",
-      "Oh My Commits"
-    );
+    this.webviewManager = new WebviewManager(context, "webview", APP_NAME);
 
     // Register message handlers
     this.webviewManager.registerMessageHandler("commit", async (message) => {
@@ -63,10 +63,6 @@ export class QuickCommitCommand extends BaseCommand {
 
     // Clean up file watcher when extension is deactivated
     context.subscriptions.push(this);
-  }
-
-  get config() {
-    return vscode.workspace.getConfiguration("oh-my-commits");
   }
 
   get emptyChangeBehavior() {

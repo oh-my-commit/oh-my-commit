@@ -3,7 +3,7 @@
 import { program } from "commander";
 import chalk from "chalk";
 import simpleGit from "simple-git";
-import { CommitManager } from "@oh-my-commits/shared";
+import { CommitManager, OmcStandardModelId } from "@oh-my-commits/shared";
 import { ConsoleLogger } from "@oh-my-commits/shared";
 
 // Initialize git and commit manager
@@ -12,7 +12,7 @@ const logger = new ConsoleLogger("Oh My Commits CLI");
 const commitManager = new CommitManager({ logger });
 
 // Default model
-const DEFAULT_MODEL = "omc/standard";
+const DEFAULT_MODEL = OmcStandardModelId;
 
 // Command handlers
 const listModels = async () => {

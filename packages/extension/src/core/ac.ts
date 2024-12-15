@@ -13,14 +13,11 @@ import { convertToGitChangeSummary } from "@/utils/git-converter";
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [];
   private modelId?: string;
-  public config: vscode.WorkspaceConfiguration;
 
   constructor(app: AppManager) {
     super();
-    this.logger = app.logger;
 
-    this.config = vscode.workspace.getConfiguration("");
-    this.providers.push(new OmcProvider(this.logger));
+    this.providers.push(new OmcProvider());
     this.modelId = this.config.get<string>(SETTING_MODEL_ID);
   }
 
@@ -47,9 +44,7 @@ export class AcManager extends Loggable(class {}) {
     }
 
     this.modelId = modelId;
-    await vscode.workspace
-      .getConfiguration("")
-      .update("omc.model", modelId, true);
+    this.config.update(SETTING_MODEL_ID, modelId, true);
 
     const providerId = model.providerId;
     if (presetAiProviders.includes(providerId)) {

@@ -21,13 +21,6 @@ export class CommandManager extends Loggable(class {}) {
     private readonly acManager: AcManager
   ) {
     super();
-    this.logger = vscode.window.createOutputChannel(
-      "Oh My Commits - Commands",
-      {
-        log: true,
-      }
-    );
-    this.logger.info("Initializing command manager");
 
     // Register all commands
     this.registerCommand(COMMAND_OPEN_PREFERENCE, new OpenPreferencesCommand());
