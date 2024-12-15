@@ -1,6 +1,10 @@
 import { Model } from "@/types/model";
 import { Loggable } from "@/types/mixins";
-import { GitChangeSummary, GenerateCommitResult } from "@oh-my-commits/shared";
+import {
+  GitChangeSummary,
+  GenerateCommitResult,
+  APP_ID,
+} from "@oh-my-commits/shared";
 import { workspace, WorkspaceConfiguration } from "vscode";
 
 export const presetAiProviders = [
@@ -25,6 +29,6 @@ export abstract class Provider extends Loggable(class {}) {
   ): Promise<GenerateCommitResult>;
 
   protected get config(): WorkspaceConfiguration {
-    return workspace.getConfiguration("");
+    return workspace.getConfiguration(APP_ID);
   }
 }

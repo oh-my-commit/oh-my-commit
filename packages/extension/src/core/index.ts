@@ -4,13 +4,13 @@ import { AcManager } from "@/core/ac";
 import { StatusBarManager } from "@/core/vscode-status-bar";
 import { VscodeGitService } from "@/core/vscode-git";
 import { Loggable } from "@/types/mixins";
+import { CommandManager } from "./vscode-commands/command-manager";
 
 export class AppManager extends Loggable(class {}) {
   public context: vscode.ExtensionContext;
-
-  public readonly statusBarManager: StatusBarManager;
-  public readonly gitService: VscodeGitService;
-  public readonly acManager: AcManager;
+  public acManager: AcManager;
+  public commandManager: CommandManager;
+  public gitService: VscodeGitService;
 
   constructor(context: vscode.ExtensionContext) {
     super();
@@ -20,33 +20,24 @@ export class AppManager extends Loggable(class {}) {
     this.logger = vscode.window.createOutputChannel("Oh My Commits", {
       log: true,
     });
+    this.logger.info("Initializing Oh My Commits");
 
-    // Initialize services
-    this.gitService = new VscodeGitService();
+    // const gitService = new VscodeGitService();
     this.acManager = new AcManager(this);
-    this.statusBarManager = new StatusBarManager(this);
+    const statusBarManager = new StatusBarManager(this);
+    this.gitService = new VscodeGitService();
+    this.commandManager = new CommandManager(
+      context,
+      this.gitService,
+      this.acManager
+    );
 
-    // Initialize components
-    this.logger.info("Initializing Oh My Commits components");
-  }
-
-  public async initialize(): Promise<void> {
-    this.logger.info("Initializing Oh My Commits...");
-
-    // Setup Git integration
-    await this.setupGitIntegration();
-  }
-
-  private async setupGitIntegration(): Promise<void> {
-    const isGitRepo = await this.gitService.isGitRepository();
-    if (!isGitRepo) {
-      this.logger.warn("Not a Git repository");
-      return;
-    }
-    this.logger.info("Git repository detected");
+    this.logger.info("Initialized Oh My Commits");
   }
 
   public dispose(): void {
+    this.logger.info("Disposing Oh My Commits");
+    this.commandManager.dispose();
     this.logger.dispose();
   }
 }
