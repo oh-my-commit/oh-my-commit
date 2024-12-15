@@ -173,18 +173,30 @@ title = "Git CLI Integration"
 abstract = "探讨将 Oh My Commit 功能集成到 Git 命令行的可能性"
 
 [conversations.046]
-slug = "fix_types"
+slug = "commit_generator"
+title = "Commit Generator Implementation"
+abstract = "Implementing and refactoring the generateCommit functionality"
+status = { state = "ongoing", satisfaction = 0 }
 
 [conversations.047]
-slug = "git_storage_optimization"
+slug = "fix_types"
 
 [conversations.048]
+slug = "logger_implementation"
+
+[conversations.049]
+slug = "typescript-fixes"
+
+[conversations.050]
+slug = "git_storage_optimization"
+
+[conversations.051]
 slug = "shell_extension_integration"
 title = "Shell Commands Integration with Extension"
 abstract = "研究和实现 Shell Commands 与 VSCode 扩展的集成方案"
 status = { state = "ongoing" }
 
-[conversations.049]
+[conversations.052]
 slug = "simplify_cli_commands"
 title = "Simplify CLI Command Structure"
 abstract = "简化 CLI 命令结构，使 gen 成为默认命令，并添加 -y 标志用于自动提交"
