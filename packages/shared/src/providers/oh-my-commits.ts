@@ -107,8 +107,8 @@ Please analyze the diff carefully and provide:
       ];
 
       this.logger.info(
-        "Generating commit message using Anthropic...",
-        JSON.stringify(messages, null, 2)
+        "Generating commit message using Anthropic..."
+        // JSON.stringify(messages, null, 2)
       );
 
       const response = await this.anthropic.messages.create({
