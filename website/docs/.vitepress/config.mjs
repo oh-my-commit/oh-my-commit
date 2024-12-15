@@ -5,12 +5,22 @@ export default defineConfig({
   description: "Your Artistic Aide for Commits - 一款专注用户体验的 VSCode Git 提交插件",
   lang: 'zh-CN',
   
+  markdown: {
+    container: {
+      tipLabel: '提示',
+      warningLabel: '注意',
+      dangerLabel: '警告',
+      infoLabel: '信息',
+      detailsLabel: '详细信息'
+    }
+  },
+
   themeConfig: {
     logo: '/logo.svg',
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: 'API', link: '/api/' },
-      { text: '最佳实践', link: '/yet-another-best-practice/' },
+      { text: '即将推出', link: '/guide/coming-soon' },
       { text: 'GitHub', link: 'https://github.com/yourusername/YAAC' }
     ],
     
@@ -30,6 +40,12 @@ export default defineConfig({
             { text: 'AI 能力', link: '/guide/ai-capabilities' },
             { text: '提交模式', link: '/guide/commit-modes' },
             { text: '团队协作', link: '/guide/team-collaboration' }
+          ]
+        },
+        {
+          text: '未来特性',
+          items: [
+            { text: '即将推出', link: '/guide/coming-soon' }
           ]
         }
       ],
