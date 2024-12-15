@@ -3,6 +3,7 @@ import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
+import { getVSCodeAPI } from "@/lib/storage";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
@@ -91,14 +92,25 @@ export function CommitMessage() {
           }}
           disabled={disabled}
         />
-        <VSCodeButton
-          disabled={!isSubjectValid || disabled}
-          onClick={() => {
-            // todo: commit
-          }}
-        >
-          Commit Changes
-        </VSCodeButton>
+        <div className="flex gap-2">
+          <VSCodeButton
+            appearance="secondary"
+            onClick={() => {
+              const vscode = getVSCodeAPI();
+              vscode.postMessage({ command: "get-commit-data" });
+            }}
+          >
+            Regenerate
+          </VSCodeButton>
+          <VSCodeButton
+            disabled={!isSubjectValid || disabled}
+            onClick={() => {
+              // todo: commit
+            }}
+          >
+            Commit Changes
+          </VSCodeButton>
+        </div>
       </Section.Footer>
     </Section>
   );

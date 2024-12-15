@@ -1,0 +1,14 @@
+[meta]
+id = "055"
+slug = "add_regenerate_button"
+title = "Add Regenerate Button to Commit Actions"
+status = { state = "completed", satisfaction = 3 }
+abstract = "在提交操作界面添加重新生成按钮，方便用户快速重新生成提交信息"
+
+[conversation]
+time = "2024-12-16T00:14:42+08:00"
+duration = 120
+
+[[rounds]]
+id = 1
+summary = "添加了重新生成按钮到 CommitActions 组件，包括按钮样式和回调函数"

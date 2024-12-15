@@ -66,10 +66,6 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public async generateCommit(diff: DiffResult): Promise<GenerateCommitResult> {
-    // this.logger.info(
-    //   `Generating commit: `,
-    //   JSON.stringify({ provider: this.provider, model: this.model }, null, 2)
-    // );
     if (!this.provider) {
       throw new Error(`Provider ${this.model!.providerId} not found`);
     }
@@ -78,7 +74,9 @@ export class AcManager extends Loggable(class {}) {
       convertToGitChangeSummary(diff),
       this.model!,
       {
-        lang: vscode.env.language,
+        lang:
+          this.config.get<string>("ohMyCommits.git.commitLanguage") ??
+          vscode.env.language,
       }
     );
   }

@@ -41,6 +41,28 @@ export class QuickCommitCommand extends BaseCommand {
       }
     });
 
+    this.webviewManager.registerMessageHandler(
+      "regenerate-commit",
+      async () => {
+        this.logger.info("Received request to regenerate commit message");
+        const diffSummary = await this.gitService.getDiffSummary();
+        const message = await this.acManager.generateCommit(diffSummary);
+        if (!message.isOk()) {
+          this.logger.error("Failed to generate commit message");
+          return;
+        }
+        const commitData: CommitEvent = {
+          type: "regenerate",
+          diffSummary: await this.gitService.getChangeSummary(),
+          message: message.value,
+        };
+        this.logger.info(this.name, commitData);
+
+        // 发送消息给 webview
+        await this.webviewManager.postMessage(commitData);
+      }
+    );
+
     this.webviewManager.registerMessageHandler("get-commit-data", async () => {
       this.logger.info("Received request for commit data");
       const diffSummary = await this.gitService.getDiffSummary();

@@ -59,6 +59,11 @@ export const CommitPage = () => {
             setChangedFiles(data.diffSummary);
           }
           break;
+        case "regenerate":
+          logger.info("[handleMessage] received regenerate event: ", data);
+          setTitle(data.message.title);
+          setBody(data.message.body ?? "");
+          break;
         default:
           logger.info("[handleMessage] Unknown event type:", data.type);
       }

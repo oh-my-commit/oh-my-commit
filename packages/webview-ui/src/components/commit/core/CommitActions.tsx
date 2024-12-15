@@ -6,11 +6,13 @@ import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 interface CommitActionsProps {
   onCommit?: () => void;
   onCancel?: () => void;
+  onRegenerate?: () => void;
 }
 
 export const CommitActions: React.FC<CommitActionsProps> = ({
   onCommit,
   onCancel,
+  onRegenerate,
 }) => {
   const [message] = useAtom(commitTitleAtom);
   const [detail] = useAtom(commitBodyAtom);
@@ -28,6 +30,13 @@ export const CommitActions: React.FC<CommitActionsProps> = ({
       <div className="actions-right">
         <button className="cancel-button" onClick={onCancel} type="button">
           Cancel
+        </button>
+        <button
+          className="regenerate-button"
+          onClick={onRegenerate}
+          type="button"
+        >
+          Regenerate
         </button>
         <button
           className="commit-button"
