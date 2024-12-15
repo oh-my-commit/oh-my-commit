@@ -1,0 +1,37 @@
+[meta]
+id = "039"
+slug = "typescript_compilation"
+title = "TypeScript Compilation Errors"
+abstract = "Fixing TypeScript compilation errors across multiple packages"
+status = { state = "ongoing" }
+
+[current]
+time = "2024-12-15T15:23:46+08:00"
+round = 3
+duration = 720
+
+[changes]
+files = [
+  "packages/shared/src/index.ts",
+  "packages/cli/src/index.ts",
+  "packages/extension/src/providers/oh-my-commit.ts",
+  "packages/core/tsconfig.json",
+  "tsconfig.base.json",
+  "packages/extension/src/core/ac.ts"
+]
+
+[summary]
+fixed_issues = [
+  "修复了类型导出问题，使用 export type 语法",
+  "解决了 GitChangeSummary 重复导入的问题",
+  "清理了未使用的导入和接口",
+  "创建了缺失的 core 包 tsconfig.json 文件",
+  "创建了项目根目录的 tsconfig.base.json 文件",
+  "修复了 GitChangeType 枚举值的导出方式",
+  "处理了未使用变量的警告"
+]
+
+[remaining_issues]
+- "需要解决 CommitManager 导出问题"
+- "需要解决 DiffResult 和 GitChangeSummary 类型不匹配的问题"
+- "需要处理未使用的 _lang 变量"

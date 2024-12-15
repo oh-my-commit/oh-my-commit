@@ -1,72 +1,82 @@
-import { CommitState } from "@/types/commit-state";
-import { TreeNode } from "@oh-my-commit/shared";
+import { GitFileChange, TreeNode } from "@oh-my-commit/shared";
 
-export const buildFileTree = (
-  files: CommitState["filesChanged"]
-): TreeNode[] => {
-  const root: { [key: string]: TreeNode } = {};
+function createFileNode(file: GitFileChange): TreeNode {
+  return {
+    name: file.path.split("/").pop() || "",
+    path: file.path,
+    type: "file",
+    displayName: file.path,
+    fileInfo: {
+      path: file.path,
+      size: 0, // Size not available from git change
+      type: "file",
+      modified: new Date().toISOString(), // Modification time not available from git change
+      additions: file.additions,
+      deletions: file.deletions,
+      status: file.status
+    }
+  };
+}
 
-  files.forEach((file) => {
-    if (!file || !file.path) return; // Skip if file or path is undefined
+function createDirectoryNode(path: string): TreeNode {
+  return {
+    name: path.split("/").pop() || "",
+    path,
+    type: "directory",
+    displayName: path,
+    children: []
+  };
+}
 
-    const parts = file.path.split("/");
-    let current = root;
+export function buildFileTree(files: GitFileChange[]): TreeNode {
+  const root: TreeNode = createDirectoryNode("");
+  root.children = [];
 
-    parts.forEach((part, index) => {
-      const currentPath = parts.slice(0, index + 1).join("/");
+  for (const file of files) {
+    const pathParts = file.path.split("/");
+    let currentNode = root;
 
-      if (!current[currentPath]) {
-        current[currentPath] = {
-          path: currentPath,
-          displayName: part,
-          type: index === parts.length - 1 ? "file" : "directory",
-          children: [],
-          fileInfo: index === parts.length - 1 ? file : undefined,
-        };
+    // Create directory nodes
+    for (let i = 0; i < pathParts.length - 1; i++) {
+      const pathSoFar = pathParts.slice(0, i + 1).join("/");
+      let childNode = currentNode.children?.find(
+        child => child.type === "directory" && child.path === pathSoFar
+      );
+
+      if (!childNode) {
+        childNode = createDirectoryNode(pathSoFar);
+        currentNode.children = currentNode.children || [];
+        currentNode.children.push(childNode);
       }
 
-      if (index < parts.length - 1) {
-        const parentPath = parts.slice(0, index + 1).join("/");
-        const childPath = parts.slice(0, index + 2).join("/");
+      currentNode = childNode;
+    }
 
-        // Ensure parent has children array
-        if (!current[parentPath].children) {
-          current[parentPath].children = [];
-        }
+    // Add file node
+    currentNode.children = currentNode.children || [];
+    currentNode.children.push(createFileNode(file));
+  }
 
-        // Add child to parent if not already present
-        if (!current[childPath]) {
-          current[childPath] = {
-            path: childPath,
-            displayName: parts[index + 1],
-            type: index === parts.length - 2 ? "file" : "directory",
-            children: [],
-            fileInfo: index === parts.length - 2 ? file : undefined,
-          };
-        }
-
-        // Only add to children array if not already there
-        const existingChild = current[parentPath].children.find(
-          (child) => child.path === childPath
-        );
-        if (!existingChild) {
-          current[parentPath].children.push(current[childPath]);
-        }
-      }
-
-      current = current;
-    });
-  });
-
-  // Convert root object to array and sort
-  return Object.values(root)
-    .filter((node) => !node.path.includes("/"))
-    .sort((a, b) => {
-      // 目录排在前面
+  // Sort nodes by displayName
+  const sortNodes = (nodes: TreeNode[]): TreeNode[] => {
+    return nodes.sort((a, b) => {
+      // Directories come before files
       if (a.type !== b.type) {
         return a.type === "directory" ? -1 : 1;
       }
-      // 同类型按名称排序
-      return a.displayName.localeCompare(b.displayName);
+      // Sort by displayName within same type
+      return (a.displayName || "").localeCompare(b.displayName || "");
     });
-};
+  };
+
+  // Recursively sort all nodes
+  const sortTreeNodes = (node: TreeNode): void => {
+    if (node.children) {
+      node.children = sortNodes(node.children);
+      node.children.forEach(sortTreeNodes);
+    }
+  };
+
+  sortTreeNodes(root);
+  return root;
+}

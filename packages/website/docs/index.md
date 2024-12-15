@@ -29,7 +29,6 @@ features:
   - icon: 🤝
     title: 团队协作
     details: 统一团队提交风格，提高协作效率
-
 ---
 
 ## 为什么选择 Oh My Commit？
@@ -44,15 +43,17 @@ Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
 ## 快速开始
 
 1. 在 VS Code 中安装插件：
+
    ```bash
    code --install-extension oh-my-commit
    ```
 
 2. 配置 AI 服务：
+
    ```json
    {
-     "oh-my-commit.ai.provider": "openai",
-     "oh-my-commit.ai.apiKey": "your-api-key"
+     "omc.ai.provider": "openai",
+     "omc.ai.apiKey": "your-api-key"
    }
    ```
 
@@ -137,9 +138,10 @@ oh-my-commit fix
 
 问题：AI 服务无法访问
 解决：
+
 ```json
 {
-  "oh-my-commit.ai": {
+  "omc.ai": {
     "provider": "azure",
     "endpoint": "YOUR_AZURE_ENDPOINT"
   }
@@ -150,9 +152,10 @@ oh-my-commit fix
 
 问题：提交被钩子拒绝
 解决：
+
 ```json
 {
-  "oh-my-commit.hooks": {
+  "omc.hooks": {
     "strict": false,
     "timeout": 10000
   }
@@ -163,9 +166,10 @@ oh-my-commit fix
 
 问题：配置未同步
 解决：
+
 ```json
 {
-  "oh-my-commit.team": {
+  "omc.team": {
     "syncEnabled": true,
     "syncInterval": 3600
   }

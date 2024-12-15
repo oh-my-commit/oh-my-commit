@@ -7,6 +7,7 @@ Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代
 ### OpenAI
 
 - **GPT-4**（推荐）
+
   - 最强大的理解能力
   - 支持多语言生成
   - 更准确的代码分析
@@ -24,7 +25,9 @@ Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代
   - 支持长文本输入
 
 ### Oh My Commit 专业模型
+
 基于大量真实代码提交数据训练的专业模型：
+
 - 更好的提交规范理解
 - 更快的响应速度
 - 更低的资源消耗
@@ -42,10 +45,11 @@ Oh My Commit 支持生成多种语言的提交消息：
 - Deutsch
 
 配置示例：
+
 ```json
 {
-  "oh-my-commit.language": "zh-CN",
-  "oh-my-commit.ai.multilingual": true
+  "omc.language": "zh-CN",
+  "omc.ai.multilingual": true
 }
 ```
 
@@ -79,14 +83,8 @@ Oh My Commit 支持生成多种语言的提交消息：
 
 ```json
 {
-  "oh-my-commit.commit.template": "[<type>] <scope>: <subject>",
-  "oh-my-commit.commit.types": [
-    "Feature",
-    "Fix",
-    "Docs",
-    "Style",
-    "Refactor"
-  ]
+  "omc.commit.template": "[<type>] <scope>: <subject>",
+  "omc.commit.types": ["Feature", "Fix", "Docs", "Style", "Refactor"]
 }
 ```
 
@@ -95,11 +93,13 @@ Oh My Commit 支持生成多种语言的提交消息：
 Oh My Commit 会深入分析你的代码变更：
 
 1. **语法理解**
+
    - 识别代码结构
    - 理解语言特性
    - 分析函数调用
 
 2. **变更分类**
+
    - 新增功能
    - Bug 修复
    - 重构优化
@@ -113,18 +113,20 @@ Oh My Commit 会深入分析你的代码变更：
 ## 最佳实践
 
 1. **选择合适的模型**
+
    ```json
    {
-     "oh-my-commit.ai.provider": "openai",
-     "oh-my-commit.ai.model": "gpt-4",
-     "oh-my-commit.ai.temperature": 0.7
+     "omc.ai.provider": "openai",
+     "omc.ai.model": "gpt-4",
+     "omc.ai.temperature": 0.7
    }
    ```
 
 2. **优化提示词**
+
    ```json
    {
-     "oh-my-commit.ai.customPrompt": {
+     "omc.ai.customPrompt": {
        "prefix": "分析以下代码变更：\n",
        "suffix": "\n请生成符合规范的提交消息。"
      }
@@ -134,7 +136,7 @@ Oh My Commit 会深入分析你的代码变更：
 3. **配置审查规则**
    ```json
    {
-     "oh-my-commit.ai.review": {
+     "omc.ai.review": {
        "checkBreakingChanges": true,
        "checkSecurity": true,
        "checkPerformance": true
@@ -153,6 +155,7 @@ oh-my-commit commit
 ```
 
 AI 将自动：
+
 1. 分析你的代码变更
 2. 生成符合规范的提交信息
 3. 提供详细的变更说明
@@ -165,6 +168,7 @@ oh-my-commit commit --template team
 ```
 
 特点：
+
 - 统一的提交格式
 - 自动应用团队规范
 - 多语言本地化
@@ -177,6 +181,7 @@ oh-my-commit review PR-123
 ```
 
 功能：
+
 - 自动分析 PR 内容
 - 生成审查建议
 - 标注潜在问题
@@ -187,9 +192,9 @@ oh-my-commit review PR-123
 
 ```json
 {
-  "oh-my-commit.ai.provider": "openai",
-  "oh-my-commit.ai.model": "gpt-4",
-  "oh-my-commit.ai.temperature": 0.7
+  "omc.ai.provider": "openai",
+  "omc.ai.model": "gpt-4",
+  "omc.ai.temperature": 0.7
 }
 ```
 
@@ -197,7 +202,7 @@ oh-my-commit review PR-123
 
 ```json
 {
-  "oh-my-commit.ai.prompt": {
+  "omc.ai.prompt": {
     "template": "作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n{diff}",
     "language": "zh-CN",
     "style": "professional"
@@ -209,18 +214,19 @@ oh-my-commit review PR-123
 
 ```json
 {
-  "oh-my-commit.ai.cache": true,
-  "oh-my-commit.ai.timeout": 10000,
-  "oh-my-commit.ai.retries": 3
+  "omc.ai.cache": true,
+  "omc.ai.timeout": 10000,
+  "omc.ai.retries": 3
 }
 ```
 
 ## 常见问题
 
 1. **如何处理 API 限流？**
+
    ```json
    {
-     "oh-my-commit.ai.rateLimit": {
+     "omc.ai.rateLimit": {
        "maxRequests": 100,
        "perMinute": 60,
        "retryDelay": 1000
@@ -229,9 +235,10 @@ oh-my-commit review PR-123
    ```
 
 2. **如何使用代理？**
+
    ```json
    {
-     "oh-my-commit.ai.proxy": {
+     "omc.ai.proxy": {
        "host": "127.0.0.1",
        "port": 7890,
        "protocol": "http"
@@ -242,7 +249,7 @@ oh-my-commit review PR-123
 3. **如何处理超时？**
    ```json
    {
-     "oh-my-commit.ai.timeout": {
+     "omc.ai.timeout": {
        "request": 10000,
        "generation": 30000
      }

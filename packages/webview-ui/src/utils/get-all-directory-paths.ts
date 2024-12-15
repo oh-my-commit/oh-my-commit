@@ -1,19 +1,19 @@
 import { TreeNode } from "@oh-my-commit/shared";
 
-export const getAllDirectoryPaths = (
-  node: TreeNode,
-  parentPath: string = ""
-): string[] => {
-  const currentPath = parentPath
-    ? `${parentPath}/${node.displayName}`
-    : node.displayName;
-  if (node.type === "directory" && node.children) {
-    return [
-      currentPath,
-      ...node.children.flatMap((child) =>
-        getAllDirectoryPaths(child, currentPath)
-      ),
-    ];
+export function getAllDirectoryPaths(node: TreeNode): string[] {
+  const paths: string[] = [];
+
+  if (node.type === "directory") {
+    paths.push(node.path);
+
+    if (node.children) {
+      node.children.forEach((child) => {
+        if (child.type === "directory") {
+          paths.push(...getAllDirectoryPaths(child));
+        }
+      });
+    }
   }
-  return [];
-};
+
+  return paths;
+}

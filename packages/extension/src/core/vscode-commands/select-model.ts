@@ -3,7 +3,7 @@ import { AcManager } from "@/core/ac";
 import * as vscode from "vscode";
 
 export class SelectModelCommand implements VscodeCommand {
-  public id = "oh-my-commit.selectModel";
+  public id = "omc.selectModel";
 
   private acManager: AcManager;
 

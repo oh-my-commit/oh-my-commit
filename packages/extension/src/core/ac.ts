@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { Provider } from "@/types/provider";
 import { Model } from "@/types/model";
-
 import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { presetAiProviders } from "@/types/provider";
 import { AppManager } from "@/core";
-import { OhMyCommitProvider } from "@/providers/yaac";
+import { OhMyCommitProvider } from "@/providers/oh-my-commit";
+import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [];
@@ -30,7 +30,7 @@ export class AcManager extends Loggable(class {}) {
 
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("");
-    this.currentModelId = config.get<string>("oh-my-commit.model");
+    this.currentModelId = config.get<string>("omc.model");
   }
 
   public async getAvailableModels(): Promise<Model[]> {
@@ -74,7 +74,7 @@ export class AcManager extends Loggable(class {}) {
     this.currentModelId = modelId;
     await vscode.workspace
       .getConfiguration("")
-      .update("oh-my-commit.model", modelId, true);
+      .update("omc.model", modelId, true);
 
     const providerId = model.providerId;
     if (presetAiProviders.includes(providerId)) {
@@ -87,7 +87,7 @@ export class AcManager extends Loggable(class {}) {
       );
 
       if (response === configureNow) {
-        await openPreferences("oh-my-commit.apiKeys");
+        await openPreferences("omc.apiKeys");
       }
     }
 
@@ -107,7 +107,7 @@ export class AcManager extends Loggable(class {}) {
       throw new Error(`Provider ${currentModel.providerId} not found`);
     }
 
-    return provider.generateCommit(diff, currentModel, {
+    return provider.generateCommit(convertToGitChangeSummary(diff), currentModel, {
       lang: vscode.env.language,
     });
   }
@@ -135,9 +135,8 @@ export class AcManager extends Loggable(class {}) {
 
   public async updateProvidersConfig(): Promise<void> {
     const config = vscode.workspace.getConfiguration("");
-    const providersConfig = config.get<Record<string, boolean>>(
-      "oh-my-commit.providers"
-    );
+    const providersConfig =
+      config.get<Record<string, boolean>>("omc.providers");
 
     if (providersConfig) {
       const providerClasses = [OhMyCommitProvider];

@@ -1,7 +1,7 @@
 import { Model } from "@/types/model";
 import { Loggable } from "@/types/mixins";
 import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
-import { DiffResult } from "simple-git";
+import { GitChangeSummary } from "@oh-my-commit/shared";
 import { workspace, WorkspaceConfiguration } from "vscode";
 
 export const presetAiProviders = [
@@ -20,7 +20,7 @@ export abstract class Provider extends Loggable(class {}) {
   static models: Model[] = []; // 支持的模型列表
 
   abstract generateCommit(
-    diff: DiffResult,
+    diff: GitChangeSummary,
     model: Model,
     options?: { lang?: string }
   ): Promise<GenerateCommitResult>;

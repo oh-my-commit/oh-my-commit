@@ -1,7 +1,7 @@
 [meta]
 slug = "fix_types"
 title = "Fix Type Errors"
-abstract = "修复类型错误，包括 GitChangeSummary 和导入路径问题"
+abstract = "修复类型错误，包括 GitChangeSummary 和导入路径问题，添加 CLI 的 dry-run 和模型选择功能，重构代码结构把核心功能移到 shared 包"
 
 [[rounds]]
 time = "2024-01-05T10:30:00Z"
@@ -12,3 +12,23 @@ duration = 120
 time = "2024-12-15T14:59:56+08:00"
 round = 2
 duration = 180
+
+[[rounds]]
+time = "2024-12-15T15:02:45+08:00"
+round = 3
+duration = 300
+
+[[rounds]]
+time = "2024-12-15T15:05:08+08:00"
+round = 4
+duration = 360
+
+[[rounds]]
+time = "2024-12-15T15:09:42+08:00"
+round = 5
+duration = 420
+
+[[rounds]]
+time = "2024-12-15T15:11:31+08:00"
+round = 6
+duration = 480

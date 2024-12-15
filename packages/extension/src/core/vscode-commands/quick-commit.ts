@@ -6,7 +6,7 @@ import { CommitEvent } from "@oh-my-commit/shared/types/commit";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
-  public id = "oh-my-commit.quickCommit";
+  public id = "omc.quickCommit";
   public name = "Quick Commit";
 
   private gitService: VscodeGitService;

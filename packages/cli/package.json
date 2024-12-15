@@ -1,36 +1,35 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.3.0",
-  "description": "Oh My Commit CLI tool",
-  "bin": {
-    "omc": "./dist/cli.js",
-    "omc-init": "./dist/cli.js",
-    "omc-gen": "./dist/cli.js",
-    "omc-check": "./dist/cli.js",
-    "omc-conventional": "./dist/cli.js",
-    "omc-simple": "./dist/cli.js",
-    "omc-en": "./dist/cli.js",
-    "omc-zh": "./dist/cli.js",
-    "omc-team": "./dist/cli.js",
-    "omc-team-init": "./dist/cli.js",
-    "omc-team-check": "./dist/cli.js",
-    "omc-debug": "./dist/cli.js"
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w",
-    "clean": "rimraf dist"
-  },
-  "dependencies": {
-    "@oh-my-commit/core": "workspace:*",
-    "@oh-my-commit/shared": "workspace:*",
-    "commander": "^12.1.0",
-    "chalk": "^4.1.2",
-    "simple-git": "^3.22.0"
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "npm run build -- --watch",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "typescript": "^5.7.2",
-    "rimraf": "^5.0.5"
-  }
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@oh-my-commit/shared": "workspace:*",
+    "commander": "^11.0.0",
+    "inquirer": "^9.0.0",
+    "neverthrow": "^6.1.0"
+  },
+  "type": "module"
 }

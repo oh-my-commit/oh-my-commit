@@ -3,10 +3,10 @@ import { atom } from "jotai";
 
 // 核心状态原子
 export const commitTitleAtom = atomWithStorage({
-  key: "oh-my-commit.commit.title",
+  key: "omc.commit.title",
   defaultValue: "",
 });
 export const commitBodyAtom = atomWithStorage({
-  key: "oh-my-commit.commit.body",
+  key: "omc.commit.body",
   defaultValue: "",
 });

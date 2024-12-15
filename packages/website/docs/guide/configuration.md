@@ -8,12 +8,12 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 
 ```json
 {
-  "oh-my-commit.ai": {
-    "provider": "openai",  // 可选：openai, claude, custom
+  "omc.ai": {
+    "provider": "openai", // 可选：openai, claude, custom
     "apiKey": "your-api-key",
-    "model": "gpt-4",  // 根据 provider 选择合适的模型
-    "temperature": 0.7,  // 控制创造性，范围 0-1
-    "maxTokens": 500  // 单次生成的最大 token 数
+    "model": "gpt-4", // 根据 provider 选择合适的模型
+    "temperature": 0.7, // 控制创造性，范围 0-1
+    "maxTokens": 500 // 单次生成的最大 token 数
   }
 }
 ```
@@ -22,12 +22,12 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 
 ```json
 {
-  "oh-my-commit.ui": {
-    "mode": "panel",  // panel, window, notification, silent
-    "theme": "auto",  // auto, light, dark
-    "language": "zh-CN",  // 界面语言
-    "showIcon": true,  // 是否在状态栏显示图标
-    "autoOpen": true  // 是否自动打开提交界面
+  "omc.ui": {
+    "mode": "panel", // panel, window, notification, silent
+    "theme": "auto", // auto, light, dark
+    "language": "zh-CN", // 界面语言
+    "showIcon": true, // 是否在状态栏显示图标
+    "autoOpen": true // 是否自动打开提交界面
   }
 }
 ```
@@ -37,6 +37,7 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 默认快捷键：
 
 - Windows/Linux：
+
   - 打开提交界面：`Ctrl+Alt+C`
   - 快速提交：`Ctrl+Alt+Enter`
   - 打开设置：`Ctrl+Alt+,`
@@ -52,7 +53,7 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 
 ```json
 {
-  "oh-my-commit.commit.template": {
+  "omc.commit.template": {
     "type": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
     "scope": ["core", "ui", "api", "docs"],
     "format": "${type}(${scope}): ${subject}\n\n${body}"
@@ -64,10 +65,10 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 
 ```json
 {
-  "oh-my-commit.git": {
-    "signCommit": false,  // 是否签名提交
-    "autoStage": true,  // 是否自动暂存修改
-    "pushOnCommit": false  // 是否在提交后自动推送
+  "omc.git": {
+    "signCommit": false, // 是否签名提交
+    "autoStage": true, // 是否自动暂存修改
+    "pushOnCommit": false // 是否在提交后自动推送
   }
 }
 ```
@@ -76,10 +77,10 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 
 ```json
 {
-  "oh-my-commit.team": {
-    "configPath": ".oh-my-commit/config.json",  // 团队配置文件路径
-    "enforceConfig": true,  // 是否强制使用团队配置
-    "allowOverride": ["ui.theme", "ui.language"]  // 允许个人覆盖的配置项
+  "omc.team": {
+    "configPath": ".oh-my-commit/config.json", // 团队配置文件路径
+    "enforceConfig": true, // 是否强制使用团队配置
+    "allowOverride": ["ui.theme", "ui.language"] // 允许个人覆盖的配置项
   }
 }
 ```
@@ -87,11 +88,13 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 ## 配置文件位置
 
 - 用户配置：
+
   - Windows: `%APPDATA%\Code\User\settings.json`
   - macOS: `~/Library/Application Support/Code/User/settings.json`
   - Linux: `~/.config/Code/User/settings.json`
 
 - 工作区配置：
+
   - 项目根目录下的 `.vscode/settings.json`
 
 - 团队配置：
@@ -112,6 +115,7 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队�
 Oh My Commit 提供了配置导入/导出功能，方便在多个环境间同步配置：
 
 1. 导出配置：
+
    - 命令面板中输入 "Oh My Commit: 导出配置"
    - 选择导出位置
    - 配置将被保存为 JSON 文件

@@ -8,7 +8,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai": {
+  "omc.ai": {
     "enabled": true,
     "provider": "openai",
     "model": "gpt-4",
@@ -22,7 +22,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.prompt": {
+  "omc.ai.prompt": {
     "system": "你是一个专业的代码审查助手，擅长生成规范的提交信息。",
     "template": "请根据以下代码变更生成一个符合 Conventional Commits 规范的提交信息：\n\n${diff}",
     "language": "zh-CN"
@@ -34,7 +34,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.languages": {
+  "omc.ai.languages": {
     "default": "zh-CN",
     "supported": ["zh-CN", "en-US", "ja-JP"],
     "templates": {
@@ -52,15 +52,10 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.review": {
+  "omc.ai.review": {
     "enabled": true,
     "mode": "auto",
-    "focus": [
-      "security",
-      "performance",
-      "style",
-      "logic"
-    ],
+    "focus": ["security", "performance", "style", "logic"],
     "threshold": 0.8
   }
 }
@@ -70,16 +65,11 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.suggestions": {
+  "omc.ai.suggestions": {
     "enabled": true,
     "inline": true,
     "autoFix": true,
-    "categories": [
-      "naming",
-      "formatting",
-      "documentation",
-      "optimization"
-    ]
+    "categories": ["naming", "formatting", "documentation", "optimization"]
   }
 }
 ```
@@ -90,7 +80,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.completion": {
+  "omc.ai.completion": {
     "enabled": true,
     "triggerChars": [":", "(", " "],
     "minChars": 3,
@@ -103,13 +93,9 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.snippets": {
+  "omc.ai.snippets": {
     "enabled": true,
-    "contexts": [
-      "tests",
-      "documentation",
-      "examples"
-    ],
+    "contexts": ["tests", "documentation", "examples"],
     "format": true
   }
 }
@@ -121,7 +107,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.openai": {
+  "omc.ai.openai": {
     "apiKey": "${OPENAI_API_KEY}",
     "organization": "${OPENAI_ORG_ID}",
     "baseUrl": "https://api.openai.com/v1",
@@ -134,7 +120,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.azure": {
+  "omc.ai.azure": {
     "enabled": true,
     "endpoint": "${AZURE_OPENAI_ENDPOINT}",
     "apiKey": "${AZURE_OPENAI_KEY}",
@@ -148,7 +134,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 ```json
 {
-  "oh-my-commit.ai.custom": {
+  "omc.ai.custom": {
     "enabled": true,
     "endpoint": "http://your-ai-service.com/api",
     "headers": {
@@ -186,9 +172,10 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 问题：遇到 API 调用限制
 解决：
+
 ```json
 {
-  "oh-my-commit.ai.rateLimit": {
+  "omc.ai.rateLimit": {
     "enabled": true,
     "maxRequests": 100,
     "interval": 3600,
@@ -201,9 +188,10 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 问题：AI 响应时间过长
 解决：
+
 ```json
 {
-  "oh-my-commit.ai.timeout": {
+  "omc.ai.timeout": {
     "request": 30000,
     "generation": 60000,
     "review": 120000
@@ -215,9 +203,10 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 
 问题：需要在离线环境使用
 解决：
+
 ```json
 {
-  "oh-my-commit.ai.offline": {
+  "omc.ai.offline": {
     "enabled": true,
     "cachePath": ".oh-my-commit/ai-cache",
     "maxCacheAge": 604800

@@ -1,35 +1,30 @@
-import { getAllFiles } from "@/utils/get-all-files";
 import { TreeNode } from "@oh-my-commit/shared";
 
-export const getDirectoryStats = (
-  node: TreeNode,
-  selectedFiles: Set<string>
-) => {
-  const allFiles = getAllFiles(node);
-  const selectedFilesInDir = allFiles.filter((f) => selectedFiles.has(f));
-
-  const stats = node.children?.reduce(
-    (acc, child) => {
-      if (
-        child.type === "file" &&
-        child.fileInfo &&
-        selectedFiles.has(child.fileInfo.path)
-      ) {
-        acc.additions += child.fileInfo.additions;
-        acc.deletions += child.fileInfo.deletions;
-      } else if (child.type === "directory") {
-        const childStats = getDirectoryStats(child, selectedFiles);
-        acc.additions += childStats.additions;
-        acc.deletions += childStats.deletions;
-      }
-      return acc;
-    },
-    { additions: 0, deletions: 0 }
-  ) || { additions: 0, deletions: 0 };
-
-  return {
-    totalFiles: allFiles.length,
-    selectedFiles: selectedFilesInDir.length,
-    ...stats,
+export function getDirectoryStats(node: TreeNode): TreeNode["stats"] {
+  const stats = {
+    totalFiles: 0,
+    totalDirectories: 0,
+    totalSize: 0,
   };
-};
+
+  if (node.type === "directory" && node.children) {
+    node.children.forEach((child) => {
+      if (child.type === "directory") {
+        stats.totalDirectories++;
+        const childStats = getDirectoryStats(child);
+        if (childStats) {
+          stats.totalFiles += childStats.totalFiles;
+          stats.totalDirectories += childStats.totalDirectories;
+          stats.totalSize += childStats.totalSize;
+        }
+      } else {
+        stats.totalFiles++;
+        if (child.fileInfo) {
+          stats.totalSize += child.fileInfo.size;
+        }
+      }
+    });
+  }
+
+  return stats;
+}
