@@ -5,8 +5,7 @@ import { Model } from "../types/model";
 import { Provider } from "../types/provider";
 import { GitChangeSummary } from "../types/git";
 import { GenerateCommitResult } from "../types/commit";
-import { BaseLogger } from "./BaseLogger";
-import { ConsoleLogger } from "./ConsoleLogger";
+import { BaseLogger } from "@/utils/BaseLogger";
 
 class OhMyCommitsStandardModel implements Model {
   id = "omc/standard";
@@ -23,7 +22,6 @@ class OhMyCommitsStandardModel implements Model {
 
 export class OhMyCommitsProvider extends Provider {
   private anthropic: Anthropic | null = null;
-  public logger: BaseLogger;
   public config: any;
 
   static id = "oh-my-commits";
@@ -35,7 +33,8 @@ export class OhMyCommitsProvider extends Provider {
 
   constructor(logger?: BaseLogger, _apiKey?: string) {
     super();
-    this.logger = logger || new ConsoleLogger("Oh My Commits");
+    if (logger) this.logger = logger;
+
     this.config = {};
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY;
@@ -54,6 +53,7 @@ export class OhMyCommitsProvider extends Provider {
     if (!this.anthropic) {
       return err("Anthropic API key not configured");
     }
+    this.logger.info("Generating commit message using Anthropic...");
 
     try {
       const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
