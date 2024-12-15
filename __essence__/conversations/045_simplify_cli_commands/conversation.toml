@@ -1,0 +1,22 @@
+slug = "simplify_cli_commands"
+title = "Simplify CLI Command Structure"
+abstract = "简化 CLI 命令结构，使 gen 成为默认命令，并添加 -y 标志用于自动提交"
+
+[status]
+state = "ongoing"
+
+[[rounds]]
+time = "2024-12-15T16:10:25+08:00"
+duration = 180
+
+[[rounds]]
+time = "2024-12-15T16:11:57+08:00"
+duration = 60
+
+[[rounds]]
+time = "2024-12-15T16:13:04+08:00"
+duration = 120
+
+[[rounds]]
+time = "2024-12-15T16:14:25+08:00"
+duration = 90
