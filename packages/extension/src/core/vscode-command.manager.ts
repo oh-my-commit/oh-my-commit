@@ -1,6 +1,20 @@
 import * as vscode from "vscode";
 import { VscodeCommand, BaseCommand } from "@/core/vscode-commands/types";
 import { AppManager } from "@/core";
+import {
+  CommitCommand,
+  InitCommand,
+  GenerateCommand,
+  CheckCommand,
+  UseConventionalCommand,
+  UseSimpleCommand,
+  UseEnglishCommand,
+  UseChineseCommand,
+  TeamModeCommand,
+  TeamInitCommand,
+  TeamCheckCommand,
+  DebugCommand,
+} from "@/core/vscode-commands/shell-commands";
 
 export class CommandManager {
   private commands: Map<string, VscodeCommand> = new Map();
@@ -19,8 +33,19 @@ export class CommandManager {
   }
 
   private registerCommands(): void {
-    // Register all commands here
-    // TODO: Add command registrations
+    // Register all shell commands
+    this.register(new CommitCommand());
+    this.register(new InitCommand());
+    this.register(new GenerateCommand());
+    this.register(new CheckCommand());
+    this.register(new UseConventionalCommand());
+    this.register(new UseSimpleCommand());
+    this.register(new UseEnglishCommand());
+    this.register(new UseChineseCommand());
+    this.register(new TeamModeCommand());
+    this.register(new TeamInitCommand());
+    this.register(new TeamCheckCommand());
+    this.register(new DebugCommand());
   }
 
   register(command: VscodeCommand): void {

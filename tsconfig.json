@@ -1,8 +1,10 @@
 {
   "files": [],
   "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/core" },
+    { "path": "./packages/cli" },
     { "path": "./packages/extension" },
-    { "path": "./packages/webview-ui" },
-    { "path": "./packages/shared" }
+    { "path": "./packages/webview-ui" }
   ]
 }

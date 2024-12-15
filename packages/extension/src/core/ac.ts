@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
 import { Provider } from "@/types/provider";
 import { Model } from "@/types/model";
-import { OhMyCommitProvider } from "@/providers/oh-my-commit";
+
 import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { presetAiProviders } from "@/types/provider";
 import { AppManager } from "@/core";
+import { OhMyCommitProvider } from "@/providers/yaac";
 
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [];
@@ -71,7 +72,9 @@ export class AcManager extends Loggable(class {}) {
     }
 
     this.currentModelId = modelId;
-    await vscode.workspace.getConfiguration("").update("oh-my-commit.model", modelId, true);
+    await vscode.workspace
+      .getConfiguration("")
+      .update("oh-my-commit.model", modelId, true);
 
     const providerId = model.providerId;
     if (presetAiProviders.includes(providerId)) {
@@ -110,13 +113,21 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public registerProvider(provider: Provider): void {
-    if (!this.providers.find((p) => (p.constructor as typeof Provider).id === (provider.constructor as typeof Provider).id)) {
+    if (
+      !this.providers.find(
+        (p) =>
+          (p.constructor as typeof Provider).id ===
+          (provider.constructor as typeof Provider).id
+      )
+    ) {
       this.providers.push(provider);
     }
   }
 
   public unregisterProvider(providerId: string): void {
-    const index = this.providers.findIndex((p) => (p.constructor as typeof Provider).id === providerId);
+    const index = this.providers.findIndex(
+      (p) => (p.constructor as typeof Provider).id === providerId
+    );
     if (index !== -1) {
       this.providers.splice(index, 1);
     }
@@ -124,7 +135,9 @@ export class AcManager extends Loggable(class {}) {
 
   public async updateProvidersConfig(): Promise<void> {
     const config = vscode.workspace.getConfiguration("");
-    const providersConfig = config.get<Record<string, boolean>>("oh-my-commit.providers");
+    const providersConfig = config.get<Record<string, boolean>>(
+      "oh-my-commit.providers"
+    );
 
     if (providersConfig) {
       const providerClasses = [OhMyCommitProvider];
