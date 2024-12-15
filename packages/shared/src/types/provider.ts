@@ -6,14 +6,14 @@ import { BaseLogger } from "@/utils/BaseLogger";
 import { ConsoleLogger } from "@/utils/ConsoleLogger";
 
 export abstract class Provider {
-  protected config: any;
   public logger: BaseLogger = new ConsoleLogger("Oh My Commits");
+  protected config: any;
+  protected enabled: boolean = true;
 
-  static id: string;
-  static displayName: string;
-  static description: string;
-  static enabled: boolean;
-  static models: Model[];
+  abstract id: string;
+  abstract displayName: string;
+  abstract description: string;
+  abstract models: Model[];
 
   abstract generateCommit(
     diff: GitChangeSummary,
