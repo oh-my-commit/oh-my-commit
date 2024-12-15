@@ -4,7 +4,7 @@ import { program } from "commander";
 import chalk from "chalk";
 import simpleGit from "simple-git";
 import { CommitManager } from "@oh-my-commits/shared";
-import { ConsoleLogger } from "@oh-my-commits/shared/src/utils/ConsoleLogger";
+import { ConsoleLogger } from "@oh-my-commits/shared";
 
 // Initialize git and commit manager
 const git = simpleGit();

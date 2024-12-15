@@ -4,7 +4,7 @@ import { Result, err } from "neverthrow";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
 import { OhMyCommitsProvider } from "../providers/oh-my-commits";
-import { BaseLogger } from "./BaseLogger";
+import { BaseLogger } from "@/utils/BaseLogger";
 
 export interface CommitManagerOptions {
   logger?: BaseLogger;

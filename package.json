@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "type-check": "tsc --build",
+    "clean": "turbo clean",
     "dev": "turbo dev",
     "watch": "turbo watch",
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
