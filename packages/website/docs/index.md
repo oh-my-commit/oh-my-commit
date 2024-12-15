@@ -52,8 +52,8 @@ Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
 
    ```json
    {
-     "omc.ai.provider": "openai",
-     "omc.ai.apiKey": "your-api-key"
+     "oh-my-commits.ai.provider": "openai",
+     "oh-my-commits.ai.apiKey": "your-api-key"
    }
    ```
 
@@ -141,7 +141,7 @@ oh-my-commits fix
 
 ```json
 {
-  "omc.ai": {
+  "oh-my-commits.ai": {
     "provider": "azure",
     "endpoint": "YOUR_AZURE_ENDPOINT"
   }
@@ -155,7 +155,7 @@ oh-my-commits fix
 
 ```json
 {
-  "omc.hooks": {
+  "oh-my-commits.hooks": {
     "strict": false,
     "timeout": 10000
   }
@@ -169,7 +169,7 @@ oh-my-commits fix
 
 ```json
 {
-  "omc.team": {
+  "oh-my-commits.team": {
     "syncEnabled": true,
     "syncInterval": 3600
   }

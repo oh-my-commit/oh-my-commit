@@ -8,7 +8,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "omc.mode.quick": {
+  "oh-my-commits.mode.quick": {
     "enabled": true,
     "useAI": true,
     "template": "<type>(<scope>): <subject>",
@@ -23,7 +23,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "omc.mode.interactive": {
+  "oh-my-commits.mode.interactive": {
     "enabled": true,
     "steps": ["type", "scope", "subject", "body", "breaking", "issues"],
     "validation": true
@@ -37,7 +37,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "omc.mode.team": {
+  "oh-my-commits.mode.team": {
     "enabled": true,
     "configPath": ".oh-my-commits/team.json",
     "enforceRules": true,
@@ -52,7 +52,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "omc.mode.ai": {
+  "oh-my-commits.mode.ai": {
     "enabled": true,
     "model": "gpt-4",
     "language": "zh-CN",
@@ -68,7 +68,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "omc.mode.custom": {
+  "oh-my-commits.mode.custom": {
     "enabled": true,
     "hooks": {
       "pre-commit": ".oh-my-commits/hooks/pre-commit.js",
@@ -101,7 +101,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode": {
+  "oh-my-commits.mode": {
     "default": "interactive",
     "allowSwitch": true,
     "shortcuts": {
@@ -119,7 +119,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.hybrid": {
+  "oh-my-commits.mode.hybrid": {
     "primary": "quick",
     "secondary": "ai",
     "conditions": {
@@ -134,7 +134,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.hybrid": {
+  "oh-my-commits.mode.hybrid": {
     "primary": "team",
     "secondary": "interactive",
     "validation": true,
@@ -156,7 +156,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.optimize": {
+  "oh-my-commits.mode.optimize": {
     "cacheEnabled": true,
     "historySize": 100,
     "suggestions": true,
@@ -169,7 +169,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.workflow": {
+  "oh-my-commits.mode.workflow": {
     "branch": {
       "feature/*": "interactive",
       "bugfix/*": "quick",
@@ -193,7 +193,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.conflict": {
+  "oh-my-commits.mode.conflict": {
     "priority": ["team", "ai", "interactive", "quick"],
     "resolution": "highest"
   }
@@ -207,7 +207,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.performance": {
+  "oh-my-commits.mode.performance": {
     "cache": true,
     "timeout": 5000,
     "parallel": true,
@@ -223,7 +223,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "omc.mode.offline": {
+  "oh-my-commits.mode.offline": {
     "fallback": "interactive",
     "cacheTemplates": true,
     "localValidation": true

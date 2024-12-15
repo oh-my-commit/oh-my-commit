@@ -8,7 +8,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "omc.ai": {
+  "oh-my-commits.ai": {
     "provider": "openai", // 可选：openai, claude, custom
     "apiKey": "your-api-key",
     "model": "gpt-4", // 根据 provider 选择合适的模型
@@ -22,7 +22,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "omc.ui": {
+  "oh-my-commits.ui": {
     "mode": "panel", // panel, window, notification, silent
     "theme": "auto", // auto, light, dark
     "language": "zh-CN", // 界面语言
@@ -53,7 +53,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "omc.commit.template": {
+  "oh-my-commits.commit.template": {
     "type": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
     "scope": ["core", "ui", "api", "docs"],
     "format": "${type}(${scope}): ${subject}\n\n${body}"
@@ -65,7 +65,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "omc.git": {
+  "oh-my-commits.git": {
     "signCommit": false, // 是否签名提交
     "autoStage": true, // 是否自动暂存修改
     "pushOnCommit": false // 是否在提交后自动推送
@@ -77,7 +77,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "omc.team": {
+  "oh-my-commits.team": {
     "configPath": ".oh-my-commits/config.json", // 团队配置文件路径
     "enforceConfig": true, // 是否强制使用团队配置
     "allowOverride": ["ui.theme", "ui.language"] // 允许个人覆盖的配置项

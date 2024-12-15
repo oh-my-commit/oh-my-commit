@@ -495,7 +495,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -611,7 +611,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -727,7 +727,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -843,7 +843,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -959,7 +959,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1075,7 +1075,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1191,7 +1191,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1307,7 +1307,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1423,7 +1423,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1539,7 +1539,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1655,7 +1655,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1771,7 +1771,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -1887,7 +1887,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -2003,7 +2003,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -2119,7 +2119,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -2235,7 +2235,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -2351,7 +2351,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration
@@ -2467,7 +2467,7 @@
 
 #### Changes Made
 
-- Added new configuration option `omc.noDiffBehavior` to control behavior when no changes are detected
+- Added new configuration option `oh-my-commits.noDiffBehavior` to control behavior when no changes are detected
   - `ignore`: Shows a message and exits (default)
   - `revise`: Allows amending the last commit
 - Updated QuickCommitCommand to respect this configuration

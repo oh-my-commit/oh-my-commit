@@ -16,11 +16,13 @@ interface BeforeCommitEvent {
   setMessage(msg: string); // 修改提交消息
 }
 
-omc.hooks.onBeforeCommit((event) => {
-  // 例：添加 JIRA 任务编号
-  const taskId = "PROJ-123";
-  event.setMessage(`[${taskId}] ${event.message}`);
-});
+oh -
+  my -
+  commits.hooks.onBeforeCommit((event) => {
+    // 例：添加 JIRA 任务编号
+    const taskId = "PROJ-123";
+    event.setMessage(`[${taskId}] ${event.message}`);
+  });
 ```
 
 ### `onAfterCommit`
@@ -34,10 +36,12 @@ interface AfterCommitEvent {
   files: string[]; // 已提交的文件列表
 }
 
-omc.hooks.onAfterCommit((event) => {
-  // 例：在提交后通知团队
-  notifyTeam(`New commit: ${event.hash}`);
-});
+oh -
+  my -
+  commits.hooks.onAfterCommit((event) => {
+    // 例：在提交后通知团队
+    notifyTeam(`New commit: ${event.hash}`);
+  });
 ```
 
 ## AI 相关钩子
@@ -54,12 +58,14 @@ interface BeforeGenerateEvent {
   setPrompt(text: string); // 修改 AI 提示
 }
 
-omc.hooks.onBeforeGenerate((event) => {
-  // 例：根据文件类型调整提示
-  if (event.files.some((f) => f.endsWith(".test.ts"))) {
-    event.setPrompt("This commit includes test files...");
-  }
-});
+oh -
+  my -
+  commits.hooks.onBeforeGenerate((event) => {
+    // 例：根据文件类型调整提示
+    if (event.files.some((f) => f.endsWith(".test.ts"))) {
+      event.setPrompt("This commit includes test files...");
+    }
+  });
 ```
 
 ### `onAfterGenerate`
@@ -72,10 +78,12 @@ interface AfterGenerateEvent {
   setMessage(msg: string); // 修改消息
 }
 
-omc.hooks.onAfterGenerate((event) => {
-  // 例：添加自定义前缀
-  event.setMessage(`[AUTO] ${event.message}`);
-});
+oh -
+  my -
+  commits.hooks.onAfterGenerate((event) => {
+    // 例：添加自定义前缀
+    event.setMessage(`[AUTO] ${event.message}`);
+  });
 ```
 
 ## 配置相关钩子
@@ -91,12 +99,14 @@ interface ConfigChangeEvent {
   oldValue: any; // 旧值
 }
 
-omc.hooks.onConfigChange((event) => {
-  // 例：在切换语言时刷新界面
-  if (event.key === "omc.language") {
-    refreshUI();
-  }
-});
+oh -
+  my -
+  commits.hooks.onConfigChange((event) => {
+    // 例：在切换语言时刷新界面
+    if (event.key === "oh-my-commits.language") {
+      refreshUI();
+    }
+  });
 ```
 
 ## 团队协作钩子
@@ -133,27 +143,31 @@ interface TeamActivityEvent {
 1. 错误处理：
 
    ```typescript
-   omc.hooks.onBeforeCommit((event) => {
-     try {
-       // 你的逻辑
-     } catch (error) {
-       console.error("Hook error:", error);
-       event.cancel(); // 出错时取消操作
-     }
-   });
+   oh -
+     my -
+     commits.hooks.onBeforeCommit((event) => {
+       try {
+         // 你的逻辑
+       } catch (error) {
+         console.error("Hook error:", error);
+         event.cancel(); // 出错时取消操作
+       }
+     });
    ```
 
 2. 异步操作：
 
    ```typescript
-   omc.hooks.onAfterCommit(async (event) => {
-     await updateExternalSystem(event.hash);
-   });
+   oh -
+     my -
+     commits.hooks.onAfterCommit(async (event) => {
+       await updateExternalSystem(event.hash);
+     });
    ```
 
 3. 清理钩子：
    ```typescript
-   const disposable = omc.hooks.onConfigChange(() => {});
+   const disposable = oh - my - commits.hooks.onConfigChange(() => {});
    // 当不再需要时
    disposable.dispose();
    ```
@@ -164,7 +178,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "omc.hooks": {
+  "oh-my-commits.hooks": {
     "enabled": true,
     "timeout": 5000,
     "parallel": true,
@@ -177,7 +191,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "omc.hooks.path": {
+  "oh-my-commits.hooks.path": {
     "pre-commit": ".oh-my-commits/hooks/pre-commit.js",
     "post-commit": ".oh-my-commits/hooks/post-commit.js",
     "commit-msg": ".oh-my-commits/hooks/commit-msg.js"
@@ -189,7 +203,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "omc.hooks.order": {
+  "oh-my-commits.hooks.order": {
     "pre-commit": ["lint", "test", "validate"],
     "post-commit": ["notify", "docs", "deploy"]
   }
@@ -353,7 +367,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "omc.hooks.timeout": {
+  "oh-my-commits.hooks.timeout": {
     "pre-commit": 10000,
     "post-commit": 30000,
     "commit-msg": 5000
@@ -368,7 +382,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "omc.hooks.error": {
+  "oh-my-commits.hooks.error": {
     "ignore": ["lint", "test"],
     "retry": 3,
     "delay": 1000
@@ -383,7 +397,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "omc.hooks.performance": {
+  "oh-my-commits.hooks.performance": {
     "cache": true,
     "parallel": true,
     "lightweight": true

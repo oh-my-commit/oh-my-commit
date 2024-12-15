@@ -48,8 +48,8 @@ Oh My Commits 支持生成多种语言的提交消息：
 
 ```json
 {
-  "omc.language": "zh-CN",
-  "omc.ai.multilingual": true
+  "oh-my-commits.language": "zh-CN",
+  "oh-my-commits.ai.multilingual": true
 }
 ```
 
@@ -83,8 +83,8 @@ Oh My Commits 支持生成多种语言的提交消息：
 
 ```json
 {
-  "omc.commit.template": "[<type>] <scope>: <subject>",
-  "omc.commit.types": ["Feature", "Fix", "Docs", "Style", "Refactor"]
+  "oh-my-commits.commit.template": "[<type>] <scope>: <subject>",
+  "oh-my-commits.commit.types": ["Feature", "Fix", "Docs", "Style", "Refactor"]
 }
 ```
 
@@ -116,9 +116,9 @@ Oh My Commits 会深入分析你的代码变更：
 
    ```json
    {
-     "omc.ai.provider": "openai",
-     "omc.ai.model": "gpt-4",
-     "omc.ai.temperature": 0.7
+     "oh-my-commits.ai.provider": "openai",
+     "oh-my-commits.ai.model": "gpt-4",
+     "oh-my-commits.ai.temperature": 0.7
    }
    ```
 
@@ -126,7 +126,7 @@ Oh My Commits 会深入分析你的代码变更：
 
    ```json
    {
-     "omc.ai.customPrompt": {
+     "oh-my-commits.ai.customPrompt": {
        "prefix": "分析以下代码变更：\n",
        "suffix": "\n请生成符合规范的提交消息。"
      }
@@ -136,7 +136,7 @@ Oh My Commits 会深入分析你的代码变更：
 3. **配置审查规则**
    ```json
    {
-     "omc.ai.review": {
+     "oh-my-commits.ai.review": {
        "checkBreakingChanges": true,
        "checkSecurity": true,
        "checkPerformance": true
@@ -192,9 +192,9 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "omc.ai.provider": "openai",
-  "omc.ai.model": "gpt-4",
-  "omc.ai.temperature": 0.7
+  "oh-my-commits.ai.provider": "openai",
+  "oh-my-commits.ai.model": "gpt-4",
+  "oh-my-commits.ai.temperature": 0.7
 }
 ```
 
@@ -202,7 +202,7 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "omc.ai.prompt": {
+  "oh-my-commits.ai.prompt": {
     "template": "作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n{diff}",
     "language": "zh-CN",
     "style": "professional"
@@ -214,9 +214,9 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "omc.ai.cache": true,
-  "omc.ai.timeout": 10000,
-  "omc.ai.retries": 3
+  "oh-my-commits.ai.cache": true,
+  "oh-my-commits.ai.timeout": 10000,
+  "oh-my-commits.ai.retries": 3
 }
 ```
 
@@ -226,7 +226,7 @@ oh-my-commits review PR-123
 
    ```json
    {
-     "omc.ai.rateLimit": {
+     "oh-my-commits.ai.rateLimit": {
        "maxRequests": 100,
        "perMinute": 60,
        "retryDelay": 1000
@@ -238,7 +238,7 @@ oh-my-commits review PR-123
 
    ```json
    {
-     "omc.ai.proxy": {
+     "oh-my-commits.ai.proxy": {
        "host": "127.0.0.1",
        "port": 7890,
        "protocol": "http"
@@ -249,7 +249,7 @@ oh-my-commits review PR-123
 3. **如何处理超时？**
    ```json
    {
-     "omc.ai.timeout": {
+     "oh-my-commits.ai.timeout": {
        "request": 10000,
        "generation": 30000
      }

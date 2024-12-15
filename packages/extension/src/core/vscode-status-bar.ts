@@ -3,6 +3,7 @@ import { AcManager } from "@/core/ac";
 import { VscodeGitService } from "@/core/vscode-git";
 import { Loggable } from "@/types/mixins";
 import { AppManager } from "@/core";
+import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
 
 export class StatusBarManager
   extends Loggable(class {})
@@ -22,13 +23,13 @@ export class StatusBarManager
       vscode.StatusBarAlignment.Left,
       100
     );
-    this.statusBarItem.name = "Oh My Commits";
+    this.statusBarItem.name = APP_NAME;
     this.gitService = new VscodeGitService();
 
     // 监听配置变化
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration("oh-my-commits")) {
+        if (e.affectsConfiguration(APP_ID)) {
           this.update();
         }
       })
@@ -48,25 +49,26 @@ export class StatusBarManager
 
   private async update(): Promise<void> {
     const model = this.acManager.model;
+    this.logger.info(`Updating status bar with model: `, model);
     const isGitRepo = await this.gitService.isGitRepository();
 
     if (!isGitRepo) {
-      this.statusBarItem.text = "$(error) Oh My Commits: Not a Git repository";
+      this.statusBarItem.text = `$(error) ${APP_NAME} (Not a Git repository)`;
       this.statusBarItem.tooltip = "This workspace is not a Git repository";
       this.statusBarItem.command = undefined;
       return;
     }
 
     if (!model) {
-      this.statusBarItem.text = "$(error) Oh My Commits: No model selected";
+      this.statusBarItem.text = `$(error) ${APP_NAME} (No model selected)`;
       this.statusBarItem.tooltip = "Click to select a model";
-      this.statusBarItem.command = "omc.selectModel";
+      this.statusBarItem.command = COMMAND_SELECT_MODEL;
       return;
     }
 
-    this.statusBarItem.text = `$(git-commit) Oh My Commits: ${model.name}`;
+    this.statusBarItem.text = `$(git-commit) ${APP_NAME} (${model.name})`;
     this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`;
-    this.statusBarItem.command = "omc.selectModel";
+    this.statusBarItem.command = COMMAND_SELECT_MODEL;
   }
 
   public dispose(): void {

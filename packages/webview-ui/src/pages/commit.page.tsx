@@ -44,15 +44,15 @@ export const CommitPage = () => {
   };
 
   useEffect(() => {
-    logger.info("Setting up message event listener");
+    logger.info("[useEffect] Setting up message event listener");
 
     const handleMessage = (event: MessageEvent<CommitEvent>) => {
-      logger.info("Received message event:", event);
+      logger.info("[handleMessage] Received message event:", event);
       const { data } = event;
-      logger.info("Received message data:", data);
+      logger.info("[handleMessage] Received message data:", data);
       switch (data.type) {
         case "commit":
-          logger.info("received commit event: ", data);
+          logger.info("[handleMessage] received commit event: ", data);
           setTitle(data.message.title);
           setBody(data.message.body ?? "");
           if (data.diffSummary.files) {
@@ -60,25 +60,27 @@ export const CommitPage = () => {
           }
           break;
         default:
-          logger.info("Unknown event type:", data.type);
+          logger.info("[handleMessage] Unknown event type:", data.type);
       }
     };
 
     // 添加事件监听器
     window.addEventListener("message", handleMessage);
-    logger.info("Message event listener added");
+    logger.info("[useEffect] Message event listener added");
 
     // 请求提交数据
     const vscode = getVSCodeAPI();
     vscode.postMessage({ command: "get-commit-data" });
-    logger.info("Requested commit data");
+    logger.info("[useEffect] Requested commit data");
 
     // 清理函数
     return () => {
-      logger.info("Removing message event listener");
+      logger.info("[useEffect] Removing message event listener");
       window.removeEventListener("message", handleMessage);
     };
   }, []);
+
+  logger.info("[render] == Rendering CommitPage ==");
 
   return (
     <div className="flex flex-col h-screen">

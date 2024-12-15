@@ -12,17 +12,19 @@ import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [];
-  private modelId?: string;
 
   constructor(app: AppManager) {
     super();
 
     this.providers.push(new OmcProvider());
-    this.modelId = this.config.get<string>(SETTING_MODEL_ID);
   }
 
   get models() {
     return this.providers.flatMap((p) => p.models);
+  }
+
+  get modelId() {
+    return this.config.get<string>(SETTING_MODEL_ID);
   }
 
   get model() {
@@ -43,7 +45,6 @@ export class AcManager extends Loggable(class {}) {
       return false;
     }
 
-    this.modelId = modelId;
     this.config.update(SETTING_MODEL_ID, modelId, true);
 
     const providerId = model.providerId;
@@ -57,7 +58,7 @@ export class AcManager extends Loggable(class {}) {
       );
 
       if (response === configureNow) {
-        await openPreferences("omc.apiKeys");
+        await openPreferences("oh-my-commits.apiKeys");
       }
     }
 
@@ -65,6 +66,10 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public async generateCommit(diff: DiffResult): Promise<GenerateCommitResult> {
+    this.logger.info(
+      `Generating commit: `,
+      JSON.stringify({ provider: this.provider, model: this.model }, null, 2)
+    );
     if (!this.provider) {
       throw new Error(`Provider ${this.model!.providerId} not found`);
     }
