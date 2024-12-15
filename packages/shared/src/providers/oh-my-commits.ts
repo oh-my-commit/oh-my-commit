@@ -8,7 +8,7 @@ import { Provider } from "../types/provider";
 import { GitChangeSummary } from "../types/git";
 import { GenerateCommitResult } from "../types/commit";
 
-class OhMyCommitsStandardModel implements Model {
+class OmcStandardModel implements Model {
   id = "omc/standard";
   name = "Oh My Commits Standard Model";
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
@@ -21,12 +21,12 @@ class OhMyCommitsStandardModel implements Model {
   };
 }
 
-export class OhMyCommitsProvider extends Provider {
+export class OmcProvider extends Provider {
   override id = "oh-my-commits";
   override displayName = "Oh My Commits Provider";
   override description =
     "Commit message generation powered by Oh My Commits models";
-  override models = [new OhMyCommitsStandardModel()];
+  override models = [new OmcStandardModel()];
 
   private anthropic: Anthropic | null = null;
 

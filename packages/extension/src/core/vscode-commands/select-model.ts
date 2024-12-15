@@ -14,23 +14,22 @@ export class SelectModelCommand implements VscodeCommand {
   async execute(): Promise<void> {
     console.log("Manage models command triggered");
 
-    const models = await this.acManager.getAvailableModels();
-    if (models.length === 0) {
+    if (this.acManager.models.length === 0) {
       console.log("No available models found");
       vscode.window.showErrorMessage("No available models");
       return;
     }
 
     try {
-      const currentModel = await this.acManager.getCurrentModel();
-
       const selected = await vscode.window.showQuickPick(
-        models.map((s) => ({
+        this.acManager.models.map((s) => ({
           ...s,
           label: s.name,
           description: s.description,
-          detail: s.metrics ? `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}` : 'No metrics available',
-          picked: currentModel?.id === s.id,
+          detail: s.metrics
+            ? `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}`
+            : "No metrics available",
+          picked: this.acManager.model?.id === s.id,
         })),
         {
           placeHolder: "Select AI Model to Use",
