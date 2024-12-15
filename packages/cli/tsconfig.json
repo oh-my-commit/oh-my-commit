@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "../shared/src/utils/ConsoleLogger.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "references": [
     {

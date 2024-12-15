@@ -1,6 +1,9 @@
 // Core exports
 export * from "./core/commit-manager";
-export * from "./core/BaseLogger";
+
+// Utils
+export * from "./utils/BaseLogger";
+export * from "./utils/ConsoleLogger";
 
 // Type exports
 export * from "./types/model";
