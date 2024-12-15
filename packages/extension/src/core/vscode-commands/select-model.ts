@@ -29,7 +29,7 @@ export class SelectModelCommand implements VscodeCommand {
           ...s,
           label: s.name,
           description: s.description,
-          detail: `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}`,
+          detail: s.metrics ? `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}` : 'No metrics available',
           picked: currentModel?.id === s.id,
         })),
         {

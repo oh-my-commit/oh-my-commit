@@ -4,10 +4,12 @@ import { program } from "commander";
 import chalk from "chalk";
 import simpleGit from "simple-git";
 import { CommitManager } from "@oh-my-commit/shared";
+import { ConsoleLogger } from "./utils/ConsoleLogger";
 
 // Initialize git and commit manager
 const git = simpleGit();
-const commitManager = new CommitManager();
+const logger = new ConsoleLogger("Oh My Commit CLI");
+const commitManager = new CommitManager({ logger });
 
 // Default model
 const DEFAULT_MODEL = "omc/standard";

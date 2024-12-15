@@ -1,0 +1,17 @@
+[meta]
+slug = "logger_implementation"
+title = "Logger Implementation in Provider"
+abstract = "实现 Provider 中的可继承 logger，支持不同环境（CLI、extension）传入自定义 logger"
+
+[changes]
+files = [
+    "packages/shared/src/providers/oh-my-commit.ts"
+]
+
+[changes.details]
+summary = """
+1. 添加了 BaseLogger 接口，定义了基本的日志方法
+2. 实现了默认的 ConsoleLogger 类
+3. 修改 OhMyCommitProvider 构造函数，支持外部传入 logger
+4. 如果没有传入 logger，则使用默认的 ConsoleLogger
+"""

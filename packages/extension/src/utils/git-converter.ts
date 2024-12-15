@@ -21,12 +21,14 @@ function getGitChangeType(status: string): GitChangeType {
 }
 
 function convertDiffResultFile(file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile): GitFileChange {
+  const status = 'status' in file ? file.status || "?" : "?";
+  
   return {
     path: file.file,
-    status: getGitChangeType(file.status || "?"),
-    additions: "insertions" in file ? file.insertions || 0 : 0,
-    deletions: "deletions" in file ? file.deletions || 0 : 0,
-    diff: "diff" in file ? file.diff : undefined,
+    status: getGitChangeType(status),
+    additions: 'insertions' in file ? file.insertions || 0 : 0,
+    deletions: 'deletions' in file ? file.deletions || 0 : 0,
+    diff: 'diff' in file && typeof file.diff === 'string' ? file.diff : undefined,
   };
 }
 

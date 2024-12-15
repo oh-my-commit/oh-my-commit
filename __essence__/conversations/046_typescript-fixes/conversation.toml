@@ -1,0 +1,10 @@
+[meta]
+id = "046"
+slug = "typescript-fixes"
+title = "TypeScript Compilation Fixes"
+status = { state = "ongoing" }
+abstract = "修复项目中的TypeScript编译错误"
+
+[rounds.001]
+time = "2024-12-15T16:44:26+08:00"
+round = 1

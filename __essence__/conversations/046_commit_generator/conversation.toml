@@ -1,0 +1,8 @@
+slug = "commit_generator"
+title = "Commit Generator Implementation"
+abstract = "Implementing and refactoring the generateCommit functionality"
+status = { state = "ongoing", satisfaction = 0 }
+
+[[rounds]]
+time = "2024-12-15T16:19:29+08:00"
+round = 1

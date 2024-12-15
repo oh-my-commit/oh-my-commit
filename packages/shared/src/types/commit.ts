@@ -5,7 +5,7 @@ export type CommitData = {
   title: string;
   body?: string;
 };
-export type GenerateCommitResult = Result<CommitData, Error>;
+export type GenerateCommitResult = Result<CommitData, string>;
 
 export type CommitEvent = {
   type: "commit";

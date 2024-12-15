@@ -149,29 +149,44 @@ slug = "git_file_status"
 title = "Git File Status Structure"
 abstract = "分析 simple-git 库中的文件状态变更标识数据结构，以及在项目中的应用实现"
 
-[conversations.040]
+[conversations.041]
 slug = "diffview_position"
 title = "Adjust DiffView Position"
 abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与VSCode风格保持一致"
 
-[conversations.041]
+[conversations.042]
 slug = "fileitem_uiux"
 title = "FileItem UI/UX Enhancement"
 abstract = "改进文件项组件的选中状态和交互效果"
 
-[conversations.042]
+[conversations.043]
 slug = "yaac_provider_config"
 
-[conversations.043]
+[conversations.044]
 slug = "modern_documentation"
 title = "Modern Documentation Update"
 abstract = "更新项目文档，使用新的产品名称 Oh My Commit 和配置前缀"
 
-[conversations.044]
+[conversations.045]
 slug = "git_cli_integration"
 title = "Git CLI Integration"
 abstract = "探讨将 Oh My Commit 功能集成到 Git 命令行的可能性"
 
-[conversations.045]
+[conversations.046]
+slug = "fix_types"
+
+[conversations.047]
 slug = "git_storage_optimization"
+
+[conversations.048]
+slug = "shell_extension_integration"
+title = "Shell Commands Integration with Extension"
+abstract = "研究和实现 Shell Commands 与 VSCode 扩展的集成方案"
+status = { state = "ongoing" }
+
+[conversations.049]
+slug = "simplify_cli_commands"
+title = "Simplify CLI Command Structure"
+abstract = "简化 CLI 命令结构，使 gen 成为默认命令，并添加 -y 标志用于自动提交"
+status = { state = "ongoing" }
 

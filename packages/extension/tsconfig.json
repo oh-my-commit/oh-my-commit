@@ -23,6 +23,6 @@
       "@oh-my-commit/shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../shared/src/providers/oh-my-commit.ts"],
   "exclude": ["node_modules", "dist"]
 }

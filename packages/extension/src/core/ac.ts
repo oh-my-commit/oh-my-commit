@@ -1,29 +1,36 @@
 import * as vscode from "vscode";
-import { Provider } from "@/types/provider";
-import { Model } from "@/types/model";
+import { Provider } from "@oh-my-commit/shared/types/provider";
+import { Model } from "@oh-my-commit/shared/types/model";
 import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { presetAiProviders } from "@/types/provider";
 import { AppManager } from "@/core";
-import { OhMyCommitProvider } from "@/providers/oh-my-commit";
+import { OhMyCommitProvider } from "@oh-my-commit/shared/providers/oh-my-commit";
 import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [];
   private currentModelId?: string;
+  public config: vscode.WorkspaceConfiguration;
 
   constructor(app: AppManager) {
     super();
     this.logger = app.getLogger();
     AcManager.setLogger(this.logger);
+    this.config = vscode.workspace.getConfiguration("");
   }
 
   public initialize(): void {
     this.logger.info("Initializing AcManager");
     // Register default providers
-    this.registerProvider(new OhMyCommitProvider());
+    this.registerProvider(
+      new OhMyCommitProvider(
+        this.logger,
+        this.config.get("omc.apiKeys.anthropic")
+      )
+    );
     // Load initial config
     this.loadConfig();
   }
@@ -107,9 +114,13 @@ export class AcManager extends Loggable(class {}) {
       throw new Error(`Provider ${currentModel.providerId} not found`);
     }
 
-    return provider.generateCommit(convertToGitChangeSummary(diff), currentModel, {
-      lang: vscode.env.language,
-    });
+    return provider.generateCommit(
+      convertToGitChangeSummary(diff),
+      currentModel,
+      {
+        lang: vscode.env.language,
+      }
+    );
   }
 
   public registerProvider(provider: Provider): void {
