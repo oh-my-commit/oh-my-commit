@@ -3,11 +3,7 @@
 > @oh-my-commits/extension@0.1.0 build /Users/mark/coding/apps/oh-my-commits/packages/extension
 > cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify
 
-[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNo matching export in "../shared/src/index.ts" for import "OmcProvider"[0m
 
-    src/core/ac.ts:10:9:
-[37m      10 │ import { [32mOmcProvider[37m } from "@oh-my-commits/shared";
-         ╵          [32m~~~~~~~~~~~[0m
+  [37m../../dist/[0m[1mextension.js[0m  [36m531.9kb[0m
 
-1 error
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
+⚡ [32mDone in 32ms[0m
