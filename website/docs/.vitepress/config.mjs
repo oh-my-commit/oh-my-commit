@@ -6,7 +6,7 @@ export default defineConfig({
   lang: 'zh-CN',
   
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/logo.svg',
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: 'API', link: '/api/' },
@@ -51,7 +51,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-present YAAC Team'
+      copyright: 'Copyright  2023-present YAAC Team'
     }
   }
 })
