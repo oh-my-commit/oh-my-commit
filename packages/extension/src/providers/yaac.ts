@@ -5,6 +5,7 @@ import { Ok, Err } from "neverthrow";
 import { DiffResult } from "simple-git";
 import { Provider } from "../types/provider";
 import Anthropic from "@anthropic-ai/sdk";
+import { workspace } from "vscode";
 
 interface ExtendedDiffResult extends DiffResult {
   diff: string;
@@ -23,6 +24,12 @@ class YaacStandardModel implements Model {
   aiProviderId = "anthropic";
 }
 
+export class VscodeEnv {
+  static get config() {
+    return workspace.getConfiguration("yaac");
+  }
+}
+
 export class YaacProvider extends Provider {
   private anthropic: Anthropic | null = null;
 
@@ -34,7 +41,11 @@ export class YaacProvider extends Provider {
 
   constructor() {
     super();
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey =
+      this.config.get<string>("yaac.apiKeys.anthropic") ||
+      process.env.ANTHROPIC_API_KEY;
+
+    this.logger.info("Anthropic API Key:", apiKey);
     if (apiKey) {
       this.anthropic = new Anthropic({ apiKey });
     }

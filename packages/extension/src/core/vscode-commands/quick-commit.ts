@@ -1,35 +1,31 @@
 import { AcManager } from "@/core/ac";
-import { VscodeCommand } from "@/core/vscode-commands/types";
+import { BaseCommand } from "@/core/vscode-commands/types";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
 import { CommitEvent } from "@yaac/shared/types/commit";
-
 import * as vscode from "vscode";
 
-export class QuickCommitCommand implements VscodeCommand {
+export class QuickCommitCommand extends BaseCommand {
   public id = "yaac.quickCommit";
   public name = "Quick Commit";
 
   private gitService: VscodeGitService;
   private webviewManager: WebviewManager;
   private acManager: AcManager;
-  private logger: vscode.LogOutputChannel;
 
   constructor(
     gitService: VscodeGitService,
     _acManager: AcManager,
-    context: vscode.ExtensionContext,
-    logger: vscode.LogOutputChannel
+    context: vscode.ExtensionContext
   ) {
+    super();
     this.gitService = gitService;
     this.acManager = _acManager;
-    this.logger = logger;
 
     this.webviewManager = new WebviewManager(
       context,
       "yaacCommit",
-      "YAAC Commit",
-      this.logger
+      "YAAC Commit"
     );
 
     // Register message handlers
@@ -46,7 +42,7 @@ export class QuickCommitCommand implements VscodeCommand {
     });
 
     this.webviewManager.registerMessageHandler("get-commit-data", async () => {
-      logger.info("Received request for commit data");
+      this.logger.info("Received request for commit data");
       const diffSummary = await this.gitService.getDiffSummary();
       const changeSummary = await this.gitService.getChangeSummary();
       const message = await this.acManager.generateCommit(diffSummary);

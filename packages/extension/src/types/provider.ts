@@ -1,6 +1,8 @@
 import { Model } from "@/types/model";
+import { Loggable } from "@/types/mixins";
 import { GenerateCommitResult } from "@yaac/shared/types/commit";
 import { DiffResult } from "simple-git";
+import { workspace, WorkspaceConfiguration } from "vscode";
 
 export const presetAiProviders = [
   "openai",
@@ -10,16 +12,20 @@ export const presetAiProviders = [
   "groq",
 ];
 
-export abstract class Provider {
+export abstract class Provider extends Loggable(class {}) {
   static id: string; // 提供者ID
   static displayName: string; // 提供者名称
   static description: string; // 提供者描述
-  static enabled: boolean; // 是否启用
-  static models: Model[];
+  static enabled: boolean = true; // 是否启用
+  static models: Model[] = []; // 支持的模型列表
 
-  public abstract generateCommit(
+  abstract generateCommit(
     diff: DiffResult,
     model: Model,
     options?: { lang?: string }
   ): Promise<GenerateCommitResult>;
+
+  protected get config(): WorkspaceConfiguration {
+    return workspace.getConfiguration("");
+  }
 }

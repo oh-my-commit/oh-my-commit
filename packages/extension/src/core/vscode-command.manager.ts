@@ -1,13 +1,26 @@
 import * as vscode from "vscode";
-
-import { VscodeCommand } from "@/core/vscode-commands/types";
+import { VscodeCommand, BaseCommand } from "@/core/vscode-commands/types";
+import { AppManager } from "@/core";
 
 export class CommandManager {
   private commands: Map<string, VscodeCommand> = new Map();
   private context: vscode.ExtensionContext;
+  private logger: any;
 
-  constructor(context: vscode.ExtensionContext) {
-    this.context = context;
+  constructor(app: AppManager) {
+    this.context = app.getContext();
+    this.logger = app.getLogger();
+    BaseCommand.setLogger(app.getLogger());
+  }
+
+  public initialize(): void {
+    this.logger.info("Initializing CommandManager");
+    this.registerCommands();
+  }
+
+  private registerCommands(): void {
+    // Register all commands here
+    // TODO: Add command registrations
   }
 
   register(command: VscodeCommand): void {

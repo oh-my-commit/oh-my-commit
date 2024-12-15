@@ -1,13 +1,21 @@
 import * as vscode from "vscode";
 import { AcManager } from "@/core/ac";
 import { VscodeGitService } from "@/core/vscode-git";
+import { Loggable } from "@/types/mixins";
+import { AppManager } from "@/core";
 
-export class StatusBarManager {
+export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
   private statusBarItem: vscode.StatusBarItem;
   private gitService: VscodeGitService;
   private disposables: vscode.Disposable[] = [];
+  private acManager: AcManager;
 
-  constructor(private acManager: AcManager) {
+  constructor(app: AppManager) {
+    super();
+    this.logger = app.getLogger();
+    StatusBarManager.setLogger(this.logger);
+
+    this.acManager = app.acManager;
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
       100
@@ -30,64 +38,39 @@ export class StatusBarManager {
         this.update();
       })
     );
-
-    // 监听 Git 状态变化
-    this.disposables.push(
-      this.gitService.onGitStatusChanged(() => {
-        this.update();
-      })
-    );
   }
 
-  public async initialize() {
-    await this.update();
-  }
-
-  public show() {
+  public initialize(): void {
+    this.logger.info("Initializing status bar");
     this.statusBarItem.show();
+    this.update();
   }
 
-  public hide() {
-    this.statusBarItem.hide();
-  }
+  private async update(): Promise<void> {
+    const currentModel = await this.acManager.getCurrentModel();
+    const isGitRepo = await this.gitService.isGitRepository();
 
-  public async update() {
-    try {
-      const isGitRepo = await this.gitService.isGitRepository();
-
-      if (!isGitRepo) {
-        this.statusBarItem.text = "$(git-commit) YAAC (No Git)";
-        this.statusBarItem.tooltip =
-          "YAAC requires a Git repository to function.\nInitialize a Git repository to enable all features.";
-        this.statusBarItem.command = undefined;
-        return;
-      }
-
-      const model = await this.acManager.getCurrentModel();
-      this.statusBarItem.text = "$(git-commit) YAAC";
-      if (!model) {
-        this.statusBarItem.text = "$(git-commit) YAAC (No Model)";
-        this.statusBarItem.tooltip = "Click to select a commit model";
-      } else {
-        this.statusBarItem.command = "yaac.selectModel";
-        this.statusBarItem.text = `$(git-commit) YAAC (${model.name})`;
-        this.statusBarItem.tooltip =
-          `Current model: ${model.name}\n` +
-          `Accuracy: ${model.metrics.accuracy}, Speed: ${model.metrics.speed}, Cost: ${model.metrics.cost}\n` +
-          `Click to change model`;
-      }
-    } catch (error) {
-      this.statusBarItem.text = "$(warning) YAAC";
-      this.statusBarItem.tooltip = "Error updating YAAC. Click for details.";
-      this.statusBarItem.command = {
-        title: "Show Error",
-        command: "vscode.showErrorMessage",
-        arguments: [`Failed to update YAAC status: ${error}`],
-      };
+    if (!isGitRepo) {
+      this.statusBarItem.text = "$(error) YAAC: Not a Git repository";
+      this.statusBarItem.tooltip = "This workspace is not a Git repository";
+      this.statusBarItem.command = undefined;
+      return;
     }
+
+    if (!currentModel) {
+      this.statusBarItem.text = "$(error) YAAC: No model selected";
+      this.statusBarItem.tooltip = "Click to select a model";
+      this.statusBarItem.command = "yaac.selectModel";
+      return;
+    }
+
+    this.statusBarItem.text = `$(git-commit) YAAC: ${currentModel.name}`;
+    this.statusBarItem.tooltip = `Current model: ${currentModel.name}\nClick to change model`;
+    this.statusBarItem.command = "yaac.selectModel";
   }
 
-  public dispose() {
+  public dispose(): void {
+    this.logger.info("Disposing status bar");
     this.statusBarItem.dispose();
     this.disposables.forEach((d) => d.dispose());
   }
