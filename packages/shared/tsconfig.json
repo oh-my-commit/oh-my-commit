@@ -7,6 +7,11 @@
     "outDir": "./dist",
     "rootDir": "src",
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@oh-my-commit/shared": ["../shared/src"],
+      "@oh-my-commit/shared/*": ["../shared/src/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]

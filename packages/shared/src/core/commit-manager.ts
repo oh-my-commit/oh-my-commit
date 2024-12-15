@@ -4,12 +4,17 @@ import { Result, err } from "neverthrow";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
 import { OhMyCommitProvider } from "../providers/oh-my-commit";
+import { BaseLogger } from "./BaseLogger";
+
+export interface CommitManagerOptions {
+  logger?: BaseLogger;
+}
 
 export class CommitManager {
   private provider: Provider;
 
-  constructor() {
-    this.provider = new OhMyCommitProvider();
+  constructor(options: CommitManagerOptions = {}) {
+    this.provider = new OhMyCommitProvider(options.logger);
   }
 
   public async getAvailableModels(): Promise<Model[]> {
