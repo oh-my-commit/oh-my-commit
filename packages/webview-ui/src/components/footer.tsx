@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
         onClick={() => handleLinkClick("https://github.com/cs-magic-open/oh-my-commit")}
         className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
       >
-        YAAC
+        Oh My Commit
       </button>
       <span className="mt-1 text-[9px] text-vscode-descriptionForeground opacity-40 font-light tracking-[0.15em] uppercase">
         Your Artistic Aide for Commits

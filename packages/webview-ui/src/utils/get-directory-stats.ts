@@ -1,5 +1,5 @@
 import { getAllFiles } from "@/utils/get-all-files";
-import { TreeNode } from "@yaac/shared";
+import { TreeNode } from "@oh-my-commit/shared";
 
 export const getDirectoryStats = (
   node: TreeNode,

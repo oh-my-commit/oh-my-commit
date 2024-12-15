@@ -22,7 +22,7 @@ export const CommitActions: React.FC<CommitActionsProps> = ({
   return (
     <div className="actions-bar">
       <div className="actions-left">
-        <span className="brand-text">YAAC</span>
+        <span className="brand-text">Oh My Commit</span>
         <span className="hint">AI-powered commit message</span>
       </div>
       <div className="actions-right">

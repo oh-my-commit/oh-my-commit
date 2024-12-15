@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { HighlightText } from "@/components/common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import { GitFileChange } from "@yaac/shared";
+import { GitFileChange } from "@oh-my-commit/shared";
 import { Checkbox } from "../../common/Checkbox";
 import { basename } from "path";
 

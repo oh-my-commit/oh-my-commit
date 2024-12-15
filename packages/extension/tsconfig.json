@@ -19,8 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@yaac/shared": ["../shared/src"],
-      "@yaac/shared/*": ["../shared/src/*"]
+      "@oh-my-commit/shared": ["../shared/src"],
+      "@oh-my-commit/shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src"],

@@ -1,4 +1,4 @@
-import { TreeNode } from "@yaac/shared";
+import { TreeNode } from "@oh-my-commit/shared";
 
 export const getAllDirectoryPaths = (
   node: TreeNode,

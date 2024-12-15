@@ -404,7 +404,7 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
 
   public get uiMode(): string {
     return (
-      vscode.workspace.getConfiguration("yaac").get<string>("ui.mode") ??
+      vscode.workspace.getConfiguration("oh-my-commit").get<string>("ui.mode") ??
       "panel"
     );
   }

@@ -8,8 +8,8 @@ import {
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { CommitEvent } from "@yaac/shared/types/commit";
-import { GitChangeType, GitChangeSummary, GitFileChange } from "@yaac/shared";
+import { CommitEvent } from "@oh-my-commit/shared/types/commit";
+import { GitChangeType, GitChangeSummary, GitFileChange } from "@oh-my-commit/shared";
 import type { DiffResultTextFile } from "simple-git";
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";

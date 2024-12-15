@@ -1,6 +1,6 @@
 # 即将推出
 
-YAAC 正在持续发展中，我们有许多激动人心的功能正在开发中。
+Oh My Commit 正在持续发展中，我们有许多激动人心的功能正在开发中。
 
 ## 开发路线图
 
@@ -47,9 +47,9 @@ YAAC 正在持续发展中，我们有许多激动人心的功能正在开发中
 
 我们非常重视用户的反馈和建议。如果你对即将推出的功能有任何想法或建议，欢迎：
 
-1. 在 [GitHub Issues](https://github.com/yourusername/YAAC/issues) 提交功能请求
-2. 加入我们的 [Discord 社区](https://discord.gg/yaac) 参与讨论
-3. 关注我们的 [Twitter](https://twitter.com/yaac) 获取最新动态
+1. 在 [GitHub Issues](https://github.com/yourusername/Oh My Commit/issues) 提交功能请求
+2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit) 参与讨论
+3. 关注我们的 [Twitter](https://twitter.com/oh-my-commit) 获取最新动态
 
 ## 功能预约
 

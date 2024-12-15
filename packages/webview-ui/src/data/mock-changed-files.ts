@@ -1,5 +1,5 @@
 import type { FileChange } from "../state/types";
-import { GitChangeType } from "@yaac/shared";
+import { GitChangeType } from "@oh-my-commit/shared";
 
 export const mockFileChanges: FileChange[] = [
   {

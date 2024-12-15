@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
-import { GitFileChange, GitChangeType } from "@yaac/shared";
+import { GitFileChange, GitChangeType } from "@oh-my-commit/shared";
 
 export interface GroupedViewProps {
   files: GitFileChange[];

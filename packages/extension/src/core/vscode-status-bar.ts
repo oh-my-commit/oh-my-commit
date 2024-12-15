@@ -20,13 +20,13 @@ export class StatusBarManager extends Loggable(class {}) implements vscode.Dispo
       vscode.StatusBarAlignment.Left,
       100
     );
-    this.statusBarItem.name = "YAAC";
+    this.statusBarItem.name = "Oh My Commit";
     this.gitService = new VscodeGitService();
 
     // 监听配置变化
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration("yaac")) {
+        if (e.affectsConfiguration("oh-my-commit")) {
           this.update();
         }
       })
@@ -51,22 +51,22 @@ export class StatusBarManager extends Loggable(class {}) implements vscode.Dispo
     const isGitRepo = await this.gitService.isGitRepository();
 
     if (!isGitRepo) {
-      this.statusBarItem.text = "$(error) YAAC: Not a Git repository";
+      this.statusBarItem.text = "$(error) Oh My Commit: Not a Git repository";
       this.statusBarItem.tooltip = "This workspace is not a Git repository";
       this.statusBarItem.command = undefined;
       return;
     }
 
     if (!currentModel) {
-      this.statusBarItem.text = "$(error) YAAC: No model selected";
+      this.statusBarItem.text = "$(error) Oh My Commit: No model selected";
       this.statusBarItem.tooltip = "Click to select a model";
-      this.statusBarItem.command = "yaac.selectModel";
+      this.statusBarItem.command = "oh-my-commit.selectModel";
       return;
     }
 
-    this.statusBarItem.text = `$(git-commit) YAAC: ${currentModel.name}`;
+    this.statusBarItem.text = `$(git-commit) Oh My Commit: ${currentModel.name}`;
     this.statusBarItem.tooltip = `Current model: ${currentModel.name}\nClick to change model`;
-    this.statusBarItem.command = "yaac.selectModel";
+    this.statusBarItem.command = "oh-my-commit.selectModel";
   }
 
   public dispose(): void {

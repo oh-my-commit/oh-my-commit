@@ -1,6 +1,6 @@
 // 核心业务类型
 
-import { GitChangeType } from "@yaac/shared";
+import { GitChangeType } from "@oh-my-commit/shared";
 
 export interface FileChange {
   path: string;

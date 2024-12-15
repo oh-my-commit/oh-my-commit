@@ -12,7 +12,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { twj } from "tw-to-css";
 import { HighlightText } from "@/components/common/HighlightText";
 import cn from "classnames";
-import { GitChangeSummary, GitFileChange } from "@yaac/shared";
+import { GitChangeSummary, GitFileChange } from "@oh-my-commit/shared";
 
 interface DiffViewerProps {
   files: GitChangeSummary | null;

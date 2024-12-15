@@ -11,7 +11,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
       <div className="init-animation">
         <div className="logo-container">
           <svg
-            className="yaac-logo"
+            className="oh-my-commit-logo"
             viewBox="0 0 200 100"
             width="128"
             height="64"
@@ -78,7 +78,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
           </svg>
         </div>
         <div className="text-container">
-          {/* <span className="app-name">YAAC</span> */}
+          {/* <span className="app-name">Oh My Commit</span> */}
           <span className="tagline">Your Artistic Aide for Commits</span>
         </div>
         <button className="enter-button" onClick={onEnter}>

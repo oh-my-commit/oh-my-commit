@@ -12,8 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@yaac/shared/*": ["src/*"],
-      "@yaac/shared": ["src/index.ts"]
+      "@oh-my-commit/shared/*": ["src/*"],
+      "@oh-my-commit/shared": ["src/index.ts"]
     }
   },
   "include": ["src"],

@@ -72,7 +72,7 @@ number = 7
 time = "2024-12-15T12:10:00+08:00"
 query_essence = "更改产品名称"
 key_points = """
-- 将产品名从 YAAC 改为 Oh My Commit
+- 将产品名从 Oh My Commit 改为 Oh My Commit
 - 更新了网站配置和描述
 - 修改了首页内容和特性介绍
 - 更新了 API 文档中的包名和示例

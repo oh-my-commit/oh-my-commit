@@ -1,6 +1,6 @@
 import { Model } from "@/types/model";
 import { Loggable } from "@/types/mixins";
-import { GenerateCommitResult } from "@yaac/shared/types/commit";
+import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { workspace, WorkspaceConfiguration } from "vscode";
 

@@ -1,4 +1,4 @@
-import { GitChangeSummary, GitFileChange, GitChangeType } from "@yaac/shared";
+import { GitChangeSummary, GitFileChange, GitChangeType } from "@oh-my-commit/shared";
 import { changedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { useSetAtom } from "jotai";
 import React, { useEffect } from "react";

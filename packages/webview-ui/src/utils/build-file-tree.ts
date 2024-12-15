@@ -1,5 +1,5 @@
 import { CommitState } from "@/types/commit-state";
-import { TreeNode } from "@yaac/shared";
+import { TreeNode } from "@oh-my-commit/shared";
 
 export const buildFileTree = (
   files: CommitState["filesChanged"]

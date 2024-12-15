@@ -22,12 +22,12 @@
   animation: scaleIn 0.5s ease-out forwards;
 }
 
-.yaac-logo {
+.oh-my-commit-logo {
   width: 128px;
   height: 64px;
 }
 
-.yaac-logo path {
+.oh-my-commit-logo path {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation: draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;

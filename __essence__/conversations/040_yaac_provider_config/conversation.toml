@@ -1,7 +1,7 @@
 [meta]
-slug = "yaac_provider_config"
-title = "YaacProvider Configuration Enhancement"
-abstract = "Implementing API key configuration reading from user settings in YaacProvider"
+slug = "oh-my-commit_provider_config"
+title = "OhMyCommitProvider Configuration Enhancement"
+abstract = "Implementing API key configuration reading from user settings in OhMyCommitProvider"
 
 [rounds.001]
 time = "2024-12-15T04:53:46+08:00"
