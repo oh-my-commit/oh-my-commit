@@ -1,0 +1,8 @@
+time = "2024-12-15T14:34:51+08:00"
+round = 1
+duration = 990
+
+[meta]
+slug = "git_storage_optimization"
+title = "Git Storage Optimization"
+abstract = "分析并优化 Git 存储空间，理解 .gitignore 规则对存储的影响"
