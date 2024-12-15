@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: "YAAC",
+  title: "Oh My Commit",
   description: "Your Artistic Aide for Commits - 一款专注用户体验的 VSCode Git 提交插件",
   
   themeConfig: {
@@ -10,7 +10,7 @@ export default defineConfig({
       { text: '指南', link: '/guide/introduction' },
       { text: 'API', link: '/api/' },
       { text: '最佳实践', link: '/yet-another-best-practice/' },
-      { text: 'GitHub', link: 'https://github.com/yourusername/YAAC' }
+      { text: 'GitHub', link: 'https://github.com/yourusername/Oh My Commit' }
     ],
     
     sidebar: {
@@ -46,7 +46,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-present YAAC Team'
+      copyright: 'Copyright © 2023-present Oh My Commit Team'
     }
   }
 })

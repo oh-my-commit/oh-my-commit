@@ -2,11 +2,11 @@ import { AcManager } from "@/core/ac";
 import { BaseCommand } from "@/core/vscode-commands/types";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
-import { CommitEvent } from "@yaac/shared/types/commit";
+import { CommitEvent } from "@oh-my-commit/shared/types/commit";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
-  public id = "yaac.quickCommit";
+  public id = "oh-my-commit.quickCommit";
   public name = "Quick Commit";
 
   private gitService: VscodeGitService;
@@ -24,8 +24,8 @@ export class QuickCommitCommand extends BaseCommand {
 
     this.webviewManager = new WebviewManager(
       context,
-      "yaacCommit",
-      "YAAC Commit"
+      "oh-my-commitCommit",
+      "Oh My Commit Commit"
     );
 
     // Register message handlers
@@ -66,7 +66,7 @@ export class QuickCommitCommand extends BaseCommand {
   }
 
   get config() {
-    return vscode.workspace.getConfiguration("yaac");
+    return vscode.workspace.getConfiguration("oh-my-commit");
   }
 
   get emptyChangeBehavior() {

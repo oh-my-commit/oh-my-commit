@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { Provider } from "@/types/provider";
 import { Model } from "@/types/model";
-import { YaacProvider } from "@/providers/yaac";
-import { GenerateCommitResult } from "@yaac/shared/types/commit";
+import { OhMyCommitProvider } from "@/providers/oh-my-commit";
+import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
@@ -22,19 +22,19 @@ export class AcManager extends Loggable(class {}) {
   public initialize(): void {
     this.logger.info("Initializing AcManager");
     // Register default providers
-    this.registerProvider(new YaacProvider());
+    this.registerProvider(new OhMyCommitProvider());
     // Load initial config
     this.loadConfig();
   }
 
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("");
-    this.currentModelId = config.get<string>("yaac.model");
+    this.currentModelId = config.get<string>("oh-my-commit.model");
   }
 
   public async getAvailableModels(): Promise<Model[]> {
     const models: Model[] = [];
-    const providerClasses = [YaacProvider];
+    const providerClasses = [OhMyCommitProvider];
 
     for (const providerClass of providerClasses) {
       if (!providerClass.enabled) {
@@ -71,7 +71,7 @@ export class AcManager extends Loggable(class {}) {
     }
 
     this.currentModelId = modelId;
-    await vscode.workspace.getConfiguration("").update("yaac.model", modelId, true);
+    await vscode.workspace.getConfiguration("").update("oh-my-commit.model", modelId, true);
 
     const providerId = model.providerId;
     if (presetAiProviders.includes(providerId)) {
@@ -84,7 +84,7 @@ export class AcManager extends Loggable(class {}) {
       );
 
       if (response === configureNow) {
-        await openPreferences("yaac.apiKeys");
+        await openPreferences("oh-my-commit.apiKeys");
       }
     }
 
@@ -124,10 +124,10 @@ export class AcManager extends Loggable(class {}) {
 
   public async updateProvidersConfig(): Promise<void> {
     const config = vscode.workspace.getConfiguration("");
-    const providersConfig = config.get<Record<string, boolean>>("yaac.providers");
+    const providersConfig = config.get<Record<string, boolean>>("oh-my-commit.providers");
 
     if (providersConfig) {
-      const providerClasses = [YaacProvider];
+      const providerClasses = [OhMyCommitProvider];
       for (const providerClass of providerClasses) {
         providerClass.enabled = providersConfig[providerClass.id] ?? true;
       }

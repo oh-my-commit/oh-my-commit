@@ -62,12 +62,12 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/yourusername/YAAC' }
+      { icon: 'github', link: 'https://github.com/yourusername/Oh My Commit' }
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright  2023-present YAAC Team'
+      copyright: 'Copyright  2023-present Oh My Commit Team'
     }
   }
 })

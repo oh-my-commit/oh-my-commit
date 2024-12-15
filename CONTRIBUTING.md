@@ -1,6 +1,6 @@
-# Contributing to YAAC
+# Contributing to Oh My Commit
 
-感谢你对 YAAC（Yet Another Auto Commit）的贡献兴趣！这份指南将帮助你了解如何参与项目开发。
+感谢你对 Oh My Commit（Yet Another Auto Commit）的贡献兴趣！这份指南将帮助你了解如何参与项目开发。
 
 <!-- toc -->
 
@@ -40,7 +40,7 @@
 
    ```zsh
    git clone https://github.com/cs-magic-open/oh-my-commit.git
-   cd yaac
+   cd oh-my-commit
    ```
 
 3. **安装依赖**

@@ -1,4 +1,4 @@
-# YAAC (Yet Another Auto Commit) - PRD
+# Oh My Commit (Yet Another Auto Commit) - PRD
 
 <!-- toc -->
 
@@ -18,7 +18,7 @@
 
 ## 产品定位
 
-YAAC 是新一代的 Git 提交助手，专注于提供卓越的用户体验和强大的 AI 能力。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
+Oh My Commit 是新一代的 Git 提交助手，专注于提供卓越的用户体验和强大的 AI 能力。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
 
 ## 核心优势
 
@@ -113,9 +113,9 @@ YAAC 是新一代的 Git 提交助手，专注于提供卓越的用户体验和�
 
 ### 2. 命令面板
 
-- `YAAC: Quick Commit` - 使用当前方案快速提交
-- `YAAC: Select Model` - 切换提交方案
-- `YAAC: Open Preferences` -打开用户配置系统
+- `Oh My Commit: Quick Commit` - 使用当前方案快速提交
+- `Oh My Commit: Select Model` - 切换提交方案
+- `Oh My Commit: Open Preferences` -打开用户配置系统
 
 ### 3. 设置界面
 

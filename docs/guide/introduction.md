@@ -1,8 +1,8 @@
 # 介绍
 
-YAAC（Your Artistic Aide for Commits）是一款专注于提供卓越用户体验的 VSCode Git 提交插件。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
+Oh My Commit（Your Artistic Aide for Commits）是一款专注于提供卓越用户体验的 VSCode Git 提交插件。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
 
-## 为什么选择 YAAC？
+## 为什么选择 Oh My Commit？
 
 ### 1. 极致的用户体验
 
@@ -18,7 +18,7 @@ YAAC（Your Artistic Aide for Commits）是一款专注于提供卓越用户体�
 ### 2. 强大的 AI 能力
 
 - **多模型支持**：
-  - 内置 YAAC 专业模型
+  - 内置 Oh My Commit 专业模型
   - 支持 OpenAI GPT-3.5/4
   - 支持 Claude 等主流模型
 - **深度代码理解**：
@@ -40,7 +40,7 @@ YAAC（Your Artistic Aide for Commits）是一款专注于提供卓越用户体�
 - **用户友好**：支持详细的提交描述
 - **一次配置**：简化后续使用流程
 
-## 谁适合使用 YAAC？
+## 谁适合使用 Oh My Commit？
 
 - 使用 VSCode 的开发者
 - 重视代码提交质量的团队

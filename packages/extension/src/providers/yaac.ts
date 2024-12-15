@@ -1,6 +1,6 @@
 import { Model } from "@/types/model";
-import { CommitData } from "@yaac/shared/src/types/commit";
-import { GenerateCommitResult } from "@yaac/shared/types/commit";
+import { CommitData } from "@oh-my-commit/shared/src/types/commit";
+import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
 import { Ok, Err } from "neverthrow";
 import { DiffResult } from "simple-git";
 import { Provider } from "../types/provider";
@@ -11,11 +11,11 @@ interface ExtendedDiffResult extends DiffResult {
   diff: string;
 }
 
-class YaacStandardModel implements Model {
-  id = "yaac/standard";
-  name = "YAAC / Standard";
+class OhMyCommitStandardModel implements Model {
+  id = "oh-my-commit/standard";
+  name = "Oh My Commit / Standard";
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
-  providerId = "yaac";
+  providerId = "oh-my-commit";
   metrics = {
     accuracy: 0.95,
     speed: 0.7,
@@ -26,23 +26,23 @@ class YaacStandardModel implements Model {
 
 export class VscodeEnv {
   static get config() {
-    return workspace.getConfiguration("yaac");
+    return workspace.getConfiguration("oh-my-commit");
   }
 }
 
-export class YaacProvider extends Provider {
+export class OhMyCommitProvider extends Provider {
   private anthropic: Anthropic | null = null;
 
-  static id = "yaac";
-  static displayName = "YAAC Provider";
-  static description = "Commit message generation powered by YAAC models";
+  static id = "oh-my-commit";
+  static displayName = "Oh My Commit Provider";
+  static description = "Commit message generation powered by Oh My Commit models";
   static enabled = true;
-  static models = [new YaacStandardModel()];
+  static models = [new OhMyCommitStandardModel()];
 
   constructor() {
     super();
     const apiKey =
-      this.config.get<string>("yaac.apiKeys.anthropic") ||
+      this.config.get<string>("oh-my-commit.apiKeys.anthropic") ||
       process.env.ANTHROPIC_API_KEY;
 
     this.logger.info("Anthropic API Key:", apiKey);
@@ -125,7 +125,7 @@ Please analyze the diff carefully and provide:
     options?: { lang?: string }
   ): Promise<GenerateCommitResult> {
     switch (model.id) {
-      case "yaac/standard":
+      case "oh-my-commit/standard":
         const result = await this.generateWithClaude(
           diff as ExtendedDiffResult,
           options?.lang
