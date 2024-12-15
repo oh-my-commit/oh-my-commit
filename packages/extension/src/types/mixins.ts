@@ -1,3 +1,4 @@
+import { APP_ID } from "@oh-my-commits/shared";
 import vscode, { LogOutputChannel } from "vscode";
 
 // Constructor type with static members
@@ -16,6 +17,8 @@ export function Loggable<TBase extends Constructor>(Base: TBase) {
     public setLogger(logger: LogOutputChannel) {
       this.logger = logger;
     }
+
+    public config = vscode.workspace.getConfiguration("");
   }
   return LoggableClass;
 }

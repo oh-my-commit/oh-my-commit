@@ -7,12 +7,13 @@ import { Model } from "../types/model";
 import { Provider } from "../types/provider";
 import { GitChangeSummary } from "../types/git";
 import { GenerateCommitResult } from "../types/commit";
+import { APP_ID, APP_NAME, OmcStandardModelId } from "@/constants";
 
 class OmcStandardModel implements Model {
-  id = "omc/standard";
-  name = "Oh My Commits Standard Model";
+  id = OmcStandardModelId;
+  name = `${APP_NAME} Standard Model`;
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
-  providerId = "oh-my-commits";
+  providerId = APP_ID;
   aiProviderId = "anthropic";
   metrics = {
     accuracy: 0.95,
@@ -22,10 +23,9 @@ class OmcStandardModel implements Model {
 }
 
 export class OmcProvider extends Provider {
-  override id = "oh-my-commits";
-  override displayName = "Oh My Commits Provider";
-  override description =
-    "Commit message generation powered by Oh My Commits models";
+  override id = APP_ID;
+  override displayName = `${APP_NAME} Provider`;
+  override description = `Commit message generation powered by ${APP_NAME} models`;
   override models = [new OmcStandardModel()];
 
   private anthropic: Anthropic | null = null;

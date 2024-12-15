@@ -17,14 +17,9 @@ export class AppManager extends Loggable(class {}) {
 
     this.context = context;
 
-    this.logger = vscode.window.createOutputChannel("Oh My Commits", {
-      log: true,
-    });
-    this.logger.info("Initializing Oh My Commits");
+    this.logger.info("Initializing");
 
-    // const gitService = new VscodeGitService();
     this.acManager = new AcManager(this);
-    const statusBarManager = new StatusBarManager(this);
     this.gitService = new VscodeGitService();
     this.commandManager = new CommandManager(
       context,
@@ -32,11 +27,13 @@ export class AppManager extends Loggable(class {}) {
       this.acManager
     );
 
-    this.logger.info("Initialized Oh My Commits");
+    new StatusBarManager(this);
+
+    this.logger.info("Initialized");
   }
 
   public dispose(): void {
-    this.logger.info("Disposing Oh My Commits");
+    this.logger.info("Disposing");
     this.commandManager.dispose();
     this.logger.dispose();
   }
