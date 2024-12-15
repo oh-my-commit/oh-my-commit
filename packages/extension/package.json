@@ -1,5 +1,7 @@
 {
   "name": "@oh-my-commits/extension",
+  "displayName": "Oh My Commits",
+  "description": "AI-powered commit message generator",
   "version": "0.1.0",
   "private": true,
   "type": "module",

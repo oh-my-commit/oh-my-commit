@@ -10,7 +10,7 @@ import { AppManager } from "./core";
 export async function activate(context: vscode.ExtensionContext) {
   try {
     const app = new AppManager(context);
-    await app.initialize();
+    // await app.initialize();
     context.subscriptions.push({ dispose: () => app.dispose() });
   } catch (error: unknown) {
     const message =
