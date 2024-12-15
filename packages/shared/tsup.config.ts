@@ -4,10 +4,10 @@ export default defineConfig({
   entry: ["src/index.ts"],
   format: ["cjs", "esm"],
   dts: {
-    resolve: true,
-    entry: {
-      index: "./src/index.ts",
-    },
+    compilerOptions: {
+      composite: false,
+      incremental: false
+    }
   },
   sourcemap: true,
   clean: true,
