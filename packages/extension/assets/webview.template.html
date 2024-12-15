@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' {{cspSource}} blob: data:; style-src {{cspSource}} 'unsafe-inline'; img-src {{cspSource}} https: data: blob:; font-src {{cspSource}}; connect-src {{cspSource}} https:;">
+    <title>Oh My Commits</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script nonce="{{nonce}}">
+        // 设置全局变量
+        window.vscode = acquireVsCodeApi();
+        
+        // 添加热更新支持
+        window.addEventListener('message', event => {
+            const message = event.data;
+            if (message.command === 'reload') {
+                // 保存当前状态
+                const state = window.vscode.getState();
+                
+                // 重新加载页面
+                window.location.reload();
+                
+                // 在页面加载完成后恢复状态
+                window.addEventListener('load', () => {
+                    if (state) {
+                        window.vscode.setState(state);
+                        // 触发状态恢复事件
+                        window.dispatchEvent(new CustomEvent('stateRestored', { detail: state }));
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="{{scriptUri}}" nonce="{{nonce}}"></script>
+</body>
+</html>

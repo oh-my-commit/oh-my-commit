@@ -20,17 +20,15 @@ const App: React.FC = () => {
   );
 };
 
-window.addEventListener("load", () => {
-  const container = document.getElementById("root");
-  if (!container) {
-    console.error("Root element not found");
-    return;
-  }
+const container = document.getElementById("root");
+if (!container) {
+  console.error("Root element not found");
+  throw new Error("Root element not found");
+}
 
-  const root = createRoot(container);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  );
-});
+const root = createRoot(container);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

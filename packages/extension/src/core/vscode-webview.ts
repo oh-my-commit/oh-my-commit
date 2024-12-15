@@ -54,6 +54,8 @@ export class WebviewManager
     return this.windowModeConfigs.user[key];
   }
 
+  private context: vscode.ExtensionContext;
+
   constructor(
     context: vscode.ExtensionContext,
     private readonly viewType: string,
@@ -63,6 +65,7 @@ export class WebviewManager
     persistWindowState: boolean = false
   ) {
     super();
+    this.context = context;
     this.logger.info(`Creating ${viewType} webview`);
     this.persistWindowState = persistWindowState;
 
@@ -115,62 +118,12 @@ export class WebviewManager
     this.scriptPath = scriptPath;
     this.scriptUri = vscode.Uri.joinPath(context.extensionUri, this.scriptPath);
 
-    // watch for file changes
-    const mainJsPath = path.join(
-      context.extensionPath,
-      "dist",
-      "webview-ui",
-      "main.js"
-    );
-    this.logger.debug(`Watching file: ${mainJsPath}`);
-
-    const watcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(
-        vscode.Uri.file(path.dirname(mainJsPath)),
-        path.basename(mainJsPath)
-      )
-    );
-    type WatcherEvent = "onDidChange" | "onDidCreate" | "onDidDelete";
-    const events: WatcherEvent[] = [
-      "onDidChange",
-      "onDidCreate",
-      "onDidDelete",
-    ];
-    events.forEach((event) => {
-      const watcherEvent = watcher[event] as vscode.Event<vscode.Uri>;
-      watcherEvent((uri) => {
-        this.logger.debug(`File ${event}: ${uri.fsPath}`);
-        if (this.webviewPanel?.webview) {
-          this.updateWebview();
-        } else {
-          this.logger.warn("Webview panel not available");
-        }
-      });
-    });
-
     // register webview
-    context.subscriptions.push(watcher, this);
+    context.subscriptions.push(this);
   }
 
   public registerMessageHandler(command: string, handler: MessageHandler) {
     this.messageHandlers.set(command, handler);
-  }
-
-  private async handleMessage(message: any) {
-    const handler = this.messageHandlers.get(message.command);
-    if (handler) {
-      try {
-        // 不记录日志消息，避免循环记录
-        if (message.command !== "log") {
-          this.logger.debug("Received message:", message);
-        }
-        await handler(message);
-      } catch (error) {
-        this.logger.error(`Error handling message ${message.command}:`, error);
-      }
-    } else {
-      this.logger.warn(`No handler registered for command: ${message.command}`);
-    }
   }
 
   public async show(
@@ -222,16 +175,125 @@ export class WebviewManager
   }
 
   public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
-    const panel = await this.show({});
-
-    // Add message handling
-    panel.webview.onDidReceiveMessage(
-      (message) => this.handleMessage(message),
-      undefined,
-      []
+    this.logger.info("Creating webview panel...");
+    const panel = vscode.window.createWebviewPanel(
+      "ohMyCommits",
+      "Oh My Commits",
+      {
+        viewColumn: vscode.ViewColumn.One,
+        preserveFocus: true,
+      },
+      this.getWebviewOptions()
     );
 
+    // Set up file watcher
+    const watcher = this.setupFileWatcher(panel);
+
+    this.webviewPanel = panel;
+    await this.updateWebview();
+
+    // Clean up
+    panel.onDidDispose(() => {
+      this.logger.info("Panel disposed, cleaning up...");
+      watcher.dispose();
+      if (this.webviewPanel === panel) {
+        this.webviewPanel = undefined;
+      }
+    });
+
     return panel;
+  }
+
+  private setupFileWatcher(panel: vscode.WebviewPanel) {
+    const mainJsPath = path.join(this.context.extensionPath, this.scriptPath);
+
+    this.logger.info(`Main.js path: ${mainJsPath}`);
+
+    // Verify paths exist
+    if (!fs.existsSync(mainJsPath)) {
+      this.logger.error(`Main.js not found at: ${mainJsPath}`);
+    }
+
+    // Watch the compiled main.js file
+    fs.watchFile(mainJsPath, { interval: 300 }, async (curr, prev) => {
+      const currTime = curr.mtime.getTime();
+      const prevTime = prev.mtime.getTime();
+
+      this.logger.info("File change detected in main.js:");
+      this.logger.info(`Path: ${mainJsPath}`);
+      this.logger.info(`Previous: ${prev.mtime.toISOString()} (${prevTime})`);
+      this.logger.info(`Current: ${curr.mtime.toISOString()} (${currTime})`);
+
+      if (currTime !== prevTime) {
+        this.logger.info("Timestamps differ, reloading webview...");
+        await this.updateWebview();
+      } else {
+        this.logger.info("Timestamps match, skipping reload");
+      }
+    });
+
+    // Cleanup
+    const cleanup = () => {
+      this.logger.info("Cleaning up file watchers...");
+      fs.unwatchFile(mainJsPath);
+    };
+
+    panel.onDidDispose(cleanup);
+
+    return { dispose: cleanup };
+  }
+
+  private getWebviewOptions(): vscode.WebviewOptions &
+    vscode.WebviewPanelOptions {
+    const options = {
+      enableScripts: true,
+      retainContextWhenHidden: true,
+      localResourceRoots: [
+        vscode.Uri.joinPath(
+          vscode.Uri.file(path.dirname(this.scriptPath)),
+          "..",
+          ".."
+        ),
+      ],
+    };
+    this.logger.info("Webview options:", options);
+    return options;
+  }
+
+  private getCspSettings(): string {
+    const webview = this.webviewPanel!.webview;
+    const csp = `default-src 'none';
+            img-src ${webview.cspSource} https: data:;
+            script-src ${webview.cspSource} 'unsafe-inline';
+            style-src ${webview.cspSource} 'unsafe-inline';
+            font-src ${webview.cspSource};`;
+    this.logger.info("CSP settings:", csp);
+    return csp;
+  }
+
+  private getScriptUri(): vscode.Uri {
+    const uri = this.webviewPanel!.webview.asWebviewUri(this.scriptUri);
+    const finalUri = uri.with({ query: `v=${Date.now()}` });
+    this.logger.info(`Script URI: ${finalUri.toString()}`);
+    return finalUri;
+  }
+
+  private async updateWebview() {
+    if (!this.webviewPanel?.webview) {
+      this.logger.warn("No webview panel available for update");
+      return;
+    }
+
+    const templateData = {
+      scriptUri: this.getScriptUri().toString(),
+      cspSource: this.getCspSettings(),
+      windowMode: this.uiMode === "window",
+    };
+
+    this.logger.info("Updating webview with template data:", templateData);
+    const html = this.template(templateData);
+    this.webviewPanel.webview.html = html;
+    this.logger.info("Webview updated successfully");
   }
 
   private async updateWorkspaceConfig(
@@ -398,21 +460,6 @@ export class WebviewManager
       // Clean up the command registration when panel is disposed
       panel.onDidDispose(() => disposable.dispose());
     }
-  }
-
-  private async updateWebview() {
-    if (!this.webviewPanel?.webview) return;
-
-    const templateData = {
-      scriptUri: this.webviewPanel.webview
-        .asWebviewUri(this.scriptUri)
-        .toString(),
-      cspSource: this.webviewPanel.webview.cspSource,
-      windowMode: this.uiMode === "window",
-    };
-
-    const html = this.template(templateData);
-    this.webviewPanel.webview.html = html;
   }
 
   private normalizeLogLevel(level: string): LogLevel {

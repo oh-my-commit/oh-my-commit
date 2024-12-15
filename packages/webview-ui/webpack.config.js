@@ -1,8 +1,15 @@
 const path = require("path");
+const nodeLibs = require("node-libs-browser");
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
+
+  // 创建fallback配置
+  const fallback = {};
+  Object.entries(nodeLibs).forEach(([name, path]) => {
+    fallback[name] = path === null ? false : path;
+  });
 
   return {
     mode: argv.mode || "development",
@@ -10,26 +17,21 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, "../../dist/webview-ui"),
       filename: "main.js",
-      clean: true,
-      ...(isProduction
-        ? {
-            libraryTarget: "module",
-            chunkFormat: "module",
-          }
-        : {}),
+      clean: isDevelopment ? false : true,
     },
-    experiments: {
-      outputModule: isProduction,
+    devtool: isDevelopment ? "eval-source-map" : "source-map",
+    watch: isDevelopment,
+    watchOptions: {
+      ignored: /node_modules/,
+      aggregateTimeout: 100,
+      poll: 1000,
     },
-    devtool: isDevelopment ? "eval" : "source-map",
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
         "@": path.resolve(__dirname, "src"),
       },
-      fallback: {
-        "path": require.resolve("path-browserify")
-      }
+      fallback
     },
     module: {
       rules: [
@@ -72,11 +74,6 @@ module.exports = (env, argv) => {
           type: "asset/resource",
         },
       ],
-    },
-    watchOptions: {
-      ignored: /node_modules/,
-      aggregateTimeout: 100,
-      poll: 1000,
     },
     optimization: {
       minimize: isProduction,

@@ -1,6 +1,7 @@
 import { getVSCodeAPI } from "@/lib/storage";
 import React from "react";
 import packageJson from "../../package.json";
+import { APP_NAME } from "@oh-my-commits/shared";
 
 interface FooterProps {
   className?: string;
@@ -30,13 +31,12 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
         onClick={() =>
           handleLinkClick("https://github.com/cs-magic-open/oh-my-commits")
         }
-        className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
+        // className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
       >
-        Oh My Commits
+        <span className="mt-1 text-[9px] text-vscode-descriptionForeground opacity-40 font-light tracking-[0.15em] uppercase">
+          {APP_NAME} {packageJson.version}
+        </span>
       </button>
-      <span className="mt-1 text-[9px] text-vscode-descriptionForeground opacity-40 font-light tracking-[0.15em] uppercase">
-        Oh My Commits
-      </span>
     </footer>
   );
 };

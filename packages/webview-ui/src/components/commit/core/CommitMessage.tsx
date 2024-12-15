@@ -100,7 +100,7 @@ export function CommitMessage() {
               vscode.postMessage({ command: "get-commit-data" });
             }}
           >
-            Regenerate
+            Regenerate2
           </VSCodeButton>
           <VSCodeButton
             disabled={!isSubjectValid || disabled}
