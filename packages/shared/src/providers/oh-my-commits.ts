@@ -7,6 +7,8 @@ import { GitChangeSummary } from "../types/git";
 import { GenerateCommitResult } from "../types/commit";
 import { BaseLogger } from "@/utils/BaseLogger";
 
+import HttpsProxyAgent from "https-proxy-agent";
+
 class OhMyCommitsStandardModel implements Model {
   id = "omc/standard";
   name = "Oh My Commits Standard Model";
@@ -44,11 +46,17 @@ export class OhMyCommitsProvider extends Provider {
       process.env.HTTPS_PROXY ||
       process.env.ALL_PROXY;
 
+    const config: Record<string, any> = {
+      apiKey,
+      // baseURL: proxy,
+    };
+
+    if (proxy) {
+      config["httpAgent"] = new HttpsProxyAgent.HttpsProxyAgent(proxy);
+    }
+
     if (apiKey) {
-      this.anthropic = new Anthropic({
-        apiKey,
-        baseURL: proxy,
-      });
+      this.anthropic = new Anthropic(config);
     }
   }
 
@@ -91,18 +99,23 @@ Please analyze the diff carefully and provide:
 2. A blank line
 3. A detailed body explaining what changes were made and why`;
 
-      this.logger.info("Generating commit message using Anthropic...");
+      const messages = [
+        {
+          role: "user" as const,
+          content: prompt,
+        },
+      ];
+
+      this.logger.info(
+        "Generating commit message using Anthropic...",
+        JSON.stringify(messages, null, 2)
+      );
 
       const response = await this.anthropic.messages.create({
         model: "claude-3-sonnet-20240229",
         max_tokens: 1000,
         temperature: 0.7,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+        messages,
       });
 
       this.logger.info("Commit message generated: ", response);
@@ -116,6 +129,7 @@ Please analyze the diff carefully and provide:
         body: bodyParts.join("\n\n").trim(),
       });
     } catch (error) {
+      this.logger.error("Failed to generate commit message:", error);
       return err(error instanceof Error ? error.message : "Unknown error");
     }
   }
