@@ -15,8 +15,7 @@ export class StatusBarManager
 
   constructor(app: AppManager) {
     super();
-    this.logger = app.getLogger();
-    StatusBarManager.setLogger(this.logger);
+    this.logger = app.logger;
 
     this.acManager = app.acManager;
     this.statusBarItem = vscode.window.createStatusBarItem(
@@ -41,9 +40,7 @@ export class StatusBarManager
         this.update();
       })
     );
-  }
 
-  public initialize(): void {
     this.logger.info("Initializing status bar");
     this.statusBarItem.show();
     this.update();

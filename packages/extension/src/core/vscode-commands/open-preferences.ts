@@ -1,8 +1,9 @@
 import { VscodeCommand } from "@/core/vscode-commands/types";
 import { openPreferences } from "@/utils/open-preference";
+import { COMMAND_OPEN_PREFERENCE } from "@oh-my-commits/shared";
 
 export class OpenPreferencesCommand implements VscodeCommand {
-  public id = "omc.openPreferences";
+  public id = COMMAND_OPEN_PREFERENCE;
 
   async execute(): Promise<void> {
     console.log("Open preferences command triggered");

@@ -1,9 +1,10 @@
 import { VscodeCommand } from "@/core/vscode-commands/types";
 import { AcManager } from "@/core/ac";
 import * as vscode from "vscode";
+import { COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
 
 export class SelectModelCommand implements VscodeCommand {
-  public id = "omc.selectModel";
+  public id = COMMAND_SELECT_MODEL;
 
   private acManager: AcManager;
 

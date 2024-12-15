@@ -2,11 +2,11 @@ import { AcManager } from "@/core/ac";
 import { BaseCommand } from "@/core/vscode-commands/types";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
-import { CommitEvent } from "@oh-my-commits/shared";
+import { COMMAND_QUICK_COMMIT, CommitEvent } from "@oh-my-commits/shared";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
-  public id = "omc.quickCommit";
+  public id = COMMAND_QUICK_COMMIT;
   public name = "Quick Commit";
 
   private gitService: VscodeGitService;
@@ -24,8 +24,8 @@ export class QuickCommitCommand extends BaseCommand {
 
     this.webviewManager = new WebviewManager(
       context,
-      "oh-my-commitsCommit",
-      "Oh My Commits Commit"
+      "webview",
+      "Oh My Commits"
     );
 
     // Register message handlers

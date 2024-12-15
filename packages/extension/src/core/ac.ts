@@ -17,8 +17,8 @@ export class AcManager extends Loggable(class {}) {
 
   constructor(app: AppManager) {
     super();
-    this.logger = app.getLogger();
-    AcManager.setLogger(this.logger);
+    this.logger = app.logger;
+
     this.config = vscode.workspace.getConfiguration("");
     this.providers.push(new OmcProvider(this.logger));
     this.modelId = this.config.get<string>(SETTING_MODEL_ID);
