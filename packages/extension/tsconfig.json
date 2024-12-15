@@ -12,6 +12,8 @@
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "types": ["vscode"],
     "baseUrl": ".",

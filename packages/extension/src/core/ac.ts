@@ -1,41 +1,49 @@
+import * as vscode from "vscode";
+import { Provider } from "@/types/provider";
 import { Model } from "@/types/model";
-import { openPreferences } from "@/utils/open-preference";
+import { YaacProvider } from "@/providers/yaac";
 import { GenerateCommitResult } from "@yaac/shared/types/commit";
 import { DiffResult } from "simple-git";
-import * as vscode from "vscode";
-import { presetAiProviders, Provider } from "../types/provider";
-import { isEqual, pick } from "lodash-es";
-import { AppManager } from "@/core"; 
+import { Loggable } from "@/types/mixins";
+import { openPreferences } from "@/utils/open-preference";
+import { presetAiProviders } from "@/types/provider";
+import { AppManager } from "@/core";
 
-import { YaacProvider } from "../providers/yaac";
-
-export const getWorkspaceConfig = () =>
-  vscode.workspace.getConfiguration("yaac");
-
-export class AcManager {
-  private app: AppManager; 
-  private currentModelId: string | undefined;
-  private providers: Provider[] = [
-    new YaacProvider(), 
-  ];
+export class AcManager extends Loggable(class {}) {
+  private providers: Provider[] = [];
+  private currentModelId?: string;
 
   constructor(app: AppManager) {
-    this.app = app;
+    super();
+    this.logger = app.getLogger();
+    AcManager.setLogger(this.logger);
+  }
+
+  public initialize(): void {
+    this.logger.info("Initializing AcManager");
+    // Register default providers
+    this.registerProvider(new YaacProvider());
+    // Load initial config
     this.loadConfig();
+  }
+
+  private loadConfig() {
+    const config = vscode.workspace.getConfiguration("");
+    this.currentModelId = config.get<string>("yaac.model");
   }
 
   public async getAvailableModels(): Promise<Model[]> {
     const models: Model[] = [];
+    const providerClasses = [YaacProvider];
 
-    for (const provider of this.providers) {
-      const providerClass = provider.constructor as typeof Provider;
+    for (const providerClass of providerClasses) {
       if (!providerClass.enabled) {
         continue;
       }
 
       const providerModels = providerClass.models.map((model: Model) => ({
         ...model,
-        description: `${model.description} (API Required)`,
+        providerId: providerClass.id,
       }));
 
       models.push(...providerModels);
@@ -50,7 +58,7 @@ export class AcManager {
     }
 
     const models = await this.getAvailableModels();
-    return models.find((s) => s.id === this.currentModelId);
+    return models.find((model) => model.id === this.currentModelId);
   }
 
   public async selectModel(modelId: string): Promise<boolean> {
@@ -58,20 +66,19 @@ export class AcManager {
     const model = models.find((s) => s.id === modelId);
 
     if (!model) {
-      console.log(`Model ${modelId} not found`);
+      this.logger.error(`Model ${modelId} not found`);
       return false;
     }
 
     this.currentModelId = modelId;
+    await vscode.workspace.getConfiguration("").update("yaac.model", modelId, true);
 
-    await getWorkspaceConfig().update("ac.model", modelId, true);
-
-    const aiProviderId = model.aiProviderId as string;
-    if (presetAiProviders.includes(aiProviderId)) {
+    const providerId = model.providerId;
+    if (presetAiProviders.includes(providerId)) {
       const configureNow = "Configure Now";
       const configureLater = "Configure Later";
       const response = await vscode.window.showErrorMessage(
-        `使用该模型需要先填写目标 ${aiProviderId.toUpperCase()}_API_KEY`,
+        `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
         configureLater
       );
@@ -98,58 +105,32 @@ export class AcManager {
     }
 
     return provider.generateCommit(diff, currentModel, {
-      lang: this.config.get("git.commitLanguage"),
+      lang: vscode.env.language,
     });
   }
 
-  public registerProvider(provider: Provider) {
+  public registerProvider(provider: Provider): void {
     if (!this.providers.find((p) => (p.constructor as typeof Provider).id === (provider.constructor as typeof Provider).id)) {
       this.providers.push(provider);
     }
   }
 
-  public removeProvider(providerId: string) {
+  public unregisterProvider(providerId: string): void {
     const index = this.providers.findIndex((p) => (p.constructor as typeof Provider).id === providerId);
     if (index !== -1) {
       this.providers.splice(index, 1);
     }
   }
 
-  public get config() {
-    return getWorkspaceConfig();
-  }
+  public async updateProvidersConfig(): Promise<void> {
+    const config = vscode.workspace.getConfiguration("");
+    const providersConfig = config.get<Record<string, boolean>>("yaac.providers");
 
-  private loadConfig() {
-    const providersConfig = this.config.get<Record<string, boolean>>(
-      "providers",
-      {}
-    );
-
-    for (const provider of this.providers) {
-      const providerClass = provider.constructor as typeof Provider;
-      providerClass.enabled = providersConfig[providerClass.id] ?? true;
-    }
-
-    this.currentModelId = this.config.get<string>("ac.model");
-  }
-
-  protected async registerConfiguration() {
-    const models = await this.getAvailableModels();
-    const currentModel = await this.getCurrentModel();
-    const target = {
-      type: "string",
-      description: "Current Auto Commit Model",
-      enum: models.map((s) => s.name),
-      enumDescriptions: models.map((s) => s.description),
-      default: currentModel?.name,
-    };
-    await this.app.updateConfiguration(
-      "yaac.ac.model",
-      target,
-      (raw, target) => {
-        const keys = Object.keys(target).filter((k) => k !== "default"); 
-        return isEqual(pick(raw, keys), pick(target, keys));
+    if (providersConfig) {
+      const providerClasses = [YaacProvider];
+      for (const providerClass of providerClasses) {
+        providerClass.enabled = providersConfig[providerClass.id] ?? true;
       }
-    );
+    }
   }
 }

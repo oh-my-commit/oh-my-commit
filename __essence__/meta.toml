@@ -181,3 +181,8 @@ abstract = "调整文件差异视图的位置到右侧并优化UI/UX，使其与
 slug = "fileitem_uiux"
 title = "FileItem UI/UX Enhancement"
 abstract = "改进文件项组件的选中状态和交互效果"
+
+[conversations.040]
+slug = "yaac_provider_config"
+title = ""
+abstract = ""

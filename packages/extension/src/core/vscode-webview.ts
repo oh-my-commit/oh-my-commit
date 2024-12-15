@@ -2,11 +2,12 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import * as Handlebars from "handlebars";
+import { Loggable } from "@/types/mixins";
 
 type MessageHandler = (message: any) => Promise<void>;
 type LogLevel = "debug" | "info" | "warn" | "error" | "trace";
 
-export class WebviewManager {
+export class WebviewManager extends Loggable(class {}) implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel;
   private readonly scriptUri: vscode.Uri;
   private readonly template: HandlebarsTemplateDelegate;
@@ -52,12 +53,11 @@ export class WebviewManager {
     context: vscode.ExtensionContext,
     private readonly viewType: string,
     private readonly title: string,
-    private readonly logger: vscode.LogOutputChannel,
     templatePath: string = "./assets/webview.template.html",
     scriptPath: string = "./dist/webview-ui/main.js",
     persistWindowState: boolean = false
   ) {
-    this.logger = logger;
+    super();
     this.logger.info(`Creating ${viewType} webview`);
     this.persistWindowState = persistWindowState;
 

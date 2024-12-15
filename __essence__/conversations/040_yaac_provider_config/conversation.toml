@@ -1,0 +1,8 @@
+[meta]
+slug = "yaac_provider_config"
+title = "YaacProvider Configuration Enhancement"
+abstract = "Implementing API key configuration reading from user settings in YaacProvider"
+
+[rounds.001]
+time = "2024-12-15T04:53:46+08:00"
+round = 1
