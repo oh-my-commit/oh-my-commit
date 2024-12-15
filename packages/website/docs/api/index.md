@@ -68,29 +68,38 @@ const omc = new OhMyCommits({
 });
 
 // 生成提交信息
-const message = await omc.generate({
-  files: ["src/index.js"],
-  diff: "git diff content",
-});
+const message =
+  (await oh) -
+  my -
+  commits.generate({
+    files: ["src/index.js"],
+    diff: "git diff content",
+  });
 
 // 执行提交
-await omc.commit({
-  message,
-  files: ["src/index.js"],
-});
+(await oh) -
+  my -
+  commits.commit({
+    message,
+    files: ["src/index.js"],
+  });
 ```
 
 ### 事件监听
 
 ```javascript
 // 监听事件
-omc.on("commit", (data) => {
-  console.log("提交完成:", data);
-});
+oh -
+  my -
+  commits.on("commit", (data) => {
+    console.log("提交完成:", data);
+  });
 
-omc.on("error", (error) => {
-  console.error("发生错误:", error);
-});
+oh -
+  my -
+  commits.on("error", (error) => {
+    console.error("发生错误:", error);
+  });
 ```
 
 ## 配置 API
@@ -289,7 +298,7 @@ interface Context {
 const { CommitError, ConfigError, HookError } = require("oh-my-commits/errors");
 
 try {
-  await omc.commit(message);
+  (await oh) - my - commits.commit(message);
 } catch (error) {
   if (error instanceof CommitError) {
     // 处理提交错误

@@ -20,8 +20,8 @@
 
    ```json
    {
-     "omc.ai.provider": "openai",
-     "omc.ai.apiKey": "your-api-key"
+     "oh-my-commits.ai.provider": "openai",
+     "oh-my-commits.ai.apiKey": "your-api-key"
    }
    ```
 
@@ -29,8 +29,8 @@
 
    ```json
    {
-     "omc.commit.convention": "conventional",
-     "omc.commit.scopes": ["feat", "fix", "docs"]
+     "oh-my-commits.commit.convention": "conventional",
+     "oh-my-commits.commit.scopes": ["feat", "fix", "docs"]
    }
    ```
 
@@ -38,11 +38,11 @@
    ```json
    {
      "key": "alt+g",
-     "command": "omc.generateCommitMessage"
+     "command": "oh-my-commits.generateCommitMessage"
    },
    {
      "key": "alt+c",
-     "command": "omc.commit"
+     "command": "oh-my-commits.commit"
    }
    ```
 
@@ -67,7 +67,7 @@ Oh My Commits 提供了多种提交模式，适应不同的使用场景：
 
    ```json
    {
-     "omc.commitMode": "panel"
+     "oh-my-commits.commitMode": "panel"
    }
    ```
 
@@ -77,7 +77,7 @@ Oh My Commits 提供了多种提交模式，适应不同的使用场景：
 
    ```json
    {
-     "omc.commitMode": "window"
+     "oh-my-commits.commitMode": "window"
    }
    ```
 
@@ -87,7 +87,7 @@ Oh My Commits 提供了多种提交模式，适应不同的使用场景：
 
    ```json
    {
-     "omc.commitMode": "notification"
+     "oh-my-commits.commitMode": "notification"
    }
    ```
 
@@ -96,7 +96,7 @@ Oh My Commits 提供了多种提交模式，适应不同的使用场景：
 4. **静默模式**：
    ```json
    {
-     "omc.commitMode": "silent"
+     "oh-my-commits.commitMode": "silent"
    }
    ```
    自动生成并提交，无需交互，适合自动化场景。

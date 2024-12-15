@@ -64,15 +64,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "oh-my-commits.quickCommit",
+        "command": "ohMyCommits.quickCommit",
         "title": "Oh My Commits: Quick Commit"
       },
       {
-        "command": "oh-my-commits.selectModel",
+        "command": "ohMyCommits.selectModel",
         "title": "Oh My Commits: Select Model"
       },
       {
-        "command": "oh-my-commits.openPreference",
+        "command": "ohMyCommits.openPreference",
         "title": "Oh My Commits: Open Preference"
       }
     ],
@@ -101,16 +101,12 @@
           "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "ohMyCommits.ac.model": {
+        "ohMyCommits.model.id": {
           "type": "string",
           "enum": [
-            "oh-my-commits.test",
-            "oh-my-commits.balanced",
-            "oh-my-commits.professional",
-            "cgop.openai.chatgpt-3.5",
-            "cgop.openai.chatgpt-4"
+            "oh-my-commits.standard"
           ],
-          "default": "oh-my-commits.test",
+          "default": "oh-my-commits.standard",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 3
         },

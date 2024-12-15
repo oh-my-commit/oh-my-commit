@@ -1,22 +1,23 @@
-import { VscodeCommand } from "@/core/vscode-commands/types";
+import { BaseCommand, VscodeCommand } from "@/core/vscode-commands/types";
 import { AcManager } from "@/core/ac";
 import * as vscode from "vscode";
 import { COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
 
-export class SelectModelCommand implements VscodeCommand {
+export class SelectModelCommand extends BaseCommand implements VscodeCommand {
   public id = COMMAND_SELECT_MODEL;
 
   private acManager: AcManager;
 
   constructor(acManager: AcManager) {
+    super();
     this.acManager = acManager;
   }
 
   async execute(): Promise<void> {
-    console.log("Manage models command triggered");
+    this.logger.info("Manage models command triggered");
 
     if (this.acManager.models.length === 0) {
-      console.log("No available models found");
+      this.logger.info("No available models found");
       vscode.window.showErrorMessage("No available models");
       return;
     }
@@ -40,7 +41,7 @@ export class SelectModelCommand implements VscodeCommand {
       );
 
       if (selected) {
-        console.log(`Switched to model: ${selected.id}`);
+        this.logger.info(`Switched to model: ${selected.id}`);
         await this.acManager.selectModel(selected.id);
       }
     } catch (error: unknown) {

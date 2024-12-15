@@ -14,7 +14,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team": {
+  "oh-my-commits.team": {
     "configPath": ".oh-my-commits/team.json",
     "syncEnabled": true,
     "syncInterval": 3600
@@ -28,7 +28,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.commit": {
+  "oh-my-commits.team.commit": {
     "convention": "conventional",
     "scopes": [
       "feat",
@@ -55,7 +55,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.review": {
+  "oh-my-commits.team.review": {
     "required": true,
     "minReviewers": 2,
     "assignRules": [
@@ -82,7 +82,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
    ```json
    {
-     "omc.team.workflow": {
+     "oh-my-commits.team.workflow": {
        "type": "github-flow",
        "branchPrefix": "feature/",
        "autoMergePatch": true
@@ -94,7 +94,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
    ```json
    {
-     "omc.team.workflow": {
+     "oh-my-commits.team.workflow": {
        "type": "gitlab-flow",
        "environments": ["dev", "staging", "prod"],
        "autoDeployToDev": true
@@ -105,7 +105,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 3. **Trunk Based**
    ```json
    {
-     "omc.team.workflow": {
+     "oh-my-commits.team.workflow": {
        "type": "trunk-based",
        "trunk": "main",
        "shortLivedBranches": true
@@ -119,7 +119,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.ci": {
+  "oh-my-commits.team.ci": {
     "provider": "github-actions",
     "validateCommits": true,
     "autoFix": true,
@@ -139,7 +139,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.activity": {
+  "oh-my-commits.team.activity": {
     "enabled": true,
     "showInPanel": true,
     "filters": {
@@ -157,7 +157,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.stats": {
+  "oh-my-commits.team.stats": {
     "enabled": true,
     "schedule": "weekly",
     "metrics": ["commits", "lines", "files", "authors"],
@@ -175,7 +175,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team": {
+  "oh-my-commits.team": {
     "enforceConvention": true,
     "requireTests": true,
     "requireReview": true,
@@ -188,7 +188,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.review": {
+  "oh-my-commits.team.review": {
     "checkCoverage": true,
     "checkPerformance": true,
     "checkSecurity": true,
@@ -201,7 +201,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "omc.team.automation": {
+  "oh-my-commits.team.automation": {
     "formatCode": true,
     "updateChangelog": true,
     "createRelease": true,
