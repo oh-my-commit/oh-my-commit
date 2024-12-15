@@ -1,7 +1,6 @@
 import { Model } from "@/types/model";
 import { Loggable } from "@/types/mixins";
-import { GenerateCommitResult } from "@oh-my-commits/shared/types/commit";
-import { GitChangeSummary } from "@oh-my-commits/shared";
+import { GitChangeSummary, GenerateCommitResult } from "@oh-my-commits/shared";
 import { workspace, WorkspaceConfiguration } from "vscode";
 
 export const presetAiProviders = [
