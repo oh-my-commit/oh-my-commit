@@ -50,7 +50,7 @@ export class StatusBarManager
   }
 
   private async update(): Promise<void> {
-    const currentModel = await this.acManager.getCurrentModel();
+    const model = this.acManager.model;
     const isGitRepo = await this.gitService.isGitRepository();
 
     if (!isGitRepo) {
@@ -60,15 +60,15 @@ export class StatusBarManager
       return;
     }
 
-    if (!currentModel) {
+    if (!model) {
       this.statusBarItem.text = "$(error) Oh My Commits: No model selected";
       this.statusBarItem.tooltip = "Click to select a model";
       this.statusBarItem.command = "omc.selectModel";
       return;
     }
 
-    this.statusBarItem.text = `$(git-commit) Oh My Commits: ${currentModel.name}`;
-    this.statusBarItem.tooltip = `Current model: ${currentModel.name}\nClick to change model`;
+    this.statusBarItem.text = `$(git-commit) Oh My Commits: ${model.name}`;
+    this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`;
     this.statusBarItem.command = "omc.selectModel";
   }
 

@@ -3,7 +3,7 @@ import { GitChangeSummary } from "../types/git";
 import { Result, err } from "neverthrow";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
-import { OhMyCommitsProvider } from "../providers/oh-my-commits";
+import { OmcProvider } from "../providers/oh-my-commits";
 import { BaseLogger } from "@/utils/BaseLogger";
 
 export interface CommitManagerOptions {
@@ -14,7 +14,7 @@ export class CommitManager {
   private provider: Provider;
 
   constructor(options: CommitManagerOptions = {}) {
-    this.provider = new OhMyCommitsProvider(options.logger);
+    this.provider = new OmcProvider(options.logger);
   }
 
   public async getAvailableModels(): Promise<Model[]> {

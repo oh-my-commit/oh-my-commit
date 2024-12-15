@@ -28,7 +28,7 @@ export class AppManager extends Loggable(class {}) {
 
     // Initialize components
     this.logger.info("Initializing Oh My Commits components");
-    this.acManager.initialize();
+
     this.commandManager.initialize();
     this.statusBarManager.initialize();
   }
@@ -43,10 +43,6 @@ export class AppManager extends Loggable(class {}) {
       // Setup Git integration
       await this.setupGitIntegration();
       this.logger.info("Git integration setup complete");
-
-      // Update providers config
-      await this.acManager.updateProvidersConfig();
-      this.logger.info("Provider configuration updated");
 
       this.logger.info("Oh My Commits initialization complete");
     } catch (error) {
