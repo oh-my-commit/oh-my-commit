@@ -3,7 +3,7 @@ import { GitChangeSummary } from "../types/git";
 import { Result, err } from "neverthrow";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
-import { OhMyCommitProvider } from "../providers/yaac";
+import { OhMyCommitProvider } from "../providers/oh-my-commit";
 
 export class CommitManager {
   private provider: Provider;
@@ -21,10 +21,14 @@ export class CommitManager {
     modelId: string = "oh-my-commit/standard"
   ): Promise<Result<CommitData, string>> {
     const models = await this.getAvailableModels();
-    const model = models.find(m => m.id === modelId);
-    
+    const model = models.find((m) => m.id === modelId);
+
     if (!model) {
-      return err(`Model ${modelId} not found. Available models: ${models.map(m => m.id).join(", ")}`);
+      return err(
+        `Model ${modelId} not found. Available models: ${models
+          .map((m) => m.id)
+          .join(", ")}`
+      );
     }
 
     try {
@@ -32,7 +36,9 @@ export class CommitManager {
         lang: "zh-CN",
       });
     } catch (error) {
-      return err(error instanceof Error ? error.message : "Unknown error occurred");
+      return err(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
     }
   }
 }
