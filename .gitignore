@@ -1,4 +1,4 @@
-.turbo/
+**/.turbo/
 temp/
 out/
 src-tauri/target
