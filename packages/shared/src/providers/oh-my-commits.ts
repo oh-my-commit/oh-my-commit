@@ -1,45 +1,42 @@
 import { ok, err } from "neverthrow";
 import Anthropic from "@anthropic-ai/sdk";
+import HttpsProxyAgent from "https-proxy-agent";
 
+import { BaseLogger } from "@/utils/BaseLogger";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
 import { GitChangeSummary } from "../types/git";
 import { GenerateCommitResult } from "../types/commit";
-import { BaseLogger } from "@/utils/BaseLogger";
-
-import HttpsProxyAgent from "https-proxy-agent";
-import { ToolUseBlock } from "@anthropic-ai/sdk/resources";
-import { it } from "node:test";
 
 class OhMyCommitsStandardModel implements Model {
   id = "omc/standard";
   name = "Oh My Commits Standard Model";
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
   providerId = "oh-my-commits";
+  aiProviderId = "anthropic";
   metrics = {
     accuracy: 0.95,
     speed: 0.7,
     cost: 0.8,
   };
-  aiProviderId = "anthropic";
 }
 
 export class OhMyCommitsProvider extends Provider {
-  private anthropic: Anthropic | null = null;
+  override id = "oh-my-commits";
+  override displayName = "Oh My Commits Provider";
+  override description =
+    "Commit message generation powered by Oh My Commits models";
+  override models = [new OhMyCommitsStandardModel()];
+
   public config: any;
 
-  static id = "oh-my-commits";
-  static displayName = "Oh My Commits Provider";
-  static description =
-    "Commit message generation powered by Oh My Commits models";
-  static enabled = true;
-  static models = [new OhMyCommitsStandardModel()];
+  private anthropic: Anthropic | null = null;
 
   constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
     super();
     if (logger) this.logger = logger;
 
-    this.config = {};
+    // this.config = {}; // todo: load from vscode configuration
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY;
     const proxy =
@@ -48,31 +45,24 @@ export class OhMyCommitsProvider extends Provider {
       process.env.HTTPS_PROXY ||
       process.env.ALL_PROXY;
 
-    const config: Record<string, any> = {
-      apiKey,
-      // baseURL: proxy,
-    };
+    const config: Record<string, any> = { apiKey };
 
-    if (proxy) {
-      config["httpAgent"] = new HttpsProxyAgent.HttpsProxyAgent(proxy);
-    }
+    if (proxy) config["httpAgent"] = new HttpsProxyAgent.HttpsProxyAgent(proxy);
 
-    if (apiKey) {
-      this.anthropic = new Anthropic(config);
-    }
+    if (apiKey) this.anthropic = new Anthropic(config);
   }
 
   async generateCommit(
     diff: GitChangeSummary,
-    _model: Model,
+    providedModel: Model,
     options?: { lang?: string }
   ): Promise<GenerateCommitResult> {
     const lang = options?.lang || "en";
-    if (!this.anthropic) {
-      return err("Anthropic API key not configured");
-    }
+    const model = "claude-3-sonnet-20240229";
 
     try {
+      if (!this.anthropic) throw new Error("Anthropic API key not configured");
+
       const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
 
 Git diff:
@@ -117,20 +107,18 @@ Example response:
   }
 }`;
 
-      const messages = [
-        {
-          role: "user" as const,
-          content: prompt,
-        },
-      ];
-
       this.logger.info("Generating commit message using Anthropic...");
 
       const response = await this.anthropic.messages.create({
-        model: "claude-3-sonnet-20240229",
+        model,
         max_tokens: 1000,
         temperature: 0.7,
-        messages,
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
         tools: [
           {
             name: "generate_commit",
@@ -200,34 +188,38 @@ Example response:
         JSON.stringify(response)
       );
 
-      try {
-        if (!response.content[0] || response.content[0].type !== "tool_use") {
-          throw new Error("Invalid response format");
-        }
+      const item = response.content[0];
+      if (item.type !== "tool_use")
+        throw new Error("Invalid tool response from AI model");
 
-        const result = response.content.find(
-          (c) => c.type === "tool_use" && c.name === "generate_commit"
-          // @ts-ignore
-        )!.input;
-        const data = {
-          title: result.title,
-          body: result.body,
-          meta: {
-            model: "claude-3-sonnet-20240229",
-            timestamp: new Date().toISOString(),
-            provider: "oh-my-commits",
-            ...result.extra,
-          },
+      const result = item.input as {
+        title: string;
+        body: string;
+        extra?: {
+          type?: string;
+          scope?: string;
+          breaking?: boolean;
+          issues?: string[];
         };
-        this.logger.info(
-          "Commit message generated (data): ",
-          JSON.stringify(data, null, 2)
-        );
-        return ok(data);
-      } catch (e) {
-        this.logger.error("Failed to parse tool response:", e);
-        return err("Invalid tool response from AI model");
-      }
+      };
+      if (!result) throw new Error("Invalid tool response from AI model");
+
+      const data = {
+        title: result.title,
+        body: result.body,
+        meta: {
+          timestamp: new Date().toISOString(),
+          provider: "oh-my-commits",
+          providedModel: providedModel.id,
+          anthropicModel: model,
+          ...result.extra,
+        },
+      };
+      this.logger.info(
+        "Commit message generated (data): ",
+        JSON.stringify(data, null, 2)
+      );
+      return ok(data);
     } catch (error) {
       this.logger.error("Failed to generate commit message:", error);
       return err(error instanceof Error ? error.message : "Unknown error");
