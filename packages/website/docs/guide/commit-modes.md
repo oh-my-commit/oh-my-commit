@@ -1,6 +1,6 @@
 # 提交模式
 
-Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团队需求。
+Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团队需求。
 
 ## 快速模式
 
@@ -39,7 +39,7 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 {
   "omc.mode.team": {
     "enabled": true,
-    "configPath": ".oh-my-commit/team.json",
+    "configPath": ".oh-my-commits/team.json",
     "enforceRules": true,
     "requireReview": true
   }
@@ -71,8 +71,8 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
   "omc.mode.custom": {
     "enabled": true,
     "hooks": {
-      "pre-commit": ".oh-my-commit/hooks/pre-commit.js",
-      "post-commit": ".oh-my-commit/hooks/post-commit.js"
+      "pre-commit": ".oh-my-commits/hooks/pre-commit.js",
+      "post-commit": ".oh-my-commits/hooks/post-commit.js"
     },
     "templates": {
       "feature": "feat(${scope}): ${subject}",
@@ -88,13 +88,13 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```bash
 # 切换到快速模式
-oh-my-commit mode quick
+oh-my-commits mode quick
 
 # 切换到交互模式
-oh-my-commit mode interactive
+oh-my-commits mode interactive
 
 # 切换到 AI 模式
-oh-my-commit mode ai
+oh-my-commits mode ai
 ```
 
 ### 配置文件切换

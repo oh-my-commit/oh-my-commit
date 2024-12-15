@@ -10,7 +10,7 @@ export * from "./types/commit";
 export * from "./types/tree";
 
 // Provider exports
-export { OhMyCommitProvider } from "./providers/oh-my-commit";
+export { OhMyCommitsProvider } from "./providers/oh-my-commits";
 
 // Result type re-export from neverthrow
 export { Result, ok, err } from "neverthrow";

@@ -1,6 +1,6 @@
-# Contributing to Oh My Commit
+# Contributing to Oh My Commits
 
-感谢你对 Oh My Commit（Yet Another Auto Commit）的贡献兴趣！这份指南将帮助你了解如何参与项目开发。
+感谢你对 Oh My Commits（Yet Another Auto Commit）的贡献兴趣！这份指南将帮助你了解如何参与项目开发。
 
 <!-- toc -->
 
@@ -40,7 +40,7 @@
 
    ```zsh
    git clone https://github.com/cs-magic-open/omc.git
-   cd oh-my-commit
+   cd oh-my-commits
    ```
 
 3. **安装依赖**

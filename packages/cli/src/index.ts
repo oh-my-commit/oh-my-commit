@@ -3,12 +3,12 @@
 import { program } from "commander";
 import chalk from "chalk";
 import simpleGit from "simple-git";
-import { CommitManager } from "@oh-my-commit/shared";
+import { CommitManager } from "@oh-my-commits/shared";
 import { ConsoleLogger } from "./utils/ConsoleLogger";
 
 // Initialize git and commit manager
 const git = simpleGit();
-const logger = new ConsoleLogger("Oh My Commit CLI");
+const logger = new ConsoleLogger("Oh My Commits CLI");
 const commitManager = new CommitManager({ logger });
 
 // Default model
@@ -33,7 +33,7 @@ const listModels = async () => {
 };
 
 const initConfig = async () => {
-  console.log(chalk.blue("Initializing Oh My Commit..."));
+  console.log(chalk.blue("Initializing Oh My Commits..."));
   try {
     // TODO: Add actual initialization logic
     // 1. Create config file if not exists
@@ -99,13 +99,13 @@ const generateAndCommit = async (options: any) => {
 // Register commands
 program
   .name("omc")
-  .description("Oh My Commit - AI-powered commit message generator")
+  .description("Oh My Commits - AI-powered commit message generator")
   .version("1.0.0");
 
 // Init command
 program
   .command("init")
-  .description("Initialize Oh My Commit configuration")
+  .description("Initialize Oh My Commits configuration")
   .action(initConfig);
 
 // List models command

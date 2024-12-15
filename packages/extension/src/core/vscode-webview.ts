@@ -7,7 +7,10 @@ import { Loggable } from "@/types/mixins";
 type MessageHandler = (message: any) => Promise<void>;
 type LogLevel = "debug" | "info" | "warn" | "error" | "trace";
 
-export class WebviewManager extends Loggable(class {}) implements vscode.Disposable {
+export class WebviewManager
+  extends Loggable(class {})
+  implements vscode.Disposable
+{
   private webviewPanel?: vscode.WebviewPanel;
   private readonly scriptUri: vscode.Uri;
   private readonly template: HandlebarsTemplateDelegate;
@@ -41,7 +44,9 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
     },
   };
 
-  private getWorkspaceConfig(key: keyof typeof this.windowModeConfigs.workspace) {
+  private getWorkspaceConfig(
+    key: keyof typeof this.windowModeConfigs.workspace
+  ) {
     return this.windowModeConfigs.workspace[key];
   }
 
@@ -78,8 +83,8 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
       if (message.payload) {
         const { channel, level, rawMessage } = message.payload;
         const normalizedLevel = this.normalizeLogLevel(level);
-        const webviewChannel = channel ? `webview-${channel}` : 'webview';
-        
+        const webviewChannel = channel ? `webview-${channel}` : "webview";
+
         switch (normalizedLevel) {
           case "debug":
             this.logger.debug(`[${webviewChannel}] ${rawMessage}`);
@@ -238,7 +243,9 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
+          this.getWorkspaceConfig(
+            key as keyof typeof this.windowModeConfigs.workspace
+          ),
           vscode.ConfigurationTarget.Workspace
         );
       }
@@ -268,20 +275,28 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
       this.persistWindowState &&
       Object.keys(this.savedStates).length > 0
     ) {
-      for (const key of Object.keys(this.windowModeConfigs.workspace) as Array<keyof typeof this.windowModeConfigs.workspace>) {
-        await vscode.workspace.getConfiguration().update(
-          key,
-          this.getWorkspaceConfig(key),
-          vscode.ConfigurationTarget.Workspace
-        );
+      for (const key of Object.keys(this.windowModeConfigs.workspace) as Array<
+        keyof typeof this.windowModeConfigs.workspace
+      >) {
+        await vscode.workspace
+          .getConfiguration()
+          .update(
+            key,
+            this.getWorkspaceConfig(key),
+            vscode.ConfigurationTarget.Workspace
+          );
       }
 
-      for (const key of Object.keys(this.windowModeConfigs.user) as Array<keyof typeof this.windowModeConfigs.user>) {
-        await vscode.workspace.getConfiguration().update(
-          key,
-          this.getUserConfig(key),
-          vscode.ConfigurationTarget.Global
-        );
+      for (const key of Object.keys(this.windowModeConfigs.user) as Array<
+        keyof typeof this.windowModeConfigs.user
+      >) {
+        await vscode.workspace
+          .getConfiguration()
+          .update(
+            key,
+            this.getUserConfig(key),
+            vscode.ConfigurationTarget.Global
+          );
       }
 
       // 清空保存的状态
@@ -404,8 +419,9 @@ export class WebviewManager extends Loggable(class {}) implements vscode.Disposa
 
   public get uiMode(): string {
     return (
-      vscode.workspace.getConfiguration("oh-my-commit").get<string>("ui.mode") ??
-      "panel"
+      vscode.workspace
+        .getConfiguration("oh-my-commits")
+        .get<string>("ui.mode") ?? "panel"
     );
   }
 

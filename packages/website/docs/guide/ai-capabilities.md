@@ -1,6 +1,6 @@
 # AI 能力
 
-Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代码变更，生成专业的提交信息。
+Oh My Commits 的核心特色是强大的 AI 能力，它能深入理解你的代码变更，生成专业的提交信息。
 
 ## 支持的模型
 
@@ -24,7 +24,7 @@ Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代
   - 详细的变更分析
   - 支持长文本输入
 
-### Oh My Commit 专业模型
+### Oh My Commits 专业模型
 
 基于大量真实代码提交数据训练的专业模型：
 
@@ -34,7 +34,7 @@ Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代
 
 ## 语言支持
 
-Oh My Commit 支持生成多种语言的提交消息：
+Oh My Commits 支持生成多种语言的提交消息：
 
 - 中文（简体）
 - English
@@ -90,7 +90,7 @@ Oh My Commit 支持生成多种语言的提交消息：
 
 ## 代码分析
 
-Oh My Commit 会深入分析你的代码变更：
+Oh My Commits 会深入分析你的代码变更：
 
 1. **语法理解**
 
@@ -151,7 +151,7 @@ Oh My Commit 会深入分析你的代码变更：
 ```bash
 # 示例：快速提交
 git add .
-oh-my-commit commit
+oh-my-commits commit
 ```
 
 AI 将自动：
@@ -164,7 +164,7 @@ AI 将自动：
 
 ```bash
 # 示例：团队规范提交
-oh-my-commit commit --template team
+oh-my-commits commit --template team
 ```
 
 特点：
@@ -177,7 +177,7 @@ oh-my-commit commit --template team
 
 ```bash
 # 示例：审查辅助
-oh-my-commit review PR-123
+oh-my-commits review PR-123
 ```
 
 功能：

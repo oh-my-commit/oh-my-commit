@@ -3,7 +3,7 @@ import { GitChangeSummary } from "../types/git";
 import { Result, err } from "neverthrow";
 import { Model } from "../types/model";
 import { Provider } from "../types/provider";
-import { OhMyCommitProvider } from "../providers/oh-my-commit";
+import { OhMyCommitsProvider } from "../providers/oh-my-commits";
 import { BaseLogger } from "./BaseLogger";
 
 export interface CommitManagerOptions {
@@ -14,16 +14,16 @@ export class CommitManager {
   private provider: Provider;
 
   constructor(options: CommitManagerOptions = {}) {
-    this.provider = new OhMyCommitProvider(options.logger);
+    this.provider = new OhMyCommitsProvider(options.logger);
   }
 
   public async getAvailableModels(): Promise<Model[]> {
-    return OhMyCommitProvider.models;
+    return OhMyCommitsProvider.models;
   }
 
   public async generateCommit(
     changeSummary: GitChangeSummary,
-    modelId: string = "oh-my-commit/standard"
+    modelId: string = "oh-my-commits/standard"
   ): Promise<Result<CommitData, string>> {
     const models = await this.getAvailableModels();
     const model = models.find((m) => m.id === modelId);

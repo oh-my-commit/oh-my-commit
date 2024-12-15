@@ -6,7 +6,7 @@ export class Logger {
 
   constructor(name: string) {
     this.name = name;
-    this.output = vscode.window.createOutputChannel(`Oh My Commit - ${name}`);
+    this.output = vscode.window.createOutputChannel(`Oh My Commits - ${name}`);
   }
 
   info(message: string): void {
@@ -27,7 +27,9 @@ export class Logger {
 
   private log(level: string, message: string): void {
     const timestamp = new Date().toISOString();
-    this.output.appendLine(`[${timestamp}] [${level}] [${this.name}] ${message}`);
+    this.output.appendLine(
+      `[${timestamp}] [${level}] [${this.name}] ${message}`
+    );
   }
 
   dispose(): void {

@@ -19,10 +19,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@oh-my-commit/shared": ["../shared/src"],
-      "@oh-my-commit/shared/*": ["../shared/src/*"]
+      "@oh-my-commits/shared": ["../shared/src"],
+      "@oh-my-commits/shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src", "../shared/src/providers/oh-my-commit.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "../shared"
+    }
+  ]
 }

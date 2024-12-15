@@ -15,7 +15,7 @@ export class AppManager extends Loggable(class {}) {
   constructor(context: vscode.ExtensionContext) {
     super();
     this.context = context;
-    this.logger = vscode.window.createOutputChannel("Oh My Commit", {
+    this.logger = vscode.window.createOutputChannel("Oh My Commits", {
       log: true,
     }) as vscode.LogOutputChannel;
     AppManager.setLogger(this.logger);
@@ -27,14 +27,14 @@ export class AppManager extends Loggable(class {}) {
     this.statusBarManager = new StatusBarManager(this);
 
     // Initialize components
-    this.logger.info("Initializing Oh My Commit components");
+    this.logger.info("Initializing Oh My Commits components");
     this.acManager.initialize();
     this.commandManager.initialize();
     this.statusBarManager.initialize();
   }
 
   public async initialize(): Promise<void> {
-    this.logger.info("Initializing Oh My Commit...");
+    this.logger.info("Initializing Oh My Commits...");
 
     try {
       // Initialize UI
@@ -48,9 +48,9 @@ export class AppManager extends Loggable(class {}) {
       await this.acManager.updateProvidersConfig();
       this.logger.info("Provider configuration updated");
 
-      this.logger.info("Oh My Commit initialization complete");
+      this.logger.info("Oh My Commits initialization complete");
     } catch (error) {
-      this.logger.error(`Failed to initialize Oh My Commit: ${error}`);
+      this.logger.error(`Failed to initialize Oh My Commits: ${error}`);
       throw error;
     }
   }

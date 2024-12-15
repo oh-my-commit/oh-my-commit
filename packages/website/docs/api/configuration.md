@@ -1,6 +1,6 @@
 # 配置项
 
-Oh My Commit 提供了丰富的配置选项，让你可以根据需要自定义插件行为。
+Oh My Commits 提供了丰富的配置选项，让你可以根据需要自定义插件行为。
 
 ## 基础配置
 
@@ -82,7 +82,7 @@ Oh My Commit 提供了丰富的配置选项，让你可以根据需要自定义�
 ### `omc.team.configPath`
 
 - 类型: `string`
-- 默认值: `'.oh-my-commit/team.json'`
+- 默认值: `'.oh-my-commits/team.json'`
 - 说明: 团队配置文件路径
 
 ### `omc.team.syncEnabled`

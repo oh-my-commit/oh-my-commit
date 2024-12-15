@@ -1,7 +1,7 @@
 {
-  "name": "@oh-my-commit/website",
+  "name": "@oh-my-commits/website",
   "version": "1.0.0",
-  "description": "Oh My Commit Documentation Website",
+  "description": "Oh My Commits Documentation Website",
   "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev docs",

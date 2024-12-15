@@ -1,6 +1,6 @@
 # 命令列表
 
-Oh My Commit 提供了一系列 VSCode 命令，你可以通过命令面板（`Cmd/Ctrl + Shift + P`）调用它们。
+Oh My Commits 提供了一系列 VSCode 命令，你可以通过命令面板（`Cmd/Ctrl + Shift + P`）调用它们。
 
 ## 核心命令
 
@@ -26,7 +26,7 @@ Oh My Commit 提供了一系列 VSCode 命令，你可以通过命令面板（`C
 
 ### `omc.openSettings`
 
-打开 Oh My Commit 设置面板。快速配置插件的各项参数。
+打开 Oh My Commits 设置面板。快速配置插件的各项参数。
 
 ### `omc.resetSettings`
 

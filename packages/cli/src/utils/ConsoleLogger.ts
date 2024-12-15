@@ -1,4 +1,4 @@
-import { BaseLogger } from "@oh-my-commit/shared";
+import { BaseLogger } from "@oh-my-commits/shared";
 
 export class ConsoleLogger implements BaseLogger {
   private name: string;

@@ -8,11 +8,11 @@ import { GenerateCommitResult } from "../types/commit";
 import { BaseLogger } from "./BaseLogger";
 import { ConsoleLogger } from "./ConsoleLogger";
 
-class OhMyCommitStandardModel implements Model {
+class OhMyCommitsStandardModel implements Model {
   id = "omc/standard";
-  name = "Oh My Commit Standard Model";
+  name = "Oh My Commits Standard Model";
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
-  providerId = "oh-my-commit";
+  providerId = "oh-my-commits";
   metrics = {
     accuracy: 0.95,
     speed: 0.7,
@@ -21,21 +21,21 @@ class OhMyCommitStandardModel implements Model {
   aiProviderId = "anthropic";
 }
 
-export class OhMyCommitProvider extends Provider {
+export class OhMyCommitsProvider extends Provider {
   private anthropic: Anthropic | null = null;
   public logger: BaseLogger;
   public config: any;
 
-  static id = "oh-my-commit";
-  static displayName = "Oh My Commit Provider";
+  static id = "oh-my-commits";
+  static displayName = "Oh My Commits Provider";
   static description =
-    "Commit message generation powered by Oh My Commit models";
+    "Commit message generation powered by Oh My Commits models";
   static enabled = true;
-  static models = [new OhMyCommitStandardModel()];
+  static models = [new OhMyCommitsStandardModel()];
 
   constructor(logger?: BaseLogger, _apiKey?: string) {
     super();
-    this.logger = logger || new ConsoleLogger("Oh My Commit");
+    this.logger = logger || new ConsoleLogger("Oh My Commits");
     this.config = {};
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY;
