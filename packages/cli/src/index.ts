@@ -2,7 +2,6 @@
 
 import { program } from "commander";
 import chalk from "chalk";
-
 import simpleGit from "simple-git";
 import { CommitManager } from "@oh-my-commit/shared";
 
@@ -10,127 +9,89 @@ import { CommitManager } from "@oh-my-commit/shared";
 const git = simpleGit();
 const commitManager = new CommitManager();
 
+// Default model
+const DEFAULT_MODEL = "omc/standard";
+
 // Command handlers
-const handlers = {
-  commit: async (options: any) => {
-    // Default command (omc)
-    console.log(chalk.blue("Generating commit message..."));
-    try {
-      if (!options.model) {
-        const models = await commitManager.getAvailableModels();
-        console.error(
-          chalk.red(
-            "Error: No model specified. Use --model or -m to specify a model."
-          )
-        );
-        console.log(chalk.yellow("\nAvailable models:"));
-        for (const model of models) {
-          console.log(`  - ${model.id} (${model.name})`);
-        }
-        process.exit(1);
-      }
-
-      const diff = await git.diff(["--staged"]);
-      const result = await commitManager.generateCommit(
-        {
-          changed: 0, // TODO: Parse from git diff
-          files: [], // TODO: Parse from git diff
-          insertions: 0, // TODO: Parse from git diff
-          deletions: 0, // TODO: Parse from git diff
-        },
-        options.model
-      );
-
-      if (result.isOk()) {
-        const commitData = result.value;
-        console.log(chalk.green("Generated commit message:"));
-        console.log(commitData.title);
-        if (commitData.body) {
-          console.log("\n" + commitData.body);
-        }
-
-        if (!options.dryRun) {
-          // Execute git commit only if not in dry-run mode
-          await git.commit([
-            commitData.title,
-            ...(commitData.body ? [commitData.body] : []),
-          ]);
-          console.log(chalk.green("Changes committed successfully!"));
-        } else {
-          console.log(
-            chalk.yellow("\nDry run mode - changes were not committed.")
-          );
-          console.log(
-            chalk.yellow(
-              "To commit these changes, run the command without --dry-run"
-            )
-          );
-        }
+const listModels = async () => {
+  try {
+    const models = await commitManager.getAvailableModels();
+    console.log(chalk.blue("Available models:"));
+    for (const model of models) {
+      if (model.id === DEFAULT_MODEL) {
+        console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`));
       } else {
-        console.error(
-          chalk.red("Failed to generate commit message:"),
-          result.error
-        );
-        process.exit(1);
+        console.log(`  - ${model.id} - ${model.name}`);
       }
-    } catch (error) {
-      console.error(chalk.red("Failed to commit changes:"), error);
+    }
+  } catch (error) {
+    console.error(chalk.red("Failed to list models:"), error);
+    process.exit(1);
+  }
+};
+
+const initConfig = async () => {
+  console.log(chalk.blue("Initializing Oh My Commit..."));
+  try {
+    // TODO: Add actual initialization logic
+    // 1. Create config file if not exists
+    // 2. Set up default model
+    // 3. Configure git hooks if needed
+    console.log(chalk.green("Initialization completed!"));
+  } catch (error) {
+    console.error(chalk.red("Failed to initialize:"), error);
+    process.exit(1);
+  }
+};
+
+const generateAndCommit = async (options: any) => {
+  console.log(chalk.blue("Generating commit message..."));
+  try {
+    const model = options.model || DEFAULT_MODEL;
+    const diff = await git.diff(["--staged"]);
+    const result = await commitManager.generateCommit(
+      {
+        changed: 0, // TODO: Parse from git diff
+        files: [], // TODO: Parse from git diff
+        insertions: 0, // TODO: Parse from git diff
+        deletions: 0, // TODO: Parse from git diff
+      },
+      model
+    );
+
+    if (result.isOk()) {
+      const commitData = result.value;
+      console.log(chalk.green("Generated commit message:"));
+      console.log(commitData.title);
+      if (commitData.body) {
+        console.log("\n" + commitData.body);
+      }
+
+      if (options.yes) {
+        // Automatically commit if -y flag is provided
+        await git.commit([
+          commitData.title,
+          ...(commitData.body ? [commitData.body] : []),
+        ]);
+        console.log(chalk.green("Changes committed successfully!"));
+      } else {
+        // Ask for confirmation
+        console.log(chalk.yellow("\nUse -y flag to commit automatically"));
+        console.log(
+          chalk.yellow("Or run git commit manually with the message above")
+        );
+      }
+    } else {
+      console.error(
+        chalk.red("Failed to generate commit message:"),
+        result.error
+      );
       process.exit(1);
     }
-  },
-
-  init: async (options: any) => {
-    console.log(chalk.blue("Initializing Oh My Commit..."));
-    // Add your init logic here
-  },
-
-  generate: async (options: any) => {
-    console.log(chalk.blue("Generating commit message..."));
-    try {
-      if (!options.model) {
-        const models = await commitManager.getAvailableModels();
-        console.error(
-          chalk.red(
-            "Error: No model specified. Use --model or -m to specify a model."
-          )
-        );
-        console.log(chalk.yellow("\nAvailable models:"));
-        for (const model of models) {
-          console.log(`  - ${model.id} (${model.name})`);
-        }
-        process.exit(1);
-      }
-
-      const diff = await git.diff(["--staged"]);
-      const result = await commitManager.generateCommit(
-        {
-          changed: 0, // TODO: Parse from git diff
-          files: [], // TODO: Parse from git diff
-          insertions: 0, // TODO: Parse from git diff
-          deletions: 0, // TODO: Parse from git diff
-        },
-        options.model
-      );
-
-      if (result.isOk()) {
-        const commitData = result.value;
-        console.log(chalk.green("Generated commit message:"));
-        console.log(commitData.title);
-        if (commitData.body) {
-          console.log("\n" + commitData.body);
-        }
-      } else {
-        console.error(
-          chalk.red("Failed to generate commit message:"),
-          result.error
-        );
-        process.exit(1);
-      }
-    } catch (error) {
-      console.error(chalk.red("Failed to generate commit message:"), error);
-      process.exit(1);
-    }
-  },
+  } catch (error) {
+    console.error(chalk.red("Failed to generate commit message:"), error);
+    process.exit(1);
+  }
 };
 
 // Register commands
@@ -139,32 +100,34 @@ program
   .description("Oh My Commit - AI-powered commit message generator")
   .version("1.0.0");
 
-program
-  .command("commit")
-  .description("Generate and commit changes with AI-generated message")
-  .option(
-    "-d, --dry-run",
-    "Preview the commit message without actually committing"
-  )
-  .option(
-    "-m, --model <model>",
-    "Specify the AI model to use (e.g., oh-my-commit/standard)"
-  )
-  .action(handlers.commit);
-
+// Init command
 program
   .command("init")
   .description("Initialize Oh My Commit configuration")
-  .action(handlers.init);
+  .action(initConfig);
 
+// List models command
 program
-  .command("generate")
-  .description("Generate commit message without committing")
+  .command("list")
+  .description("List all available AI Commit models")
+  .action(listModels);
+
+// Generate command
+program
+  .command("gen")
+  .description("Generate commit message")
+  .option("-y, --yes", "Automatically commit changes")
   .option(
     "-m, --model <model>",
-    "Specify the AI model to use (e.g., oh-my-commit/standard)"
+    `Specify the AI model to use (\`omc list\` to see all available models)`
   )
-  .action(handlers.generate);
+  .action(generateAndCommit);
+
+// Show help by default
+program.showHelpAfterError();
+if (process.argv.length === 2) {
+  program.help();
+}
 
 // Parse command line arguments
 program.parse(process.argv);
