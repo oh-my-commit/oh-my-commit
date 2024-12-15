@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: "Oh My Commit",
-  description: "Your Artistic Aide for Commits - 一款专注用户体验的 VSCode Git 提交插件",
+  description: "Oh My Commit - 一款专注用户体验的 VSCode Git 提交插件",
   
   themeConfig: {
     logo: '/logo.png',

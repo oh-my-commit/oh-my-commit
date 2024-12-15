@@ -1,6 +1,6 @@
 # 介绍
 
-Oh My Commit（Your Artistic Aide for Commits）是一款专注于提供卓越用户体验的 VSCode Git 提交插件。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
+Oh My Commit（Oh My Commit）是一款专注于提供卓越用户体验的 VSCode Git 提交插件。我们的目标是让每一次代码提交都成为一种享受，而不是负担。
 
 ## 为什么选择 Oh My Commit？
 
