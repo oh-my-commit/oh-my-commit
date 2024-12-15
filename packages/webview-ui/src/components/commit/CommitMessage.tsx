@@ -9,6 +9,7 @@ import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import React, { useEffect, useRef, useState } from "react";
+import { CommitEvent } from "@oh-my-commits/shared/types";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -17,6 +18,7 @@ export function CommitMessage() {
   const [title, setTitle] = useAtom(commitTitleAtom);
   const [body, setBody] = useAtom(commitBodyAtom);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
   const tooltipContainerRef = useRef<HTMLDivElement>(null);
   const subjectLength = title.length;
   const isSubjectValid =
@@ -35,6 +37,18 @@ export function CommitMessage() {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const messageHandler = (event: MessageEvent<CommitEvent>) => {
+      const message = event.data;
+      if (message.type === "commit") {
+        setIsRegenerating(false);
+      }
+    };
+
+    window.addEventListener("message", messageHandler);
+    return () => window.removeEventListener("message", messageHandler);
   }, []);
 
   return (
@@ -93,18 +107,35 @@ export function CommitMessage() {
           }}
           disabled={disabled}
         />
-        <div className="flex gap-2">
+        <div className="flex items-center gap-4 shrink-0">
           <VSCodeButton
+            className="w-32 shrink-0 overflow-hidden"
             appearance="secondary"
+            disabled={isRegenerating}
             onClick={() => {
+              setIsRegenerating(true);
               const vscode = getVSCodeAPI();
               logger.info("Sending get-commit-data message");
               vscode.postMessage({ command: "get-commit-data" });
               logger.info("Message sent");
             }}
           >
-            Regenerate
+            {isRegenerating ? (
+              <span className="w-full flex items-center gap-2">
+                <vscode-progress-ring
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    "--vscode-progressBar-background":
+                      "var(--vscode-button-foreground)",
+                  }}
+                />
+              </span>
+            ) : (
+              "Regenerate"
+            )}
           </VSCodeButton>
+
           <VSCodeButton
             disabled={!isSubjectValid || disabled}
             onClick={() => {
