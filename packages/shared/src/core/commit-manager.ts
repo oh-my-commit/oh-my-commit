@@ -18,7 +18,7 @@ export class CommitManager {
   }
 
   public async getAvailableModels(): Promise<Model[]> {
-    return OhMyCommitsProvider.models;
+    return this.provider.models;
   }
 
   public async generateCommit(
