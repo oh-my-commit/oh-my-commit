@@ -25,3 +25,13 @@ key_points = """
 - 添加了完整的 API 参考文档
 - 优化了文档结构和导航
 """
+
+[[rounds]]
+number = 3
+time = "2024-12-15T11:54:09+08:00"
+query_essence = "添加网站 Logo"
+key_points = """
+- 创建了 public 目录用于存放静态资源
+- 设计并添加了现代简约风格的 SVG logo
+- 更新了网站配置以使用新的 logo
+"""

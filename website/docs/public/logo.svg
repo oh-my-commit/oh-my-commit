@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆形 -->
+  <circle cx="64" cy="64" r="60" fill="#4F46E5"/>
+  
+  <!-- Y -->
+  <path d="M40 30L55 55L70 30H78L58 62V90H52V62L32 30H40Z" fill="white"/>
+  
+  <!-- 装饰性圆点，代表 AI -->
+  <circle cx="88" cy="60" r="8" fill="#34D399"/>
+  
+  <!-- 装饰性曲线，代表艺术性 -->
+  <path d="M85 75Q95 85 88 95Q81 105 71 95" stroke="white" stroke-width="4" fill="none"/>
+</svg>

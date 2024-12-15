@@ -6,7 +6,7 @@ hero:
   text: "Your Artistic Aide for Commits"
   tagline: 一款专注用户体验、重新定义 Git Commit 的 VSCode 插件
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: YAAC
   actions:
     - theme: brand
