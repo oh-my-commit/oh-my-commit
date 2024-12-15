@@ -4,7 +4,10 @@ import { VscodeGitService } from "@/core/vscode-git";
 import { Loggable } from "@/types/mixins";
 import { AppManager } from "@/core";
 
-export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
+export class StatusBarManager
+  extends Loggable(class {})
+  implements vscode.Disposable
+{
   private statusBarItem: vscode.StatusBarItem;
   private gitService: VscodeGitService;
   private disposables: vscode.Disposable[] = [];
@@ -60,13 +63,13 @@ export class StatusBarManager extends Loggable(class {}) implements vscode.Dispo
     if (!currentModel) {
       this.statusBarItem.text = "$(error) Oh My Commit: No model selected";
       this.statusBarItem.tooltip = "Click to select a model";
-      this.statusBarItem.command = "oh-my-commit.selectModel";
+      this.statusBarItem.command = "omc.selectModel";
       return;
     }
 
     this.statusBarItem.text = `$(git-commit) Oh My Commit: ${currentModel.name}`;
     this.statusBarItem.tooltip = `Current model: ${currentModel.name}\nClick to change model`;
-    this.statusBarItem.command = "oh-my-commit.selectModel";
+    this.statusBarItem.command = "omc.selectModel";
   }
 
   public dispose(): void {

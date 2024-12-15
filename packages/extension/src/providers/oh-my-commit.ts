@@ -1,19 +1,18 @@
-import { Model } from "@/types/model";
-import { CommitData } from "@oh-my-commit/shared/src/types/commit";
-import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
-import { Ok, Err } from "neverthrow";
-import { DiffResult } from "simple-git";
-import { Provider } from "../types/provider";
+import {
+  Model,
+  CommitData,
+  Result,
+  type GitChangeSummary,
+  type Provider,
+} from "@oh-my-commit/shared";
+import { ok, err } from "neverthrow";
 import Anthropic from "@anthropic-ai/sdk";
 import { workspace } from "vscode";
-
-interface ExtendedDiffResult extends DiffResult {
-  diff: string;
-}
+import { Logger } from "@/utils/logger";
 
 class OhMyCommitStandardModel implements Model {
-  id = "oh-my-commit/standard";
-  name = "Oh My Commit / Standard";
+  id = "omc/standard";
+  name = "Oh My Commit Standard Model";
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
   providerId = "oh-my-commit";
   metrics = {
@@ -30,8 +29,10 @@ export class VscodeEnv {
   }
 }
 
-export class OhMyCommitProvider extends Provider {
+export class OhMyCommitProvider implements Provider {
   private anthropic: Anthropic | null = null;
+  public logger: Logger;
+  public config: any;
 
   static id = "oh-my-commit";
   static displayName = "Oh My Commit Provider";
@@ -40,34 +41,33 @@ export class OhMyCommitProvider extends Provider {
   static models = [new OhMyCommitStandardModel()];
 
   constructor() {
-    super();
+    this.logger = new Logger("OhMyCommitProvider");
+    this.config = {};
+    
     const apiKey =
-      this.config.get<string>("oh-my-commit.apiKeys.anthropic") ||
+      workspace.getConfiguration("omc").get<string>("apiKeys.anthropic") ||
       process.env.ANTHROPIC_API_KEY;
 
-    this.logger.info("Anthropic API Key:", apiKey);
     if (apiKey) {
       this.anthropic = new Anthropic({ apiKey });
     }
   }
 
-  private async generateWithClaude(
-    diff: ExtendedDiffResult,
-    lang: string = "zh-CN"
-  ): Promise<GenerateCommitResult> {
+  async generateCommit(
+    diff: GitChangeSummary,
+    _model: Model,
+    options?: { lang?: string }
+  ): Promise<Result<CommitData, string>> {
+    const lang = options?.lang || "en";
     if (!this.anthropic) {
-      return new Err(
-        new Error(
-          "Claude API key not configured. Please set ANTHROPIC_API_KEY environment variable."
-        )
-      );
+      return err("Anthropic API key not configured");
     }
 
     try {
       const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
 
 Git diff:
-${diff.diff}
+${JSON.stringify(diff, null, 2)}
 
 Requirements:
 1. Title MUST follow format: <type>[optional scope]: <description>
@@ -108,34 +108,12 @@ Please analyze the diff carefully and provide:
         response.content[0].type === "text" ? response.content[0].text : "";
       const [title, ...bodyParts] = message.split("\n\n");
 
-      const result: CommitData = {
+      return ok({
         title: title.trim(),
         body: bodyParts.join("\n\n").trim(),
-      };
-
-      return new Ok(result);
+      });
     } catch (error) {
-      return new Err(error instanceof Error ? error : new Error(String(error)));
-    }
-  }
-
-  override async generateCommit(
-    diff: DiffResult,
-    model: Model,
-    options?: { lang?: string }
-  ): Promise<GenerateCommitResult> {
-    switch (model.id) {
-      case "oh-my-commit/standard":
-        const result = await this.generateWithClaude(
-          diff as ExtendedDiffResult,
-          options?.lang
-        );
-        if (result.isErr()) {
-          throw result.error;
-        }
-        return result;
-      default:
-        throw new Error(`Unsupported model: ${model.id}`);
+      return err(error instanceof Error ? error.message : "Unknown error");
     }
   }
 }

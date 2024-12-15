@@ -1,10 +1,30 @@
 {
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2020"],
+    "sourceMap": true,
+    "rootDir": ".",
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+  },
   "files": [],
   "references": [
     { "path": "./packages/shared" },
-    { "path": "./packages/core" },
     { "path": "./packages/cli" },
     { "path": "./packages/extension" },
     { "path": "./packages/webview-ui" }
-  ]
+  ],
+  "exclude": ["**/node_modules", ".vscode-test"]
 }

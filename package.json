@@ -63,28 +63,28 @@
   "contributes": {
     "commands": [
       {
-        "command": "oh-my-commit.quickCommit",
+        "command": "omc.quickCommit",
         "title": "Oh My Commit: Quick Commit"
       },
       {
-        "command": "oh-my-commit.selectModel",
+        "command": "omc.selectModel",
         "title": "Oh My Commit: Select Model"
       },
       {
-        "command": "oh-my-commit.openPreferences",
+        "command": "omc.openPreferences",
         "title": "Oh My Commit: Open Preferences"
       }
     ],
     "configuration": {
       "title": "Oh My Commit",
       "properties": {
-        "oh-my-commit.basic.enabled": {
+        "omc.basic.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用 Oh My Commit",
           "order": 1
         },
-        "oh-my-commit.basic.uiLanguage": {
+        "omc.basic.uiLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -100,20 +100,20 @@
           "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "oh-my-commit.ac.model": {
+        "omc.ac.model": {
           "type": "string",
           "enum": [
-            "oh-my-commit.test",
-            "oh-my-commit.balanced",
-            "oh-my-commit.professional",
+            "omc.test",
+            "omc.balanced",
+            "omc.professional",
             "cgop.openai.chatgpt-3.5",
             "cgop.openai.chatgpt-4"
           ],
-          "default": "oh-my-commit.test",
+          "default": "omc.test",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 3
         },
-        "oh-my-commit.git.emptyChangeBehavior": {
+        "omc.git.emptyChangeBehavior": {
           "type": "string",
           "enum": [
             "skip",
@@ -127,13 +127,13 @@
           "markdownDescription": "当工作区没有文件变更时的行为",
           "order": 20
         },
-        "oh-my-commit.git.autoStage": {
+        "omc.git.autoStage": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否自动暂存所有更改",
           "order": 21
         },
-        "oh-my-commit.git.commitLanguage": {
+        "omc.git.commitLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -149,7 +149,7 @@
           "markdownDescription": "Git 提交信息的语言",
           "order": 22
         },
-        "oh-my-commit.ui.mode": {
+        "omc.ui.mode": {
           "type": "string",
           "enum": [
             "silent",
@@ -167,7 +167,7 @@
           "markdownDescription": "提交界面显示模式",
           "order": 23
         },
-        "oh-my-commit.ai.apiKeys": {
+        "omc.ai.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
           "additionalProperties": {
@@ -189,13 +189,13 @@
           },
           "order": 30
         },
-        "oh-my-commit.telemetry.enabled": {
+        "omc.telemetry.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用使用数据收集（匿名）",
           "order": 50
         },
-        "oh-my-commit.telemetry.shareLevel": {
+        "omc.telemetry.shareLevel": {
           "type": "string",
           "enum": [
             "minimal",
@@ -211,7 +211,7 @@
           "markdownDescription": "数据收集级别",
           "order": 51
         },
-        "oh-my-commit.feedback.enabled": {
+        "omc.feedback.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",

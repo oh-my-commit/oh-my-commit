@@ -10,15 +10,15 @@ Oh My Commit 提供了一系列事件钩子，让你可以在特定时机执行�
 
 ```typescript
 interface BeforeCommitEvent {
-  message: string;          // 提交消息
-  files: string[];         // 待提交的文件列表
-  cancel(): void;          // 取消提交
+  message: string; // 提交消息
+  files: string[]; // 待提交的文件列表
+  cancel(): void; // 取消提交
   setMessage(msg: string); // 修改提交消息
 }
 
 omc.hooks.onBeforeCommit((event) => {
   // 例：添加 JIRA 任务编号
-  const taskId = 'PROJ-123';
+  const taskId = "PROJ-123";
   event.setMessage(`[${taskId}] ${event.message}`);
 });
 ```
@@ -29,9 +29,9 @@ omc.hooks.onBeforeCommit((event) => {
 
 ```typescript
 interface AfterCommitEvent {
-  message: string;     // 提交消息
-  hash: string;       // 提交哈希
-  files: string[];    // 已提交的文件列表
+  message: string; // 提交消息
+  hash: string; // 提交哈希
+  files: string[]; // 已提交的文件列表
 }
 
 omc.hooks.onAfterCommit((event) => {
@@ -48,16 +48,16 @@ omc.hooks.onAfterCommit((event) => {
 
 ```typescript
 interface BeforeGenerateEvent {
-  files: string[];           // 变更文件列表
-  diff: string;             // 代码差异
-  cancel(): void;           // 取消生成
-  setPrompt(text: string);  // 修改 AI 提示
+  files: string[]; // 变更文件列表
+  diff: string; // 代码差异
+  cancel(): void; // 取消生成
+  setPrompt(text: string); // 修改 AI 提示
 }
 
 omc.hooks.onBeforeGenerate((event) => {
   // 例：根据文件类型调整提示
-  if (event.files.some(f => f.endsWith('.test.ts'))) {
-    event.setPrompt('This commit includes test files...');
+  if (event.files.some((f) => f.endsWith(".test.ts"))) {
+    event.setPrompt("This commit includes test files...");
   }
 });
 ```
@@ -68,8 +68,8 @@ omc.hooks.onBeforeGenerate((event) => {
 
 ```typescript
 interface AfterGenerateEvent {
-  message: string;          // 生成的消息
-  setMessage(msg: string);  // 修改消息
+  message: string; // 生成的消息
+  setMessage(msg: string); // 修改消息
 }
 
 omc.hooks.onAfterGenerate((event) => {
@@ -86,14 +86,14 @@ omc.hooks.onAfterGenerate((event) => {
 
 ```typescript
 interface ConfigChangeEvent {
-  key: string;      // 变更的配置项
-  value: any;       // 新值
-  oldValue: any;    // 旧值
+  key: string; // 变更的配置项
+  value: any; // 新值
+  oldValue: any; // 旧值
 }
 
 omc.hooks.onConfigChange((event) => {
   // 例：在切换语言时刷新界面
-  if (event.key === 'oh-my-commit.language') {
+  if (event.key === "omc.language") {
     refreshUI();
   }
 });
@@ -111,8 +111,8 @@ omc.hooks.onConfigChange((event) => {
 
 ```typescript
 interface TeamConfigSyncEvent {
-  config: object;    // 同步的配置
-  source: string;    // 配置来源
+  config: object; // 同步的配置
+  source: string; // 配置来源
 }
 ```
 
@@ -122,27 +122,29 @@ interface TeamConfigSyncEvent {
 
 ```typescript
 interface TeamActivityEvent {
-  type: string;      // 活动类型
-  user: string;      // 用户
-  data: any;         // 活动数据
+  type: string; // 活动类型
+  user: string; // 用户
+  data: any; // 活动数据
 }
 ```
 
 ## 最佳实践
 
 1. 错误处理：
+
    ```typescript
    omc.hooks.onBeforeCommit((event) => {
      try {
        // 你的逻辑
      } catch (error) {
-       console.error('Hook error:', error);
+       console.error("Hook error:", error);
        event.cancel(); // 出错时取消操作
      }
    });
    ```
 
 2. 异步操作：
+
    ```typescript
    omc.hooks.onAfterCommit(async (event) => {
      await updateExternalSystem(event.hash);
@@ -162,7 +164,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commit.hooks": {
+  "omc.hooks": {
     "enabled": true,
     "timeout": 5000,
     "parallel": true,
@@ -175,7 +177,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commit.hooks.path": {
+  "omc.hooks.path": {
     "pre-commit": ".oh-my-commit/hooks/pre-commit.js",
     "post-commit": ".oh-my-commit/hooks/post-commit.js",
     "commit-msg": ".oh-my-commit/hooks/commit-msg.js"
@@ -187,17 +189,9 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commit.hooks.order": {
-    "pre-commit": [
-      "lint",
-      "test",
-      "validate"
-    ],
-    "post-commit": [
-      "notify",
-      "docs",
-      "deploy"
-    ]
+  "omc.hooks.order": {
+    "pre-commit": ["lint", "test", "validate"],
+    "post-commit": ["notify", "docs", "deploy"]
   }
 }
 ```
@@ -210,17 +204,17 @@ interface TeamActivityEvent {
 // .oh-my-commit/hooks/lint.js
 module.exports = async (context) => {
   const { files } = context;
-  
+
   // ESLint 检查
   const results = await lint(files);
-  
+
   if (results.errorCount > 0) {
     return {
       pass: false,
-      message: '代码存在 ESLint 错误，请修复后重试'
+      message: "代码存在 ESLint 错误，请修复后重试",
     };
   }
-  
+
   return { pass: true };
 };
 ```
@@ -231,17 +225,17 @@ module.exports = async (context) => {
 // .oh-my-commit/hooks/test.js
 module.exports = async (context) => {
   const { files } = context;
-  
+
   // 运行测试
   const results = await runTests(files);
-  
+
   if (results.failures > 0) {
     return {
       pass: false,
-      message: '测试失败，请修复后重试'
+      message: "测试失败，请修复后重试",
     };
   }
-  
+
   return { pass: true };
 };
 ```
@@ -254,19 +248,19 @@ module.exports = async (context) => {
 // .oh-my-commit/hooks/jira.js
 module.exports = async (context) => {
   const { message } = context;
-  const config = await getConfig('jira');
-  
+  const config = await getConfig("jira");
+
   // 从分支名获取 JIRA ID
   const issueId = getCurrentBranch().match(/\w+-\d+/)?.[0];
-  
+
   if (issueId) {
     // 更新 JIRA 问题状态
     await updateJiraIssue(issueId, {
-      status: 'In Review',
-      comment: `提交: ${message}`
+      status: "In Review",
+      comment: `提交: ${message}`,
     });
   }
-  
+
   return { pass: true };
 };
 ```
@@ -277,17 +271,17 @@ module.exports = async (context) => {
 // .oh-my-commit/hooks/deploy.js
 module.exports = async (context) => {
   const { branch, message } = context;
-  
+
   // 仅在主分支上部署
-  if (branch === 'main') {
+  if (branch === "main") {
     // 触发部署
     await deploy({
-      env: 'production',
+      env: "production",
       version: getVersion(),
-      changelog: message
+      changelog: message,
     });
   }
-  
+
   return { pass: true };
 };
 ```
@@ -305,7 +299,7 @@ module.exports = async (context) => {
   } catch (error) {
     return {
       pass: false,
-      message: `操作失败: ${error.message}`
+      message: `操作失败: ${error.message}`,
     };
   }
 };
@@ -318,16 +312,16 @@ module.exports = async (context) => {
   // 并行执行多个检查
   const [lintResult, testResult] = await Promise.all([
     lint(context.files),
-    test(context.files)
+    test(context.files),
   ]);
-  
+
   if (!lintResult.pass || !testResult.pass) {
     return {
       pass: false,
-      message: '检查失败，请查看详细信息'
+      message: "检查失败，请查看详细信息",
     };
   }
-  
+
   return { pass: true };
 };
 ```
@@ -337,15 +331,15 @@ module.exports = async (context) => {
 ```javascript
 module.exports = async (context) => {
   // 读取配置
-  const config = await getConfig('hooks');
-  
+  const config = await getConfig("hooks");
+
   // 根据配置执行操作
   if (config.strict) {
     // 严格模式下的检查
   } else {
     // 普通模式下的检查
   }
-  
+
   return { pass: true };
 };
 ```
@@ -356,9 +350,10 @@ module.exports = async (context) => {
 
 问题：钩子执行时间过长
 解决：
+
 ```json
 {
-  "oh-my-commit.hooks.timeout": {
+  "omc.hooks.timeout": {
     "pre-commit": 10000,
     "post-commit": 30000,
     "commit-msg": 5000
@@ -370,9 +365,10 @@ module.exports = async (context) => {
 
 问题：钩子执行失败
 解决：
+
 ```json
 {
-  "oh-my-commit.hooks.error": {
+  "omc.hooks.error": {
     "ignore": ["lint", "test"],
     "retry": 3,
     "delay": 1000
@@ -384,9 +380,10 @@ module.exports = async (context) => {
 
 问题：钩子影响性能
 解决：
+
 ```json
 {
-  "oh-my-commit.hooks.performance": {
+  "omc.hooks.performance": {
     "cache": true,
     "parallel": true,
     "lightweight": true

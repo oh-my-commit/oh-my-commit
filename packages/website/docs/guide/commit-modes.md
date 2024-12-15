@@ -8,7 +8,7 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```json
 {
-  "oh-my-commit.mode.quick": {
+  "omc.mode.quick": {
     "enabled": true,
     "useAI": true,
     "template": "<type>(<scope>): <subject>",
@@ -23,16 +23,9 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```json
 {
-  "oh-my-commit.mode.interactive": {
+  "omc.mode.interactive": {
     "enabled": true,
-    "steps": [
-      "type",
-      "scope",
-      "subject",
-      "body",
-      "breaking",
-      "issues"
-    ],
+    "steps": ["type", "scope", "subject", "body", "breaking", "issues"],
     "validation": true
   }
 }
@@ -44,7 +37,7 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```json
 {
-  "oh-my-commit.mode.team": {
+  "omc.mode.team": {
     "enabled": true,
     "configPath": ".oh-my-commit/team.json",
     "enforceRules": true,
@@ -59,7 +52,7 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```json
 {
-  "oh-my-commit.mode.ai": {
+  "omc.mode.ai": {
     "enabled": true,
     "model": "gpt-4",
     "language": "zh-CN",
@@ -75,7 +68,7 @@ Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团�
 
 ```json
 {
-  "oh-my-commit.mode.custom": {
+  "omc.mode.custom": {
     "enabled": true,
     "hooks": {
       "pre-commit": ".oh-my-commit/hooks/pre-commit.js",
@@ -108,7 +101,7 @@ oh-my-commit mode ai
 
 ```json
 {
-  "oh-my-commit.mode": {
+  "omc.mode": {
     "default": "interactive",
     "allowSwitch": true,
     "shortcuts": {
@@ -126,7 +119,7 @@ oh-my-commit mode ai
 
 ```json
 {
-  "oh-my-commit.mode.hybrid": {
+  "omc.mode.hybrid": {
     "primary": "quick",
     "secondary": "ai",
     "conditions": {
@@ -141,7 +134,7 @@ oh-my-commit mode ai
 
 ```json
 {
-  "oh-my-commit.mode.hybrid": {
+  "omc.mode.hybrid": {
     "primary": "team",
     "secondary": "interactive",
     "validation": true,
@@ -163,7 +156,7 @@ oh-my-commit mode ai
 
 ```json
 {
-  "oh-my-commit.mode.optimize": {
+  "omc.mode.optimize": {
     "cacheEnabled": true,
     "historySize": 100,
     "suggestions": true,
@@ -176,7 +169,7 @@ oh-my-commit mode ai
 
 ```json
 {
-  "oh-my-commit.mode.workflow": {
+  "omc.mode.workflow": {
     "branch": {
       "feature/*": "interactive",
       "bugfix/*": "quick",
@@ -197,15 +190,11 @@ oh-my-commit mode ai
 
 问题：多个模式配置冲突
 解决：
+
 ```json
 {
-  "oh-my-commit.mode.conflict": {
-    "priority": [
-      "team",
-      "ai",
-      "interactive",
-      "quick"
-    ],
+  "omc.mode.conflict": {
+    "priority": ["team", "ai", "interactive", "quick"],
     "resolution": "highest"
   }
 }
@@ -215,9 +204,10 @@ oh-my-commit mode ai
 
 问题：某些模式响应慢
 解决：
+
 ```json
 {
-  "oh-my-commit.mode.performance": {
+  "omc.mode.performance": {
     "cache": true,
     "timeout": 5000,
     "parallel": true,
@@ -230,9 +220,10 @@ oh-my-commit mode ai
 
 问题：离线环境使用受限
 解决：
+
 ```json
 {
-  "oh-my-commit.mode.offline": {
+  "omc.mode.offline": {
     "fallback": "interactive",
     "cacheTemplates": true,
     "localValidation": true

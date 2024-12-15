@@ -1,32 +1,32 @@
 {
   "name": "@oh-my-commit/shared",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./types/*": {
-      "types": "./dist/types/*.d.ts",
-      "default": "./dist/types/*.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*"
-      ]
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsc"
-  },
-  "dependencies": {
-    "simple-git": "^3.27.0"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "tsup": "*",
     "typescript": "^5.0.0"
-  }
+  },
+  "dependencies": {
+    "neverthrow": "^6.1.0"
+  },
+  "type": "module"
 }
