@@ -28,8 +28,6 @@ export class OhMyCommitsProvider extends Provider {
     "Commit message generation powered by Oh My Commits models";
   override models = [new OhMyCommitsStandardModel()];
 
-  public config: any;
-
   private anthropic: Anthropic | null = null;
 
   constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
