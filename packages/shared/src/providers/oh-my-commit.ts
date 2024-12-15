@@ -5,7 +5,7 @@ import { GitChangeSummary } from "../types/git";
 import { Provider } from "../types/provider";
 
 export class OhMyCommitStandardModel implements Model {
-  id = "oh-my-commit/standard";
+  id = "omc/standard";
   name = "Standard";
   description = "Standard commit message format";
   providerId = "oh-my-commit";
@@ -17,7 +17,7 @@ export class OhMyCommitProvider implements Provider {
     info: console.log,
     warn: console.warn,
     error: console.error,
-    debug: console.debug
+    debug: console.debug,
   };
 
   static models = [new OhMyCommitStandardModel()];
@@ -27,12 +27,14 @@ export class OhMyCommitProvider implements Provider {
     _model: Model,
     _options?: { lang?: string }
   ): Promise<Result<CommitData, string>> {
-    const files = diff.files.map(file => `${file.status} ${file.path}`).join("\n");
-    
+    const files = diff.files
+      .map((file) => `${file.status} ${file.path}`)
+      .join("\n");
+
     // Basic commit message generation without AI
     const title = `chore: update ${diff.files.length} files`;
     const body = `Files changed:\n${files}`;
-    
+
     return ok({ title, body });
   }
 }

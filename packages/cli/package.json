@@ -1,18 +1,21 @@
 {
   "name": "@oh-my-commit/cli",
   "version": "0.0.1",
+  "bin": {
+    "omc": "./dist/index.js"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format esm --dts --platform node",
     "dev": "npm run build -- --watch",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
@@ -27,9 +30,11 @@
   },
   "dependencies": {
     "@oh-my-commit/shared": "workspace:*",
-    "commander": "^11.0.0",
-    "inquirer": "^9.0.0",
-    "neverthrow": "^6.1.0"
+    "commander": "^12.0.0",
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.12",
+    "neverthrow": "^6.1.0",
+    "simple-git": "^3.22.0"
   },
   "type": "module"
 }

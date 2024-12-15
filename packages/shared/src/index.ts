@@ -10,7 +10,7 @@ export type { CommitData } from "./types/commit";
 export type { TreeNode } from "./types/tree";
 
 // Provider exports
-export { OhMyCommitProvider } from "./providers/yaac";
+export { OhMyCommitProvider } from "./providers/oh-my-commit";
 
 // Result type re-export from neverthrow
 export { Result, ok, err } from "neverthrow";
