@@ -1,4 +1,4 @@
-import { CommitMessage } from "@/components/commit/core/CommitMessage";
+import { CommitMessage } from "@/components/commit/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
 import { useCloseWindow } from "@/hooks/use-close-window";
@@ -30,7 +30,7 @@ export const CommitPage = () => {
   const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom,
+    lastOpenedFilePathAtom
   );
 
   useCloseWindow();
@@ -58,11 +58,6 @@ export const CommitPage = () => {
           if (data.diffSummary.files) {
             setChangedFiles(data.diffSummary);
           }
-          break;
-        case "regenerate":
-          logger.info("[handleMessage] received regenerate event: ", data);
-          setTitle(data.message.title);
-          setBody(data.message.body ?? "");
           break;
         default:
           logger.info("[handleMessage] Unknown event type:", data.type);

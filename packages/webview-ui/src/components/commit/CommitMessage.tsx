@@ -3,6 +3,7 @@ import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
+import { logger } from "@/lib/logger";
 import { getVSCodeAPI } from "@/lib/storage";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
@@ -98,9 +99,10 @@ export function CommitMessage() {
             onClick={() => {
               const vscode = getVSCodeAPI();
               vscode.postMessage({ command: "get-commit-data" });
+              logger.info("Regenerate commit data");
             }}
           >
-            Regenerate2
+            Regenerate
           </VSCodeButton>
           <VSCodeButton
             disabled={!isSubjectValid || disabled}

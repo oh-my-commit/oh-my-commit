@@ -179,36 +179,47 @@ abstract = "Implementing and refactoring the generateCommit functionality"
 status = { state = "ongoing", satisfaction = 0 }
 
 [conversations.047]
-slug = "fix_types"
+slug = "hot_reload"
+title = "WebView Hot Reload Implementation"
+abstract = "实现 VSCode WebView 的热更新功能"
 
 [conversations.048]
-slug = "logger_implementation"
+slug = "fix_types"
 
 [conversations.049]
-slug = "typescript-fixes"
+slug = "logger_implementation"
 
 [conversations.050]
-slug = "git_storage_optimization"
+slug = "typescript-fixes"
 
 [conversations.051]
+slug = "git_storage_optimization"
+
+[conversations.052]
 slug = "shell_extension_integration"
 title = "Shell Commands Integration with Extension"
 abstract = "研究和实现 Shell Commands 与 VSCode 扩展的集成方案"
 status = { state = "ongoing" }
 
-[conversations.052]
+[conversations.053]
 slug = "simplify_cli_commands"
 title = "Simplify CLI Command Structure"
 abstract = "简化 CLI 命令结构，使 gen 成为默认命令，并添加 -y 标志用于自动提交"
 status = { state = "ongoing" }
 
-[conversations.053]
+[conversations.054]
 slug = "typescript_build_fix"
 abstract = "修复 TypeScript 构建配置，解决 DTS 生成错误"
 
-[conversations.054]
+[conversations.055]
 slug = "cli_module_update"
 title = "CLI Module Update and Project Structure"
 abstract = "Update CLI module from oh-my-commit to oh-my-commits and maintain project structure"
 status = { state = "ongoing" }
+
+[conversations.056]
+slug = "add_regenerate_button"
+
+[conversations.057]
+slug = "webpack_build_fix"
 

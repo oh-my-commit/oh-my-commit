@@ -28,41 +28,6 @@ export class QuickCommitCommand extends BaseCommand {
 
     this.webviewManager = new WebviewManager(context, "webview", APP_NAME);
 
-    // Register message handlers
-    this.webviewManager.registerMessageHandler("commit", async (message) => {
-      try {
-        const { message: commitMessage } = message;
-        await this.gitService.commit(commitMessage);
-        vscode.window.showInformationMessage("Changes committed successfully!");
-        this.webviewManager.dispose();
-      } catch (error) {
-        this.logger.error(error as Error);
-        vscode.window.showErrorMessage(`Failed to commit: ${error}`);
-      }
-    });
-
-    this.webviewManager.registerMessageHandler(
-      "regenerate-commit",
-      async () => {
-        this.logger.info("Received request to regenerate commit message");
-        const diffSummary = await this.gitService.getDiffSummary();
-        const message = await this.acManager.generateCommit(diffSummary);
-        if (!message.isOk()) {
-          this.logger.error("Failed to generate commit message");
-          return;
-        }
-        const commitData: CommitEvent = {
-          type: "regenerate",
-          diffSummary: await this.gitService.getChangeSummary(),
-          message: message.value,
-        };
-        this.logger.info(this.name, commitData);
-
-        // 发送消息给 webview
-        await this.webviewManager.postMessage(commitData);
-      }
-    );
-
     this.webviewManager.registerMessageHandler("get-commit-data", async () => {
       this.logger.info("Received request for commit data");
       const diffSummary = await this.gitService.getDiffSummary();
