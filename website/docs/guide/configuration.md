@@ -1,6 +1,6 @@
 # 用户配置
 
-YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自定义使用体验。
+Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队需求自定义使用体验。
 
 ## 基础配置
 
@@ -8,11 +8,13 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ```json
 {
-  "yaac.ai.provider": "openai",  // 可选：openai, claude, custom
-  "yaac.ai.apiKey": "your-api-key",
-  "yaac.ai.model": "gpt-4",  // 根据 provider 选择合适的模型
-  "yaac.ai.temperature": 0.7,  // 控制创造性，范围 0-1
-  "yaac.ai.maxTokens": 500  // 单次生成的最大 token 数
+  "oh-my-commit.ai": {
+    "provider": "openai",  // 可选：openai, claude, custom
+    "apiKey": "your-api-key",
+    "model": "gpt-4",  // 根据 provider 选择合适的模型
+    "temperature": 0.7,  // 控制创造性，范围 0-1
+    "maxTokens": 500  // 单次生成的最大 token 数
+  }
 }
 ```
 
@@ -20,11 +22,13 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ```json
 {
-  "yaac.ui.mode": "panel",  // panel, window, notification, silent
-  "yaac.ui.theme": "auto",  // auto, light, dark
-  "yaac.ui.language": "zh-CN",  // 界面语言
-  "yaac.ui.showIcon": true,  // 是否在状态栏显示图标
-  "yaac.ui.autoOpen": true  // 是否自动打开提交界面
+  "oh-my-commit.ui": {
+    "mode": "panel",  // panel, window, notification, silent
+    "theme": "auto",  // auto, light, dark
+    "language": "zh-CN",  // 界面语言
+    "showIcon": true,  // 是否在状态栏显示图标
+    "autoOpen": true  // 是否自动打开提交界面
+  }
 }
 ```
 
@@ -48,7 +52,7 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ```json
 {
-  "yaac.commit.template": {
+  "oh-my-commit.commit.template": {
     "type": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
     "scope": ["core", "ui", "api", "docs"],
     "format": "${type}(${scope}): ${subject}\n\n${body}"
@@ -60,9 +64,11 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ```json
 {
-  "yaac.git.signCommit": false,  // 是否签名提交
-  "yaac.git.autoStage": true,  // 是否自动暂存修改
-  "yaac.git.pushOnCommit": false  // 是否在提交后自动推送
+  "oh-my-commit.git": {
+    "signCommit": false,  // 是否签名提交
+    "autoStage": true,  // 是否自动暂存修改
+    "pushOnCommit": false  // 是否在提交后自动推送
+  }
 }
 ```
 
@@ -70,9 +76,11 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ```json
 {
-  "yaac.team.configPath": ".yaac/config.json",  // 团队配置文件路径
-  "yaac.team.enforceConfig": true,  // 是否强制使用团队配置
-  "yaac.team.allowOverride": ["ui.theme", "ui.language"]  // 允许个人覆盖的配置项
+  "oh-my-commit.team": {
+    "configPath": ".oh-my-commit/config.json",  // 团队配置文件路径
+    "enforceConfig": true,  // 是否强制使用团队配置
+    "allowOverride": ["ui.theme", "ui.language"]  // 允许个人覆盖的配置项
+  }
 }
 ```
 
@@ -87,7 +95,7 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
   - 项目根目录下的 `.vscode/settings.json`
 
 - 团队配置：
-  - 项目根目录下的 `.yaac/config.json`
+  - 项目根目录下的 `.oh-my-commit/config.json`
 
 ## 配置优先级
 
@@ -101,14 +109,14 @@ YAAC 提供了丰富的配置选项，让你可以根据个人或团队需求自
 
 ## 导入/导出配置
 
-YAAC 提供了配置导入/导出功能，方便在多个环境间同步配置：
+Oh My Commit 提供了配置导入/导出功能，方便在多个环境间同步配置：
 
 1. 导出配置：
-   - 命令面板中输入 "YAAC: 导出配置"
+   - 命令面板中输入 "Oh My Commit: 导出配置"
    - 选择导出位置
    - 配置将被保存为 JSON 文件
 
 2. 导入配置：
-   - 命令面板中输入 "YAAC: 导入配置"
+   - 命令面板中输入 "Oh My Commit: 导入配置"
    - 选择配置文件
    - 确认是否覆盖现有配置

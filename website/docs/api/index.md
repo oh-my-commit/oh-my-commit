@@ -1,197 +1,307 @@
 # API 参考
 
-YAAC 提供了丰富的 API，让你可以通过编程方式集成和扩展 YAAC 的功能。
+Oh My Commit 提供了丰富的 API，让您可以根据需求自定义和扩展功能。
 
-## 快速开始
+## 命令行接口
 
-```typescript
-import * as yaac from 'yaac';
+### 基本命令
 
-// 初始化 YAAC
-const client = new yaac.Client({
-  provider: 'openai',
-  apiKey: process.env.OPENAI_API_KEY  // 使用环境变量
+```bash
+# 初始化配置
+oh-my-commit init
+
+# 生成提交信息
+oh-my-commit generate
+
+# 执行提交
+oh-my-commit commit
+
+# 检查提交信息
+oh-my-commit check
+```
+
+### 选项参数
+
+```bash
+# 使用特定模式
+oh-my-commit --mode <mode>
+
+# 指定语言
+oh-my-commit --lang <language>
+
+# 应用团队配置
+oh-my-commit --team
+
+# 启用调试模式
+oh-my-commit --debug
+```
+
+## Node.js API
+
+### 基本用法
+
+```javascript
+const { OhMyCommit } = require('oh-my-commit');
+
+// 创建实例
+const omc = new OhMyCommit({
+  language: 'zh-CN',
+  convention: 'conventional'
 });
 
 // 生成提交信息
-const message = await client.generateCommitMessage({
-  files: ['src/main.ts', 'src/utils.ts'],
-  diff: '...'
+const message = await omc.generate({
+  files: ['src/index.js'],
+  diff: 'git diff content'
 });
 
-// 创建提交
-await client.commit({
+// 执行提交
+await omc.commit({
   message,
-  files: ['src/main.ts', 'src/utils.ts']
+  files: ['src/index.js']
 });
 ```
 
-## API 结构
+### 事件监听
 
-YAAC 的 API 分为以下几个主要模块：
-
-- **Client**: 主客户端类，提供核心功能
-- **Git**: Git 操作相关的 API
-- **AI**: AI 服务相关的 API
-- **UI**: 界面控制相关的 API
-- **Config**: 配置管理相关的 API
-
-## 详细文档
-
-- [配置项](./configuration.md)：了解如何配置 YAAC
-- [命令列表](./commands.md)：查看所有可用的 VSCode 命令
-- [事件钩子](./hooks.md)：学习如何使用事件钩子扩展功能
-
-## 示例
-
-### 自定义提交流程
-
-```typescript
-import { Client, CommitOptions } from 'yaac';
-
-async function customCommit() {
-  const client = new Client();
-  
-  // 获取修改的文件
-  const changes = await client.git.getChanges();
-  
-  // 生成提交信息
-  const message = await client.ai.generateMessage({
-    files: changes.map(c => c.file),
-    diff: await client.git.getDiff(),
-    template: '<type>(<scope>): <subject>',  // 自定义模板
-    language: 'zh-CN'  // 指定语言
-  });
-  
-  // 自定义提交选项
-  const options: CommitOptions = {
-    message,
-    sign: true,     // 签名提交
-    push: true,     // 自动推送
-    verify: true    // 验证提交消息
-  };
-  
-  // 执行提交
-  await client.commit(options);
-}
-```
-
-### 监听事件
-
-```typescript
-import { Client, CommitEvent } from 'yaac';
-
-const client = new Client();
-
-// 监听提交前事件
-client.on('beforeCommit', (event: CommitEvent) => {
-  // 添加 JIRA 任务编号
-  const taskId = getJiraTaskId();
-  if (taskId) {
-    event.setMessage(`[${taskId}] ${event.message}`);
-  }
-  
-  // 验证提交消息
-  if (!event.message.match(/^(feat|fix|docs|style|refactor)/)) {
-    event.cancel();
-    throw new Error('提交消息不符合规范');
-  }
+```javascript
+// 监听事件
+omc.on('commit', (data) => {
+  console.log('提交完成:', data);
 });
 
-// 监听提交后事件
-client.on('afterCommit', async (event: CommitEvent) => {
-  // 更新 JIRA 状态
-  await updateJiraStatus(event.hash);
-  
-  // 发送团队通知
-  await sendTeamNotification({
-    type: 'commit',
-    hash: event.hash,
-    message: event.message
-  });
+omc.on('error', (error) => {
+  console.error('发生错误:', error);
 });
 ```
 
-### 自定义 AI 提供商
+## 配置 API
 
-```typescript
-import { Client, AIProvider, GenerateOptions } from 'yaac';
+### 读取配置
 
-class CustomAIProvider implements AIProvider {
-  async generateMessage(options: GenerateOptions) {
-    // 实现自定义的消息生成逻辑
-    const { files, diff, template } = options;
-    
-    // 调用自定义 AI 服务
-    const response = await this.callCustomAI({
-      prompt: this.buildPrompt(files, diff),
-      template: template || '<type>: <subject>'
-    });
-    
-    return response.message;
+```javascript
+const { getConfig } = require('oh-my-commit');
+
+// 获取全局配置
+const config = await getConfig();
+
+// 获取特定配置
+const aiConfig = await getConfig('ai');
+```
+
+### 更新配置
+
+```javascript
+const { updateConfig } = require('oh-my-commit');
+
+// 更新配置
+await updateConfig({
+  language: 'en-US',
+  ai: {
+    enabled: true
   }
-  
-  private buildPrompt(files: string[], diff: string) {
-    return `分析以下代码变更并生成提交消息：\n\n文件：${files.join(', ')}\n\n差异：\n${diff}`;
-  }
-}
-
-// 使用自定义提供商
-const client = new Client({
-  provider: new CustomAIProvider()
 });
 ```
 
-### 团队协作集成
+## 钩子 API
 
-::: warning 即将推出
-以下示例代码将在团队协作功能发布后可用。
-:::
+### 注册钩子
 
-```typescript
-import { Client, TeamConfig } from 'yaac';
+```javascript
+const { registerHook } = require('oh-my-commit');
 
-async function setupTeam() {
-  const client = new Client();
-  
-  // 配置团队设置
-  const teamConfig: TeamConfig = {
-    convention: 'conventional',
-    scopes: ['feat', 'fix', 'docs'],
-    reviewers: ['alice', 'bob'],
-    autoAssign: true
-  };
-  
-  // 同步团队配置
-  await client.team.syncConfig(teamConfig);
-  
-  // 监听团队活动
-  client.on('teamActivity', (event) => {
-    console.log(`${event.user} ${event.type}: ${event.data}`);
-  });
-}
+// 注册提交前钩子
+registerHook('pre-commit', async (context) => {
+  const { files, message } = context;
+  // 执行检查
+  return { pass: true };
+});
+```
+
+### 移除钩子
+
+```javascript
+const { removeHook } = require('oh-my-commit');
+
+// 移除钩子
+removeHook('pre-commit', hookId);
+```
+
+## AI API
+
+### 生成提交信息
+
+```javascript
+const { generateMessage } = require('oh-my-commit');
+
+// 生成提交信息
+const message = await generateMessage({
+  diff: 'git diff content',
+  language: 'zh-CN',
+  type: 'feat'
+});
+```
+
+### 代码分析
+
+```javascript
+const { analyzeCode } = require('oh-my-commit');
+
+// 分析代码变更
+const analysis = await analyzeCode({
+  files: ['src/index.js'],
+  diff: 'git diff content'
+});
+```
+
+## Git API
+
+### 获取变更
+
+```javascript
+const { getChanges } = require('oh-my-commit');
+
+// 获取暂存区变更
+const changes = await getChanges({
+  staged: true
+});
+```
+
+### 执行提交
+
+```javascript
+const { commit } = require('oh-my-commit');
+
+// 执行提交
+await commit({
+  message: 'feat: add new feature',
+  files: ['src/index.js']
+});
+```
+
+## 插件 API
+
+### 创建插件
+
+```javascript
+const { createPlugin } = require('oh-my-commit');
+
+// 创建插件
+const plugin = createPlugin({
+  name: 'my-plugin',
+  version: '1.0.0',
+  hooks: {
+    'pre-commit': async (context) => {
+      // 插件逻辑
+      return { pass: true };
+    }
+  }
+});
+```
+
+### 注册插件
+
+```javascript
+const { registerPlugin } = require('oh-my-commit');
+
+// 注册插件
+registerPlugin(plugin);
+```
+
+## 工具 API
+
+### 文件操作
+
+```javascript
+const { readFile, writeFile } = require('oh-my-commit');
+
+// 读取文件
+const content = await readFile('path/to/file');
+
+// 写入文件
+await writeFile('path/to/file', content);
+```
+
+### 配置验证
+
+```javascript
+const { validateConfig } = require('oh-my-commit');
+
+// 验证配置
+const result = await validateConfig(config);
 ```
 
 ## 类型定义
 
-完整的类型定义请参考 [GitHub 仓库](https://github.com/yourusername/YAAC/blob/main/types/index.d.ts)。
+### 配置类型
+
+```typescript
+interface Config {
+  language: string;
+  convention: string;
+  ai: {
+    enabled: boolean;
+    provider: string;
+    model: string;
+  };
+  hooks: {
+    enabled: boolean;
+    timeout: number;
+  };
+}
+```
+
+### 上下文类型
+
+```typescript
+interface Context {
+  files: string[];
+  message: string;
+  branch: string;
+  author: string;
+  timestamp: number;
+}
+```
 
 ## 错误处理
 
-YAAC 使用标准的错误处理机制：
+### 错误类型
 
-```typescript
+```javascript
+const {
+  CommitError,
+  ConfigError,
+  HookError
+} = require('oh-my-commit/errors');
+
 try {
-  await client.commit({
-    message: 'feat: new feature',
-    files: ['src/main.ts']
-  });
+  await omc.commit(message);
 } catch (error) {
-  if (error instanceof yaac.GitError) {
-    console.error('Git 操作失败:', error.message);
-  } else if (error instanceof yaac.AIError) {
-    console.error('AI 服务失败:', error.message);
-  } else {
-    console.error('未知错误:', error);
+  if (error instanceof CommitError) {
+    // 处理提交错误
   }
 }
+```
+
+### 错误码
+
+```javascript
+const { ErrorCodes } = require('oh-my-commit/errors');
+
+switch (error.code) {
+  case ErrorCodes.INVALID_CONFIG:
+    // 处理配置错误
+    break;
+  case ErrorCodes.HOOK_TIMEOUT:
+    // 处理钩子超时
+    break;
+}
+```
+
+::: tip 提示
+更多 API 详情请参考各个功能模块的文档。
+:::
+
+::: warning 注意
+某些 API 可能需要额外的配置或权限才能使用。
+:::

@@ -2,63 +2,105 @@
 
 ## 安装
 
-1. 打开 VSCode
-2. 打开扩展面板（`Ctrl+Shift+X` / `⌘+Shift+X`）
-3. 搜索 "YAAC"
-4. 点击 "安装"
+1. 在 VS Code 中安装插件：
+   ```bash
+   code --install-extension oh-my-commit
+   ```
 
-## 基础配置
+2. 或者从 VS Code 插件市场安装：
+   - 打开 VS Code
+   - 按下 `Cmd/Ctrl + Shift + X` 打开插件市场
+   - 搜索 "Oh My Commit"
+   - 点击 "安装"
 
-安装完成后，你需要进行一些基础配置：
+## 配置
 
-1. 打开命令面板（`Ctrl+Shift+P` / `⌘+Shift+P`）
-2. 输入 "YAAC: 配置"
-3. 设置以下必要项：
-   - AI 服务提供商
-   - API 密钥
-   - 提交模板（可选）
+1. 配置 AI 服务：
+   ```json
+   {
+     "oh-my-commit.ai.provider": "openai",
+     "oh-my-commit.ai.apiKey": "your-api-key"
+   }
+   ```
 
-## 开始使用
+2. 选择提交规范：
+   ```json
+   {
+     "oh-my-commit.commit.convention": "conventional",
+     "oh-my-commit.commit.scopes": ["feat", "fix", "docs"]
+   }
+   ```
 
-### 基础提交流程
+3. 自定义快捷键（可选）：
+   ```json
+   {
+     "key": "alt+g",
+     "command": "oh-my-commit.generateCommitMessage"
+   },
+   {
+     "key": "alt+c",
+     "command": "oh-my-commit.commit"
+   }
+   ```
 
-1. 在 VSCode 中打开你的项目
-2. 修改代码后，可以：
-   - 点击状态栏的 YAAC 图标
-   - 使用快捷键 `Ctrl+Alt+C` / `⌘+Option+C`
-   - 在源代码管理面板中点击 "提交" 按钮
-3. YAAC 将自动：
-   - 分析你的代码变更
-   - 生成合适的提交信息
-   - 打开预览界面供你确认或修改
+## 基本用法
 
-### 界面模式
+1. **生成提交消息**：
+   - 在 VS Code 中修改代码
+   - 按下 `Alt + G` 或在命令面板中执行 `Oh My Commit: Generate Message`
+   - AI 将分析你的代码变更并生成提交消息
 
-YAAC 提供四种界面模式，你可以根据个人喜好选择：
+2. **执行提交**：
+   - 预览并编辑生成的提交消息
+   - 按下 `Alt + C` 或在命令面板中执行 `Oh My Commit: Commit`
+   - 代码将被提交到 Git 仓库
 
-1. **静默模式**
-   - 最小化干扰
-   - 仅在状态栏显示
-   - 适合快速提交
+## 提交模式
 
-2. **通知模式**
-   - 弹出通知
-   - 支持快速操作
-   - 适合简单修改
+Oh My Commit 提供了多种提交模式，适应不同的使用场景：
 
-3. **窗口模式**
-   - 浮动窗口
-   - 完整功能
-   - 不影响编辑区域
+1. **面板模式**（默认）：
+   ```json
+   {
+     "oh-my-commit.commitMode": "panel"
+   }
+   ```
+   在 VS Code 侧边栏显示提交面板，提供完整的编辑和预览功能。
 
-4. **面板模式**
-   - 集成在 VSCode 面板中
-   - 最完整的功能
-   - 适合复杂操作
+2. **窗口模式**：
+   ```json
+   {
+     "oh-my-commit.commitMode": "window"
+   }
+   ```
+   在独立窗口中显示提交界面，适合大屏幕用户。
+
+3. **通知模式**：
+   ```json
+   {
+     "oh-my-commit.commitMode": "notification"
+   }
+   ```
+   通过通知提示显示提交消息，适合快速提交。
+
+4. **静默模式**：
+   ```json
+   {
+     "oh-my-commit.commitMode": "silent"
+   }
+   ```
+   自动生成并提交，无需交互，适合自动化场景。
 
 ## 下一步
 
-- 查看 [用户配置](/guide/configuration) 了解更多配置选项
-- 了解 [AI 能力](/guide/ai-capabilities) 以充分利用 AI 特性
-- 探索 [提交模式](/guide/commit-modes) 选择最适合你的工作方式
-- 阅读 [团队协作](/guide/team-collaboration) 了解如何在团队中使用 YAAC
+- 查看 [AI 能力](./ai-capabilities.md) 了解更多 AI 特性
+- 了解 [提交模式](./commit-modes.md) 的详细用法
+- 探索 [团队协作](./team-collaboration.md) 功能
+
+::: tip 提示
+首次使用时，建议先配置 AI 服务并选择合适的提交规范。
+:::
+
+::: warning 注意
+请妥善保管你的 API 密钥，建议使用环境变量或 VS Code 的 settings.json 进行配置。
+:::

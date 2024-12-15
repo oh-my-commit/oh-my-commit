@@ -4,238 +4,211 @@
 团队协作功能目前正在开发中，预计将在 2024 年 Q2 推出。您可以在[即将推出](/guide/coming-soon)页面了解更多信息。
 :::
 
-YAAC 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
+Oh My Commit 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
 
 ## 团队配置
 
-### 配置文件
+### 配置共享
 
-在项目根目录创建 `.yaac/config.json`：
+团队可以通过配置文件共享统一的设置：
 
 ```json
 {
-  "version": "1.0.0",
-  "team": {
-    "name": "Your Team",
-    "language": "zh-CN",
-    "commitStyle": "conventional"
-  },
-  "rules": {
-    "scopes": ["core", "ui", "api", "docs"],
-    "types": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
-    "subjectLength": 72,
-    "bodyLength": 100
-  },
-  "templates": {
-    "feat": "feat(${scope}): ${subject}\n\n${body}",
-    "fix": "fix(${scope}): ${subject}\n\nFixes #${issue}"
+  "oh-my-commit.team": {
+    "configPath": ".oh-my-commit/team.json",
+    "syncEnabled": true,
+    "syncInterval": 3600
   }
 }
 ```
 
-### Git Hooks
+### 提交规范
 
-在 `.yaac/hooks` 目录下配置 Git Hooks：
+统一团队的提交消息格式：
 
-```bash
-#!/bin/bash
-# .yaac/hooks/pre-commit
+```json
+{
+  "oh-my-commit.team.commit": {
+    "convention": "conventional",
+    "scopes": [
+      "feat", "fix", "docs", "style", "refactor",
+      "perf", "test", "build", "ci", "chore"
+    ],
+    "template": "<type>(<scope>): <subject>",
+    "subjectLimit": 72,
+    "bodyLimit": 500
+  }
+}
+```
 
-# 运行 YAAC 提交检查
-yaac check --strict
+### 审查规则
 
-# 如果检查失败，阻止提交
-if [ $? -ne 0 ]; then
-  echo "提交不符合团队规范，请修改后重试"
-  exit 1
-fi
+配置代码审查的规则：
+
+```json
+{
+  "oh-my-commit.team.review": {
+    "required": true,
+    "minReviewers": 2,
+    "assignRules": [
+      {
+        "path": "src/frontend/**",
+        "reviewers": ["@frontend-team"]
+      },
+      {
+        "path": "src/backend/**",
+        "reviewers": ["@backend-team"]
+      }
+    ]
+  }
+}
 ```
 
 ## 工作流集成
 
-### 1. GitHub 工作流
+### Git 工作流
 
-```yaml
-# .github/workflows/yaac.yml
-name: YAAC Commit Check
+支持常见的 Git 工作流：
 
-on: [pull_request]
+1. **GitHub Flow**
+   ```json
+   {
+     "oh-my-commit.team.workflow": {
+       "type": "github-flow",
+       "branchPrefix": "feature/",
+       "autoMergePatch": true
+     }
+   }
+   ```
 
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: YAAC Check
-        uses: yaac/github-action@v1
-        with:
-          config: .yaac/config.json
-```
+2. **GitLab Flow**
+   ```json
+   {
+     "oh-my-commit.team.workflow": {
+       "type": "gitlab-flow",
+       "environments": ["dev", "staging", "prod"],
+       "autoDeployToDev": true
+     }
+   }
+   ```
 
-### 2. GitLab CI/CD
+3. **Trunk Based**
+   ```json
+   {
+     "oh-my-commit.team.workflow": {
+       "type": "trunk-based",
+       "trunk": "main",
+       "shortLivedBranches": true
+     }
+   }
+   ```
 
-```yaml
-# .gitlab-ci.yml
-yaac:
-  stage: test
-  script:
-    - npm install -g yaac-cli
-    - yaac check --config .yaac/config.json
-  only:
-    - merge_requests
-```
+### CI/CD 集成
 
-### 3. Azure DevOps
-
-```yaml
-# azure-pipelines.yml
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-- script: |
-    npm install -g yaac-cli
-    yaac check --config .yaac/config.json
-  displayName: 'YAAC Check'
-```
-
-## 团队最佳实践
-
-### 1. 提交规范
-
-- **类型前缀**
-  ```
-  feat: 新功能
-  fix: 修复
-  docs: 文档
-  style: 样式
-  refactor: 重构
-  test: 测试
-  chore: 杂项
-  ```
-
-- **作用域**
-  ```
-  feat(ui): 添加新按钮组件
-  fix(api): 修复用户认证问题
-  docs(readme): 更新安装说明
-  ```
-
-- **提交信息模板**
-  ```
-  <类型>(<作用域>): <简短描述>
-
-  <详细描述>
-
-  <关闭的问题>
-  ```
-
-### 2. 代码审查流程
-
-1. **提交前检查**
-   - 运行自动化测试
-   - 执行代码格式化
-   - 验证提交信息
-
-2. **审查要点**
-   - 代码质量
-   - 提交信息规范
-   - 变更影响范围
-
-3. **自动化集成**
-   - CI/CD 流水线检查
-   - 自动化代码审查
-   - 提交信息验证
-
-### 3. 分支策略
-
-```mermaid
-graph TD
-    A[master] -->|release| B[release]
-    A -->|feature| C[feature/xxx]
-    A -->|hotfix| D[hotfix/xxx]
-    C -->|merge| A
-    D -->|merge| A
-    D -->|merge| B
-```
-
-## 工具集成
-
-### 1. VS Code 设置
+与常见的 CI/CD 工具集成：
 
 ```json
 {
-  "settings": {
-    "yaac.team.configPath": ".yaac/config.json",
-    "yaac.team.enforceConfig": true,
-    "yaac.team.autoFormat": true
-  }
-}
-```
-
-### 2. IDE 插件
-
-- **JetBrains IDE**
-  ```json
-  {
-    "yaac.plugin": {
-      "enabled": true,
-      "configPath": ".yaac/config.json",
-      "autoSync": true
+  "oh-my-commit.team.ci": {
+    "provider": "github-actions",
+    "validateCommits": true,
+    "autoFix": true,
+    "notifications": {
+      "slack": "#commits",
+      "discord": "commits-channel"
     }
   }
-  ```
-
-- **Sublime Text**
-  ```json
-  {
-    "yaac_config": ".yaac/config.json",
-    "yaac_auto_format": true
-  }
-  ```
-
-### 3. CLI 工具
-
-```bash
-# 全局安装
-npm install -g yaac-cli
-
-# 检查提交信息
-yaac check "feat(ui): add button"
-
-# 应用团队规范
-yaac apply --config .yaac/config.json
-```
-
-## 常见问题解决
-
-### 1. 配置冲突
-
-问题：团队配置与个人配置冲突
-解决：
-```json
-{
-  "yaac.team.allowOverride": [
-    "ui.theme",
-    "ui.language"
-  ]
 }
 ```
 
-### 2. 提交被拒绝
+## 团队活动
 
-问题：提交不符合团队规范
-检查：
-```bash
-yaac check --verbose
-yaac fix --auto
+### 活动面板
+
+实时显示团队成员的提交活动：
+
+```json
+{
+  "oh-my-commit.team.activity": {
+    "enabled": true,
+    "showInPanel": true,
+    "filters": {
+      "authors": ["@team"],
+      "branches": ["main", "develop"],
+      "since": "1d"
+    }
+  }
+}
 ```
 
-### 3. 同步问题
+### 统计报告
 
-问题：配置未同步到团队成员
-解决：
-```bash
-yaac sync --team
-git pull --rebase
+生成团队提交统计报告：
+
+```json
+{
+  "oh-my-commit.team.stats": {
+    "enabled": true,
+    "schedule": "weekly",
+    "metrics": [
+      "commits",
+      "lines",
+      "files",
+      "authors"
+    ],
+    "export": {
+      "format": "html",
+      "destination": "reports/"
+    }
+  }
+}
 ```
+
+## 最佳实践
+
+### 1. 团队规范
+
+```json
+{
+  "oh-my-commit.team": {
+    "enforceConvention": true,
+    "requireTests": true,
+    "requireReview": true,
+    "autoAssignReviewers": true
+  }
+}
+```
+
+### 2. 代码审查
+
+```json
+{
+  "oh-my-commit.team.review": {
+    "checkCoverage": true,
+    "checkPerformance": true,
+    "checkSecurity": true,
+    "aiAssist": true
+  }
+}
+```
+
+### 3. 自动化
+
+```json
+{
+  "oh-my-commit.team.automation": {
+    "formatCode": true,
+    "updateChangelog": true,
+    "createRelease": true,
+    "notifyTeam": true
+  }
+}
+```
+
+::: tip 提示
+团队协作功能将大大提升团队的工作效率，敬请期待！
+:::
+
+::: warning 注意
+在功能正式发布前，您可以通过自定义配置和 Git Hooks 实现类似的团队协作功能。
+:::
