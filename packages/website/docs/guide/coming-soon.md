@@ -1,13 +1,15 @@
 # 即将推出
 
-Oh My Commit 正在持续发展中，我们有许多激动人心的功能正在开发中。
+Oh My Commits 正在持续发展中，我们有许多激动人心的功能正在开发中。
 
 ## 开发路线图
 
 ### 1. 团队协作功能 🔜
+
 预计发布时间：2024 Q2
 
 - **团队配置同步**
+
   - 统一的提交规范
   - 团队级配置管理
   - 自动化工作流
@@ -18,9 +20,11 @@ Oh My Commit 正在持续发展中，我们有许多激动人心的功能正在�
   - 代码审查助手
 
 ### 2. AI 高级特性 🔜
+
 预计发布时间：2024 Q3
 
 - **自定义模型支持**
+
   - 私有模型部署
   - 模型微调能力
   - 更多 AI 提供商
@@ -31,9 +35,11 @@ Oh My Commit 正在持续发展中，我们有许多激动人心的功能正在�
   - 安全漏洞检测
 
 ### 3. 高级可视化 🔜
+
 预计发布时间：2024 Q4
 
 - **提交历史可视化**
+
   - 图形化提交树
   - 变更影响分析
   - 团队贡献统计
@@ -47,9 +53,9 @@ Oh My Commit 正在持续发展中，我们有许多激动人心的功能正在�
 
 我们非常重视用户的反馈和建议。如果你对即将推出的功能有任何想法或建议，欢迎：
 
-1. 在 [GitHub Issues](https://github.com/yourusername/Oh My Commit/issues) 提交功能请求
-2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit) 参与讨论
-3. 关注我们的 [Twitter](https://twitter.com/oh-my-commit) 获取最新动态
+1. 在 [GitHub Issues](https://github.com/yourusername/Oh My Commits/issues) 提交功能请求
+2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commits) 参与讨论
+3. 关注我们的 [Twitter](https://twitter.com/oh-my-commits) 获取最新动态
 
 ## 功能预约
 

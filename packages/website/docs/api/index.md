@@ -1,6 +1,6 @@
 # API 参考
 
-Oh My Commit 提供了丰富的 API，让您可以根据需求自定义和扩展功能。
+Oh My Commits 提供了丰富的 API，让您可以根据需求自定义和扩展功能。
 
 ## 命令行接口
 
@@ -59,24 +59,24 @@ omc-debug            # 调试模式
 ### 基本用法
 
 ```javascript
-const { OhMyCommit } = require('oh-my-commit');
+const { OhMyCommits } = require("oh-my-commits");
 
 // 创建实例
-const omc = new OhMyCommit({
-  language: 'zh-CN',
-  convention: 'conventional'
+const omc = new OhMyCommits({
+  language: "zh-CN",
+  convention: "conventional",
 });
 
 // 生成提交信息
 const message = await omc.generate({
-  files: ['src/index.js'],
-  diff: 'git diff content'
+  files: ["src/index.js"],
+  diff: "git diff content",
 });
 
 // 执行提交
 await omc.commit({
   message,
-  files: ['src/index.js']
+  files: ["src/index.js"],
 });
 ```
 
@@ -84,12 +84,12 @@ await omc.commit({
 
 ```javascript
 // 监听事件
-omc.on('commit', (data) => {
-  console.log('提交完成:', data);
+omc.on("commit", (data) => {
+  console.log("提交完成:", data);
 });
 
-omc.on('error', (error) => {
-  console.error('发生错误:', error);
+omc.on("error", (error) => {
+  console.error("发生错误:", error);
 });
 ```
 
@@ -98,26 +98,26 @@ omc.on('error', (error) => {
 ### 读取配置
 
 ```javascript
-const { getConfig } = require('oh-my-commit');
+const { getConfig } = require("oh-my-commits");
 
 // 获取全局配置
 const config = await getConfig();
 
 // 获取特定配置
-const aiConfig = await getConfig('ai');
+const aiConfig = await getConfig("ai");
 ```
 
 ### 更新配置
 
 ```javascript
-const { updateConfig } = require('oh-my-commit');
+const { updateConfig } = require("oh-my-commits");
 
 // 更新配置
 await updateConfig({
-  language: 'en-US',
+  language: "en-US",
   ai: {
-    enabled: true
-  }
+    enabled: true,
+  },
 });
 ```
 
@@ -126,10 +126,10 @@ await updateConfig({
 ### 注册钩子
 
 ```javascript
-const { registerHook } = require('oh-my-commit');
+const { registerHook } = require("oh-my-commits");
 
 // 注册提交前钩子
-registerHook('pre-commit', async (context) => {
+registerHook("pre-commit", async (context) => {
   const { files, message } = context;
   // 执行检查
   return { pass: true };
@@ -139,10 +139,10 @@ registerHook('pre-commit', async (context) => {
 ### 移除钩子
 
 ```javascript
-const { removeHook } = require('oh-my-commit');
+const { removeHook } = require("oh-my-commits");
 
 // 移除钩子
-removeHook('pre-commit', hookId);
+removeHook("pre-commit", hookId);
 ```
 
 ## AI API
@@ -150,25 +150,25 @@ removeHook('pre-commit', hookId);
 ### 生成提交信息
 
 ```javascript
-const { generateMessage } = require('oh-my-commit');
+const { generateMessage } = require("oh-my-commits");
 
 // 生成提交信息
 const message = await generateMessage({
-  diff: 'git diff content',
-  language: 'zh-CN',
-  type: 'feat'
+  diff: "git diff content",
+  language: "zh-CN",
+  type: "feat",
 });
 ```
 
 ### 代码分析
 
 ```javascript
-const { analyzeCode } = require('oh-my-commit');
+const { analyzeCode } = require("oh-my-commits");
 
 // 分析代码变更
 const analysis = await analyzeCode({
-  files: ['src/index.js'],
-  diff: 'git diff content'
+  files: ["src/index.js"],
+  diff: "git diff content",
 });
 ```
 
@@ -177,23 +177,23 @@ const analysis = await analyzeCode({
 ### 获取变更
 
 ```javascript
-const { getChanges } = require('oh-my-commit');
+const { getChanges } = require("oh-my-commits");
 
 // 获取暂存区变更
 const changes = await getChanges({
-  staged: true
+  staged: true,
 });
 ```
 
 ### 执行提交
 
 ```javascript
-const { commit } = require('oh-my-commit');
+const { commit } = require("oh-my-commits");
 
 // 执行提交
 await commit({
-  message: 'feat: add new feature',
-  files: ['src/index.js']
+  message: "feat: add new feature",
+  files: ["src/index.js"],
 });
 ```
 
@@ -202,25 +202,25 @@ await commit({
 ### 创建插件
 
 ```javascript
-const { createPlugin } = require('oh-my-commit');
+const { createPlugin } = require("oh-my-commits");
 
 // 创建插件
 const plugin = createPlugin({
-  name: 'my-plugin',
-  version: '1.0.0',
+  name: "my-plugin",
+  version: "1.0.0",
   hooks: {
-    'pre-commit': async (context) => {
+    "pre-commit": async (context) => {
       // 插件逻辑
       return { pass: true };
-    }
-  }
+    },
+  },
 });
 ```
 
 ### 注册插件
 
 ```javascript
-const { registerPlugin } = require('oh-my-commit');
+const { registerPlugin } = require("oh-my-commits");
 
 // 注册插件
 registerPlugin(plugin);
@@ -231,19 +231,19 @@ registerPlugin(plugin);
 ### 文件操作
 
 ```javascript
-const { readFile, writeFile } = require('oh-my-commit');
+const { readFile, writeFile } = require("oh-my-commits");
 
 // 读取文件
-const content = await readFile('path/to/file');
+const content = await readFile("path/to/file");
 
 // 写入文件
-await writeFile('path/to/file', content);
+await writeFile("path/to/file", content);
 ```
 
 ### 配置验证
 
 ```javascript
-const { validateConfig } = require('oh-my-commit');
+const { validateConfig } = require("oh-my-commits");
 
 // 验证配置
 const result = await validateConfig(config);
@@ -286,11 +286,7 @@ interface Context {
 ### 错误类型
 
 ```javascript
-const {
-  CommitError,
-  ConfigError,
-  HookError
-} = require('oh-my-commit/errors');
+const { CommitError, ConfigError, HookError } = require("oh-my-commits/errors");
 
 try {
   await omc.commit(message);
@@ -304,7 +300,7 @@ try {
 ### 错误码
 
 ```javascript
-const { ErrorCodes } = require('oh-my-commit/errors');
+const { ErrorCodes } = require("oh-my-commits/errors");
 
 switch (error.code) {
   case ErrorCodes.INVALID_CONFIG:

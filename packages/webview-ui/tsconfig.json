@@ -19,10 +19,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@oh-my-commit/shared": ["../shared/src"],
-      "@oh-my-commit/shared/*": ["../shared/src/*"]
+      "@oh-my-commits/shared": ["../shared/src"],
+      "@oh-my-commits/shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src", "../shared/src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../shared"
+    }
+  ]
 }

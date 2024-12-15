@@ -26,7 +26,7 @@
             "timestamp": "2024-12-09T10:24:30+08:00"
           },
           {
-            "user_input": "@oh-my-commit/webview:dev: ERROR in ./src/main.tsx\n@oh-my-commit/webview:dev: Module build failed (from ../../node_modules/.pnpm/ts-loader@9.5.1_typescript@5.7.2_webpack@5.97.1/node_modules/ts-loader/index.js):\n@oh-my-commit/webview:dev: Error: TypeScript emitted no output for /Users/mark/coding/apps/YetAnotherAutoCommit/packages/webview-ui/src/main.tsx.",
+            "user_input": "@oh-my-commits/webview:dev: ERROR in ./src/main.tsx\n@oh-my-commits/webview:dev: Module build failed (from ../../node_modules/.pnpm/ts-loader@9.5.1_typescript@5.7.2_webpack@5.97.1/node_modules/ts-loader/index.js):\n@oh-my-commits/webview:dev: Error: TypeScript emitted no output for /Users/mark/coding/apps/YetAnotherAutoCommit/packages/webview-ui/src/main.tsx.",
             "assistant_response": "解决了TypeScript编译错误：1) 重新启用transpileOnly 2) 在ts-loader中覆盖noEmit设置 3) 保持sourceMap配置以维持调试体验",
             "timestamp": "2024-12-09T10:28:46+08:00"
           },

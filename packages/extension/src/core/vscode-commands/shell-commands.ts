@@ -17,7 +17,7 @@ abstract class ShellCommand extends BaseCommand {
   }
 
   protected async getOptions(): Promise<ShellCommandOptions> {
-    const config = vscode.workspace.getConfiguration("oh-my-commit");
+    const config = vscode.workspace.getConfiguration("oh-my-commits");
     return {
       mode: config.get<string>("mode"),
       lang: config.get<string>("language"),

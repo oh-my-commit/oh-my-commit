@@ -1,6 +1,6 @@
-name = "Oh My Commit"
+name = "Oh My Commits"
 version = "2.0.0"
-abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（Oh My Commit），帮助开发者快速实现高质量的代码提交。"
+abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（Oh My Commits），帮助开发者快速实现高质量的代码提交。"
 
 [conversations.001]
 slug = "tsc"
@@ -165,12 +165,12 @@ slug = "yaac_provider_config"
 [conversations.044]
 slug = "modern_documentation"
 title = "Modern Documentation Update"
-abstract = "更新项目文档，使用新的产品名称 Oh My Commit 和配置前缀"
+abstract = "更新项目文档，使用新的产品名称 Oh My Commits 和配置前缀"
 
 [conversations.045]
 slug = "git_cli_integration"
 title = "Git CLI Integration"
-abstract = "探讨将 Oh My Commit 功能集成到 Git 命令行的可能性"
+abstract = "探讨将 Oh My Commits 功能集成到 Git 命令行的可能性"
 
 [conversations.046]
 slug = "commit_generator"

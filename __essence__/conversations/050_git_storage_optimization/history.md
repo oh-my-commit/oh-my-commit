@@ -3,7 +3,7 @@
 ## Initial Investigation
 
 **USER**: du -sh .git
- 33M    .git
+33M .git
 
 为什么这么大
 
@@ -61,7 +61,8 @@ $ find . -type f -size +1M -exec ls -lh {} \;
 
 ## .gitignore Change Analysis
 
-**USER**: The following changes were made to: file:///Users/mark/coding/apps/oh-my-commit/.gitignore
+**USER**: The following changes were made to: file:///Users/mark/coding/apps/oh-my-commits/.gitignore
+
 ```diff
 @@ -1,4 +1,4 @@
 -.turbo/
@@ -76,6 +77,7 @@ $ find . -type f -size +1M -exec ls -lh {} \;
 **ASSISTANT**: 让我解释为什么改变 `.gitignore` 中的规则从 `.turbo/` 到 `**/.turbo/` 会让 `.git` 目录大小显著减小：
 
 1. `.turbo/` vs `**/.turbo/` 的区别：
+
    - `.turbo/` 只会忽略项目根目录下的 `.turbo` 目录
    - `**/.turbo/` 会忽略项目中所有目录下的 `.turbo` 目录（包括子目录）
 
@@ -150,12 +152,14 @@ packages/webview-ui/.turbo/turbo-build.log
 **ASSISTANT**: 让我用一个具体的实验来演示这个过程：
 
 1. 首先看看当前的状态：
+
 ```bash
 $ du -sh .git
 1.7M	.git
 ```
 
 2. 让我们看看 `.turbo` 文件是否还在历史中：
+
 ```bash
 $ git log --all --full-history --name-only -- "*/.turbo/*" | head -n 5
 commit 8d72b3f916c86c01752685d688a18753384a5995
@@ -169,22 +173,26 @@ packages/webview-ui/.turbo/turbo-build.log
 ```
 
 3. 现在运行 git gc 和 prune：
+
 ```bash
 $ git gc --aggressive
 $ git prune
 ```
 
 4. 再次检查大小：
+
 ```bash
 $ du -sh .git
 1.7M	.git
 ```
 
 看到了吗？
+
 - `.git` 目录大小没有变化（还是 1.7M）
 - `.turbo` 文件的历史记录还在（可以通过 `git log` 看到）
 
 这说明：
+
 - `.gitignore` 的改变让目录变小不是因为删除了历史记录
 - `git gc` 和 `prune` 也没有删除这些文件，因为它们是有效的历史记录
 
@@ -205,6 +213,7 @@ $ find . -name ".turbo" -type d
 ```
 
 让我们看看这些目录的大小：
+
 ```bash
 $ du -sh .turbo
 17M	.turbo

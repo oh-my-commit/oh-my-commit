@@ -1,4 +1,4 @@
-import { TreeNode } from "@oh-my-commit/shared";
+import { TreeNode } from "@oh-my-commits/shared";
 
 export function getDirectoryStats(node: TreeNode): TreeNode["stats"] {
   const stats = {

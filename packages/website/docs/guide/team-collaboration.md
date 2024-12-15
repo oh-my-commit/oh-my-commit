@@ -4,7 +4,7 @@
 团队协作功能目前正在开发中，预计将在 2024 年 Q2 推出。您可以在[即将推出](/guide/coming-soon)页面了解更多信息。
 :::
 
-Oh My Commit 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
+Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
 
 ## 团队配置
 
@@ -15,7 +15,7 @@ Oh My Commit 计划提供强大的团队协作功能，帮助团队统一提交�
 ```json
 {
   "omc.team": {
-    "configPath": ".oh-my-commit/team.json",
+    "configPath": ".oh-my-commits/team.json",
     "syncEnabled": true,
     "syncInterval": 3600
   }

@@ -14,7 +14,7 @@ duration = 720
 files = [
   "packages/shared/src/index.ts",
   "packages/cli/src/index.ts",
-  "packages/extension/src/providers/oh-my-commit.ts",
+  "packages/extension/src/providers/oh-my-commits.ts",
   "packages/core/tsconfig.json",
   "tsconfig.base.json",
   "packages/extension/src/core/ac.ts"

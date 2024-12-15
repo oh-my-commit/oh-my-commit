@@ -1,7 +1,7 @@
 // Create atoms for persistent state
 import { atomWithStorage } from "@/lib/storage";
 import { atom } from "jotai";
-import { GitChangeSummary } from "@oh-my-commit/shared";
+import { GitChangeSummary } from "@oh-my-commits/shared";
 
 // 文件变更状态
 export const changedFilesAtom = atomWithStorage<GitChangeSummary | null>({

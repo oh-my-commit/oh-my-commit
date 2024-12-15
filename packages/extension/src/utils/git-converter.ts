@@ -1,5 +1,14 @@
-import { DiffResult, DiffResultTextFile, DiffResultBinaryFile, DiffResultNameStatusFile } from "simple-git";
-import { GitChangeSummary, GitChangeType, GitFileChange } from "@oh-my-commit/shared";
+import {
+  DiffResult,
+  DiffResultTextFile,
+  DiffResultBinaryFile,
+  DiffResultNameStatusFile,
+} from "simple-git";
+import {
+  GitChangeSummary,
+  GitChangeType,
+  GitFileChange,
+} from "@oh-my-commits/shared";
 
 function getGitChangeType(status: string): GitChangeType {
   switch (status) {
@@ -20,15 +29,18 @@ function getGitChangeType(status: string): GitChangeType {
   }
 }
 
-function convertDiffResultFile(file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile): GitFileChange {
-  const status = 'status' in file ? file.status || "?" : "?";
-  
+function convertDiffResultFile(
+  file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile
+): GitFileChange {
+  const status = "status" in file ? file.status || "?" : "?";
+
   return {
     path: file.file,
     status: getGitChangeType(status),
-    additions: 'insertions' in file ? file.insertions || 0 : 0,
-    deletions: 'deletions' in file ? file.deletions || 0 : 0,
-    diff: 'diff' in file && typeof file.diff === 'string' ? file.diff : undefined,
+    additions: "insertions" in file ? file.insertions || 0 : 0,
+    deletions: "deletions" in file ? file.deletions || 0 : 0,
+    diff:
+      "diff" in file && typeof file.diff === "string" ? file.diff : undefined,
   };
 }
 

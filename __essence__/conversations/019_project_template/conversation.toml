@@ -16,7 +16,7 @@ response = "这个项目确实很适合作为一个现代化 VS Code 插件开�
 [[rounds]]
 number = 2
 query = "请帮我实现一下"
-response = "我已经分析了 Oh My Commit 项目，这是一个专注于提供优秀 Git 提交体验的 VS Code 插件。让我重新设计模板结构：
+response = "我已经分析了 Oh My Commits 项目，这是一个专注于提供优秀 Git 提交体验的 VS Code 插件。让我重新设计模板结构：
 
 1. 项目结构设置：
    - 使用 Turborepo 管理多包架构

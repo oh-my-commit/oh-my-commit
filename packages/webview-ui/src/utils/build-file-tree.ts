@@ -1,4 +1,4 @@
-import { GitFileChange, TreeNode } from "@oh-my-commit/shared";
+import { GitFileChange, TreeNode } from "@oh-my-commits/shared";
 
 function createFileNode(file: GitFileChange): TreeNode {
   return {
@@ -13,8 +13,8 @@ function createFileNode(file: GitFileChange): TreeNode {
       modified: new Date().toISOString(), // Modification time not available from git change
       additions: file.additions,
       deletions: file.deletions,
-      status: file.status
-    }
+      status: file.status,
+    },
   };
 }
 
@@ -24,7 +24,7 @@ function createDirectoryNode(path: string): TreeNode {
     path,
     type: "directory",
     displayName: path,
-    children: []
+    children: [],
   };
 }
 
@@ -40,7 +40,7 @@ export function buildFileTree(files: GitFileChange[]): TreeNode {
     for (let i = 0; i < pathParts.length - 1; i++) {
       const pathSoFar = pathParts.slice(0, i + 1).join("/");
       let childNode = currentNode.children?.find(
-        child => child.type === "directory" && child.path === pathSoFar
+        (child) => child.type === "directory" && child.path === pathSoFar
       );
 
       if (!childNode) {

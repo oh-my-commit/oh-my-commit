@@ -11,7 +11,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
       <div className="init-animation">
         <div className="logo-container">
           <svg
-            className="oh-my-commit-logo"
+            className="oh-my-commits-logo"
             viewBox="0 0 200 100"
             width="128"
             height="64"
@@ -78,8 +78,8 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
           </svg>
         </div>
         <div className="text-container">
-          {/* <span className="app-name">Oh My Commit</span> */}
-          <span className="tagline">Oh My Commit</span>
+          {/* <span className="app-name">Oh My Commits</span> */}
+          <span className="tagline">Oh My Commits</span>
         </div>
         <button className="enter-button" onClick={onEnter}>
           <i className="codicon codicon-arrow-right" />

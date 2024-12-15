@@ -12,7 +12,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { twj } from "tw-to-css";
 import { HighlightText } from "@/components/common/HighlightText";
 import cn from "classnames";
-import { GitChangeSummary, GitFileChange } from "@oh-my-commit/shared";
+import { GitChangeSummary, GitFileChange } from "@oh-my-commits/shared";
 
 interface DiffViewerProps {
   files: GitChangeSummary | null;
@@ -53,7 +53,8 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
 
   const saveScrollPosition = useCallback(() => {
     if (scrollContainerRef.current && lastOpenedFilePath) {
-      scrollPositionRef.current[lastOpenedFilePath] = scrollContainerRef.current.scrollTop;
+      scrollPositionRef.current[lastOpenedFilePath] =
+        scrollContainerRef.current.scrollTop;
     }
   }, [lastOpenedFilePath]);
 
@@ -116,7 +117,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           </div>
         </div>
       </div>
-      <div 
+      <div
         ref={scrollContainerRef}
         className="min-w-0 overflow-auto h-[calc(100vh-120px)]"
         onScroll={() => saveScrollPosition()}

@@ -1,6 +1,6 @@
 {
-  "name": "@cs-magic/oh-my-commit",
-  "displayName": "Oh My Commit",
+  "name": "@cs-magic/oh-my-commits",
+  "displayName": "Oh My Commits",
   "version": "0.3.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "cs-magic",
@@ -8,7 +8,7 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cs-magic-open/oh-my-commit"
+    "url": "https://github.com/cs-magic-open/oh-my-commits"
   },
   "keywords": [
     "git",
@@ -28,9 +28,9 @@
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
     "prepare": "husky install",
     "build": "turbo build",
-    "docs:dev": "turbo run docs:dev --filter=@oh-my-commit/website",
-    "docs:build": "turbo run docs:build --filter=@oh-my-commit/website",
-    "docs:preview": "turbo run docs:preview --filter=@oh-my-commit/website"
+    "docs:dev": "turbo run docs:dev --filter=@oh-my-commits/website",
+    "docs:build": "turbo run docs:build --filter=@oh-my-commits/website",
+    "docs:preview": "turbo run docs:preview --filter=@oh-my-commits/website"
   },
   "devDependencies": {
     "@cs-magic/md-toc": "^0.5.1",
@@ -64,24 +64,24 @@
     "commands": [
       {
         "command": "omc.quickCommit",
-        "title": "Oh My Commit: Quick Commit"
+        "title": "Oh My Commits: Quick Commit"
       },
       {
         "command": "omc.selectModel",
-        "title": "Oh My Commit: Select Model"
+        "title": "Oh My Commits: Select Model"
       },
       {
         "command": "omc.openPreferences",
-        "title": "Oh My Commit: Open Preferences"
+        "title": "Oh My Commits: Open Preferences"
       }
     ],
     "configuration": {
-      "title": "Oh My Commit",
+      "title": "Oh My Commits",
       "properties": {
         "omc.basic.enabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "是否启用 Oh My Commit",
+          "markdownDescription": "是否启用 Oh My Commits",
           "order": 1
         },
         "omc.basic.uiLanguage": {

@@ -1,6 +1,6 @@
 # AI 功能
 
-Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提交。
+Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码提交。
 
 ## AI 提交消息生成
 
@@ -208,7 +208,7 @@ Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提
 {
   "omc.ai.offline": {
     "enabled": true,
-    "cachePath": ".oh-my-commit/ai-cache",
+    "cachePath": ".oh-my-commits/ai-cache",
     "maxCacheAge": 604800
   }
 }

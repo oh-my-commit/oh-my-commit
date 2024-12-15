@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { HighlightText } from "@/components/common/HighlightText";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import { GitFileChange } from "@oh-my-commit/shared";
+import { GitFileChange } from "@oh-my-commits/shared";
 import { Checkbox } from "../../common/Checkbox";
 import { basename } from "path";
 
@@ -44,11 +44,11 @@ export const FileItem: React.FC<FileItemProps> = ({
       return;
     }
 
-    const lines = file.diff.split('\n');
+    const lines = file.diff.split("\n");
     let count = 0;
     try {
-      const regex = new RegExp(searchQuery, 'gi');
-      lines.forEach(line => {
+      const regex = new RegExp(searchQuery, "gi");
+      lines.forEach((line) => {
         const matches = line.match(regex);
         if (matches) {
           count += matches.length;
@@ -56,9 +56,9 @@ export const FileItem: React.FC<FileItemProps> = ({
       });
     } catch (error) {
       // 如果正则表达式无效，忽略错误
-      console.warn('Invalid regex in search query:', error);
+      console.warn("Invalid regex in search query:", error);
     }
-    
+
     setContentMatchCount(count);
   }, [searchQuery, file.diff]);
 
@@ -116,22 +116,20 @@ export const FileItem: React.FC<FileItemProps> = ({
         )}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
-          <span className={cn(
-            "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1", 
-            selected && "opacity-80"
-          )}>
+          <span
+            className={cn(
+              "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1",
+              selected && "opacity-80"
+            )}
+          >
             {pathMatchCount > 0 && (
-              <span title="Matches in filename">
-                {pathMatchCount}
-              </span>
+              <span title="Matches in filename">{pathMatchCount}</span>
             )}
             {pathMatchCount > 0 && contentMatchCount > 0 && (
               <span className="opacity-40">·</span>
             )}
             {contentMatchCount > 0 && (
-              <span title="Matches in content">
-                {contentMatchCount}
-              </span>
+              <span title="Matches in content">{contentMatchCount}</span>
             )}
           </span>
         )}

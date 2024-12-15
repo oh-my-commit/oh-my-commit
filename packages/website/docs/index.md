@@ -2,19 +2,19 @@
 layout: home
 
 hero:
-  name: "Oh My Commit"
+  name: "Oh My Commits"
   text: "让 Git 提交变得优雅而智能"
   tagline: 一款基于 AI 的 Git 提交助手
   image:
     src: /logo.svg
-    alt: Oh My Commit
+    alt: Oh My Commits
   actions:
     - theme: brand
       text: 快速开始
       link: /guide/getting-started
     - theme: alt
       text: 在 GitHub 上查看
-      link: https://github.com/cs-magic-open/oh-my-commit
+      link: https://github.com/cs-magic-open/oh-my-commits
 
 features:
   - icon: 🤖
@@ -31,9 +31,9 @@ features:
     details: 统一团队提交风格，提高协作效率
 ---
 
-## 为什么选择 Oh My Commit？
+## 为什么选择 Oh My Commits？
 
-Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
+Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
 
 - 🤖 **智能生成**：基于代码变更自动生成规范的提交消息
 - 🎨 **优雅交互**：提供多种交互模式，满足不同场景需求
@@ -45,7 +45,7 @@ Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
 1. 在 VS Code 中安装插件：
 
    ```bash
-   code --install-extension oh-my-commit
+   code --install-extension oh-my-commits
    ```
 
 2. 配置 AI 服务：
@@ -74,7 +74,7 @@ Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
 ## 工作流程
 
 1. **代码变更**：修改代码并暂存更改
-2. **启动工具**：运行 `oh-my-commit` 命令
+2. **启动工具**：运行 `oh-my-commits` 命令
 3. **AI 分析**：AI 自动分析代码变更
 4. **生成信息**：生成规范的提交信息
 5. **确认提交**：确认或编辑提交信息
@@ -86,30 +86,30 @@ Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
 
 ```bash
 # 快速提交
-oh-my-commit quick
+oh-my-commits quick
 
 # 详细模式
-oh-my-commit interactive
+oh-my-commits interactive
 ```
 
 ### 团队协作
 
 ```bash
 # 应用团队规范
-oh-my-commit --team
+oh-my-commits --team
 
 # 提交并推送
-oh-my-commit --push
+oh-my-commits --push
 ```
 
 ### CI/CD 集成
 
 ```bash
 # 检查提交信息
-oh-my-commit check
+oh-my-commits check
 
 # 自动修复
-oh-my-commit fix
+oh-my-commits fix
 ```
 
 ## 最佳实践
@@ -186,7 +186,7 @@ oh-my-commit fix
 
 ## 支持我们
 
-如果您觉得 Oh My Commit 对您有帮助，欢迎：
+如果您觉得 Oh My Commits 对您有帮助，欢迎：
 
 - ⭐️ 在 GitHub 上给我们 Star
 - 📝 提交问题和建议

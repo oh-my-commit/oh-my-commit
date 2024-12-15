@@ -19,7 +19,7 @@ import {
 } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
-import { GitChangeSummary, GitFileChange } from "@oh-my-commit/shared";
+import { GitChangeSummary, GitFileChange } from "@oh-my-commits/shared";
 import { logger } from "@/lib/logger";
 
 import { cn } from "@/lib/utils";

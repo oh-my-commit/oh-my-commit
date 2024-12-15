@@ -22,12 +22,12 @@
   animation: scaleIn 0.5s ease-out forwards;
 }
 
-.oh-my-commit-logo {
+.oh-my-commits-logo {
   width: 128px;
   height: 64px;
 }
 
-.oh-my-commit-logo path {
+.oh-my-commits-logo path {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation: draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -95,7 +95,8 @@
   animation: drawPath 0.3s ease-out 1.2s forwards;
 }
 
-.branch-up, .branch-down {
+.branch-up,
+.branch-down {
   stroke-dasharray: 40;
   stroke-dashoffset: 40;
 }
@@ -113,9 +114,15 @@
   animation: fadeIn 0.2s ease-out forwards;
 }
 
-.branch-group circle:nth-child(1) { animation-delay: 1.2s; }
-.branch-group circle:nth-child(2) { animation-delay: 1.5s; }
-.branch-group circle:nth-child(3) { animation-delay: 1.8s; }
+.branch-group circle:nth-child(1) {
+  animation-delay: 1.2s;
+}
+.branch-group circle:nth-child(2) {
+  animation-delay: 1.5s;
+}
+.branch-group circle:nth-child(3) {
+  animation-delay: 1.8s;
+}
 
 .connector {
   stroke-dasharray: 30;
@@ -143,8 +150,7 @@
 .orbit {
   stroke-dasharray: 300;
   stroke-dashoffset: 300;
-  animation: drawCircle 1.5s ease-out forwards,
-             pulse 3s ease-in-out infinite;
+  animation: drawCircle 1.5s ease-out forwards, pulse 3s ease-in-out infinite;
 }
 
 .hexagon {
@@ -165,10 +171,18 @@
   animation: nodeAppear 0.3s ease-out forwards;
 }
 
-.node-1 { animation-delay: 1.8s; }
-.node-2 { animation-delay: 2.0s; }
-.node-3 { animation-delay: 2.2s; }
-.node-4 { animation-delay: 2.4s; }
+.node-1 {
+  animation-delay: 1.8s;
+}
+.node-2 {
+  animation-delay: 2s;
+}
+.node-3 {
+  animation-delay: 2.2s;
+}
+.node-4 {
+  animation-delay: 2.4s;
+}
 
 .text-container {
   display: flex;
@@ -229,25 +243,35 @@
   animation: matrixDot 2s infinite;
 }
 
-.dot-0 { animation-delay: 0s; }
-.dot-1 { animation-delay: 0.3s; }
-.dot-2 { animation-delay: 0.6s; }
-.dot-3 { animation-delay: 0.9s; }
-.dot-4 { animation-delay: 1.2s; }
-.dot-5 { animation-delay: 1.5s; }
+.dot-0 {
+  animation-delay: 0s;
+}
+.dot-1 {
+  animation-delay: 0.3s;
+}
+.dot-2 {
+  animation-delay: 0.6s;
+}
+.dot-3 {
+  animation-delay: 0.9s;
+}
+.dot-4 {
+  animation-delay: 1.2s;
+}
+.dot-5 {
+  animation-delay: 1.5s;
+}
 
 .tech-ring {
   stroke-dasharray: 252;
   stroke-dashoffset: 252;
-  animation: drawRing 2s ease-out forwards,
-             rotateRing 10s linear infinite;
+  animation: drawRing 2s ease-out forwards, rotateRing 10s linear infinite;
 }
 
 .tech-ring-2 {
   stroke-dasharray: 252;
   stroke-dashoffset: 252;
-  animation: drawRing 2s ease-out forwards,
-             rotateRingReverse 8s linear infinite;
+  animation: drawRing 2s ease-out forwards, rotateRingReverse 8s linear infinite;
   opacity: 0.5;
 }
 
@@ -261,8 +285,7 @@
 .hexagon {
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
-  animation: drawHexagon 2s ease-out forwards,
-             glowPulse 4s ease-in-out infinite;
+  animation: drawHexagon 2s ease-out forwards, glowPulse 4s ease-in-out infinite;
 }
 
 .circuit-path {
@@ -279,7 +302,7 @@
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation: drawSymbol 1s ease-out 1.5s forwards,
-             symbolGlow 3s ease-in-out infinite 1.5s;
+    symbolGlow 3s ease-in-out infinite 1.5s;
 }
 
 .node-group {
@@ -287,12 +310,24 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-.node-0 { animation-delay: 2.0s; }
-.node-1 { animation-delay: 2.2s; }
-.node-2 { animation-delay: 2.4s; }
-.node-3 { animation-delay: 2.6s; }
-.node-4 { animation-delay: 2.8s; }
-.node-5 { animation-delay: 3.0s; }
+.node-0 {
+  animation-delay: 2s;
+}
+.node-1 {
+  animation-delay: 2.2s;
+}
+.node-2 {
+  animation-delay: 2.4s;
+}
+.node-3 {
+  animation-delay: 2.6s;
+}
+.node-4 {
+  animation-delay: 2.8s;
+}
+.node-5 {
+  animation-delay: 3s;
+}
 
 .node-pulse {
   opacity: 0.3;
@@ -304,17 +339,29 @@
   animation: binaryFade 2s infinite;
 }
 
-.binary-0 { animation-delay: 0s; }
-.binary-1 { animation-delay: 1s; }
+.binary-0 {
+  animation-delay: 0s;
+}
+.binary-1 {
+  animation-delay: 1s;
+}
 
 @keyframes scaleIn {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 @keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes slideUp {
@@ -369,7 +416,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -380,67 +428,132 @@
 }
 
 @keyframes matrixDot {
-  0%, 20% { opacity: 0; }
-  40%, 60% { opacity: 1; }
-  80%, 100% { opacity: 0; }
+  0%,
+  20% {
+    opacity: 0;
+  }
+  40%,
+  60% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes drawRing {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes rotateRing {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes rotateRingReverse {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes dataFlow {
-  0% { stroke-dashoffset: 40; opacity: 0.2; }
-  50% { opacity: 0.8; }
-  100% { stroke-dashoffset: -40; opacity: 0.2; }
+  0% {
+    stroke-dashoffset: 40;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dashoffset: -40;
+    opacity: 0.2;
+  }
 }
 
 @keyframes drawCircuit {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes drawSymbol {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes corePulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.6; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.6;
+  }
 }
 
 @keyframes symbolGlow {
-  0%, 100% { filter: drop-shadow(0 0 2px currentColor); }
-  50% { filter: drop-shadow(0 0 5px currentColor); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
 }
 
 @keyframes nodePulse {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.5); opacity: 0; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 @keyframes glowPulse {
-  0%, 100% { filter: drop-shadow(0 0 2px currentColor); }
-  50% { filter: drop-shadow(0 0 8px currentColor); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
 }
 
 @keyframes binaryFade {
-  0%, 20%, 40% { opacity: 0; }
-  30% { opacity: 1; }
+  0%,
+  20%,
+  40% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes drawPath {

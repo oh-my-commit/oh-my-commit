@@ -1,4 +1,4 @@
-import { Model as SharedModel } from "@oh-my-commit/shared";
+import { Model as SharedModel } from "@oh-my-commits/shared";
 
 export interface ModelMetrics {
   accuracy: number;

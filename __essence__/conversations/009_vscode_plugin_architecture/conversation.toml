@@ -58,7 +58,7 @@ timestamp = "2024-12-10T23:27:26+08:00"
 user_input = """mkdir my-new-extensioncd my-new-extensionyo vscode-modern
 Error vscode-modern 
 
-require() of ES Module /Users/mark/coding/apps/Oh My Commit-Oh My Commit/generator-vscode-modern/node_modules/yeoman-generator/dist/index.js from /Users/mark/coding/apps/Oh My Commit-Oh My Commit/generator-vscode-modern/generators/app/index.js not supported."""
+require() of ES Module /Users/mark/coding/apps/Oh My Commits-Oh My Commits/generator-vscode-modern/node_modules/yeoman-generator/dist/index.js from /Users/mark/coding/apps/Oh My Commits-Oh My Commits/generator-vscode-modern/generators/app/index.js not supported."""
 assistant_response = """I'll fix the ES Module import error by updating the generator code to use ES modules and adding the necessary type: module configuration."""
 continuation = true
 

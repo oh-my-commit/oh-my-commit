@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { Provider } from "@oh-my-commit/shared/types/provider";
-import { Model } from "@oh-my-commit/shared/types/model";
-import { GenerateCommitResult } from "@oh-my-commit/shared/types/commit";
+import { Provider } from "@oh-my-commits/shared/types/provider";
+import { Model } from "@oh-my-commits/shared/types/model";
+import { GenerateCommitResult } from "@oh-my-commits/shared/types/commit";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { presetAiProviders } from "@/types/provider";
 import { AppManager } from "@/core";
-import { OhMyCommitProvider } from "@oh-my-commit/shared/providers/oh-my-commit";
+import { OhMyCommitsProvider } from "@oh-my-commits/shared/providers/oh-my-commits";
 import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
@@ -26,7 +26,7 @@ export class AcManager extends Loggable(class {}) {
     this.logger.info("Initializing AcManager");
     // Register default providers
     this.registerProvider(
-      new OhMyCommitProvider(
+      new OhMyCommitsProvider(
         this.logger,
         this.config.get("omc.apiKeys.anthropic")
       )
@@ -42,7 +42,7 @@ export class AcManager extends Loggable(class {}) {
 
   public async getAvailableModels(): Promise<Model[]> {
     const models: Model[] = [];
-    const providerClasses = [OhMyCommitProvider];
+    const providerClasses = [OhMyCommitsProvider];
 
     for (const providerClass of providerClasses) {
       if (!providerClass.enabled) {
@@ -150,7 +150,7 @@ export class AcManager extends Loggable(class {}) {
       config.get<Record<string, boolean>>("omc.providers");
 
     if (providersConfig) {
-      const providerClasses = [OhMyCommitProvider];
+      const providerClasses = [OhMyCommitsProvider];
       for (const providerClass of providerClasses) {
         providerClass.enabled = providersConfig[providerClass.id] ?? true;
       }

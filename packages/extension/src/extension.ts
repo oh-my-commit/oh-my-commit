@@ -15,7 +15,9 @@ export async function activate(context: vscode.ExtensionContext) {
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Unknown error occurred";
-    vscode.window.showErrorMessage(`Failed to initialize Oh My Commit: ${message}`);
+    vscode.window.showErrorMessage(
+      `Failed to initialize Oh My Commits: ${message}`
+    );
   }
 }
 
