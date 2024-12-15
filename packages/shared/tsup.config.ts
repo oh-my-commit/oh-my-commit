@@ -7,10 +7,6 @@ export default defineConfig({
     resolve: true,
     entry: {
       index: "./src/index.ts",
-      "types/provider": "./src/types/provider.ts",
-      "types/model": "./src/types/model.ts",
-      "types/commit": "./src/types/commit.ts",
-      "providers/oh-my-commits": "./src/providers/oh-my-commits.ts",
     },
   },
   sourcemap: true,
