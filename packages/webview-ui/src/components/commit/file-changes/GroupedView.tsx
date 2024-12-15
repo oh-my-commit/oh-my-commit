@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
+import { GitChangeType, GitFileChange } from "@oh-my-commits/shared/types";
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";
-import { GitFileChange, GitChangeType } from "@oh-my-commits/shared";
 
 export interface GroupedViewProps {
   files: GitFileChange[];
@@ -43,7 +43,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
           <div
             className={cn(
               "flex items-center gap-2 px-2 py-1 text-[12px] font-medium",
-              STATUS_COLORS[status]
+              STATUS_COLORS[status],
             )}
           >
             <span>{STATUS_LABELS[status]}</span>

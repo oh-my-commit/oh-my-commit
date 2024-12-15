@@ -1,32 +1,17 @@
-import { useAtom } from "jotai";
-import React, {
-  useCallback,
-  useMemo,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { EmptyState } from "./EmptyState";
-import { FileStats } from "./FileStats";
-import { FlatView } from "./FlatView";
-
-import { DiffViewer } from "./DiffViewer";
-import { SearchBar } from "./SearchBar";
-import {
-  changedFilesAtom,
-  lastOpenedFilePathAtom,
-  selectedFilesAtom,
-} from "@/state/atoms/commit.changed-files";
-import { searchQueryAtom } from "@/state/atoms/search";
-import { viewModeAtom } from "@/state/atoms/ui";
-import { GitChangeSummary, GitFileChange } from "@oh-my-commits/shared";
-import { logger } from "@/lib/logger";
+import { Section } from "@/components/layout/Section";
 
 import { cn } from "@/lib/utils";
-import { Section } from "@/components/layout/Section";
-import { InfoIcon } from "@/components/commit/info-icon";
-import { buildFileTree } from "@/utils/build-file-tree";
+import { searchQueryAtom } from "@/state/atoms/search";
+import { viewModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@/state/types";
+import { GitChangeSummary } from "@oh-my-commits/shared/types";
+import { useAtom } from "jotai";
+import React from "react";
+
+import { DiffViewer } from "./DiffViewer";
+import { EmptyState } from "./EmptyState";
+import { FlatView } from "./FlatView";
+import { SearchBar } from "./SearchBar";
 
 interface FileChangesProps {
   changedFiles: GitChangeSummary | null;
@@ -50,7 +35,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     setSelectedFiles(
       selectedFiles.includes(path)
         ? selectedFiles.filter((p) => p !== path)
-        : [...selectedFiles, path]
+        : [...selectedFiles, path],
     );
   };
 
@@ -105,7 +90,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         <div
           className={cn(
             "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
-            !lastOpenedFilePath && "opacity-0"
+            !lastOpenedFilePath && "opacity-0",
           )}
         >
           {lastOpenedFilePath && (

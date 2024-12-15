@@ -8,7 +8,7 @@
 import plugin from "tailwindcss/plugin";
 
 export type ThemePluginConfig = {
-  /** 
+  /**
    * Map of Tailwind class names to their corresponding values
    * Key: Tailwind class name (e.g., 'primary', 'bg-default')
    * Value: CSS value or transformation function
@@ -70,10 +70,10 @@ export function createTailwindThemePlugin(config: ThemePluginConfig) {
               acc[key] = typeof value === "function" ? value(key) : value;
               return acc;
             },
-            {}
+            {},
           ),
         },
       },
-    }
+    },
   );
 }

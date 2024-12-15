@@ -12,7 +12,9 @@ interface FileStatsProps {
 
 export const FileStats: React.FC<FileStatsProps> = ({ stats, className }) => {
   return (
-    <div className={`flex items-center gap-2 text-[12px] text-[var(--vscode-descriptionForeground)] ${className}`}>
+    <div
+      className={`flex items-center gap-2 text-[12px] text-[var(--vscode-descriptionForeground)] ${className}`}
+    >
       <span>{Object.values(stats).reduce((a, b) => a + b, 0)} files</span>
       <span>·</span>
       <span className="text-[var(--vscode-gitDecoration-addedResourceForeground)]">

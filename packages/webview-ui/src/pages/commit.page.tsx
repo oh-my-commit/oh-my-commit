@@ -2,18 +2,18 @@ import { CommitMessage } from "@/components/commit/core/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
 import { useCloseWindow } from "@/hooks/use-close-window";
+import { logger } from "@/lib/logger";
+import { getVSCodeAPI } from "@/lib/storage";
 import {
   changedFilesAtom,
   lastOpenedFilePathAtom,
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { CommitEvent } from "@oh-my-commits/shared";
+import { CommitEvent } from "@oh-my-commits/shared/types";
 
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";
-import { logger } from "@/lib/logger";
-import { getVSCodeAPI } from "@/lib/storage";
 
 interface GitDiffFile {
   file: string;
@@ -30,7 +30,7 @@ export const CommitPage = () => {
   const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
 
   useCloseWindow();

@@ -1,7 +1,7 @@
 import { getVSCodeAPI } from "@/lib/storage";
+import { APP_NAME } from "@oh-my-commits/shared/constants";
 import React from "react";
 import packageJson from "../../package.json";
-import { APP_NAME } from "@oh-my-commits/shared";
 
 interface FooterProps {
   className?: string;

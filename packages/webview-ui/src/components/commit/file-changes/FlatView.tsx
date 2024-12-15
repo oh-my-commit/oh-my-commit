@@ -1,6 +1,6 @@
 import React from "react";
-import { FileItem } from "./FileItem";
 import type { FileChange } from "../../../state/types";
+import { FileItem } from "./FileItem";
 
 export interface FlatViewProps {
   files: FileChange[];

@@ -1,5 +1,4 @@
 import React from "react";
-import { cn } from "../../lib/utils";
 
 interface HighlightTextProps {
   text: string;
@@ -37,7 +36,7 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
             </span>
           ) : (
             part
-          )
+          ),
         )}
       </span>
     );

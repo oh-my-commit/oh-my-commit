@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '../../lib/utils';
+import React from "react";
+import { cn } from "../../lib/utils";
 
 interface CheckboxProps {
   checked: boolean;
@@ -13,7 +13,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   className,
 }) => {
   return (
-    <div 
+    <div
       className={cn("w-3 h-3 relative", className)}
       onClick={(e) => e.stopPropagation()}
     >
@@ -29,7 +29,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           "absolute inset-0 border rounded",
           "border-[var(--vscode-checkbox-border)]",
           checked &&
-            "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]"
+            "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]",
         )}
       />
       {checked && (

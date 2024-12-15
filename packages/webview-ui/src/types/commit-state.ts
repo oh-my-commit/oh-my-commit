@@ -1,4 +1,4 @@
-import { GitFileChange } from "@oh-my-commits/shared";
+import { GitFileChange } from "@oh-my-commits/shared/types";
 
 export interface CommitState {
   message: string;

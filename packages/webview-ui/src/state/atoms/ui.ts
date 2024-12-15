@@ -1,5 +1,5 @@
-import { atomWithStorage } from "@/lib/storage";
 import { ViewMode } from "@/components/commit/file-changes/constants";
+import { atomWithStorage } from "@/lib/storage";
 
 // 视图模式
 export const viewModeAtom = atomWithStorage<ViewMode>({

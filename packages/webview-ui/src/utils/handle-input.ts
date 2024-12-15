@@ -7,14 +7,14 @@ export const getIndentationLevel = (line: string): number => {
 // Helper function to get the previous line's indentation level
 export const getPreviousLineIndentLevel = (
   text: string,
-  currentLineStart: number
+  currentLineStart: number,
 ): number => {
   const lastNewline = text.lastIndexOf("\n", currentLineStart - 1);
   if (lastNewline === -1) return 0;
 
   const previousLine = text.slice(
     text.lastIndexOf("\n", lastNewline - 1) + 1,
-    lastNewline
+    lastNewline,
   );
   return getIndentationLevel(previousLine);
 };
@@ -26,7 +26,7 @@ export const handleKeyDown = (
   selectionStart: number,
   selectionEnd: number,
   onChange: (value: string) => void,
-  setSelectionRange: (start: number, end: number) => void
+  setSelectionRange: (start: number, end: number) => void,
 ) => {
   // Handle Tab key for indentation
   if (e.key === "Tab") {
@@ -132,7 +132,7 @@ export const handleKeyDown = (
           newPos,
           selectionStart === selectionEnd
             ? newPos
-            : newPos + (selectionEnd - selectionStart)
+            : newPos + (selectionEnd - selectionStart),
         );
       } else {
         // Multi-line selection
@@ -237,7 +237,7 @@ export const handleKeyDown = (
 
 const handleKeyDownOriginal = (
   e: React.KeyboardEvent,
-  onValueChange: (value: string) => void
+  onValueChange: (value: string) => void,
 ) => {
   console.log("Key pressed:", e);
   // Prevent default Tab behavior

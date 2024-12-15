@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
-import { cn } from "@/lib/utils";
 import { HighlightText } from "@/components/common/HighlightText";
-import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
-import { GitFileChange } from "@oh-my-commits/shared";
+import { cn } from "@/lib/utils";
+import { GitFileChange } from "@oh-my-commits/shared/types";
+
+import React, { useEffect } from "react";
 import { Checkbox } from "../../common/Checkbox";
-import { basename } from "path";
+import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
+import { basename } from "@/utils/path";
 
 interface FileItemProps {
   file: GitFileChange;

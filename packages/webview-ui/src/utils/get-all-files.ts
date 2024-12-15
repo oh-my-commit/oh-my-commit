@@ -1,4 +1,4 @@
-import { TreeNode } from "@oh-my-commits/shared";
+import { TreeNode } from "@oh-my-commits/shared/types";
 
 export const getAllFiles = (node: TreeNode): string[] => {
   if (!node) return [];
@@ -14,6 +14,6 @@ export const getAllFiles = (node: TreeNode): string[] => {
     .concat(
       (node.children || [])
         .filter((child) => child.type === "directory")
-        .flatMap((child) => getAllFiles(child))
+        .flatMap((child) => getAllFiles(child)),
     );
 };

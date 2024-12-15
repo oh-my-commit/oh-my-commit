@@ -6,11 +6,7 @@ export * from "./utils/BaseLogger";
 export * from "./utils/ConsoleLogger";
 
 // Type exports
-export * from "./types/model";
-export * from "./types/provider";
-export * from "./types/git";
-export * from "./types/commit";
-export * from "./types/tree";
+export * from "./types";
 
 // Provider exports
 export * from "./providers/oh-my-commits";

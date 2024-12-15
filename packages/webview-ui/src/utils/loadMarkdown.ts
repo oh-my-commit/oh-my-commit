@@ -5,7 +5,7 @@ const MARKDOWN_URLS = {
 };
 
 export const loadMarkdown = async (
-  name: "commit-specification"
+  name: "commit-specification",
 ): Promise<string> => {
   const url = MARKDOWN_URLS[name];
   try {

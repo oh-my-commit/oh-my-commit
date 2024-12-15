@@ -1,4 +1,4 @@
-import { GitFileChange, TreeNode } from "@oh-my-commits/shared";
+import { GitFileChange, TreeNode } from "@oh-my-commits/shared/types";
 
 function createFileNode(file: GitFileChange): TreeNode {
   return {
@@ -40,7 +40,7 @@ export function buildFileTree(files: GitFileChange[]): TreeNode {
     for (let i = 0; i < pathParts.length - 1; i++) {
       const pathSoFar = pathParts.slice(0, i + 1).join("/");
       let childNode = currentNode.children?.find(
-        (child) => child.type === "directory" && child.path === pathSoFar
+        (child) => child.type === "directory" && child.path === pathSoFar,
       );
 
       if (!childNode) {

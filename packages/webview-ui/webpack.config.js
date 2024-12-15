@@ -1,15 +1,10 @@
 const path = require("path");
-const nodeLibs = require("node-libs-browser");
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
-  // 创建fallback配置
-  const fallback = {};
-  Object.entries(nodeLibs).forEach(([name, path]) => {
-    fallback[name] = path === null ? false : path;
-  });
+  const shared = path.resolve(__dirname, "../shared/src");
 
   return {
     mode: argv.mode || "development",
@@ -30,8 +25,9 @@ module.exports = (env, argv) => {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
         "@": path.resolve(__dirname, "src"),
+        "@oh-my-commits/shared/types": path.resolve(shared, "types/index"),
+        "@oh-my-commits/shared/constants": path.resolve(shared, "constants"),
       },
-      fallback
     },
     module: {
       rules: [

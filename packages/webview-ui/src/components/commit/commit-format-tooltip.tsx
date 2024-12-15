@@ -14,7 +14,7 @@ export const CommitFormatTooltip = () => {
       } catch (error) {
         console.error("Failed to load markdown:", error);
         setMarkdown(
-          "Failed to load commit format guide. Please try again later."
+          "Failed to load commit format guide. Please try again later.",
         );
       } finally {
         setLoading(false);

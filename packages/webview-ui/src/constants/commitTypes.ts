@@ -84,5 +84,5 @@ export const EXTENDED_COMMIT_TYPES: CommitType[] = [
     value: "config",
     label: "⚙️ Config",
     description: "Change configuration files",
-  }
+  },
 ];

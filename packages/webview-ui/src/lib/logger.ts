@@ -9,7 +9,7 @@ class Logger {
   private formatMessage(...args: any[]): string {
     return args
       .map((arg) =>
-        typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)
+        typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg),
       )
       .join(" ");
   }
@@ -20,44 +20,44 @@ class Logger {
       const error = new Error();
       Error.captureStackTrace(error, this.getCallerInfo);
       const stack = error.stack;
-      console.log('Debug - Full stack:', stack);
+      console.log("Debug - Full stack:", stack);
 
       if (!stack) {
-        console.log('Debug - No stack trace available');
+        console.log("Debug - No stack trace available");
         return { file: "unknown", line: 0, column: 0 };
       }
 
       // 分析堆栈信息
-      const stackLines = stack.split('\n');
-      console.log('Debug - Stack lines:', stackLines);
+      const stackLines = stack.split("\n");
+      console.log("Debug - Stack lines:", stackLines);
 
       // 查找调用者的行
-      let callerLine = '';
+      let callerLine = "";
       for (const line of stackLines) {
         // 跳过内部帧
-        if (!line.includes('logger.ts') && !line.includes('node_modules')) {
+        if (!line.includes("logger.ts") && !line.includes("node_modules")) {
           callerLine = line;
-          console.log('Debug - Found caller line:', callerLine);
+          console.log("Debug - Found caller line:", callerLine);
           break;
         }
       }
 
       if (!callerLine) {
-        console.log('Debug - No suitable caller line found');
+        console.log("Debug - No suitable caller line found");
         return { file: "unknown", line: 0, column: 0 };
       }
 
       // 尝试从 eval 注释中获取源文件信息
       const evalMatch = callerLine.match(/eval.*?\/\/ (.+?):(\d+):(\d+)/);
       if (evalMatch) {
-        console.log('Debug - Found eval source map:', evalMatch);
+        console.log("Debug - Found eval source map:", evalMatch);
         const [, sourcePath, line, column] = evalMatch;
         // 从源路径中提取文件名
-        const fileName = sourcePath.split('/').pop() || "unknown";
+        const fileName = sourcePath.split("/").pop() || "unknown";
         return {
           file: fileName,
           line: parseInt(line, 10),
-          column: parseInt(column, 10)
+          column: parseInt(column, 10),
         };
       }
 
@@ -67,26 +67,26 @@ class Logger {
         console.log('Debug - Found "at" location:', atMatch);
         const [, filePath, line, column] = atMatch;
         // 尝试从路径中提取源文件名
-        let fileName = filePath.split('/').pop() || "unknown";
+        let fileName = filePath.split("/").pop() || "unknown";
         // 如果文件名包含 src 目录，尝试获取实际的源文件名
         const srcMatch = filePath.match(/\/src\/([^/]+)/);
         if (srcMatch) {
           fileName = srcMatch[1];
-          if (!fileName.endsWith('.ts') && !fileName.endsWith('.tsx')) {
-            fileName += '.tsx';
+          if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) {
+            fileName += ".tsx";
           }
         }
         return {
           file: fileName,
           line: parseInt(line, 10),
-          column: parseInt(column, 10)
+          column: parseInt(column, 10),
         };
       }
 
-      console.log('Debug - No location information found');
+      console.log("Debug - No location information found");
       return { file: "unknown", line: 0, column: 0 };
     } catch (error) {
-      console.error('Debug - Error in getCallerInfo:', error);
+      console.error("Debug - Error in getCallerInfo:", error);
       return { file: "unknown", line: 0, column: 0 };
     }
   }
@@ -109,8 +109,8 @@ class Logger {
           file,
           line,
           column,
-          isDevelopment: process.env.NODE_ENV === 'development'
-        }
+          isDevelopment: process.env.NODE_ENV === "development",
+        },
       },
     });
   }
