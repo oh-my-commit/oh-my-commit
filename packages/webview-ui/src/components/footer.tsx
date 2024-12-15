@@ -33,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
         Oh My Commit
       </button>
       <span className="mt-1 text-[9px] text-vscode-descriptionForeground opacity-40 font-light tracking-[0.15em] uppercase">
-        Your Artistic Aide for Commits
+        Oh My Commit
       </span>
     </footer>
   );

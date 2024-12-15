@@ -1,4 +1,4 @@
-name = "Oh My Commit - Your Artistic Aide for Commits"
+name = "Oh My Commit"
 version = "2.0.0"
 abstract = "本项目的目标是为 VSCode 提供一款高效、可靠的 AI 提交插件（Oh My Commit），帮助开发者快速实现高质量的代码提交。"
 

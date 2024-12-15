@@ -1,6 +1,6 @@
 <div align="center">
 
-# Oh My Commit - Your Artistic Aide for Commits
+# Oh My Commit
 
 <!-- toc -->
 

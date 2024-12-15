@@ -79,7 +79,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
         </div>
         <div className="text-container">
           {/* <span className="app-name">Oh My Commit</span> */}
-          <span className="tagline">Your Artistic Aide for Commits</span>
+          <span className="tagline">Oh My Commit</span>
         </div>
         <button className="enter-button" onClick={onEnter}>
           <i className="codicon codicon-arrow-right" />

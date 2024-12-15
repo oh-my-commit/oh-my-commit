@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "Oh My Commit"
-  text: "Your Artistic Aide for Commits"
+  text: "Oh My Commit"
   tagline: 一款专注用户体验、重新定义 Git Commit 的 VSCode 插件
   actions:
     - theme: brand
