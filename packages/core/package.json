@@ -1,0 +1,22 @@
+{
+  "name": "@oh-my-commit/core",
+  "version": "0.3.0",
+  "description": "Oh My Commit Core Library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@oh-my-commit/shared": "workspace:*",
+    "neverthrow": "^6.1.0",
+    "simple-git": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2",
+    "rimraf": "^5.0.5"
+  }
+}

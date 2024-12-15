@@ -1,0 +1,4 @@
+slug = "shell_extension_integration"
+title = "Shell Commands Integration with Extension"
+abstract = "研究和实现 Shell Commands 与 VSCode 扩展的集成方案"
+status = { state = "ongoing" }
