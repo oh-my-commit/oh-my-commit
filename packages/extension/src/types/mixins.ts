@@ -1,4 +1,4 @@
-import { APP_ID } from "@oh-my-commits/shared";
+import { APP_ID, APP_NAME } from "@oh-my-commits/shared";
 import vscode, { LogOutputChannel } from "vscode";
 
 // Constructor type with static members
@@ -8,7 +8,7 @@ export type Constructor<T = {}> = abstract new (...args: any[]) => T;
 export function Loggable<TBase extends Constructor>(Base: TBase) {
   abstract class LoggableClass extends Base {
     public logger: LogOutputChannel = vscode.window.createOutputChannel(
-      "Oh My Commits",
+      APP_NAME,
       {
         log: true,
       }
@@ -18,7 +18,7 @@ export function Loggable<TBase extends Constructor>(Base: TBase) {
       this.logger = logger;
     }
 
-    public config = vscode.workspace.getConfiguration("");
+    public config = vscode.workspace.getConfiguration();
   }
   return LoggableClass;
 }

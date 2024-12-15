@@ -11,16 +11,13 @@ const git = simpleGit();
 const logger = new ConsoleLogger("Oh My Commits CLI");
 const commitManager = new CommitManager({ logger });
 
-// Default model
-const DEFAULT_MODEL = OmcStandardModelId;
-
 // Command handlers
 const listModels = async () => {
   try {
     const models = await commitManager.getAvailableModels();
     console.log(chalk.blue("Available models:"));
     for (const model of models) {
-      if (model.id === DEFAULT_MODEL) {
+      if (model.id === OmcStandardModelId) {
         console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`));
       } else {
         console.log(`  - ${model.id} - ${model.name}`);
@@ -49,7 +46,7 @@ const initConfig = async () => {
 const generateAndCommit = async (options: any) => {
   console.log(chalk.blue("Generating commit message..."));
   try {
-    const model = options.model || DEFAULT_MODEL;
+    const model = options.model;
     const diff = await git.diff(["--staged"]);
     const result = await commitManager.generateCommit(
       {

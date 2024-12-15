@@ -11,7 +11,7 @@ import { APP_ID, APP_NAME, OmcStandardModelId } from "@/constants";
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
-  name = `${APP_NAME} Standard Model`;
+  name = `Standard Model`;
   description = "High accuracy commit messages using Claude 3.5 Sonnet";
   providerId = APP_ID;
   aiProviderId = "anthropic";

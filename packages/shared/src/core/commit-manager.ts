@@ -23,7 +23,7 @@ export class CommitManager {
 
   public async generateCommit(
     changeSummary: GitChangeSummary,
-    modelId: string = "oh-my-commits/standard"
+    modelId: string
   ): Promise<Result<CommitData, string>> {
     const models = await this.getAvailableModels();
     const model = models.find((m) => m.id === modelId);
