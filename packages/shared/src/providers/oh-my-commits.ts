@@ -8,6 +8,8 @@ import { GenerateCommitResult } from "../types/commit";
 import { BaseLogger } from "@/utils/BaseLogger";
 
 import HttpsProxyAgent from "https-proxy-agent";
+import { ToolUseBlock } from "@anthropic-ai/sdk/resources";
+import { it } from "node:test";
 
 class OhMyCommitsStandardModel implements Model {
   id = "omc/standard";
@@ -76,28 +78,44 @@ export class OhMyCommitsProvider extends Provider {
 Git diff:
 ${JSON.stringify(diff, null, 2)}
 
+Please analyze the diff carefully and provide a commit message in the following JSON format:
+
+{
+  "title": "type(scope): description",  // Follow conventional commits format
+  "body": "Detailed explanation",       // Explain WHAT and WHY
+  "extra": {
+    "type": "feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert",
+    "scope": "optional component scope",
+    "breaking": false,                  // Set to true if breaking change
+    "issues": ["#123", "#456"]         // Related issue numbers if any
+  }
+}
+
 Requirements:
-1. Title MUST follow format: <type>[optional scope]: <description>
+1. Title format:
    - type: feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert
-   - scope: optional, in parentheses, e.g., (core)
+   - scope: optional, in parentheses
    - description: imperative mood, no period
 2. Keep title under 72 characters
-3. Use imperative mood ("add" not "added" or "adds")
+3. Use imperative mood in description ("add" not "added")
 4. Body should explain WHAT and WHY, not HOW
 5. Wrap body at 72 characters
 6. Use ${lang} for all text content
-7. Breaking changes MUST be indicated by "!" after type/scope
-   Example: feat(api)!: remove user endpoints
-
-Example formats:
-feat(auth): add Google OAuth login
-fix(db): resolve connection timeout issues
-refactor!: drop support for Node 6
-
-Please analyze the diff carefully and provide:
-1. A concise title line following the format above
-2. A blank line
-3. A detailed body explaining what changes were made and why`;
+7. For breaking changes:
+   - Add "!" after type/scope in title
+   - Set breaking=true in extra
+   
+Example response:
+{
+  "title": "feat(auth): add Google OAuth login",
+  "body": "Implement Google OAuth to provide users with single sign-on capability\\n\\nThis change:\\n- Adds Google OAuth integration\\n- Simplifies login process for users\\n- Improves security with 2FA support",
+  "extra": {
+    "type": "feat",
+    "scope": "auth",
+    "breaking": false,
+    "issues": []
+  }
+}`;
 
       const messages = [
         {
@@ -106,28 +124,110 @@ Please analyze the diff carefully and provide:
         },
       ];
 
-      this.logger.info(
-        "Generating commit message using Anthropic..."
-        // JSON.stringify(messages, null, 2)
-      );
+      this.logger.info("Generating commit message using Anthropic...");
 
       const response = await this.anthropic.messages.create({
         model: "claude-3-sonnet-20240229",
         max_tokens: 1000,
         temperature: 0.7,
         messages,
+        tools: [
+          {
+            name: "generate_commit",
+            description:
+              "Generate a structured commit message based on git diff",
+            input_schema: {
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                  description:
+                    "Commit title following conventional commits format: <type>[optional scope]: <description>",
+                },
+                body: {
+                  type: "string",
+                  description:
+                    "Detailed explanation of what changes were made and why",
+                },
+                extra: {
+                  type: "object",
+                  properties: {
+                    type: {
+                      type: "string",
+                      enum: [
+                        "feat",
+                        "fix",
+                        "docs",
+                        "style",
+                        "refactor",
+                        "perf",
+                        "test",
+                        "chore",
+                        "ci",
+                        "build",
+                        "revert",
+                      ],
+                      description: "Type of change",
+                    },
+                    scope: {
+                      type: "string",
+                      description: "Component scope of the change",
+                    },
+                    breaking: {
+                      type: "boolean",
+                      description: "Whether this is a breaking change",
+                    },
+                    issues: {
+                      type: "array",
+                      items: {
+                        type: "string",
+                      },
+                      description: "Related issue numbers",
+                    },
+                  },
+                  required: ["type", "breaking", "issues"],
+                },
+              },
+              required: ["title", "body", "extra"],
+            },
+          },
+        ],
+        tool_choice: { type: "tool" as const, name: "generate_commit" },
       });
 
-      this.logger.info("Commit message generated: ", response);
+      this.logger.debug(
+        "Commit message generated (resonse): ",
+        JSON.stringify(response)
+      );
 
-      const message =
-        response.content[0].type === "text" ? response.content[0].text : "";
-      const [title, ...bodyParts] = message.split("\n\n");
+      try {
+        if (!response.content[0] || response.content[0].type !== "tool_use") {
+          throw new Error("Invalid response format");
+        }
 
-      return ok({
-        title: title.trim(),
-        body: bodyParts.join("\n\n").trim(),
-      });
+        const result = response.content.find(
+          (c) => c.type === "tool_use" && c.name === "generate_commit"
+          // @ts-ignore
+        )!.input;
+        const data = {
+          title: result.title,
+          body: result.body,
+          meta: {
+            model: "claude-3-sonnet-20240229",
+            timestamp: new Date().toISOString(),
+            provider: "oh-my-commits",
+            ...result.extra,
+          },
+        };
+        this.logger.info(
+          "Commit message generated (data): ",
+          JSON.stringify(data, null, 2)
+        );
+        return ok(data);
+      } catch (e) {
+        this.logger.error("Failed to parse tool response:", e);
+        return err("Invalid tool response from AI model");
+      }
     } catch (error) {
       this.logger.error("Failed to generate commit message:", error);
       return err(error instanceof Error ? error.message : "Unknown error");
