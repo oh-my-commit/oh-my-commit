@@ -24,11 +24,20 @@ export class AcManager extends Loggable(class {}) {
   }
 
   get modelId() {
-    return this.config.get<string>(SETTING_MODEL_ID);
+    // return this.config.get<string>(SETTING_MODEL_ID);
+    const modelId = vscode.workspace
+      .getConfiguration("ohMyCommits")
+      .get<string>("model.id");
+    // this.logger.info("modelID: ", modelId);
+    return modelId;
   }
 
   get model() {
-    return this.models.find((model) => model.id === this.modelId);
+    const models = this.models;
+    const modelId = this.modelId;
+    const model = models.find((model) => model.id === this.modelId);
+    // this.logger.info("get model: ", { modelId, models, model });
+    return model;
   }
 
   get provider() {

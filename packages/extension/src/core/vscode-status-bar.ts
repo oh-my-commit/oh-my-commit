@@ -16,7 +16,6 @@ export class StatusBarManager
 
   constructor(app: AppManager) {
     super();
-    this.logger = app.logger;
 
     this.acManager = app.acManager;
     this.statusBarItem = vscode.window.createStatusBarItem(
@@ -48,8 +47,9 @@ export class StatusBarManager
   }
 
   private async update(): Promise<void> {
+    const modelId = this.acManager.modelId;
     const model = this.acManager.model;
-    this.logger.info(`Updating status bar with model: `, model);
+    this.logger.info(`Updating status: `, { modelId, model });
     const isGitRepo = await this.gitService.isGitRepository();
 
     if (!isGitRepo) {

@@ -41,7 +41,6 @@ export class SelectModelCommand extends BaseCommand implements VscodeCommand {
       );
 
       if (selected) {
-        this.logger.info(`Switched to model: ${selected.id}`);
         await this.acManager.selectModel(selected.id);
       }
     } catch (error: unknown) {
