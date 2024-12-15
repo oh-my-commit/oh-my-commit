@@ -7,24 +7,24 @@ export class ConsoleLogger implements BaseLogger {
     this.name = name;
   }
 
-  private log(level: string, message: string): void {
+  private log(level: string, ...message: any[]): void {
     const timestamp = new Date().toISOString();
     console.log(`[${timestamp}] [${level}] [${this.name}] ${message}`);
   }
 
-  info(message: string): void {
+  info(...message: any[]): void {
     this.log("INFO", message);
   }
 
-  warn(message: string): void {
+  warn(...message: any[]): void {
     this.log("WARN", message);
   }
 
-  error(message: string): void {
+  error(...message: any[]): void {
     this.log("ERROR", message);
   }
 
-  debug(message: string): void {
+  debug(...message: any[]): void {
     this.log("DEBUG", message);
   }
 }

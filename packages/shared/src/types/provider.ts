@@ -2,11 +2,12 @@ import { Result } from "neverthrow";
 import { Model } from "./model";
 import { CommitData } from "./commit";
 import { GitChangeSummary } from "./git";
-import { BaseLogger } from "../providers/BaseLogger";
+import { BaseLogger } from "@/utils/BaseLogger";
+import { ConsoleLogger } from "@/utils/ConsoleLogger";
 
 export abstract class Provider {
   protected config: any;
-  public abstract logger: BaseLogger;
+  public logger: BaseLogger = new ConsoleLogger("Oh My Commits");
 
   static id: string;
   static displayName: string;
