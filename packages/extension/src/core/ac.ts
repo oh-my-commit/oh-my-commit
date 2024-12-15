@@ -24,20 +24,11 @@ export class AcManager extends Loggable(class {}) {
   }
 
   get modelId() {
-    // return this.config.get<string>(SETTING_MODEL_ID);
-    const modelId = vscode.workspace
-      .getConfiguration("ohMyCommits")
-      .get<string>("model.id");
-    // this.logger.info("modelID: ", modelId);
-    return modelId;
+    return this.config.get<string>(SETTING_MODEL_ID);
   }
 
   get model() {
-    const models = this.models;
-    const modelId = this.modelId;
-    const model = models.find((model) => model.id === this.modelId);
-    // this.logger.info("get model: ", { modelId, models, model });
-    return model;
+    return this.models.find((model) => model.id === this.modelId);
   }
 
   get provider() {
@@ -75,10 +66,10 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public async generateCommit(diff: DiffResult): Promise<GenerateCommitResult> {
-    this.logger.info(
-      `Generating commit: `,
-      JSON.stringify({ provider: this.provider, model: this.model }, null, 2)
-    );
+    // this.logger.info(
+    //   `Generating commit: `,
+    //   JSON.stringify({ provider: this.provider, model: this.model }, null, 2)
+    // );
     if (!this.provider) {
       throw new Error(`Provider ${this.model!.providerId} not found`);
     }
