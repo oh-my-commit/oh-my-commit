@@ -31,16 +31,24 @@ export class OhMyCommitsProvider extends Provider {
   static enabled = true;
   static models = [new OhMyCommitsStandardModel()];
 
-  constructor(logger?: BaseLogger, _apiKey?: string) {
+  constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
     super();
     if (logger) this.logger = logger;
 
     this.config = {};
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY;
+    const proxy =
+      proxyUrl ||
+      process.env.HTTP_PROXY ||
+      process.env.HTTPS_PROXY ||
+      process.env.ALL_PROXY;
 
     if (apiKey) {
-      this.anthropic = new Anthropic({ apiKey });
+      this.anthropic = new Anthropic({
+        apiKey,
+        baseURL: proxy,
+      });
     }
   }
 
@@ -90,7 +98,7 @@ Please analyze the diff carefully and provide:
         temperature: 0.7,
         messages: [
           {
-            role: "assistant",
+            role: "user",
             content: prompt,
           },
         ],
