@@ -98,8 +98,9 @@ export function CommitMessage() {
             appearance="secondary"
             onClick={() => {
               const vscode = getVSCodeAPI();
+              logger.info("Sending get-commit-data message");
               vscode.postMessage({ command: "get-commit-data" });
-              logger.info("Regenerate commit data");
+              logger.info("Message sent");
             }}
           >
             Regenerate

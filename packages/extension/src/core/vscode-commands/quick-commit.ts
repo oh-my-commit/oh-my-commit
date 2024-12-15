@@ -28,24 +28,30 @@ export class QuickCommitCommand extends BaseCommand {
 
     this.webviewManager = new WebviewManager(context, "webview", APP_NAME);
 
+    this.logger.info("Registering get-commit-data handler");
     this.webviewManager.registerMessageHandler("get-commit-data", async () => {
       this.logger.info("Received request for commit data");
-      const diffSummary = await this.gitService.getDiffSummary();
-      const changeSummary = await this.gitService.getChangeSummary();
-      const message = await this.acManager.generateCommit(diffSummary);
-      if (!message.isOk()) {
-        this.logger.error("Failed to generate commit message");
-        return;
-      }
-      const commitData: CommitEvent = {
-        type: "commit",
-        diffSummary: changeSummary,
-        message: message.value,
-      };
-      this.logger.info(this.name, commitData);
+      try {
+        const diffSummary = await this.gitService.getDiffSummary();
+        const changeSummary = await this.gitService.getChangeSummary();
+        const message = await this.acManager.generateCommit(diffSummary);
+        if (!message.isOk()) {
+          this.logger.error("Failed to generate commit message");
+          return;
+        }
+        const commitData: CommitEvent = {
+          type: "commit",
+          diffSummary: changeSummary,
+          message: message.value,
+        };
+        this.logger.info("Generated commit data:", commitData);
 
-      // 发送消息给 webview
-      await this.webviewManager.postMessage(commitData);
+        // 发送消息给 webview
+        await this.webviewManager.postMessage(commitData);
+        this.logger.info("Commit data sent to webview");
+      } catch (error) {
+        this.logger.error("Error handling get-commit-data:", error);
+      }
     });
 
     // Clean up file watcher when extension is deactivated
