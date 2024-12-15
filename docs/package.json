@@ -1,7 +1,7 @@
 {
-  "name": "yaac-docs",
+  "name": "oh-my-commit-docs",
   "version": "1.0.0",
-  "description": "YAAC Documentation",
+  "description": "Oh My Commit Documentation",
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",

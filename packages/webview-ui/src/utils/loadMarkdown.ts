@@ -1,6 +1,6 @@
 // Fetch markdown content at runtime instead of importing
 const MARKDOWN_URLS = {
-  "commit-specification": "https://raw.githubusercontent.com/cs-magic/YAAC/main/docs/yet-another-best-practice/commit-specification.md"
+  "commit-specification": "https://raw.githubusercontent.com/cs-magic-open/oh-my-commit/main/docs/yet-another-best-practice/commit-specification.md"
 };
 
 export const loadMarkdown = async (name: "commit-specification"): Promise<string> => {

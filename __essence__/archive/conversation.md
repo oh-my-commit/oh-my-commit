@@ -115,7 +115,7 @@
 
 - 确定项目简称为 YAAC（读作"雅刻"）
 - 更新了项目所有文档中的名称和配置项
-- 设置了正确的 GitHub 仓库地址：github.com/cs-magic/yaac
+- 设置了正确的 GitHub 仓库地址：github.com/cs-magic-open/oh-my-commit
 
 ## 2024-01-06
 

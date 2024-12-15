@@ -1,5 +1,5 @@
 {
-  "name": "@yaac/webview",
+  "name": "@oh-my-commit/webview",
   "version": "0.1.0",
   "private": true,
   "main": "../../dist/webview-ui/main.js",
@@ -14,7 +14,7 @@
     "@uiw/react-md-editor": "^4.0.4",
     "@vscode/codicons": "^0.0.36",
     "@vscode/webview-ui-toolkit": "^1.4.0",
-    "@yaac/shared": "workspace:*",
+    "@oh-my-commit/shared": "workspace:*",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "immer": "^10.1.1",

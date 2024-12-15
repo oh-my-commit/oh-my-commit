@@ -85,7 +85,7 @@
 如果你遇到任何问题或有建议，请：
 
 1. 查看 [常见问题](FAQ.md)
-2. 提交 [Issue](https://github.com/cs-magic/yaac/issues)
+2. 提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
 3. 加入我们的 [Discord 社区](https://discord.gg/yaac)
 
 ## 许可证

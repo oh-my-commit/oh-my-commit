@@ -21,7 +21,7 @@ export default defineConfig({
       { text: '指南', link: '/guide/introduction' },
       { text: 'API', link: '/api/' },
       { text: '即将推出', link: '/guide/coming-soon' },
-      { text: 'GitHub', link: 'https://github.com/cs-magic-open/YAAC' }
+      { text: 'GitHub', link: 'https://github.com/cs-magic-open/oh-my-commit' }
     ],
     
     sidebar: {
