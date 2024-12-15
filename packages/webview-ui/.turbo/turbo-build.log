@@ -36,4 +36,4 @@ Entrypoints:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.97.1 compiled with [1m[33m3 warnings[39m[22m in 3619 ms
+webpack 5.97.1 compiled with [1m[33m3 warnings[39m[22m in 4143 ms
