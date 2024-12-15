@@ -1,7 +1,7 @@
 {
-  "name": "yaac-website",
+  "name": "oh-my-commit-website",
   "version": "1.0.0",
-  "description": "YAAC Documentation Website",
+  "description": "Oh My Commit Documentation Website",
   "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev docs",

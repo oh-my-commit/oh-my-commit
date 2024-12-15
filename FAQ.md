@@ -116,7 +116,7 @@ A:
 
 A: 你可以通过以下方式获取帮助：
 
-1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic/yaac/issues)
+1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
 2. 加入我们的 [Discord 社区](https://discord.gg/yaac)
 3. 查看详细的[开发文档](docs/yet-another-best-practice/)
 </details>

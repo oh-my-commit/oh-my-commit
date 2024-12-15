@@ -1,6 +1,6 @@
 {
-  "name": "@cs-magic/yaac",
-  "displayName": "YAAC - Yet Another Auto Commit",
+  "name": "@cs-magic/oh-my-commit",
+  "displayName": "Oh My Commit",
   "version": "0.2.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "cs-magic",
@@ -8,7 +8,7 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cs-magic/yaac"
+    "url": "https://github.com/cs-magic/oh-my-commit"
   },
   "keywords": [
     "git",
@@ -60,28 +60,28 @@
   "contributes": {
     "commands": [
       {
-        "command": "yaac.quickCommit",
-        "title": "YAAC: Quick Commit"
+        "command": "oh-my-commit.quickCommit",
+        "title": "Oh My Commit: Quick Commit"
       },
       {
-        "command": "yaac.selectModel",
-        "title": "YAAC: Select Model"
+        "command": "oh-my-commit.selectModel",
+        "title": "Oh My Commit: Select Model"
       },
       {
-        "command": "yaac.openPreferences",
-        "title": "YAAC: Open Preferences"
+        "command": "oh-my-commit.openPreferences",
+        "title": "Oh My Commit: Open Preferences"
       }
     ],
     "configuration": {
-      "title": "Yet Another Auto Commit",
+      "title": "Oh My Commit",
       "properties": {
-        "yaac.basic.enabled": {
+        "oh-my-commit.basic.enabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "是否启用 YAAC",
+          "markdownDescription": "是否启用 Oh My Commit",
           "order": 1
         },
-        "yaac.basic.uiLanguage": {
+        "oh-my-commit.basic.uiLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -97,20 +97,20 @@
           "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "yaac.ac.model": {
+        "oh-my-commit.ac.model": {
           "type": "string",
           "enum": [
-            "yaac.test",
-            "yaac.balanced",
-            "yaac.professional",
+            "oh-my-commit.test",
+            "oh-my-commit.balanced",
+            "oh-my-commit.professional",
             "cgop.openai.chatgpt-3.5",
             "cgop.openai.chatgpt-4"
           ],
-          "default": "yaac.test",
+          "default": "oh-my-commit.test",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 3
         },
-        "yaac.git.emptyChangeBehavior": {
+        "oh-my-commit.git.emptyChangeBehavior": {
           "type": "string",
           "enum": [
             "skip",
@@ -124,13 +124,13 @@
           "markdownDescription": "当工作区没有文件变更时的行为",
           "order": 20
         },
-        "yaac.git.autoStage": {
+        "oh-my-commit.git.autoStage": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否自动暂存所有更改",
           "order": 21
         },
-        "yaac.git.commitLanguage": {
+        "oh-my-commit.git.commitLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -146,7 +146,7 @@
           "markdownDescription": "Git 提交信息的语言",
           "order": 22
         },
-        "yaac.ui.mode": {
+        "oh-my-commit.ui.mode": {
           "type": "string",
           "enum": [
             "silent",
@@ -164,7 +164,7 @@
           "markdownDescription": "提交界面显示模式",
           "order": 23
         },
-        "yaac.ai.apiKeys": {
+        "oh-my-commit.ai.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
           "additionalProperties": {
@@ -186,13 +186,13 @@
           },
           "order": 30
         },
-        "yaac.telemetry.enabled": {
+        "oh-my-commit.telemetry.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用使用数据收集（匿名）",
           "order": 50
         },
-        "yaac.telemetry.shareLevel": {
+        "oh-my-commit.telemetry.shareLevel": {
           "type": "string",
           "enum": [
             "minimal",
@@ -208,7 +208,7 @@
           "markdownDescription": "数据收集级别",
           "order": 51
         },
-        "yaac.feedback.enabled": {
+        "oh-my-commit.feedback.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",
