@@ -17,3 +17,5 @@ export { OmcProvider } from "./providers/oh-my-commits";
 
 // Result type re-export from neverthrow
 export { Result, ok, err } from "neverthrow";
+
+export * from "./constants";

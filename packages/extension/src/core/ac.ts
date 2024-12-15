@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Provider } from "@oh-my-commits/shared";
+import { Provider, SETTING_MODEL_ID } from "@oh-my-commits/shared";
 
 import { GenerateCommitResult } from "@oh-my-commits/shared";
 import { DiffResult } from "simple-git";
@@ -21,7 +21,7 @@ export class AcManager extends Loggable(class {}) {
     AcManager.setLogger(this.logger);
     this.config = vscode.workspace.getConfiguration("");
     this.providers.push(new OmcProvider(this.logger));
-    this.modelId = this.config.get<string>("omc.moded.id");
+    this.modelId = this.config.get<string>(SETTING_MODEL_ID);
   }
 
   get models() {
