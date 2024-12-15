@@ -6,10 +6,9 @@ export type Constructor<T = {}> = abstract new (...args: any[]) => T;
 // Loggable mixin
 export function Loggable<TBase extends Constructor>(Base: TBase) {
   abstract class LoggableClass extends Base {
-    protected static logger: LogOutputChannel;
-    protected logger!: LogOutputChannel;
+    public logger!: LogOutputChannel;
 
-    public static setLogger(logger: LogOutputChannel) {
+    public setLogger(logger: LogOutputChannel) {
       this.logger = logger;
     }
   }
