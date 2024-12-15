@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { Provider } from "@oh-my-commits/shared/types/provider";
-import { Model } from "@oh-my-commits/shared/types/model";
-import { GenerateCommitResult } from "@oh-my-commits/shared/types/commit";
+import { Provider } from "@oh-my-commits/shared";
+import { Model } from "@oh-my-commits/shared";
+import { GenerateCommitResult } from "@oh-my-commits/shared";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";

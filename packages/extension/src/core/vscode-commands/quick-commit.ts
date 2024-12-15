@@ -2,7 +2,7 @@ import { AcManager } from "@/core/ac";
 import { BaseCommand } from "@/core/vscode-commands/types";
 import { VscodeGitService } from "@/core/vscode-git";
 import { WebviewManager } from "@/core/vscode-webview";
-import { CommitEvent } from "@oh-my-commits/shared/types/commit";
+import { CommitEvent } from "@oh-my-commits/shared";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
