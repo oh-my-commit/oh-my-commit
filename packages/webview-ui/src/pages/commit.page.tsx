@@ -51,13 +51,14 @@ export const CommitPage = () => {
       const { data } = event;
       logger.info("[handleMessage] Received message data:", data);
       switch (data.type) {
+        case "diff-summary":
+          logger.info("[handleMessage] received diff summary: ", data);
+          setChangedFiles(data.diffSummary);
+          break;
         case "commit":
-          logger.info("[handleMessage] received commit event: ", data);
+          logger.info("[handleMessage] received commit message: ", data);
           setTitle(data.message.title);
           setBody(data.message.body ?? "");
-          if (data.diffSummary.files) {
-            setChangedFiles(data.diffSummary);
-          }
           break;
         default:
           logger.info("[handleMessage] Unknown event type:", data.type);
@@ -68,10 +69,10 @@ export const CommitPage = () => {
     window.addEventListener("message", handleMessage);
     logger.info("[useEffect] Message event listener added");
 
-    // 请求提交数据
+    // 通知 extension webview 已准备好
     const vscode = getVSCodeAPI();
-    vscode.postMessage({ command: "get-commit-data" });
-    logger.info("[useEffect] Requested commit data");
+    vscode.postMessage({ command: "webview-ready" });
+    logger.info("[useEffect] Sent webview-ready message");
 
     // 清理函数
     return () => {
@@ -80,12 +81,21 @@ export const CommitPage = () => {
     };
   }, []);
 
+  // 处理重新生成
+  const handleRegenerate = () => {
+    const vscode = getVSCodeAPI();
+    vscode.postMessage({ 
+      command: "regenerate-commit",
+      selectedFiles: selectedFiles
+    });
+  };
+
   logger.info("[render] == Rendering CommitPage ==");
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-auto">
-        <CommitMessage />
+        <CommitMessage onRegenerate={handleRegenerate} />
         <FileChanges
           changedFiles={changedFiles}
           selectedFiles={selectedFiles}

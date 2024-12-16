@@ -8,7 +8,7 @@ export type CommitData = {
 export type GenerateCommitResult = Result<CommitData, string>;
 
 export type CommitEvent = {
-  type: "commit" | "regenerate";
+  type: "commit" | "regenerate" | "diff-summary";
   message: CommitData;
   diffSummary: GitChangeSummary;
 };

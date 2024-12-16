@@ -1,0 +1,10 @@
+[meta]
+id = "046"
+slug = "shared_console_logger"
+title = "Shared Console Logger Export Issue"
+status = { state = "ongoing" }
+abstract = "解决 shared 包中 ConsoleLogger 导出问题"
+
+[timeline]
+start_time = "2024-12-16T22:14:05+08:00"
+rounds = []

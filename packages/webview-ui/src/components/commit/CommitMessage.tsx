@@ -14,7 +14,7 @@ import { CommitEvent } from "@oh-my-commits/shared/types";
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
 
-export function CommitMessage() {
+export function CommitMessage({ onRegenerate }: { onRegenerate: () => void }) {
   const [title, setTitle] = useAtom(commitTitleAtom);
   const [body, setBody] = useAtom(commitBodyAtom);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -114,10 +114,7 @@ export function CommitMessage() {
             disabled={isRegenerating}
             onClick={() => {
               setIsRegenerating(true);
-              const vscode = getVSCodeAPI();
-              logger.info("Sending get-commit-data message");
-              vscode.postMessage({ command: "get-commit-data" });
-              logger.info("Message sent");
+              onRegenerate();
             }}
           >
             {isRegenerating ? (

@@ -1,0 +1,23 @@
+// Create atoms for persistent state
+import { atomWithStorage } from "@/lib/storage";
+// 文件变更状态
+export const changedFilesAtom = atomWithStorage({
+    key: "oh-my-commits.commit.changed-files",
+    defaultValue: null,
+});
+// 选中的文件路径列表
+export const selectedFilesAtom = atomWithStorage({
+    defaultValue: [],
+    key: "oh-my-commits.commit.changed-files.selected",
+});
+// 展开的目录列表
+export const expandedDirsAtom = atomWithStorage({
+    defaultValue: [],
+    key: "oh-my-commits.commit.changed-files.expanded",
+});
+// 最后打开的文件路径
+export const lastOpenedFilePathAtom = atomWithStorage({
+    defaultValue: null,
+    key: "oh-my-commits.commit.changed-files.last-opened",
+});
+//# sourceMappingURL=commit.changed-files.js.map

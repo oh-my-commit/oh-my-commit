@@ -1,20 +1,7 @@
 {
+  "extends": ["../../tsconfig.json"],
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2020",
     "outDir": "dist",
-    "lib": ["ES2020"],
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
     "types": ["vscode"],
     "baseUrl": ".",
     "paths": {

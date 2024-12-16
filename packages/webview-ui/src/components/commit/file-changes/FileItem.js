@@ -1,0 +1,52 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { HighlightText } from "@/components/common/HighlightText";
+import { cn } from "@/lib/utils";
+import React, { useEffect } from "react";
+import { Checkbox } from "../../common/Checkbox";
+import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
+import { basename } from "@/utils/path";
+export const FileItem = ({ file, selected, isOpen, viewMode, searchQuery = "", onSelect, onClick, }) => {
+    const [pathMatchCount, setPathMatchCount] = React.useState(0);
+    const [contentMatchCount, setContentMatchCount] = React.useState(0);
+    const handleSelect = () => {
+        onSelect(file.path);
+    };
+    const handleClick = (e) => {
+        e.stopPropagation();
+        onClick(file.path);
+    };
+    // 检查文件内容中的匹配
+    useEffect(() => {
+        if (!searchQuery || !file.diff) {
+            setContentMatchCount(0);
+            return;
+        }
+        const lines = file.diff.split("\n");
+        let count = 0;
+        try {
+            const regex = new RegExp(searchQuery, "gi");
+            lines.forEach((line) => {
+                const matches = line.match(regex);
+                if (matches) {
+                    count += matches.length;
+                }
+            });
+        }
+        catch (error) {
+            // 如果正则表达式无效，忽略错误
+            console.warn("Invalid regex in search query:", error);
+        }
+        setContentMatchCount(count);
+    }, [searchQuery, file.diff]);
+    // 只要有任何一种匹配就显示
+    const hasMatch = !searchQuery || pathMatchCount > 0 || contentMatchCount > 0;
+    if (!hasMatch) {
+        return null;
+    }
+    return (_jsxs("div", { className: cn("group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out", isOpen
+            ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)] shadow-sm"
+            : selected
+                ? "bg-[var(--vscode-list-inactiveSelectionBackground)] text-[var(--vscode-list-inactiveSelectionForeground)]"
+                : "hover:bg-[var(--vscode-list-hoverBackground)] active:bg-[var(--vscode-list-activeSelectionBackground)] active:bg-opacity-50"), onClick: handleClick, children: [_jsxs("div", { className: "flex-1 flex items-center min-w-0 h-full", children: [_jsx("div", { className: "flex items-center justify-center w-8 h-full transition-opacity duration-100", children: _jsx(Checkbox, { checked: selected, onChange: handleSelect }) }), _jsxs("div", { className: "flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2", children: [_jsx("div", { className: "flex items-center gap-0.5 transition-colors duration-100", children: _jsx("span", { className: cn("font-mono font-medium text-[12px]", STATUS_COLORS[file.status], selected && "text-inherit"), title: STATUS_LABELS[file.status], children: STATUS_LETTERS[file.status] }) }), _jsx("span", { className: "truncate", children: _jsx(HighlightText, { text: viewMode === "tree" ? basename(file.path) : file.path, highlight: searchQuery, onMatchCount: setPathMatchCount }) })] })] }), _jsxs("div", { className: cn("flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100", !selected && "text-[var(--vscode-descriptionForeground)]"), children: [searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (_jsxs("span", { className: cn("text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1", selected && "opacity-80"), children: [pathMatchCount > 0 && (_jsx("span", { title: "Matches in filename", children: pathMatchCount })), pathMatchCount > 0 && contentMatchCount > 0 && (_jsx("span", { className: "opacity-40", children: "\u00B7" })), contentMatchCount > 0 && (_jsx("span", { title: "Matches in content", children: contentMatchCount }))] })), file.additions > 0 && (_jsxs("span", { className: cn("text-git-added-fg", selected && "text-inherit"), children: ["+", file.additions] })), file.deletions > 0 && (_jsxs("span", { className: cn("text-git-deleted-fg", selected && "text-inherit"), children: ["\u2212", file.deletions] }))] })] }));
+};
+//# sourceMappingURL=FileItem.js.map
