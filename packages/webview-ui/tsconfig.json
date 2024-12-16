@@ -5,6 +5,7 @@
     "module": "esnext",
     "jsx": "react-jsx",
     "baseUrl": ".",
+    "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
       "@oh-my-commits/shared/types": ["../shared/src/types/index"],
