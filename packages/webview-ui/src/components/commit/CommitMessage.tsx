@@ -9,7 +9,7 @@ import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import React, { useEffect, useRef, useState } from "react";
-import { CommitEvent } from "@oh-my-commits/shared/types";
+import { TransportEvent } from "@oh-my-commits/shared/types";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -40,7 +40,7 @@ export function CommitMessage({ onRegenerate }: { onRegenerate: () => void }) {
   }, []);
 
   useEffect(() => {
-    const messageHandler = (event: MessageEvent<CommitEvent>) => {
+    const messageHandler = (event: MessageEvent<TransportEvent>) => {
       const message = event.data;
       if (message.type === "commit") {
         setIsRegenerating(false);

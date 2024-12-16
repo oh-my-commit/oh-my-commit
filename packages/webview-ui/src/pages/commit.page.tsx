@@ -47,21 +47,17 @@ export const CommitPage = () => {
     logger.info("[useEffect] Setting up message event listener");
 
     const handleMessage = (event: MessageEvent<CommitEvent>) => {
-      logger.info("[handleMessage] Received message event:", event);
       const { data } = event;
-      logger.info("[handleMessage] Received message data:", data);
       switch (data.type) {
         case "diff-summary":
-          logger.info("[handleMessage] received diff summary: ", data);
           setChangedFiles(data.diffSummary);
           break;
         case "commit":
-          logger.info("[handleMessage] received commit message: ", data);
           setTitle(data.message.title);
           setBody(data.message.body ?? "");
           break;
         default:
-          logger.info("[handleMessage] Unknown event type:", data.type);
+          logger.info("Unknown event type:", data.type);
       }
     };
 
@@ -84,9 +80,9 @@ export const CommitPage = () => {
   // 处理重新生成
   const handleRegenerate = () => {
     const vscode = getVSCodeAPI();
-    vscode.postMessage({ 
+    vscode.postMessage({
       command: "regenerate-commit",
-      selectedFiles: selectedFiles
+      selectedFiles: selectedFiles,
     });
   };
 

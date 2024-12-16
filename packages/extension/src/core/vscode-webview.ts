@@ -77,7 +77,7 @@ export class WebviewManager
     });
 
     this.registerMessageHandler("window-close", async () => {
-      this.logger.info("Handling window close");
+      this.logger.info("<< Handling window close");
       await this.cleanupPanel();
     });
 
@@ -87,22 +87,22 @@ export class WebviewManager
         const { channel, level, rawMessage } = message.payload;
         const normalizedLevel = this.normalizeLogLevel(level);
         const webviewChannel = channel ? `webview-${channel}` : "webview";
-
+        const msg = `<< [${webviewChannel}] ${rawMessage}`;
         switch (normalizedLevel) {
           case "debug":
-            this.logger.debug(`[${webviewChannel}] ${rawMessage}`);
+            this.logger.debug(msg);
             break;
           case "info":
-            this.logger.info(`[${webviewChannel}] ${rawMessage}`);
+            this.logger.info(msg);
             break;
           case "warn":
-            this.logger.warn(`[${webviewChannel}] ${rawMessage}`);
+            this.logger.warn(msg);
             break;
           case "error":
-            this.logger.error(`[${webviewChannel}] ${rawMessage}`);
+            this.logger.error(msg);
             break;
           case "trace":
-            this.logger.trace(`[${webviewChannel}] ${rawMessage}`);
+            this.logger.trace(msg);
             break;
         }
       }
@@ -188,12 +188,11 @@ export class WebviewManager
 
     // Set up message handler
     panel.webview.onDidReceiveMessage(async (message) => {
-      this.logger.info("Received message from webview:", message);
       const handler = this.messageHandlers.get(message.command);
       if (handler) {
         try {
           await handler(message);
-          this.logger.info("Message handled successfully");
+          this.logger.debug("Message handled successfully");
         } catch (error) {
           this.logger.error("Error handling message:", error);
         }
