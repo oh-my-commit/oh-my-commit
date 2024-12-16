@@ -5,7 +5,7 @@ import { WebviewManager } from "@/core/vscode-webview";
 import {
   APP_NAME,
   COMMAND_QUICK_COMMIT,
-  CommitEvent,
+  TransportEvent,
 } from "@oh-my-commits/shared";
 import * as vscode from "vscode";
 
@@ -80,10 +80,12 @@ export class QuickCommitCommand extends BaseCommand {
 
           const message = await this.acManager.generateCommit(filteredDiff);
           if (message.isOk()) {
-            await this.webviewManager.postMessage({
+            const data = {
               type: "commit",
               message: message.value,
-            });
+            };
+            this.logger.info(">> commit: ", data);
+            await this.webviewManager.postMessage(data);
           } else {
             this.logger.error("Failed to regenerate commit message");
           }
