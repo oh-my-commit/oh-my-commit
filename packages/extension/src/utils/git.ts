@@ -36,7 +36,7 @@ export class GitCore {
     // 获取每个文件的详细信息
     for (const file of diff.files) {
       const fileDiff = await this.git.diff(["--staged", "--", file.file]);
-      // @ts-expect-error 未来可以支持 content
+      // 未来可以支持 content
       const content = await this.getFileContent(file.file);
 
       // 使用类型断言来处理 insertions 和 deletions
