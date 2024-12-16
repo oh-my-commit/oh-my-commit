@@ -45,7 +45,7 @@ export class CommitWebviewService extends Loggable(class {}) {
    * 发送消息到 webview
    */
   private async sendMessage(message: CommitWebviewMessage) {
-    this.logger.info(">> commit webview: ", message);
+    this.logger.info(`[Host --> Webview]: `, message);
     await this.webviewManager.postMessage(message);
   }
 

@@ -1,4 +1,4 @@
-import { GitFileChange, TreeNode } from "@oh-my-commits/shared/types";
+import { GitFileChange, TreeNode } from "@oh-my-commits/shared/common";
 
 function createFileNode(file: GitFileChange): TreeNode {
   return {

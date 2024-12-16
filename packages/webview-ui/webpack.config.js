@@ -4,8 +4,6 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
-  const shared = path.resolve(__dirname, "../shared/src");
-
   return {
     mode: argv.mode || "development",
     entry: "./src/main.tsx",
@@ -24,9 +22,11 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
-        "@": path.resolve(__dirname, "src"),
-        "@oh-my-commits/shared/types": path.resolve(shared, "types/index"),
-        "@oh-my-commits/shared/constants": path.resolve(shared, "constants"),
+        "@": [
+          path.resolve(__dirname, "src"),
+          path.resolve(__dirname, "../shared/src"),
+        ],
+        "@oh-my-commits/shared": [path.resolve(__dirname, "../shared/src")],
       },
     },
     module: {

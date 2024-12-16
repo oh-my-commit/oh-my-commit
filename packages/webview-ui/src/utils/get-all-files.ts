@@ -1,4 +1,4 @@
-import { TreeNode } from "@oh-my-commits/shared/types";
+import { TreeNode } from "@oh-my-commits/shared/common";
 
 export const getAllFiles = (node: TreeNode): string[] => {
   if (!node) return [];

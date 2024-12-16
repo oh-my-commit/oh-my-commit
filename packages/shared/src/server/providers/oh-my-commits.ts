@@ -1,13 +1,12 @@
-import { ok, err } from "neverthrow";
+import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
+import { BaseLogger } from "@/common/utils/logger";
 import Anthropic from "@anthropic-ai/sdk";
 import { HttpsProxyAgent } from "https-proxy-agent";
-
-import { BaseLogger } from "@/utils/BaseLogger";
-import { Model } from "../types/model";
-import { Provider } from "../types/provider";
-import { GitChangeSummary } from "../types/git";
-import { GenerateCommitResult } from "../types/commit";
-import { APP_ID, APP_NAME, OmcStandardModelId } from "@/constants";
+import { err, ok } from "neverthrow";
+import { GenerateCommitResult } from "@/common/types/commit";
+import { GitChangeSummary } from "@/common/types/git";
+import { Model } from "@/common/types/model";
+import { Provider } from "@/common/types/provider";
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
@@ -53,7 +52,9 @@ export class OmcProvider extends Provider {
   async generateCommit(
     diff: GitChangeSummary,
     providedModel: Model,
-    options?: { lang?: string }
+    options?: {
+      lang?: string;
+    },
   ): Promise<GenerateCommitResult> {
     const lang = options?.lang || "en";
     const model = "claude-3-sonnet-20240229";
@@ -183,7 +184,7 @@ Example response:
 
       this.logger.debug(
         "Commit message generated (resonse): ",
-        JSON.stringify(response)
+        JSON.stringify(response),
       );
 
       const item = response.content[0];
@@ -215,7 +216,7 @@ Example response:
       };
       this.logger.info(
         "Commit message generated (data): ",
-        JSON.stringify(data, null, 2)
+        JSON.stringify(data, null, 2),
       );
       return ok(data);
     } catch (error) {

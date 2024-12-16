@@ -1,6 +1,6 @@
 // 核心业务类型
 
-import { GitChangeType } from "@oh-my-commits/shared/types";
+import { GitChangeType } from "@oh-my-commits/shared/common";
 
 export interface FileChange {
   path: string;

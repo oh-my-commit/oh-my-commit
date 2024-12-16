@@ -1,5 +1,5 @@
 import { getVSCodeAPI } from "@/lib/storage";
-import { APP_NAME } from "@oh-my-commits/shared/constants";
+import { APP_NAME } from "@oh-my-commits/shared/common";
 import React from "react";
 import packageJson from "../../package.json";
 

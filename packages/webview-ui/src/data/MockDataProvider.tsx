@@ -3,7 +3,7 @@ import {
   GitChangeSummary,
   GitChangeType,
   GitFileChange,
-} from "@oh-my-commits/shared/types";
+} from "@oh-my-commits/shared/common";
 import { useSetAtom } from "jotai";
 import React, { useEffect } from "react";
 

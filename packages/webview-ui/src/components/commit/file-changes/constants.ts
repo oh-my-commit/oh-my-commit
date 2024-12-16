@@ -1,6 +1,4 @@
-// File change status colors
-
-import { GitChangeType } from "@oh-my-commits/shared/types";
+import { GitChangeType } from "@oh-my-commits/shared/common";
 
 export const STATUS_COLORS: Record<GitChangeType, string> = {
   added: "text-git-added-fg",

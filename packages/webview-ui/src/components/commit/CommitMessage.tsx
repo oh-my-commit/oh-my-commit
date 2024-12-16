@@ -3,13 +3,11 @@ import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
-import { logger } from "@/lib/logger";
-import { getVSCodeAPI } from "@/lib/storage";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
+import { CommitEvent } from "@oh-my-commits/shared/common";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import React, { useEffect, useRef, useState } from "react";
-import { CommitEvent } from "@oh-my-commits/shared/types";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;

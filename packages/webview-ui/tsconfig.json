@@ -7,9 +7,7 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@oh-my-commits/shared/types": ["../shared/src/types/index"],
-      "@oh-my-commits/shared/constants": ["../shared/src/constants"]
-      //      "@vscode/*": ["./node_modules/@vscode/*"]
+      "@oh-my-commits/shared/common": ["../shared/common/index"],
     }
   },
   "include": ["src"],

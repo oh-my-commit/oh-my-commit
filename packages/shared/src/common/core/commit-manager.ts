@@ -1,10 +1,11 @@
-import { CommitData } from "../types/commit";
-import { GitChangeSummary } from "../types/git";
-import { Result, err } from "neverthrow";
-import { Model } from "../types/model";
-import { Provider } from "../types/provider";
-import { OmcProvider } from "../providers/oh-my-commits";
-import { BaseLogger } from "@/utils/BaseLogger";
+import { err, Result } from "neverthrow";
+
+import { BaseLogger } from "@/common/utils/logger";
+import { OmcProvider } from "@/server/providers/oh-my-commits";
+import { CommitData } from "@/common/types/commit";
+import { GitChangeSummary } from "@/common/types/git";
+import { Model } from "@/common/types/model";
+import { Provider } from "@/common/types/provider";
 
 export interface CommitManagerOptions {
   logger?: BaseLogger;

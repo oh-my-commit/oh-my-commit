@@ -2,7 +2,7 @@ import { CommitMessage } from "@/components/commit/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
 import { useCloseWindow } from "@/hooks/use-close-window";
-import { logger } from "@/lib/logger";
+import { vscodeClientLogger } from "@/lib/vscode-client-logger";
 import { getVSCodeAPI } from "@/lib/storage";
 import {
   changedFilesAtom,
@@ -10,7 +10,7 @@ import {
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { CommitEvent } from "@oh-my-commits/shared/types";
+import { CommitEvent } from "@oh-my-commits/shared/common";
 
 import { useAtom } from "jotai";
 import React, { useEffect } from "react";
@@ -30,7 +30,7 @@ export const CommitPage = () => {
   const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
 
   useCloseWindow();
@@ -44,7 +44,7 @@ export const CommitPage = () => {
   };
 
   useEffect(() => {
-    logger.info("[useEffect] Setting up message event listener");
+    vscodeClientLogger.info("[useEffect] Setting up message event listener");
 
     const handleMessage = (event: MessageEvent<CommitEvent>) => {
       const { data } = event;
@@ -57,22 +57,22 @@ export const CommitPage = () => {
           setBody(data.message.body ?? "");
           break;
         default:
-          logger.info("Unknown event type:", data.type);
+          vscodeClientLogger.info("Unknown event type:", data.type);
       }
     };
 
     // 添加事件监听器
     window.addEventListener("message", handleMessage);
-    logger.info("[useEffect] Message event listener added");
+    vscodeClientLogger.info("[useEffect] Message event listener added");
 
     // 通知 extension webview 已准备好
     const vscode = getVSCodeAPI();
     vscode.postMessage({ command: "webview-ready" });
-    logger.info("[useEffect] Sent webview-ready message");
+    vscodeClientLogger.info("[useEffect] Sent webview-ready message");
 
     // 清理函数
     return () => {
-      logger.info("[useEffect] Removing message event listener");
+      vscodeClientLogger.info("[useEffect] Removing message event listener");
       window.removeEventListener("message", handleMessage);
     };
   }, []);
@@ -86,7 +86,7 @@ export const CommitPage = () => {
     });
   };
 
-  logger.info("[render] == Rendering CommitPage ==");
+  vscodeClientLogger.info("[render] == Rendering CommitPage ==");
 
   return (
     <div className="flex flex-col h-screen">

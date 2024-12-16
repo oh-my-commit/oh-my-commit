@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@/state/types";
-import { GitChangeSummary } from "@oh-my-commits/shared/types";
+import { GitChangeSummary } from "@oh-my-commits/shared/common";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ import { DiffViewer } from "./DiffViewer";
 import { EmptyState } from "./EmptyState";
 import { FlatView } from "./FlatView";
 import { SearchBar } from "./SearchBar";
-import { logger } from "@/lib/logger";
+import { vscodeClientLogger } from "@/lib/vscode-client-logger";
 
 interface FileChangesProps {
   changedFiles: GitChangeSummary | null;
@@ -52,7 +52,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     setSelectedFiles(
       selectedFiles.includes(path)
         ? selectedFiles.filter((p) => p !== path)
-        : [...selectedFiles, path]
+        : [...selectedFiles, path],
     );
   };
 
@@ -61,9 +61,9 @@ export const FileChanges: React.FC<FileChangesProps> = ({
     (initialSelection.length !== selectedFiles.length ||
       !initialSelection.every((file) => selectedFiles.includes(file)));
 
-  logger.info("initialSelection: ", initialSelection);
-  logger.info("selectedFiles: ", selectedFiles);
-  logger.info("hasSelectionChanged: ", hasSelectionChanged);
+  vscodeClientLogger.info("initialSelection: ", initialSelection);
+  vscodeClientLogger.info("selectedFiles: ", selectedFiles);
+  vscodeClientLogger.info("hasSelectionChanged: ", hasSelectionChanged);
 
   const handleFileClick = (path: string) => {
     setLastOpenedFilePath(path);
@@ -103,14 +103,16 @@ export const FileChanges: React.FC<FileChangesProps> = ({
   return (
     <Section
       title="Changed Files"
-      actions={hasSelectionChanged ? (
-        <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
-          <i className="codicon codicon-info" />
-          <span>
-            File selection changed. You can regenerate the commit message.
-          </span>
-        </div>
-      ) : undefined}
+      actions={
+        hasSelectionChanged ? (
+          <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
+            <i className="codicon codicon-info" />
+            <span>
+              File selection changed. You can regenerate the commit message.
+            </span>
+          </div>
+        ) : undefined
+      }
     >
       <div className="flex flex-col sm:flex-row h-full relative">
         <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
@@ -125,7 +127,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         <div
           className={cn(
             "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
-            !lastOpenedFilePath && "opacity-0"
+            !lastOpenedFilePath && "opacity-0",
           )}
         >
           {lastOpenedFilePath && (
