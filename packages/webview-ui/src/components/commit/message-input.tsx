@@ -37,6 +37,29 @@ export const MessageInput = ({
             min-height: 120px;
             resize: vertical;
             overflow-y: auto;
+            padding-bottom: 20px !important;
+          }
+
+          .message-textarea::part(control)::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .message-textarea::part(control)::-webkit-scrollbar-track {
+            background: var(--vscode-scrollbarSlider-background);
+            border-radius: 4px;
+          }
+
+          .message-textarea::part(control)::-webkit-scrollbar-thumb {
+            background: var(--vscode-scrollbarSlider-hoverBackground);
+            border-radius: 4px;
+          }
+
+          .message-textarea::part(control)::-webkit-scrollbar-thumb:hover {
+            background: var(--vscode-scrollbarSlider-activeBackground);
+          }
+
+          .message-textarea::part(control)::-webkit-resizer {
+            padding: 6px;
           }
         `}
       </style>
@@ -67,7 +90,7 @@ export const MessageInput = ({
           }}
         />
       )}
-      <div className="absolute right-2 bottom-1 text-[10px] text-[var(--vscode-descriptionForeground)] opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+      <div className="absolute right-2 bottom-2 text-[10px] text-[var(--vscode-descriptionForeground)] opacity-0 group-hover:opacity-100 transition-opacity duration-150 px-1 bg-[var(--vscode-editor-background)]">
         {value.length}/{maxLength}
       </div>
     </div>
