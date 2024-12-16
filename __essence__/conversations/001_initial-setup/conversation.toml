@@ -1,0 +1,43 @@
+[meta]
+topic = "oh-my-commits VSCode 插件"
+start_time = "2024-12-16T23:14:25+08:00"
+status = "in_progress"
+
+[rounds.1]
+start_time = "2024-12-16T23:14:25+08:00"
+end_time = "2024-12-16T23:14:25+08:00"
+task = "抽象 WebviewManager 中向 webview 发送 commit 相关的逻辑"
+status = "completed"
+duration = 0
+
+[rounds.1.changes]
+files = [
+    "packages/extension/src/core/vscode-webview.ts",
+    "packages/extension/src/core/vscode-commands/quick-commit.ts"
+]
+summary = """
+1. 在 WebviewManager 中添加了 sendCommitMessage 方法，用于统一处理发送 commit 相关的消息
+2. 修改 QuickCommitCommand 使用新的 sendCommitMessage 方法，简化了代码结构
+3. 统一了日志记录的方式
+"""
+
+[rounds.2]
+start_time = "2024-12-16T23:17:49+08:00"
+end_time = "2024-12-16T23:17:49+08:00"
+task = "进一步抽象 commit 相关的 webview 交互逻辑"
+status = "completed"
+duration = 0
+
+[rounds.2.changes]
+files = [
+    "packages/extension/src/core/commit-webview.service.ts",
+    "packages/extension/src/core/vscode-commands/quick-commit.ts",
+    "packages/extension/src/core/vscode-webview.ts"
+]
+summary = """
+1. 创建了专门的 CommitWebviewService 类，负责处理所有 commit 相关的 webview 交互
+2. 重构了 QuickCommitCommand，将所有 commit 相关的逻辑移到 CommitWebviewService
+3. 移除了 WebviewManager 中的 sendCommitMessage 方法
+4. 添加了清晰的类型定义和领域模型
+5. 改进了错误处理和日志记录
+"""

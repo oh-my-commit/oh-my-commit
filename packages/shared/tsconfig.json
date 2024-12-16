@@ -1,14 +1,14 @@
 {
   "extends": ["../../tsconfig.json"],
   "compilerOptions": {
+    "moduleResolution": "Node", // 覆盖以支持 Node.js 模块
+
     "outDir": "./dist",
     "rootDir": "src",
     "composite": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
     "paths": {
       "@/*": ["./src/*"]
     }

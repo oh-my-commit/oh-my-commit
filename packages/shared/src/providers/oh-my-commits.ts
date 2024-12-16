@@ -1,6 +1,6 @@
 import { ok, err } from "neverthrow";
 import Anthropic from "@anthropic-ai/sdk";
-import HttpsProxyAgent from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 import { BaseLogger } from "@/utils/BaseLogger";
 import { Model } from "../types/model";
@@ -45,7 +45,7 @@ export class OmcProvider extends Provider {
 
     const config: Record<string, any> = { apiKey };
 
-    if (proxy) config["httpAgent"] = new HttpsProxyAgent.HttpsProxyAgent(proxy);
+    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy);
 
     if (apiKey) this.anthropic = new Anthropic(config);
   }
