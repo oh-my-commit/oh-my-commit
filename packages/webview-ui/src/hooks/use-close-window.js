@@ -13,6 +13,7 @@ export const useCloseWindow = () => {
             window.addEventListener("beforeunload", handleClose);
             return () => window.removeEventListener("beforeunload", handleClose);
         }
+        return () => { };
     }, [uiMode]);
 };
 //# sourceMappingURL=use-close-window.js.map

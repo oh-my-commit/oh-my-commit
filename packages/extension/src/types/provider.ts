@@ -1,10 +1,6 @@
 import { Model } from "@/types/model";
 import { Loggable } from "@/types/mixins";
-import {
-  GitChangeSummary,
-  GenerateCommitResult,
-  APP_ID,
-} from "@oh-my-commits/shared";
+import { GitChangeSummary, GenerateCommitResult } from "@oh-my-commits/shared";
 import { workspace, WorkspaceConfiguration } from "vscode";
 
 export const presetAiProviders = [
@@ -15,7 +11,15 @@ export const presetAiProviders = [
   "groq",
 ];
 
-export abstract class Provider extends Loggable(class {}) {
+class BaseProvider {
+  public config: WorkspaceConfiguration;
+
+  constructor() {
+    this.config = workspace.getConfiguration();
+  }
+}
+
+export abstract class Provider extends Loggable(BaseProvider) {
   static id: string; // 提供者ID
   static displayName: string; // 提供者名称
   static description: string; // 提供者描述
@@ -27,8 +31,4 @@ export abstract class Provider extends Loggable(class {}) {
     model: Model,
     options?: { lang?: string }
   ): Promise<GenerateCommitResult>;
-
-  protected get config(): WorkspaceConfiguration {
-    return workspace.getConfiguration(APP_ID);
-  }
 }

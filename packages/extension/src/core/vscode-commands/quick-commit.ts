@@ -37,7 +37,7 @@ export class QuickCommitCommand extends BaseCommand {
           type: "diff-summary",
           diffSummary: changeSummary,
         });
-        
+
         // 同时开始生成 commit message
         const diffSummary = await this.gitService.getDiffSummary();
         const message = await this.acManager.generateCommit(diffSummary);
@@ -55,29 +55,43 @@ export class QuickCommitCommand extends BaseCommand {
     });
 
     // 处理重新生成请求
-    this.webviewManager.registerMessageHandler("regenerate-commit", async (data: { selectedFiles: string[] }) => {
-      this.logger.info("Regenerating commit for selected files:", data.selectedFiles);
-      try {
-        const diffSummary = await this.gitService.getDiffSummary();
-        // 只使用选中的文件生成 commit
-        const filteredDiff = {
-          ...diffSummary,
-          files: diffSummary.files.filter(file => data.selectedFiles.includes(file.path))
-        };
-        
-        const message = await this.acManager.generateCommit(filteredDiff);
-        if (message.isOk()) {
-          await this.webviewManager.postMessage({
-            type: "commit",
-            message: message.value,
-          });
-        } else {
-          this.logger.error("Failed to regenerate commit message");
+    this.webviewManager.registerMessageHandler(
+      "regenerate-commit",
+      async (data: { selectedFiles: string[] }) => {
+        this.logger.info(
+          "Regenerating commit for selected files:",
+          data.selectedFiles
+        );
+        try {
+          const diffSummary = await this.gitService.getDiffSummary();
+          // 只使用选中的文件生成 commit
+          const filteredDiff = {
+            ...diffSummary,
+            files: diffSummary.files.filter((file) => {
+              // 确保文件对象存在且有 path 属性
+              return (
+                file &&
+                "path" in file &&
+                typeof file.path === "string" &&
+                data.selectedFiles.includes(file.path)
+              );
+            }),
+          };
+
+          const message = await this.acManager.generateCommit(filteredDiff);
+          if (message.isOk()) {
+            await this.webviewManager.postMessage({
+              type: "commit",
+              message: message.value,
+            });
+          } else {
+            this.logger.error("Failed to regenerate commit message");
+          }
+        } catch (error) {
+          this.logger.error("Error handling regenerate-commit:", error);
         }
-      } catch (error) {
-        this.logger.error("Error handling regenerate-commit:", error);
       }
-    });
+    );
 
     // Clean up file watcher when extension is deactivated
     context.subscriptions.push(this);

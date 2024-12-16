@@ -1,12 +1,12 @@
 // Core exports
 export * from "./core/commit-manager";
 
-// Utils
-export * from "./utils/BaseLogger";
-export * from "./utils/ConsoleLogger";
-
 // Type exports
 export * from "./types";
+
+// Utils
+export { ConsoleLogger } from "./utils/ConsoleLogger";
+export { BaseLogger } from "./utils/BaseLogger";
 
 // Provider exports
 export * from "./providers/oh-my-commits";

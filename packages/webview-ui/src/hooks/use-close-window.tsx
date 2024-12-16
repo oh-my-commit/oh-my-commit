@@ -15,5 +15,6 @@ export const useCloseWindow = () => {
       window.addEventListener("beforeunload", handleClose);
       return () => window.removeEventListener("beforeunload", handleClose);
     }
+    return () => {}; 
   }, [uiMode]);
 };
