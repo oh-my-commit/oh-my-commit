@@ -1,6 +1,6 @@
-import { AcManager } from "@/core/ac";
-import { VscodeGitService } from "@/core/vscode-git";
-import { WebviewManager } from "@/core/vscode-webview";
+import { AcManager } from "@/services/models.service";
+import { VscodeGitService } from "@/services/vscode-git.service";
+import { VscodeWebview } from "@/libs/vscode-webview";
 import { Loggable } from "@/types/mixins";
 import { CommitData } from "@oh-my-commits/shared";
 
@@ -9,35 +9,30 @@ export interface CommitMessage {
   message: CommitData;
 }
 
-export interface DiffSummary {
+export interface DiffSummaryMessage {
   type: "diff-summary";
   diffSummary: any;
 }
 
-export type CommitWebviewMessage = CommitMessage | DiffSummary;
+export type CommitWebviewMessage = CommitMessage | DiffSummaryMessage;
 
 /**
  * 处理所有与 commit 相关的 webview 交互
  */
 export class CommitWebviewService extends Loggable(class {}) {
   constructor(
-    private readonly webviewManager: WebviewManager,
+    private readonly webviewManager: VscodeWebview,
     private readonly gitService: VscodeGitService,
-    private readonly acManager: AcManager
+    private readonly acManager: AcManager,
   ) {
     super();
     this.initializeHandlers();
   }
 
   private initializeHandlers() {
-    // 处理 webview 准备就绪事件
-    this.webviewManager.registerMessageHandler("webview-ready", () =>
-      this.handleWebviewReady()
-    );
-
     // 处理重新生成请求
     this.webviewManager.registerMessageHandler("regenerate-commit", (data) =>
-      this.handleRegenerateCommit(data)
+      this.handleRegenerateCommit(data),
     );
   }
 
@@ -47,19 +42,6 @@ export class CommitWebviewService extends Loggable(class {}) {
   private async sendMessage(message: CommitWebviewMessage) {
     this.logger.info(`[Host --> Webview]: `, message);
     await this.webviewManager.postMessage(message);
-  }
-
-  /**
-   * 处理 webview 准备就绪事件
-   */
-  private async handleWebviewReady() {
-    this.logger.info("Webview ready, sending initial data");
-    try {
-      await this.sendInitialDiffSummary();
-      await this.generateAndSendCommit();
-    } catch (error) {
-      this.logger.error("Error handling webview-ready:", error);
-    }
   }
 
   /**
@@ -79,6 +61,11 @@ export class CommitWebviewService extends Loggable(class {}) {
   private async generateAndSendCommit(selectedFiles?: string[]) {
     const diffSummary = await this.gitService.getDiffSummary();
     const filteredDiff = this.filterDiffByFiles(diffSummary, selectedFiles);
+    this.logger.info("Generating commit for selected files:", {
+      selectedFiles,
+      diffSummary,
+      filteredDiff,
+    });
 
     const message = await this.acManager.generateCommit(filteredDiff);
     if (message.isOk()) {
@@ -118,7 +105,7 @@ export class CommitWebviewService extends Loggable(class {}) {
   private async handleRegenerateCommit(data: { selectedFiles: string[] }) {
     this.logger.info(
       "Regenerating commit for selected files:",
-      data.selectedFiles
+      data.selectedFiles,
     );
     try {
       await this.generateAndSendCommit(data.selectedFiles);

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { GitCore } from "@/utils/git";
+import { GitCore } from "@/libs/git";
 
 export class VscodeGitService extends GitCore {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>;
@@ -23,7 +23,7 @@ export class VscodeGitService extends GitCore {
   private setupFileSystemWatcher(workspaceRoot: string) {
     this.fsWatcher?.dispose();
     this.fsWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, "**/.git/**")
+      new vscode.RelativePattern(workspaceRoot, "**/.git/**"),
     );
 
     const handleGitChange = () => {

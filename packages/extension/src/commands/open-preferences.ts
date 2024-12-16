@@ -1,4 +1,4 @@
-import { VscodeCommand } from "@/core/vscode-commands/types";
+import { VscodeCommand } from "@/libs/vscode-command";
 import { openPreferences } from "@/utils/open-preference";
 import { COMMAND_OPEN_PREFERENCE } from "@oh-my-commits/shared";
 

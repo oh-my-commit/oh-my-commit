@@ -6,17 +6,15 @@ import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { presetAiProviders } from "@/types/provider";
-import { AppManager } from "@/core";
+import { AppManager } from "@/app.manager";
 import { OmcProvider } from "@oh-my-commits/shared";
 import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
-  private providers: Provider[] = [];
+  private providers: Provider[] = [new OmcProvider()];
 
   constructor(app: AppManager) {
     super();
-
-    this.providers.push(new OmcProvider());
   }
 
   get models() {
@@ -54,7 +52,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater
+        configureLater,
       );
 
       if (response === configureNow) {
@@ -77,7 +75,7 @@ export class AcManager extends Loggable(class {}) {
         lang:
           this.config.get<string>("ohMyCommits.git.commitLanguage") ??
           vscode.env.language,
-      }
+      },
     );
   }
 }

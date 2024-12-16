@@ -28,7 +28,7 @@ key_points = """
 - Examined related files:
   - DiffViewer.tsx: Main component logic
   - commit.changed-files.ts: State management
-  - types.ts: Interface definitions
+  - vscode-command.ts: Interface definitions
 """
 
 [[rounds]]
@@ -43,7 +43,7 @@ key_points = """
 - Affected files:
   - quick-commit.ts: File transformation logic
   - git.ts: Git operations
-  - vscode-git.ts: VSCode git service
+  - vscode-git.service.ts: VSCode git service
 """
 
 [[rounds]]
@@ -58,7 +58,7 @@ key_points = """
   2. git.ts:
      - Enhanced getStagedDiff and getUnstagedDiff to return both content and summary
      - Improved error handling
-  3. types.ts:
+  3. vscode-command.ts:
      - Added isStaged field to FileChange interface
 - Changes ensure proper tracking and display of file changes
 """

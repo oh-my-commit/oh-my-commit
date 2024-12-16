@@ -19,7 +19,5 @@ export abstract class BaseCommand
 
   abstract execute(): Promise<void>;
 
-  dispose(): void {
-    this.logger.dispose();
-  }
+  dispose(): void {}
 }

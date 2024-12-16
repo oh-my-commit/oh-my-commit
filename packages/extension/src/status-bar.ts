@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { AcManager } from "@/core/ac";
-import { VscodeGitService } from "@/core/vscode-git";
+import { AcManager } from "@/services/models.service";
+import { VscodeGitService } from "@/services/vscode-git.service";
 import { Loggable } from "@/types/mixins";
-import { AppManager } from "@/core";
+import { AppManager } from "@/app.manager";
 import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
 
 export class StatusBarManager
@@ -20,7 +20,7 @@ export class StatusBarManager
     this.acManager = app.acManager;
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
-      100
+      100,
     );
     this.statusBarItem.name = APP_NAME;
     this.gitService = new VscodeGitService();
@@ -31,14 +31,14 @@ export class StatusBarManager
         if (e.affectsConfiguration(APP_ID)) {
           this.update();
         }
-      })
+      }),
     );
 
     // 监听工作区变化（可能影响 git 状态）
     this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         this.update();
-      })
+      }),
     );
 
     this.logger.info("Initializing status bar");

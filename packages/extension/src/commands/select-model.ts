@@ -1,5 +1,5 @@
-import { BaseCommand, VscodeCommand } from "@/core/vscode-commands/types";
-import { AcManager } from "@/core/ac";
+import { BaseCommand, VscodeCommand } from "@/libs/vscode-command";
+import { AcManager } from "@/services/models.service";
 import * as vscode from "vscode";
 import { COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
 
@@ -37,7 +37,7 @@ export class SelectModelCommand extends BaseCommand implements VscodeCommand {
           placeHolder: "Select AI Model to Use",
           matchOnDescription: true,
           matchOnDetail: true,
-        }
+        },
       );
 
       if (selected) {

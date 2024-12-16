@@ -226,7 +226,7 @@
    - `gcopConfig.ts`: 定义了 gcop 配置的类型和支持的模型
    - `gcopService.ts`: 实现了 gcop 服务，包括配置管理和命令执行
    - `serviceFactory.ts`: 实现了服务工厂模式
-   - `types.ts`: 定义了通用的服务接口
+   - `vscode-command.ts`: 定义了通用的服务接口
 
 2. 实现的主要功能：
 

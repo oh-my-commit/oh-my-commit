@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { AppManager } from "./core";
+import { AppManager } from "@/app.manager";
 
 /**
  * @description
@@ -16,7 +16,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const message =
       error instanceof Error ? error.message : "Unknown error occurred";
     vscode.window.showErrorMessage(
-      `Failed to initialize Oh My Commits: ${message}`
+      `Failed to initialize Oh My Commits: ${message}`,
     );
   }
 }

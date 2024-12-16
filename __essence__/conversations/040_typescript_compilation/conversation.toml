@@ -12,12 +12,12 @@ duration = 720
 
 [changes]
 files = [
-  "packages/shared/src/index.ts",
-  "packages/cli/src/index.ts",
+  "packages/shared/src/app.manager.ts",
+  "packages/cli/src/app.manager.ts",
   "packages/extension/src/providers/oh-my-commits.ts",
   "packages/core/tsconfig.json",
   "tsconfig.base.json",
-  "packages/extension/src/core/ac.ts"
+  "packages/extension/src/core/models.service.ts"
 ]
 
 [summary]
