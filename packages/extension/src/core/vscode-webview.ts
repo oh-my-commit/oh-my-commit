@@ -86,25 +86,11 @@ export class WebviewManager
       if (message.payload) {
         const { channel, level, rawMessage } = message.payload;
         const normalizedLevel = this.normalizeLogLevel(level);
-        const webviewChannel = channel ? `webview-${channel}` : "webview";
-        const msg = `<< [${webviewChannel}] ${rawMessage}`;
-        switch (normalizedLevel) {
-          case "debug":
-            this.logger.debug(msg);
-            break;
-          case "info":
-            this.logger.info(msg);
-            break;
-          case "warn":
-            this.logger.warn(msg);
-            break;
-          case "error":
-            this.logger.error(msg);
-            break;
-          case "trace":
-            this.logger.trace(msg);
-            break;
-        }
+
+        this.logger[normalizedLevel](
+          `[Host <-- ${channel ?? "Webview"}]: `,
+          rawMessage
+        );
       }
     });
 
@@ -282,14 +268,12 @@ export class WebviewManager
             script-src ${webview.cspSource} 'unsafe-inline';
             style-src ${webview.cspSource} 'unsafe-inline';
             font-src ${webview.cspSource};`;
-    this.logger.info("CSP settings:", csp);
     return csp;
   }
 
   private getScriptUri(): vscode.Uri {
     const uri = this.webviewPanel!.webview.asWebviewUri(this.scriptUri);
     const finalUri = uri.with({ query: `v=${Date.now()}` });
-    this.logger.info(`Script URI: ${finalUri.toString()}`);
     return finalUri;
   }
 
@@ -305,7 +289,10 @@ export class WebviewManager
       windowMode: this.uiMode === "window",
     };
 
-    this.logger.info("Updating webview with template data:", templateData);
+    this.logger.info(
+      "Updating webview with template data:",
+      JSON.stringify(templateData, null, 2)
+    );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;
     this.logger.info("Webview updated successfully");

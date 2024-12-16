@@ -1,12 +1,11 @@
+import { APP_NAME } from "@/common/constants";
+import { BaseLogger, ConsoleLogger } from "@/common/utils/logger";
 import { Result } from "neverthrow";
-import { Model } from "./model";
-import { CommitData } from "./commit";
-import { GitChangeSummary } from "./git";
-import { BaseLogger } from "@/utils/BaseLogger";
-import { ConsoleLogger } from "@/utils/ConsoleLogger";
-
+import { Model } from "@/common/types/model";
+import { CommitData } from "@/common/types/commit";
+import { GitChangeSummary } from "@/common/types/git";
 export abstract class Provider {
-  public logger: BaseLogger = new ConsoleLogger("Oh My Commits");
+  public logger: BaseLogger = new ConsoleLogger(APP_NAME);
   protected config: any;
   protected enabled: boolean = true;
 

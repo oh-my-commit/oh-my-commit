@@ -3,12 +3,16 @@
 import { program } from "commander";
 import chalk from "chalk";
 import { simpleGit } from "simple-git";
-import { CommitManager, OmcStandardModelId } from "@oh-my-commits/shared";
+import {
+  APP_NAME,
+  CommitManager,
+  OmcStandardModelId,
+} from "@oh-my-commits/shared";
 import { ConsoleLogger } from "@oh-my-commits/shared";
 
 // Initialize git and commit manager
 const git = simpleGit();
-const logger = new ConsoleLogger("Oh My Commits CLI");
+const logger = new ConsoleLogger(`${APP_NAME}} CLI`);
 const commitManager = new CommitManager({ logger });
 
 // Command handlers
@@ -55,7 +59,7 @@ const generateAndCommit = async (options: any) => {
         insertions: 0, // TODO: Parse from git diff
         deletions: 0, // TODO: Parse from git diff
       },
-      model
+      model,
     );
 
     if (result.isOk()) {
@@ -77,13 +81,13 @@ const generateAndCommit = async (options: any) => {
         // Ask for confirmation
         console.log(chalk.yellow("\nUse -y flag to commit automatically"));
         console.log(
-          chalk.yellow("Or run git commit manually with the message above")
+          chalk.yellow("Or run git commit manually with the message above"),
         );
       }
     } else {
       console.error(
         chalk.red("Failed to generate commit message:"),
-        result.error
+        result.error,
       );
       process.exit(1);
     }
@@ -118,7 +122,7 @@ program
   .option("-y, --yes", "Automatically commit changes")
   .option(
     "-m, --model <model>",
-    `Specify the AI model to use (\`omc list\` to see all available models)`
+    `Specify the AI model to use (\`omc list\` to see all available models)`,
   )
   .action(generateAndCommit);
 

@@ -14,23 +14,12 @@ export * from "./provider";
 export * from "./commit";
 
 // Re-export specific types that are commonly used
-export {
-  GitChangeType,
-} from "./git";
+export { GitChangeType } from "./git";
 
-export type {
-  GitFileChange,
-  GitChangeSummary,
-} from "./git";
+export type { GitFileChange, GitChangeSummary } from "./git";
 
-export type {
-  TreeNode,
-} from "./tree";
+export type { TreeNode } from "./tree";
 
-export type {
-  Model,
-} from "./model";
+export type { Model } from "./model";
 
-export type {
-  Provider,
-} from "./provider";
+export type { Provider } from "./provider";
