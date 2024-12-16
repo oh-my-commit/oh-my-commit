@@ -9,7 +9,7 @@ export interface FlatViewProps {
   searchQuery?: string;
   hasOpenedFile: boolean;
   onSelect: (path: string) => void;
-  onFileClick: (path: string) => void;
+  onClick: (path: string) => void;
   renderStatus?: (file: FileChange & { isStaged: boolean }) => React.ReactNode;
   className?: string;
 }
@@ -21,7 +21,7 @@ export const FlatView: React.FC<FlatViewProps> = ({
   searchQuery,
   hasOpenedFile,
   onSelect,
-  onFileClick,
+  onClick,
   className,
 }) => {
   return (
@@ -35,7 +35,7 @@ export const FlatView: React.FC<FlatViewProps> = ({
           viewMode="flat"
           searchQuery={searchQuery}
           onSelect={onSelect}
-          onClick={onFileClick}
+          onClick={onClick}
         />
       ))}
     </div>

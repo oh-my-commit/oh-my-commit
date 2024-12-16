@@ -3,6 +3,8 @@ import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
+import { getVSCodeAPI } from "@/lib/storage";
+import { selectedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { CommitEvent } from "@oh-my-commits/shared/common";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
@@ -12,11 +14,12 @@ import React, { useEffect, useRef, useState } from "react";
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
 
-export function CommitMessage({ onRegenerate }: { onRegenerate: () => void }) {
+export function CommitMessage() {
   const [title, setTitle] = useAtom(commitTitleAtom);
   const [body, setBody] = useAtom(commitBodyAtom);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const tooltipContainerRef = useRef<HTMLDivElement>(null);
   const subjectLength = title.length;
   const isSubjectValid =
@@ -48,6 +51,16 @@ export function CommitMessage({ onRegenerate }: { onRegenerate: () => void }) {
     window.addEventListener("message", messageHandler);
     return () => window.removeEventListener("message", messageHandler);
   }, []);
+
+  // 处理重新生成
+  const handleRegenerate = () => {
+    setIsRegenerating(true);
+    const vscode = getVSCodeAPI();
+    vscode.postMessage({
+      command: "regenerate-commit",
+      selectedFiles: selectedFiles,
+    });
+  };
 
   return (
     <Section
@@ -110,10 +123,7 @@ export function CommitMessage({ onRegenerate }: { onRegenerate: () => void }) {
             className="w-32 shrink-0 overflow-hidden"
             appearance="secondary"
             disabled={isRegenerating}
-            onClick={() => {
-              setIsRegenerating(true);
-              onRegenerate();
-            }}
+            onClick={handleRegenerate}
           >
             {isRegenerating ? (
               <span className="w-full flex items-center gap-2">

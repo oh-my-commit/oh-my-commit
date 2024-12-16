@@ -12,36 +12,15 @@ import {
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
 import { CommitEvent } from "@oh-my-commits/shared/common";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect } from "react";
 
-interface GitDiffFile {
-  file: string;
-  changes: number;
-  insertions: number;
-  deletions: number;
-  binary: boolean;
-  type: "A" | "D" | "M";
-}
-
 export const CommitPage = () => {
-  const [title, setTitle] = useAtom(commitTitleAtom);
-  const [body, setBody] = useAtom(commitBodyAtom);
-  const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
-  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom,
-  );
+  const setTitle = useSetAtom(commitTitleAtom);
+  const setBody = useSetAtom(commitBodyAtom);
+  const setChangedFiles = useSetAtom(changedFilesAtom);
 
   useCloseWindow();
-
-  const handleSetSelectedFiles = (files: string[]) => {
-    setSelectedFiles(files);
-  };
-
-  const handleSetLastOpenedFilePath = (path: string | null) => {
-    setLastOpenedFilePath(path);
-  };
 
   useEffect(() => {
     vscodeClientLogger.info("[useEffect] Setting up message event listener");
@@ -77,28 +56,13 @@ export const CommitPage = () => {
     };
   }, []);
 
-  // 处理重新生成
-  const handleRegenerate = () => {
-    const vscode = getVSCodeAPI();
-    vscode.postMessage({
-      command: "regenerate-commit",
-      selectedFiles: selectedFiles,
-    });
-  };
-
-  vscodeClientLogger.info("[render] == Rendering CommitPage ==");
+  vscodeClientLogger.info("[CommmitPage]", "== rendered ==");
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-auto">
-        <CommitMessage onRegenerate={handleRegenerate} />
-        <FileChanges
-          changedFiles={changedFiles}
-          selectedFiles={selectedFiles}
-          setSelectedFiles={handleSetSelectedFiles}
-          lastOpenedFilePath={lastOpenedFilePath}
-          setLastOpenedFilePath={handleSetLastOpenedFilePath}
-        />
+        <CommitMessage />
+        <FileChanges />
       </div>
       <Footer />
     </div>

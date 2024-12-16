@@ -4,68 +4,49 @@ import { cn } from "@/lib/utils";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { viewModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@/state/types";
-import { GitChangeSummary } from "@oh-my-commits/shared/common";
+
 import { useAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { DiffViewer } from "./DiffViewer";
 import { EmptyState } from "./EmptyState";
 import { FlatView } from "./FlatView";
 import { SearchBar } from "./SearchBar";
 import { vscodeClientLogger } from "@/lib/vscode-client-logger";
+import {
+  changedFilesAtom,
+  lastOpenedFilePathAtom,
+  selectedFilesAtom,
+} from "@/state/atoms/commit.changed-files";
 
-interface FileChangesProps {
-  changedFiles: GitChangeSummary | null;
-  selectedFiles: string[];
-  setSelectedFiles: (files: string[]) => void;
-  lastOpenedFilePath: string | null;
-  setLastOpenedFilePath: (path: string | null) => void;
-}
+export const FileChanges: React.FC = () => {
+  const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
+  const initialSelection = changedFiles?.files?.map((file) => file.path) || [];
 
-export const FileChanges: React.FC<FileChangesProps> = ({
-  changedFiles,
-  selectedFiles,
-  setSelectedFiles,
-  lastOpenedFilePath,
-  setLastOpenedFilePath,
-}) => {
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  );
   const [viewMode] = useAtom(viewModeAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
-  const [initialSelection, setInitialSelection] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (changedFiles?.files?.length && selectedFiles.length === 0) {
-      const allFiles = changedFiles.files.map((file) => file.path);
-      setSelectedFiles(allFiles);
-      setInitialSelection(allFiles);
-    }
-  }, [changedFiles, setSelectedFiles, selectedFiles.length]);
-
-  useEffect(() => {
-    if (changedFiles?.files?.length && initialSelection.length === 0) {
-      const allFiles = changedFiles.files.map((file) => file.path);
-      setInitialSelection(allFiles);
-    }
-  }, [changedFiles]);
-
-  const handleFileSelect = (path: string) => {
-    setSelectedFiles(
-      selectedFiles.includes(path)
-        ? selectedFiles.filter((p) => p !== path)
-        : [...selectedFiles, path],
-    );
-  };
+  const handleSelect = useCallback(
+    (path: string) => {
+      setSelectedFiles(
+        selectedFiles.includes(path)
+          ? selectedFiles.filter((p) => p !== path)
+          : [...selectedFiles, path]
+      );
+    },
+    [selectedFiles]
+  );
 
   const hasSelectionChanged =
     initialSelection.length > 0 &&
     (initialSelection.length !== selectedFiles.length ||
       !initialSelection.every((file) => selectedFiles.includes(file)));
 
-  vscodeClientLogger.info("initialSelection: ", initialSelection);
-  vscodeClientLogger.info("selectedFiles: ", selectedFiles);
-  vscodeClientLogger.info("hasSelectionChanged: ", hasSelectionChanged);
-
-  const handleFileClick = (path: string) => {
+  const handleClick = (path: string) => {
     setLastOpenedFilePath(path);
   };
 
@@ -89,8 +70,8 @@ export const FileChanges: React.FC<FileChangesProps> = ({
             selectedPath={lastOpenedFilePath || undefined}
             searchQuery={searchQuery || ""}
             hasOpenedFile={!!lastOpenedFilePath}
-            onSelect={handleFileSelect}
-            onFileClick={(path) => handleFileClick(path)}
+            onSelect={handleSelect}
+            onClick={handleClick}
           />
         );
       case "tree":
@@ -99,6 +80,11 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         return null;
     }
   };
+
+  vscodeClientLogger.info("FileChanges: ", {
+    selectedFiles,
+    lastOpenedFilePath,
+  });
 
   return (
     <Section
@@ -127,7 +113,7 @@ export const FileChanges: React.FC<FileChangesProps> = ({
         <div
           className={cn(
             "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
-            !lastOpenedFilePath && "opacity-0",
+            !lastOpenedFilePath && "opacity-0"
           )}
         >
           {lastOpenedFilePath && (
