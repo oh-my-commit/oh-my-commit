@@ -1,10 +1,10 @@
-import * as vscode from "vscode";
-import { AcManager } from "@/core/ac";
+import { CommandManager } from "@/commands/command-manager";
+import { AcManager } from "@/services/models.service";
+import { VscodeGitService } from "@/services/vscode-git.service";
 
-import { StatusBarManager } from "@/core/vscode-status-bar";
-import { VscodeGitService } from "@/core/vscode-git";
+import { StatusBarManager } from "@/status-bar";
 import { Loggable } from "@/types/mixins";
-import { CommandManager } from "./vscode-commands/command-manager";
+import * as vscode from "vscode";
 
 export class AppManager extends Loggable(class {}) {
   public context: vscode.ExtensionContext;
@@ -24,7 +24,7 @@ export class AppManager extends Loggable(class {}) {
     this.commandManager = new CommandManager(
       context,
       this.gitService,
-      this.acManager
+      this.acManager,
     );
 
     new StatusBarManager(this);
@@ -35,6 +35,5 @@ export class AppManager extends Loggable(class {}) {
   public dispose(): void {
     this.logger.info("Disposing");
     this.commandManager.dispose();
-    this.logger.dispose();
   }
 }

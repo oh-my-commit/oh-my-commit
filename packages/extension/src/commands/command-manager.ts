@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
 import { Loggable } from "@/types/mixins";
-import { VscodeCommand } from "./types";
-import { OpenPreferencesCommand } from "./open-preferences";
-import { QuickCommitCommand } from "./quick-commit";
-import { SelectModelCommand } from "./select-model";
+import { VscodeCommand } from "@/libs/vscode-command";
+import { OpenPreferencesCommand } from "src/commands/open-preferences";
+import { QuickCommitCommand } from "src/commands/quick-commit";
+import { SelectModelCommand } from "src/commands/select-model";
 import {
   COMMAND_OPEN_PREFERENCE,
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
 } from "@oh-my-commits/shared";
-import { AcManager } from "../ac";
-import { VscodeGitService } from "../vscode-git";
+import { AcManager } from "@/services/models.service";
+import { VscodeGitService } from "@/services/vscode-git.service";
 
 export class CommandManager extends Loggable(class {}) {
   private readonly commands: Map<string, VscodeCommand> = new Map();
@@ -18,7 +18,7 @@ export class CommandManager extends Loggable(class {}) {
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly gitService: VscodeGitService,
-    private readonly acManager: AcManager
+    private readonly acManager: AcManager,
   ) {
     super();
 
@@ -26,11 +26,11 @@ export class CommandManager extends Loggable(class {}) {
     this.registerCommand(COMMAND_OPEN_PREFERENCE, new OpenPreferencesCommand());
     this.registerCommand(
       COMMAND_QUICK_COMMIT,
-      new QuickCommitCommand(gitService, acManager, context)
+      new QuickCommitCommand(gitService, acManager, context),
     );
     this.registerCommand(
       COMMAND_SELECT_MODEL,
-      new SelectModelCommand(acManager)
+      new SelectModelCommand(acManager),
     );
   }
 
@@ -59,6 +59,5 @@ export class CommandManager extends Loggable(class {}) {
         (command as { dispose(): void }).dispose();
       }
     }
-    this.logger.dispose();
   }
 }
