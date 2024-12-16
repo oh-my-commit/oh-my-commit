@@ -81,10 +81,12 @@ export const FileChanges: React.FC = () => {
     }
   };
 
-  vscodeClientLogger.info("FileChanges: ", {
-    selectedFiles,
-    lastOpenedFilePath,
-  });
+  useEffect(() => {
+    vscodeClientLogger.info("FileChanges: ", {
+      selectedFiles,
+      lastOpenedFilePath,
+    });
+  }, [selectedFiles, lastOpenedFilePath]);
 
   return (
     <Section

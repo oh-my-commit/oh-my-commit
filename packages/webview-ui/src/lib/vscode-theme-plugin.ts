@@ -34,9 +34,11 @@ const VSCODE_THEME_MAPPING = {
   "input-active": "inputOption-activeForeground",
 
   // Lists & Trees
-  "list-hover": "list-hoverBackground",
+  "list-hover-bg": "list-hoverBackground",
   "list-active-bg": "list-activeSelectionBackground",
   "list-active-fg": "list-activeSelectionForeground",
+  "list-inactive-bg": "list-inactiveSelectionBackground",
+  "list-inactive-fg": "list-inactiveSelectionForeground",
 
   // Git Decorations
   "git-inserted": "diffEditor-insertedTextBackground",
@@ -75,13 +77,10 @@ const VSCODE_THEME_MAPPING = {
 
 // VSCode theme specific configuration
 const vscodeThemeConfig: ThemePluginConfig = {
-  mapping: Object.entries(VSCODE_THEME_MAPPING).reduce(
-    (acc, [key, value]) => {
-      acc[key] = createVSCodeColor(value);
-      return acc;
-    },
-    {} as Record<string, string>,
-  ),
+  mapping: Object.entries(VSCODE_THEME_MAPPING).reduce((acc, [key, value]) => {
+    acc[key] = createVSCodeColor(value);
+    return acc;
+  }, {} as Record<string, string>),
 };
 
 // Create and export the VSCode theme plugin

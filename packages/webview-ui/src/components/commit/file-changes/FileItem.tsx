@@ -74,15 +74,21 @@ export const FileItem: React.FC<FileItemProps> = ({
       className={cn(
         "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out",
         isOpen
-          ? "bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)] shadow-sm"
+          ? "bg-list-active-bg text-list-active-fg shadow-sm"
           : selected
-            ? "bg-[var(--vscode-list-inactiveSelectionBackground)] text-[var(--vscode-list-inactiveSelectionForeground)]"
-            : "hover:bg-[var(--vscode-list-hoverBackground)] active:bg-[var(--vscode-list-activeSelectionBackground)] active:bg-opacity-50",
+          ? "bg-list-inactive-bg text-list-inactive-fg"
+          : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50"
       )}
       onClick={handleClick}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
-        <div className="flex items-center justify-center w-8 h-full transition-opacity duration-100">
+        <div
+          className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100 cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSelect();
+          }}
+        >
           <Checkbox checked={selected} onChange={handleSelect} />
         </div>
 
@@ -92,7 +98,7 @@ export const FileItem: React.FC<FileItemProps> = ({
               className={cn(
                 "font-mono font-medium text-[12px]",
                 STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-                selected && "text-inherit",
+                selected && "text-inherit"
               )}
               title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
@@ -113,14 +119,14 @@ export const FileItem: React.FC<FileItemProps> = ({
       <div
         className={cn(
           "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100",
-          !selected && "text-[var(--vscode-descriptionForeground)]",
+          !selected && "text-[var(--vscode-descriptionForeground)]"
         )}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
           <span
             className={cn(
               "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1",
-              selected && "opacity-80",
+              selected && "opacity-80"
             )}
           >
             {pathMatchCount > 0 && (
