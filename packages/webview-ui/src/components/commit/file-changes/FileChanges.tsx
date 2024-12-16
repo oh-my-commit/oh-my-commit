@@ -6,7 +6,7 @@ import { viewModeAtom } from "@/state/atoms/ui";
 import { FileChange } from "@/state/types";
 import { GitChangeSummary } from "@oh-my-commits/shared/types";
 import { useAtom } from "jotai";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { DiffViewer } from "./DiffViewer";
 import { EmptyState } from "./EmptyState";
@@ -30,6 +30,12 @@ export const FileChanges: React.FC<FileChangesProps> = ({
 }) => {
   const [viewMode] = useAtom(viewModeAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
+
+  useEffect(() => {
+    if (changedFiles?.files?.length && selectedFiles.length === 0) {
+      setSelectedFiles(changedFiles.files.map((file) => file.path));
+    }
+  }, [changedFiles, setSelectedFiles, selectedFiles.length]);
 
   const handleFileSelect = (path: string) => {
     setSelectedFiles(
