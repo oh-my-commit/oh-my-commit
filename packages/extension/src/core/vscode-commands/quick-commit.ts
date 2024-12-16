@@ -28,29 +28,54 @@ export class QuickCommitCommand extends BaseCommand {
 
     this.webviewManager = new WebviewManager(context, "webview", APP_NAME);
 
-    this.logger.info("Registering get-commit-data handler");
-    this.webviewManager.registerMessageHandler("get-commit-data", async () => {
-      this.logger.info("Received request for commit data");
+    // 初始化时发送 diff 信息
+    this.webviewManager.registerMessageHandler("webview-ready", async () => {
+      this.logger.info("Webview ready, sending initial data");
+      try {
+        const changeSummary = await this.gitService.getChangeSummary();
+        await this.webviewManager.postMessage({
+          type: "diff-summary",
+          diffSummary: changeSummary,
+        });
+        
+        // 同时开始生成 commit message
+        const diffSummary = await this.gitService.getDiffSummary();
+        const message = await this.acManager.generateCommit(diffSummary);
+        if (message.isOk()) {
+          await this.webviewManager.postMessage({
+            type: "commit",
+            message: message.value,
+          });
+        } else {
+          this.logger.error("Failed to generate commit message");
+        }
+      } catch (error) {
+        this.logger.error("Error handling webview-ready:", error);
+      }
+    });
+
+    // 处理重新生成请求
+    this.webviewManager.registerMessageHandler("regenerate-commit", async (data: { selectedFiles: string[] }) => {
+      this.logger.info("Regenerating commit for selected files:", data.selectedFiles);
       try {
         const diffSummary = await this.gitService.getDiffSummary();
-        const changeSummary = await this.gitService.getChangeSummary();
-        const message = await this.acManager.generateCommit(diffSummary);
-        if (!message.isOk()) {
-          this.logger.error("Failed to generate commit message");
-          return;
-        }
-        const commitData: CommitEvent = {
-          type: "commit",
-          diffSummary: changeSummary,
-          message: message.value,
+        // 只使用选中的文件生成 commit
+        const filteredDiff = {
+          ...diffSummary,
+          files: diffSummary.files.filter(file => data.selectedFiles.includes(file.path))
         };
-        this.logger.info("Generated commit data:", commitData);
-
-        // 发送消息给 webview
-        await this.webviewManager.postMessage(commitData);
-        this.logger.info("Commit data sent to webview");
+        
+        const message = await this.acManager.generateCommit(filteredDiff);
+        if (message.isOk()) {
+          await this.webviewManager.postMessage({
+            type: "commit",
+            message: message.value,
+          });
+        } else {
+          this.logger.error("Failed to regenerate commit message");
+        }
       } catch (error) {
-        this.logger.error("Error handling get-commit-data:", error);
+        this.logger.error("Error handling regenerate-commit:", error);
       }
     });
 
@@ -66,9 +91,6 @@ export class QuickCommitCommand extends BaseCommand {
     this.webviewManager.dispose();
   }
 
-  /**
-   * 无需 handle error，因为最外层 @command.manager.ts 会处理
-   */
   async execute(): Promise<void> {
     await this.webviewManager.createWebviewPanel();
   }

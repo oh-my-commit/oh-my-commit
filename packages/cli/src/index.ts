@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import chalk from "chalk";
-import simpleGit from "simple-git";
+import { simpleGit } from "simple-git";
 import { CommitManager, OmcStandardModelId } from "@oh-my-commits/shared";
 import { ConsoleLogger } from "@oh-my-commits/shared";
 
