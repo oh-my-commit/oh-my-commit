@@ -182,6 +182,9 @@ importers:
       neverthrow:
         specifier: ^6.1.0
         version: 6.2.2
+      simple-git:
+        specifier: ^3.27.0
+        version: 3.27.0
     devDependencies:
       '@types/node':
         specifier: ^20.0.0

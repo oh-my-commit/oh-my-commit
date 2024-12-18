@@ -57,7 +57,7 @@ export function CommitMessage() {
     setIsRegenerating(true);
     const vscode = getVSCodeAPI();
     vscode.postMessage({
-      command: "regenerate-commit",
+      command: "generate-commit",
       selectedFiles: selectedFiles,
     });
   };
