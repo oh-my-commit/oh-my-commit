@@ -1,10 +1,10 @@
-import { BaseLogger } from "@/common/utils/logger";
-import { err, Result } from "neverthrow";
-import { OmcProvider } from "@/server/providers/oh-my-commits";
 import { CommitData } from "@/common/types/commit";
-import { GitChangeSummary } from "@/common/types/git";
 import { Model } from "@/common/types/model";
 import { Provider } from "@/common/types/provider";
+import { BaseLogger } from "@/common/utils/logger";
+import { OmcProvider } from "@/server/providers/oh-my-commits";
+import { err, Result } from "neverthrow";
+import { DiffResult } from "simple-git";
 
 export interface CommitManagerOptions {
   logger?: BaseLogger;
@@ -22,7 +22,7 @@ export class CommitManager {
   }
 
   public async generateCommit(
-    changeSummary: GitChangeSummary,
+    diffResult: DiffResult,
     modelId: string,
   ): Promise<Result<CommitData, string>> {
     const models = await this.getAvailableModels();
@@ -37,7 +37,7 @@ export class CommitManager {
     }
 
     try {
-      return await this.provider.generateCommit(changeSummary, model, {
+      return await this.provider.generateCommit(diffResult, model, {
         lang: "zh-CN",
       });
     } catch (error) {

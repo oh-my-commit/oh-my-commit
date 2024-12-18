@@ -34,13 +34,3 @@ export interface GitFileChange {
   /** 文件原始内容 */
   oldContent?: string;
 }
-
-/**
- * Git 仓库变更摘要
- */
-export interface GitChangeSummary {
-  changed: number;
-  files: GitFileChange[];
-  insertions: number;
-  deletions: number;
-}
