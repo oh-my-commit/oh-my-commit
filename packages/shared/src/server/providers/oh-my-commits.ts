@@ -1,12 +1,21 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
-import { CommitData, GenerateCommitResult } from "@/common/types/commit";
+import { formatError } from "@/common/format-error";
+import { CommitData } from "@/common/types/commit";
 import { Model } from "@/common/types/model";
 import { Provider } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
+import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
+import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { err, ok, ResultAsync } from "neverthrow";
+import { join } from "path";
 import { DiffResult } from "simple-git";
+
+// 初始化模板管理器
+const templateManager = TemplateManager.getInstance(
+  join(__dirname, "..", "templates")
+);
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
@@ -55,62 +64,21 @@ export class OmcProvider extends Provider {
     options?: {
       lang?: string;
     }
-  ): ResultAsync<CommitData, Error> {
+  ) {
     return ResultAsync.fromPromise(
       (async () => {
         const lang = options?.lang || "en";
         const modelName = "claude-3-sonnet-20240229";
-
         if (!this.anthropic)
           throw new Error("Anthropic API key not configured");
 
-        const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
-
-Git diff:
-${JSON.stringify(diff, null, 2)}
-
-Please analyze the diff carefully and provide a commit message in the following JSON format:
-
-{
-  "title": "type(scope): description",  // Follow conventional commits format
-  "body": "Detailed explanation",       // Explain WHAT and WHY
-  "extra": {
-    "type": "feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert",
-    "scope": "optional component scope",
-    "breaking": false,                  // Set to true if breaking change
-    "issues": ["#123", "#456"]         // Related issue numbers if any
-  }
-}
-
-Requirements:
-1. Title format:
-   - type: feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert
-   - scope: optional, in parentheses
-   - description: imperative mood, no period
-2. Keep title under 72 characters
-3. Use imperative mood in description ("add" not "added")
-4. Body should explain WHAT and WHY, not HOW
-5. Wrap body at 72 characters
-6. Use ${lang} for all text content
-7. For breaking changes:
-   - Add "!" after type/scope in title
-   - Set breaking=true in extra
-   
-Example response:
-{
-  "title": "feat(auth): add Google OAuth login",
-  "body": "Implement Google OAuth to provide users with single sign-on capability\\n\\nThis change:\\n- Adds Google OAuth integration\\n- Simplifies login process for users\\n- Improves security with 2FA support",
-  "extra": {
-    "type": "feat",
-    "scope": "auth",
-    "breaking": false,
-    "issues": []
-  }
-}`;
+        const prompt = templateManager.render("commit-prompt", {
+          diff: JSON.stringify(diff, null, 2),
+        });
 
         this.logger.info("Generating commit message using Anthropic...");
 
-        const response = await this.anthropic.messages.create({
+        return this.anthropic.messages.create({
           model: modelName,
           max_tokens: 1000,
           temperature: 0.7,
@@ -183,47 +151,47 @@ Example response:
           ],
           tool_choice: { type: "tool" as const, name: "generate_commit" },
         });
-
-        this.logger.debug(
-          "Commit message generated (response): ",
-          JSON.stringify(response)
-        );
-
-        const item = response.content[0];
-        if (item.type !== "tool_use")
-          throw new Error("Invalid tool response from AI model");
-
-        const result = item.input as {
-          title: string;
-          body: string;
-          extra?: {
-            type?: string;
-            scope?: string;
-            breaking?: boolean;
-            issues?: string[];
-          };
-        };
-        if (!result) throw new Error("Invalid tool response from AI model");
-
-        return {
-          title: result.title,
-          body: result.body,
-          meta: {
-            type: result.extra?.type,
-            scope: result.extra?.scope,
-            breaking: result.extra?.breaking || false,
-            issues: result.extra?.issues || [],
-            timestamp: new Date().toISOString(),
-            provider: "oh-my-commits",
-            providedModel: model.id,
-            anthropicModel: modelName,
-          },
-        };
       })(),
-      (error: unknown) =>
-        new Error(
-          error instanceof Error ? error.message : "Unknown error occurred"
-        )
-    );
+      (error) => ({
+        type: "CALL_API_ERROR",
+        message: formatError(error),
+      })
+    ).andThen((response: Message) => {
+      this.logger.debug(
+        "Commit message generated (response): ",
+        JSON.stringify(response)
+      );
+
+      const item = response.content[0];
+      if (item.type !== "tool_use")
+        throw new Error("Invalid tool response from AI model");
+
+      const result = item.input as {
+        title: string;
+        body: string;
+        extra?: {
+          type?: string;
+          scope?: string;
+          breaking?: boolean;
+          issues?: string[];
+        };
+      };
+
+      if (!result) throw new Error("Invalid tool response from AI model");
+
+      return ok({
+        title: result.title,
+        body: result.body,
+        meta: {
+          type: result.extra?.type,
+          scope: result.extra?.scope,
+          breaking: result.extra?.breaking || false,
+          issues: result.extra?.issues || [],
+          timestamp: new Date().toISOString(),
+          provider: "oh-my-commits",
+          providedModel: model.id,
+        },
+      });
+    });
   }
 }
