@@ -13,6 +13,10 @@ export * from "./provider";
 // Commit related types
 export * from "./commit";
 
+// Message event related types
+export * from "./message-events/base";
+export * from "./message-events/commit";
+
 // Re-export specific types that are commonly used
 
 export type { TreeNode } from "./tree";
@@ -20,7 +24,3 @@ export type { TreeNode } from "./tree";
 export type { Model } from "./model";
 
 export type { Provider } from "./provider";
-export { BaseServerMessageEvent } from "@/common/types/message-events/base";
-export { BaseClientMessageEvent } from "@/common/types/message-events/base";
-export { ServerMessageEvent } from "@/common/types/message-events/commit";
-export { ClientMessageEvent } from "@/common/types/message-events/commit";
