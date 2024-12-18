@@ -1,8 +1,8 @@
 import { atomWithStorage } from "@/lib/storage";
-import { GitChangeSummary } from "@oh-my-commits/shared/common";
+import { DiffResult } from "simple-git";
 
 // 文件变更状态
-export const changedFilesAtom = atomWithStorage<GitChangeSummary | null>({
+export const diffResultAtom = atomWithStorage<DiffResult | null>({
   key: "oh-my-commits.commit.changed-files",
   defaultValue: null,
 });

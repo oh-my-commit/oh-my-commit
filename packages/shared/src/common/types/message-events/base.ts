@@ -2,6 +2,9 @@ import { LogLevel } from "@/common";
 
 export type BaseClientMessageEvent =
   | {
+      type: "ping";
+    }
+  | {
       type: "log";
       data: {
         channel?: string;
@@ -18,4 +21,4 @@ export type BaseClientMessageEvent =
         url: string;
       };
     };
-export type BaseServerMessageEvent = undefined;
+export type BaseServerMessageEvent = { type: "pong" };

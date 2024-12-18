@@ -4,11 +4,7 @@ import {
   DiffResultBinaryFile,
   DiffResultNameStatusFile,
 } from "simple-git";
-import {
-  GitChangeSummary,
-  GitChangeType,
-  GitFileChange,
-} from "@oh-my-commits/shared";
+import { GitChangeType, GitFileChange } from "@oh-my-commits/shared";
 
 function getGitChangeType(status: string): GitChangeType {
   switch (status) {
@@ -30,7 +26,7 @@ function getGitChangeType(status: string): GitChangeType {
 }
 
 function convertDiffResultFile(
-  file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile
+  file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile,
 ): GitFileChange {
   const status = "status" in file ? file.status || "?" : "?";
 
@@ -44,7 +40,7 @@ function convertDiffResultFile(
   };
 }
 
-export function convertToGitChangeSummary(diff: DiffResult): GitChangeSummary {
+export function convertToGitChangeSummary(diff: DiffResult): DiffResult {
   const files = diff.files.map(convertDiffResultFile);
   const insertions = files.reduce((sum, file) => sum + file.additions, 0);
   const deletions = files.reduce((sum, file) => sum + file.deletions, 0);

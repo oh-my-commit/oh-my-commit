@@ -1,4 +1,4 @@
-import { changedFilesAtom } from "@/state/atoms/commit.changed-files";
+import { diffResultAtom } from "@/state/atoms/commit.changed-files";
 import {
   GitChangeSummary,
   GitChangeType,
@@ -34,7 +34,7 @@ const mockChangedFiles: GitChangeSummary = {
 export const MockDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const setChangedFiles = useSetAtom(changedFilesAtom);
+  const setChangedFiles = useSetAtom(diffResultAtom);
 
   useEffect(() => {
     setChangedFiles(mockChangedFiles);

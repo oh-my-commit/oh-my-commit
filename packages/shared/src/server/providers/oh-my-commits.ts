@@ -1,12 +1,12 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
+import { CommitData, GenerateCommitResult } from "@/common/types/commit";
+import { Model } from "@/common/types/model";
+import { Provider } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import Anthropic from "@anthropic-ai/sdk";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { err, ok } from "neverthrow";
-import { GenerateCommitResult } from "@/common/types/commit";
-import { GitChangeSummary } from "@/common/types/git";
-import { Model } from "@/common/types/model";
-import { Provider } from "@/common/types/provider";
+import { err, ok, ResultAsync } from "neverthrow";
+import { DiffResult } from "simple-git";
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
@@ -49,20 +49,22 @@ export class OmcProvider extends Provider {
     if (apiKey) this.anthropic = new Anthropic(config);
   }
 
-  async generateCommit(
-    diff: GitChangeSummary,
-    providedModel: Model,
+  override generateCommit(
+    diff: DiffResult,
+    model: Model,
     options?: {
       lang?: string;
-    },
-  ): Promise<GenerateCommitResult> {
-    const lang = options?.lang || "en";
-    const model = "claude-3-sonnet-20240229";
+    }
+  ): ResultAsync<CommitData, Error> {
+    return ResultAsync.fromPromise(
+      (async () => {
+        const lang = options?.lang || "en";
+        const modelName = "claude-3-sonnet-20240229";
 
-    try {
-      if (!this.anthropic) throw new Error("Anthropic API key not configured");
+        if (!this.anthropic)
+          throw new Error("Anthropic API key not configured");
 
-      const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
+        const prompt = `You are a commit message generator. Your task is to analyze the git diff and generate a clear, descriptive commit message in ${lang} that strictly follows the conventional commits format.
 
 Git diff:
 ${JSON.stringify(diff, null, 2)}
@@ -106,122 +108,122 @@ Example response:
   }
 }`;
 
-      this.logger.info("Generating commit message using Anthropic...");
+        this.logger.info("Generating commit message using Anthropic...");
 
-      const response = await this.anthropic.messages.create({
-        model,
-        max_tokens: 1000,
-        temperature: 0.7,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        tools: [
-          {
-            name: "generate_commit",
-            description:
-              "Generate a structured commit message based on git diff",
-            input_schema: {
-              type: "object",
-              properties: {
-                title: {
-                  type: "string",
-                  description:
-                    "Commit title following conventional commits format: <type>[optional scope]: <description>",
-                },
-                body: {
-                  type: "string",
-                  description:
-                    "Detailed explanation of what changes were made and why",
-                },
-                extra: {
-                  type: "object",
-                  properties: {
-                    type: {
-                      type: "string",
-                      enum: [
-                        "feat",
-                        "fix",
-                        "docs",
-                        "style",
-                        "refactor",
-                        "perf",
-                        "test",
-                        "chore",
-                        "ci",
-                        "build",
-                        "revert",
-                      ],
-                      description: "Type of change",
-                    },
-                    scope: {
-                      type: "string",
-                      description: "Component scope of the change",
-                    },
-                    breaking: {
-                      type: "boolean",
-                      description: "Whether this is a breaking change",
-                    },
-                    issues: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                      description: "Related issue numbers",
-                    },
-                  },
-                  required: ["type", "breaking", "issues"],
-                },
-              },
-              required: ["title", "body", "extra"],
+        const response = await this.anthropic.messages.create({
+          model: modelName,
+          max_tokens: 1000,
+          temperature: 0.7,
+          messages: [
+            {
+              role: "user",
+              content: prompt,
             },
-          },
-        ],
-        tool_choice: { type: "tool" as const, name: "generate_commit" },
-      });
+          ],
+          tools: [
+            {
+              name: "generate_commit",
+              description:
+                "Generate a structured commit message based on git diff",
+              input_schema: {
+                type: "object",
+                properties: {
+                  title: {
+                    type: "string",
+                    description:
+                      "Commit title following conventional commits format: <type>[optional scope]: <description>",
+                  },
+                  body: {
+                    type: "string",
+                    description:
+                      "Detailed explanation of what changes were made and why",
+                  },
+                  extra: {
+                    type: "object",
+                    properties: {
+                      type: {
+                        type: "string",
+                        enum: [
+                          "feat",
+                          "fix",
+                          "docs",
+                          "style",
+                          "refactor",
+                          "perf",
+                          "test",
+                          "chore",
+                          "ci",
+                          "build",
+                          "revert",
+                        ],
+                        description: "Type of change",
+                      },
+                      scope: {
+                        type: "string",
+                        description: "Component scope of the change",
+                      },
+                      breaking: {
+                        type: "boolean",
+                        description: "Whether this is a breaking change",
+                      },
+                      issues: {
+                        type: "array",
+                        items: {
+                          type: "string",
+                        },
+                        description: "Related issue numbers",
+                      },
+                    },
+                    required: ["type", "breaking", "issues"],
+                  },
+                },
+                required: ["title", "body", "extra"],
+              },
+            },
+          ],
+          tool_choice: { type: "tool" as const, name: "generate_commit" },
+        });
 
-      this.logger.debug(
-        "Commit message generated (resonse): ",
-        JSON.stringify(response),
-      );
+        this.logger.debug(
+          "Commit message generated (response): ",
+          JSON.stringify(response)
+        );
 
-      const item = response.content[0];
-      if (item.type !== "tool_use")
-        throw new Error("Invalid tool response from AI model");
+        const item = response.content[0];
+        if (item.type !== "tool_use")
+          throw new Error("Invalid tool response from AI model");
 
-      const result = item.input as {
-        title: string;
-        body: string;
-        extra?: {
-          type?: string;
-          scope?: string;
-          breaking?: boolean;
-          issues?: string[];
+        const result = item.input as {
+          title: string;
+          body: string;
+          extra?: {
+            type?: string;
+            scope?: string;
+            breaking?: boolean;
+            issues?: string[];
+          };
         };
-      };
-      if (!result) throw new Error("Invalid tool response from AI model");
+        if (!result) throw new Error("Invalid tool response from AI model");
 
-      const data = {
-        title: result.title,
-        body: result.body,
-        meta: {
-          timestamp: new Date().toISOString(),
-          provider: "oh-my-commits",
-          providedModel: providedModel.id,
-          anthropicModel: model,
-          ...result.extra,
-        },
-      };
-      this.logger.info(
-        "Commit message generated (data): ",
-        JSON.stringify(data, null, 2),
-      );
-      return ok(data);
-    } catch (error) {
-      this.logger.error("Failed to generate commit message:", error);
-      return err(error instanceof Error ? error.message : "Unknown error");
-    }
+        return {
+          title: result.title,
+          body: result.body,
+          meta: {
+            type: result.extra?.type,
+            scope: result.extra?.scope,
+            breaking: result.extra?.breaking || false,
+            issues: result.extra?.issues || [],
+            timestamp: new Date().toISOString(),
+            provider: "oh-my-commits",
+            providedModel: model.id,
+            anthropicModel: modelName,
+          },
+        };
+      })(),
+      (error: unknown) =>
+        new Error(
+          error instanceof Error ? error.message : "Unknown error occurred"
+        )
+    );
   }
 }

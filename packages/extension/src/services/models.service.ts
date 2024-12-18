@@ -1,11 +1,12 @@
+import { presetAiProviders } from "@oh-my-commits/shared/common/config/providers";
+import { Result, ResultAsync } from "neverthrow";
 import * as vscode from "vscode";
-import { Provider, SETTING_MODEL_ID } from "@oh-my-commits/shared";
+import { CommitData, Provider, SETTING_MODEL_ID } from "@oh-my-commits/shared";
 
 import { GenerateCommitResult } from "@oh-my-commits/shared";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
-import { presetAiProviders } from "@/types/provider";
 import { AppManager } from "@/app.manager";
 import { OmcProvider } from "@oh-my-commits/shared";
 import { convertToGitChangeSummary } from "@/utils/git-converter";
@@ -63,7 +64,9 @@ export class AcManager extends Loggable(class {}) {
     return true;
   }
 
-  public async generateCommit(diff: DiffResult): Promise<GenerateCommitResult> {
+  public async generateCommit(
+    diff: DiffResult,
+  ): Promise<Result<CommitData, Error>> {
     if (!this.provider) {
       throw new Error(`Provider ${this.model!.providerId} not found`);
     }

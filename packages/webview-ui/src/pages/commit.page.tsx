@@ -3,51 +3,46 @@ import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
 import { useCloseWindow } from "@/hooks/use-close-window";
 import { vscodeClientLogger } from "@/lib/vscode-client-logger";
-import { getVSCodeAPI } from "@/lib/storage";
-import {
-  changedFilesAtom,
-  lastOpenedFilePathAtom,
-  selectedFilesAtom,
-} from "@/state/atoms/commit.changed-files";
+import { diffResultAtom } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { CommitEvent } from "@oh-my-commits/shared/common";
+import { ClientMessageEvent, ServerMessageEvent } from "@oh-my-commits/shared";
 
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import React, { useEffect } from "react";
 
 export const CommitPage = () => {
   const setTitle = useSetAtom(commitTitleAtom);
   const setBody = useSetAtom(commitBodyAtom);
-  const setChangedFiles = useSetAtom(changedFilesAtom);
+  const setDiffResult = useSetAtom(diffResultAtom);
 
   useCloseWindow();
 
   useEffect(() => {
     vscodeClientLogger.info("[useEffect] Setting up message event listener");
 
-    const handleMessage = (event: MessageEvent<CommitEvent>) => {
-      const { data } = event;
-      switch (data.type) {
-        case "diff-summary":
-          setChangedFiles(data.diffSummary);
+    const handleMessage = (event: ServerMessageEvent) => {
+      switch (event.type) {
+        case "diff-result":
+          setDiffResult(event.data);
           break;
-        case "commit":
-          setTitle(data.message.title);
-          setBody(data.message.body ?? "");
+        case "commit-message":
+          const { data } = event;
+          if (data.code === 0) {
+            setTitle(data.title);
+            setBody(data.body ?? "");
+          }
+          break;
+        case "commit-result":
+          break;
+        case "pong":
           break;
         default:
-          vscodeClientLogger.info("Unknown event type:", data.type);
+          vscodeClientLogger.info("Unknown event:", event);
+          return;
       }
     };
 
-    // 添加事件监听器
     window.addEventListener("message", handleMessage);
-    vscodeClientLogger.info("[useEffect] Message event listener added");
-
-    // 通知 extension webview 已准备好
-    const vscode = getVSCodeAPI();
-    vscode.postMessage({ command: "webview-ready" });
-    vscodeClientLogger.info("[useEffect] Sent webview-ready message");
 
     // 清理函数
     return () => {

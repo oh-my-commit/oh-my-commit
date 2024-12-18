@@ -1,11 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import simpleGit, { SimpleGit, DiffResult } from "simple-git";
-import {
-  GitChangeSummary,
-  GitFileChange,
-  GitChangeType,
-} from "@oh-my-commits/shared";
+import { GitFileChange, GitChangeType } from "@oh-my-commits/shared";
 
 export class GitCore {
   protected git: SimpleGit;
@@ -26,7 +22,7 @@ export class GitCore {
   /**
    * 获取已暂存文件的详细信息，用于文件差异展示
    */
-  public async getChangeSummary(): Promise<GitChangeSummary> {
+  public async getChangeSummary(): Promise<DiffResult> {
     // todo: think this later
     await this.stageAll();
 

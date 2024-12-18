@@ -1,5 +1,6 @@
+import { ClientMessageEvent } from "@oh-my-commits/shared";
 import { Provider } from "jotai";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CommitPage } from "./pages/commit.page";
 import "./styles/global.css";
@@ -18,6 +19,12 @@ const App: React.FC = () => {
   if (!showApp) {
     // return <InitAnimation onEnter={() => setShowApp(true)} />;
   }
+
+  useEffect(() => {
+    postMessage({
+      type: "init",
+    } as ClientMessageEvent);
+  }, []);
 
   return (
     <Provider>
@@ -38,5 +45,5 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

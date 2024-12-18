@@ -14,18 +14,18 @@ import { FlatView } from "./FlatView";
 import { SearchBar } from "./SearchBar";
 import { vscodeClientLogger } from "@/lib/vscode-client-logger";
 import {
-  changedFilesAtom,
+  diffResultAtom,
   lastOpenedFilePathAtom,
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files";
 
 export const FileChanges: React.FC = () => {
-  const [changedFiles, setChangedFiles] = useAtom(changedFilesAtom);
+  const [changedFiles, setChangedFiles] = useAtom(diffResultAtom);
   const initialSelection = changedFiles?.files?.map((file) => file.path) || [];
 
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
+    lastOpenedFilePathAtom,
   );
   const [viewMode] = useAtom(viewModeAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
@@ -35,10 +35,10 @@ export const FileChanges: React.FC = () => {
       setSelectedFiles(
         selectedFiles.includes(path)
           ? selectedFiles.filter((p) => p !== path)
-          : [...selectedFiles, path]
+          : [...selectedFiles, path],
       );
     },
-    [selectedFiles]
+    [selectedFiles],
   );
 
   const hasSelectionChanged =
@@ -115,7 +115,7 @@ export const FileChanges: React.FC = () => {
         <div
           className={cn(
             "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
-            !lastOpenedFilePath && "opacity-0"
+            !lastOpenedFilePath && "opacity-0",
           )}
         >
           {lastOpenedFilePath && (
