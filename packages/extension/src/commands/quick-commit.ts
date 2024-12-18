@@ -1,9 +1,9 @@
-import { AcManager } from "@/services/models.service";
 import { BaseCommand } from "@/libs/vscode-command";
-import { VscodeGitService } from "@/services/vscode-git.service";
 import { VscodeWebview } from "@/libs/vscode-webview";
-import { CommitWebviewService } from "@/services/commit-webview.service";
-import { APP_NAME, COMMAND_QUICK_COMMIT } from "@oh-my-commits/shared";
+import { AcManager } from "@/services/models.service";
+import { VscodeGitService } from "@/services/vscode-git.service";
+import { COMMAND_QUICK_COMMIT } from "@oh-my-commits/shared";
+import { DiffResult } from "simple-git";
 import * as vscode from "vscode";
 
 export class QuickCommitCommand extends BaseCommand {
@@ -11,7 +11,8 @@ export class QuickCommitCommand extends BaseCommand {
   public name = "Quick Commit";
 
   private webviewManager: VscodeWebview;
-  private commitWebviewService: CommitWebviewService;
+  private gitService: VscodeGitService;
+  private acManager: AcManager;
 
   constructor(
     gitService: VscodeGitService,
@@ -19,21 +20,27 @@ export class QuickCommitCommand extends BaseCommand {
     context: vscode.ExtensionContext,
   ) {
     super();
+    this.gitService = gitService;
+    this.acManager = acManager;
 
     // 初始化 webview 管理器
     this.webviewManager = new VscodeWebview(context, {
-      onReady: async () => {
-        await this.sendInitialDiffSummary();
-        await this.generateAndSendCommit();
+      onClientMessage: async (message) => {
+        switch (message.type) {
+          case "init":
+            await this.syncFilesAndCommits();
+            break;
+
+          case "selected-files":
+            await this.syncFilesAndCommits(message.data);
+            break;
+
+          case "commit":
+            // todo
+            break;
+        }
       },
     });
-
-    // 初始化 commit webview 服务
-    this.commitWebviewService = new CommitWebviewService(
-      this.webviewManager,
-      gitService,
-      acManager,
-    );
 
     // Clean up file watcher when extension is deactivated
     context.subscriptions.push(this);
@@ -45,5 +52,45 @@ export class QuickCommitCommand extends BaseCommand {
 
   async execute(): Promise<void> {
     await this.webviewManager.createWebviewPanel();
+  }
+
+  private async getLatestDiff(selectedFiles?: string[]) {
+    await this.gitService.stageAll();
+    const diffResult = await this.gitService.getDiffResult();
+    if (!selectedFiles) return diffResult;
+
+    const newDiffSummary: DiffResult = {
+      changed: selectedFiles.length,
+      deletions: 0,
+      insertions: 0,
+      files: [],
+    };
+
+    diffResult.files.forEach((file) => {
+      if (selectedFiles.includes(file.file)) {
+        if (!file.binary) {
+          newDiffSummary.insertions += file.insertions;
+          newDiffSummary.deletions += file.deletions;
+        }
+      }
+    });
+
+    return newDiffSummary;
+  }
+
+  private async syncFilesAndCommits(selectedFiles?: string[]) {
+    const diffResult = await this.getLatestDiff(selectedFiles);
+    if (!selectedFiles) {
+      await this.webviewManager.postMessage({
+        type: "diff-result",
+        data: diffResult,
+      });
+    }
+
+    const commit = await this.acManager.generateCommit(diffResult);
+    await this.webviewManager.postMessage({
+      type: "commit-message",
+      data: commit,
+    });
   }
 }

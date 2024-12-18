@@ -3,7 +3,12 @@ import * as Handlebars from "handlebars";
 import * as path from "path";
 import * as vscode from "vscode";
 
-import { APP_ID, APP_NAME, LogLevel } from "@oh-my-commits/shared";
+import {
+  APP_ID,
+  APP_NAME,
+  ClientMessageEvent,
+  LogLevel,
+} from "@oh-my-commits/shared";
 
 import { Loggable } from "@/types/mixins";
 
@@ -29,6 +34,7 @@ export class VscodeWebview
   private readonly scriptPath: string;
 
   private context: vscode.ExtensionContext;
+  private title: string;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -37,47 +43,18 @@ export class VscodeWebview
       title = "Webview",
       templatePath = "assets/webview.template.html",
       scriptPath = "dist/webview-ui/main.js",
-      onReady = () => {},
     }: {
       viewType?: string;
       title?: string;
       templatePath?: string;
       scriptPath?: string;
-      onReady?: () => void;
-    }
+      onClientMessage: (message: ClientMessageEvent) => void;
+    },
   ) {
     super();
+    this.title = title;
     this.context = context;
     this.logger.info(`Creating ${viewType} webview`);
-
-    this.registerMessageHandler("webview-ready", async () => {
-      if (onReady) onReady();
-    });
-
-    // Register default handlers
-    this.registerMessageHandler("openExternal", async (message) => {
-      if (message.url) {
-        await vscode.env.openExternal(vscode.Uri.parse(message.url));
-      }
-    });
-
-    this.registerMessageHandler("window-close", async () => {
-      this.logger.info("<< Handling window close");
-      await this.cleanupPanel();
-    });
-
-    // Register log handler
-    this.registerMessageHandler("log", async (message) => {
-      if (message.payload) {
-        const { channel, level, rawMessage } = message.payload;
-        const normalizedLevel = this.normalizeLogLevel(level);
-
-        this.logger[normalizedLevel](
-          `[Host <-- ${channel ?? "Webview"}]: `,
-          rawMessage
-        );
-      }
-    });
 
     // load template
     this.templatePath = templatePath;
@@ -110,22 +87,28 @@ export class VscodeWebview
         viewColumn: vscode.ViewColumn.One,
         preserveFocus: true,
       },
-      this.getWebviewOptions()
+      this.getWebviewOptions(),
     );
 
     // Set up message handler
-    panel.webview.onDidReceiveMessage(async (message) => {
-      const handler = this.messageHandlers.get(message.command);
-      if (handler) {
-        try {
-          await handler(message);
-          this.logger.debug("Message handled successfully");
-        } catch (error) {
-          this.logger.error("Error handling message:", error);
-        }
-      } else {
-        this.logger.warn(`No handler found for command: ${message.command}`);
+    panel.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
+      let level: LogLevel = "info";
+      switch (message.type) {
+        case "log":
+          level = message.data.level;
+          break;
+
+        case "close-window":
+          await this.cleanupPanel();
+          break;
+
+        case "open-external":
+          await vscode.env.openExternal(vscode.Uri.parse(message.data.url));
+          break;
+        default:
+          return;
       }
+      this.logger[level](`[Host <-- ${this.title}] `, message);
     });
 
     // Set up file watcher
@@ -212,7 +195,7 @@ export class VscodeWebview
         vscode.Uri.joinPath(
           vscode.Uri.file(path.dirname(this.scriptPath)),
           "..",
-          ".."
+          "..",
         ),
       ],
     };
@@ -250,7 +233,7 @@ export class VscodeWebview
 
     this.logger.info(
       "Updating webview with template data:",
-      JSON.stringify(templateData, null, 2)
+      JSON.stringify(templateData, null, 2),
     );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;
@@ -268,20 +251,6 @@ export class VscodeWebview
       this.webviewPanel = undefined;
 
       this.logger.debug("Panel disposed and reference cleared");
-    }
-  }
-
-  private normalizeLogLevel(level: string): LogLevel {
-    const normalizedLevel = level.toLowerCase();
-    switch (normalizedLevel) {
-      case "debug":
-      case "info":
-      case "warn":
-      case "error":
-      case "trace":
-        return normalizedLevel as LogLevel;
-      default:
-        return "info"; // 默认使用 info 级别
     }
   }
 }

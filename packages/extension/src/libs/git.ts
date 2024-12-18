@@ -19,7 +19,7 @@ export class GitCore {
   /**
    * 获取已暂存文件的统计摘要，用于生成提交信息
    */
-  public async getDiffSummary(): Promise<DiffResult> {
+  public async getDiffResult(): Promise<DiffResult> {
     return this.git.diffSummary("--staged");
   }
 
@@ -79,7 +79,7 @@ export class GitCore {
    * @returns GitChangeType 文件变更类型
    */
   private async getChangeType(
-    file: DiffResult["files"][0]
+    file: DiffResult["files"][0],
   ): Promise<GitChangeType> {
     const status = await this.git.status();
     const fileStatus = status.files.find((f) => f.path === file.file);
