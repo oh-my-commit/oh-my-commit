@@ -19,6 +19,6 @@ export abstract class Provider {
     model: Model,
     options?: {
       lang?: string;
-    },
-  ): ResultAsync<CommitData, Error>;
+    }
+  ): ResultAsync<CommitData, { type: string; message?: string }>;
 }
