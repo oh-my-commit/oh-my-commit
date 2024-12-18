@@ -23,17 +23,16 @@ export class CommitManager {
 
   public async generateCommit(
     diffResult: DiffResult,
-    modelId: string,
-  ): Promise<Result<CommitData, string>> {
+    modelId: string
+  ): Promise<Result<CommitData, { type: string; message?: string }>> {
     const models = await this.getAvailableModels();
     const model = models.find((m) => m.id === modelId);
 
     if (!model) {
-      return err(
-        `Model ${modelId} not found. Available models: ${models
-          .map((m) => m.id)
-          .join(", ")}`,
-      );
+      return err({
+        type: "model-not-found",
+        message: `Model with id ${modelId} not found`,
+      });
     }
 
     try {
@@ -41,9 +40,11 @@ export class CommitManager {
         lang: "zh-CN",
       });
     } catch (error) {
-      return err(
-        error instanceof Error ? error.message : "Unknown error occurred",
-      );
+      return err({
+        type: "provider-error",
+        message:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
     }
   }
 }
