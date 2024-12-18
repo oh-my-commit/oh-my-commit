@@ -35,8 +35,8 @@ export class VscodeWebview
     {
       viewType = "webview",
       title = "Webview",
-      templatePath = "webview.html",
-      scriptPath = "webview.html",
+      templatePath = "assets/webview.template.html",
+      scriptPath = "dist/webview-ui/main.js",
       onReady = () => {},
     }: {
       viewType?: string;
@@ -44,7 +44,7 @@ export class VscodeWebview
       templatePath?: string;
       scriptPath?: string;
       onReady?: () => void;
-    },
+    }
   ) {
     super();
     this.context = context;
@@ -74,7 +74,7 @@ export class VscodeWebview
 
         this.logger[normalizedLevel](
           `[Host <-- ${channel ?? "Webview"}]: `,
-          rawMessage,
+          rawMessage
         );
       }
     });
@@ -110,7 +110,7 @@ export class VscodeWebview
         viewColumn: vscode.ViewColumn.One,
         preserveFocus: true,
       },
-      this.getWebviewOptions(),
+      this.getWebviewOptions()
     );
 
     // Set up message handler
@@ -212,7 +212,7 @@ export class VscodeWebview
         vscode.Uri.joinPath(
           vscode.Uri.file(path.dirname(this.scriptPath)),
           "..",
-          "..",
+          ".."
         ),
       ],
     };
@@ -250,7 +250,7 @@ export class VscodeWebview
 
     this.logger.info(
       "Updating webview with template data:",
-      JSON.stringify(templateData, null, 2),
+      JSON.stringify(templateData, null, 2)
     );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;
