@@ -4,7 +4,7 @@
 团队协作功能目前正在开发中，预计将在 2024 年 Q2 推出。您可以在[即将推出](/guide/coming-soon)页面了解更多信息。
 :::
 
-Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
+Oh My Commit 计划提供强大的团队协作功能，帮助团队统一提交风格，提高协作效率。以下是即将推出的功能预览。
 
 ## 团队配置
 
@@ -14,8 +14,8 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team": {
-    "configPath": ".oh-my-commits/team.json",
+  "oh-my-commit.team": {
+    "configPath": ".oh-my-commit/team.json",
     "syncEnabled": true,
     "syncInterval": 3600
   }
@@ -28,7 +28,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.commit": {
+  "oh-my-commit.team.commit": {
     "convention": "conventional",
     "scopes": [
       "feat",
@@ -55,7 +55,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.review": {
+  "oh-my-commit.team.review": {
     "required": true,
     "minReviewers": 2,
     "assignRules": [
@@ -82,7 +82,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
    ```json
    {
-     "oh-my-commits.team.workflow": {
+     "oh-my-commit.team.workflow": {
        "type": "github-flow",
        "branchPrefix": "feature/",
        "autoMergePatch": true
@@ -94,7 +94,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
    ```json
    {
-     "oh-my-commits.team.workflow": {
+     "oh-my-commit.team.workflow": {
        "type": "gitlab-flow",
        "environments": ["dev", "staging", "prod"],
        "autoDeployToDev": true
@@ -105,7 +105,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 3. **Trunk Based**
    ```json
    {
-     "oh-my-commits.team.workflow": {
+     "oh-my-commit.team.workflow": {
        "type": "trunk-based",
        "trunk": "main",
        "shortLivedBranches": true
@@ -119,7 +119,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.ci": {
+  "oh-my-commit.team.ci": {
     "provider": "github-actions",
     "validateCommits": true,
     "autoFix": true,
@@ -139,7 +139,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.activity": {
+  "oh-my-commit.team.activity": {
     "enabled": true,
     "showInPanel": true,
     "filters": {
@@ -157,7 +157,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.stats": {
+  "oh-my-commit.team.stats": {
     "enabled": true,
     "schedule": "weekly",
     "metrics": ["commits", "lines", "files", "authors"],
@@ -175,7 +175,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team": {
+  "oh-my-commit.team": {
     "enforceConvention": true,
     "requireTests": true,
     "requireReview": true,
@@ -188,7 +188,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.review": {
+  "oh-my-commit.team.review": {
     "checkCoverage": true,
     "checkPerformance": true,
     "checkSecurity": true,
@@ -201,7 +201,7 @@ Oh My Commits 计划提供强大的团队协作功能，帮助团队统一提交
 
 ```json
 {
-  "oh-my-commits.team.automation": {
+  "oh-my-commit.team.automation": {
     "formatCode": true,
     "updateChangelog": true,
     "createRelease": true,

@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  title: "Oh My Commits",
+  title: "Oh My Commit",
   description:
     "Your AI-Powered Git Commit Assistant - 让 Git 提交变得优雅而智能",
   lang: "zh-CN",
@@ -24,7 +24,7 @@ export default defineConfig({
       { text: "即将推出", link: "/guide/coming-soon" },
       {
         text: "GitHub",
-        link: "https://github.com/cs-magic-open/oh-my-commits",
+        link: "https://github.com/cs-magic-open/oh-my-commit",
       },
     ],
 
@@ -66,13 +66,13 @@ export default defineConfig({
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/cs-magic-open/oh-my-commits",
+        link: "https://github.com/cs-magic-open/oh-my-commit",
       },
     ],
 
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright  2023-present Oh My Commits Team",
+      copyright: "Copyright  2023-present Oh My Commit Team",
     },
   },
 });

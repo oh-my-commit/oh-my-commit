@@ -1,6 +1,6 @@
 # AI 能力
 
-Oh My Commits 的核心特色是强大的 AI 能力，它能深入理解你的代码变更，生成专业的提交信息。
+Oh My Commit 的核心特色是强大的 AI 能力，它能深入理解你的代码变更，生成专业的提交信息。
 
 ## 支持的模型
 
@@ -24,7 +24,7 @@ Oh My Commits 的核心特色是强大的 AI 能力，它能深入理解你的�
   - 详细的变更分析
   - 支持长文本输入
 
-### Oh My Commits 专业模型
+### Oh My Commit 专业模型
 
 基于大量真实代码提交数据训练的专业模型：
 
@@ -34,7 +34,7 @@ Oh My Commits 的核心特色是强大的 AI 能力，它能深入理解你的�
 
 ## 语言支持
 
-Oh My Commits 支持生成多种语言的提交消息：
+Oh My Commit 支持生成多种语言的提交消息：
 
 - 中文（简体）
 - English
@@ -48,8 +48,8 @@ Oh My Commits 支持生成多种语言的提交消息：
 
 ```json
 {
-  "oh-my-commits.language": "zh-CN",
-  "oh-my-commits.ai.multilingual": true
+  "oh-my-commit.language": "zh-CN",
+  "oh-my-commit.ai.multilingual": true
 }
 ```
 
@@ -83,14 +83,14 @@ Oh My Commits 支持生成多种语言的提交消息：
 
 ```json
 {
-  "oh-my-commits.commit.template": "[<type>] <scope>: <subject>",
-  "oh-my-commits.commit.types": ["Feature", "Fix", "Docs", "Style", "Refactor"]
+  "oh-my-commit.commit.template": "[<type>] <scope>: <subject>",
+  "oh-my-commit.commit.types": ["Feature", "Fix", "Docs", "Style", "Refactor"]
 }
 ```
 
 ## 代码分析
 
-Oh My Commits 会深入分析你的代码变更：
+Oh My Commit 会深入分析你的代码变更：
 
 1. **语法理解**
 
@@ -116,9 +116,9 @@ Oh My Commits 会深入分析你的代码变更：
 
    ```json
    {
-     "oh-my-commits.ai.provider": "openai",
-     "oh-my-commits.ai.model": "gpt-4",
-     "oh-my-commits.ai.temperature": 0.7
+     "oh-my-commit.ai.provider": "openai",
+     "oh-my-commit.ai.model": "gpt-4",
+     "oh-my-commit.ai.temperature": 0.7
    }
    ```
 
@@ -126,7 +126,7 @@ Oh My Commits 会深入分析你的代码变更：
 
    ```json
    {
-     "oh-my-commits.ai.customPrompt": {
+     "oh-my-commit.ai.customPrompt": {
        "prefix": "分析以下代码变更：\n",
        "suffix": "\n请生成符合规范的提交消息。"
      }
@@ -136,7 +136,7 @@ Oh My Commits 会深入分析你的代码变更：
 3. **配置审查规则**
    ```json
    {
-     "oh-my-commits.ai.review": {
+     "oh-my-commit.ai.review": {
        "checkBreakingChanges": true,
        "checkSecurity": true,
        "checkPerformance": true
@@ -151,7 +151,7 @@ Oh My Commits 会深入分析你的代码变更：
 ```bash
 # 示例：快速提交
 git add .
-oh-my-commits commit
+oh-my-commit commit
 ```
 
 AI 将自动：
@@ -164,7 +164,7 @@ AI 将自动：
 
 ```bash
 # 示例：团队规范提交
-oh-my-commits commit --template team
+oh-my-commit commit --template team
 ```
 
 特点：
@@ -177,7 +177,7 @@ oh-my-commits commit --template team
 
 ```bash
 # 示例：审查辅助
-oh-my-commits review PR-123
+oh-my-commit review PR-123
 ```
 
 功能：
@@ -192,9 +192,9 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "oh-my-commits.ai.provider": "openai",
-  "oh-my-commits.ai.model": "gpt-4",
-  "oh-my-commits.ai.temperature": 0.7
+  "oh-my-commit.ai.provider": "openai",
+  "oh-my-commit.ai.model": "gpt-4",
+  "oh-my-commit.ai.temperature": 0.7
 }
 ```
 
@@ -202,7 +202,7 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "oh-my-commits.ai.prompt": {
+  "oh-my-commit.ai.prompt": {
     "template": "作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n{diff}",
     "language": "zh-CN",
     "style": "professional"
@@ -214,9 +214,9 @@ oh-my-commits review PR-123
 
 ```json
 {
-  "oh-my-commits.ai.cache": true,
-  "oh-my-commits.ai.timeout": 10000,
-  "oh-my-commits.ai.retries": 3
+  "oh-my-commit.ai.cache": true,
+  "oh-my-commit.ai.timeout": 10000,
+  "oh-my-commit.ai.retries": 3
 }
 ```
 
@@ -226,7 +226,7 @@ oh-my-commits review PR-123
 
    ```json
    {
-     "oh-my-commits.ai.rateLimit": {
+     "oh-my-commit.ai.rateLimit": {
        "maxRequests": 100,
        "perMinute": 60,
        "retryDelay": 1000
@@ -238,7 +238,7 @@ oh-my-commits review PR-123
 
    ```json
    {
-     "oh-my-commits.ai.proxy": {
+     "oh-my-commit.ai.proxy": {
        "host": "127.0.0.1",
        "port": 7890,
        "protocol": "http"
@@ -249,7 +249,7 @@ oh-my-commits review PR-123
 3. **如何处理超时？**
    ```json
    {
-     "oh-my-commits.ai.timeout": {
+     "oh-my-commit.ai.timeout": {
        "request": 10000,
        "generation": 30000
      }

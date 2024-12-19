@@ -1,6 +1,6 @@
 {
-  "name": "@oh-my-commits/extension",
-  "displayName": "Oh My Commits",
+  "name": "@oh-my-commit/extension",
+  "displayName": "Oh My Commit",
   "description": "AI-powered commit message generator",
   "version": "0.1.0",
   "private": true,
@@ -12,7 +12,7 @@
     "lint": "eslint src --ext ts"
   },
   "dependencies": {
-    "@oh-my-commits/shared": "workspace:*",
+    "@oh-my-commit/shared": "workspace:*",
     "@anthropic-ai/sdk": "^0.32.1",
     "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",

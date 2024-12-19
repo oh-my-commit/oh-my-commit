@@ -1,6 +1,6 @@
 # 事件钩子
 
-Oh My Commits 提供了一系列事件钩子，让你可以在特定时机执行自定义逻辑。
+Oh My Commit 提供了一系列事件钩子，让你可以在特定时机执行自定义逻辑。
 
 ## 提交相关钩子
 
@@ -103,7 +103,7 @@ oh -
   my -
   commits.hooks.onConfigChange((event) => {
     // 例：在切换语言时刷新界面
-    if (event.key === "oh-my-commits.language") {
+    if (event.key === "oh-my-commit.language") {
       refreshUI();
     }
   });
@@ -178,7 +178,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commits.hooks": {
+  "oh-my-commit.hooks": {
     "enabled": true,
     "timeout": 5000,
     "parallel": true,
@@ -191,10 +191,10 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commits.hooks.path": {
-    "pre-commit": ".oh-my-commits/hooks/pre-commit.js",
-    "post-commit": ".oh-my-commits/hooks/post-commit.js",
-    "commit-msg": ".oh-my-commits/hooks/commit-msg.js"
+  "oh-my-commit.hooks.path": {
+    "pre-commit": ".oh-my-commit/hooks/pre-commit.js",
+    "post-commit": ".oh-my-commit/hooks/post-commit.js",
+    "commit-msg": ".oh-my-commit/hooks/commit-msg.js"
   }
 }
 ```
@@ -203,7 +203,7 @@ interface TeamActivityEvent {
 
 ```json
 {
-  "oh-my-commits.hooks.order": {
+  "oh-my-commit.hooks.order": {
     "pre-commit": ["lint", "test", "validate"],
     "post-commit": ["notify", "docs", "deploy"]
   }
@@ -215,7 +215,7 @@ interface TeamActivityEvent {
 ### 代码检查
 
 ```javascript
-// .oh-my-commits/hooks/lint.js
+// .oh-my-commit/hooks/lint.js
 module.exports = async (context) => {
   const { files } = context;
 
@@ -236,7 +236,7 @@ module.exports = async (context) => {
 ### 测试运行
 
 ```javascript
-// .oh-my-commits/hooks/test.js
+// .oh-my-commit/hooks/test.js
 module.exports = async (context) => {
   const { files } = context;
 
@@ -259,7 +259,7 @@ module.exports = async (context) => {
 ### 示例：JIRA 集成
 
 ```javascript
-// .oh-my-commits/hooks/jira.js
+// .oh-my-commit/hooks/jira.js
 module.exports = async (context) => {
   const { message } = context;
   const config = await getConfig("jira");
@@ -282,7 +282,7 @@ module.exports = async (context) => {
 ### 示例：自动部署
 
 ```javascript
-// .oh-my-commits/hooks/deploy.js
+// .oh-my-commit/hooks/deploy.js
 module.exports = async (context) => {
   const { branch, message } = context;
 
@@ -367,7 +367,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "oh-my-commits.hooks.timeout": {
+  "oh-my-commit.hooks.timeout": {
     "pre-commit": 10000,
     "post-commit": 30000,
     "commit-msg": 5000
@@ -382,7 +382,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "oh-my-commits.hooks.error": {
+  "oh-my-commit.hooks.error": {
     "ignore": ["lint", "test"],
     "retry": 3,
     "delay": 1000
@@ -397,7 +397,7 @@ module.exports = async (context) => {
 
 ```json
 {
-  "oh-my-commits.hooks.performance": {
+  "oh-my-commit.hooks.performance": {
     "cache": true,
     "parallel": true,
     "lightweight": true
@@ -406,7 +406,7 @@ module.exports = async (context) => {
 ```
 
 ::: tip 提示
-钩子是扩展 Oh My Commits 功能的强大方式。建议根据项目需求合理使用钩子。
+钩子是扩展 Oh My Commit 功能的强大方式。建议根据项目需求合理使用钩子。
 :::
 
 ::: warning 注意

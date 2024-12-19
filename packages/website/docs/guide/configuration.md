@@ -1,6 +1,6 @@
 # 用户配置
 
-Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队需求自定义使用体验。
+Oh My Commit 提供了丰富的配置选项，让你可以根据个人或团队需求自定义使用体验。
 
 ## 基础配置
 
@@ -8,7 +8,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "oh-my-commits.ai": {
+  "oh-my-commit.ai": {
     "provider": "openai", // 可选：openai, claude, custom
     "apiKey": "your-api-key",
     "model": "gpt-4", // 根据 provider 选择合适的模型
@@ -22,7 +22,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "oh-my-commits.ui": {
+  "oh-my-commit.ui": {
     "mode": "panel", // panel, window, notification, silent
     "theme": "auto", // auto, light, dark
     "language": "zh-CN", // 界面语言
@@ -53,7 +53,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "oh-my-commits.commit.template": {
+  "oh-my-commit.commit.template": {
     "type": ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
     "scope": ["core", "ui", "api", "docs"],
     "format": "${type}(${scope}): ${subject}\n\n${body}"
@@ -65,7 +65,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "oh-my-commits.git": {
+  "oh-my-commit.git": {
     "signCommit": false, // 是否签名提交
     "autoStage": true, // 是否自动暂存修改
     "pushOnCommit": false // 是否在提交后自动推送
@@ -77,8 +77,8 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ```json
 {
-  "oh-my-commits.team": {
-    "configPath": ".oh-my-commits/config.json", // 团队配置文件路径
+  "oh-my-commit.team": {
+    "configPath": ".oh-my-commit/config.json", // 团队配置文件路径
     "enforceConfig": true, // 是否强制使用团队配置
     "allowOverride": ["ui.theme", "ui.language"] // 允许个人覆盖的配置项
   }
@@ -98,7 +98,7 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
   - 项目根目录下的 `.vscode/settings.json`
 
 - 团队配置：
-  - 项目根目录下的 `.oh-my-commits/config.json`
+  - 项目根目录下的 `.oh-my-commit/config.json`
 
 ## 配置优先级
 
@@ -112,15 +112,15 @@ Oh My Commits 提供了丰富的配置选项，让你可以根据个人或团队
 
 ## 导入/导出配置
 
-Oh My Commits 提供了配置导入/导出功能，方便在多个环境间同步配置：
+Oh My Commit 提供了配置导入/导出功能，方便在多个环境间同步配置：
 
 1. 导出配置：
 
-   - 命令面板中输入 "Oh My Commits: 导出配置"
+   - 命令面板中输入 "Oh My Commit: 导出配置"
    - 选择导出位置
    - 配置将被保存为 JSON 文件
 
 2. 导入配置：
-   - 命令面板中输入 "Oh My Commits: 导入配置"
+   - 命令面板中输入 "Oh My Commit: 导入配置"
    - 选择配置文件
    - 确认是否覆盖现有配置

@@ -2,7 +2,7 @@ import { BaseCommand } from "@/libs/vscode-command";
 import { VscodeWebview } from "@/libs/vscode-webview";
 import { AcManager } from "@/services/models.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
-import { COMMAND_QUICK_COMMIT } from "@oh-my-commits/shared";
+import { COMMAND_QUICK_COMMIT } from "@oh-my-commit/shared";
 import { DiffResult } from "simple-git";
 import * as vscode from "vscode";
 

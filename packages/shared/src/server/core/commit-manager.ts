@@ -2,7 +2,7 @@ import { CommitData } from "@/common/types/commit";
 import { Model } from "@/common/types/model";
 import { Provider } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
-import { OmcProvider } from "@/server/providers/oh-my-commits";
+import { OmcProvider } from "@/server/providers/oh-my-commit";
 import { err, Result } from "neverthrow";
 import { DiffResult } from "simple-git";
 

@@ -8,7 +8,7 @@ import {
   COMMAND_OPEN_PREFERENCE,
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
-} from "@oh-my-commits/shared";
+} from "@oh-my-commit/shared";
 import { AcManager } from "@/services/models.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 

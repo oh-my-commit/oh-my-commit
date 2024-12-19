@@ -1,4 +1,4 @@
-# Oh My Commits 常见问题解答 (FAQ)
+# Oh My Commit 常见问题解答 (FAQ)
 
 <!-- toc -->
 
@@ -9,35 +9,35 @@
 ## 基础问题
 
 <details>
-<summary>Q: Oh My Commits 是什么？</summary>
+<summary>Q: Oh My Commit 是什么？</summary>
 
-A: Oh My Commits（Yet Another Auto Commit，读作"雅刻"）是一款 VSCode 插件，它能通过 AI 智能分析代码变更，自动生成高质量的 commit message，帮助开发者提升开发效率和代码库的可维护性。
+A: Oh My Commit（Yet Another Auto Commit，读作"雅刻"）是一款 VSCode 插件，它能通过 AI 智能分析代码变更，自动生成高质量的 commit message，帮助开发者提升开发效率和代码库的可维护性。
 
 </details>
 
 <details>
-<summary>Q: Oh My Commits 支持哪些语言？</summary>
+<summary>Q: Oh My Commit 支持哪些语言？</summary>
 
-A: Oh My Commits 支持所有编程语言的代码变更分析，因为它关注的是代码变更的语义而不是特定的编程语言。
+A: Oh My Commit 支持所有编程语言的代码变更分析，因为它关注的是代码变更的语义而不是特定的编程语言。
 
 </details>
 
 ## 功能相关
 
 <details>
-<summary>Q: 如何快速开始使用 Oh My Commits？</summary>
+<summary>Q: 如何快速开始使用 Oh My Commit？</summary>
 
 A:
 
-1. 在 VSCode 扩展商店安装 Oh My Commits
+1. 在 VSCode 扩展商店安装 Oh My Commit
 2. 配置必要的 API 密钥
-3. 使用快捷键或命令面板中的 `Oh My Commits: Quick Commit` 命令即可开始使用
+3. 使用快捷键或命令面板中的 `Oh My Commit: Quick Commit` 命令即可开始使用
 </details>
 
 <details>
 <summary>Q: 有哪些提交方案可以选择？</summary>
 
-A: Oh My Commits 提供了多种预设的提交方案：
+A: Oh My Commit 提供了多种预设的提交方案：
 
 - `official_recommend`：官方推荐方案，平衡性能与成本
 - `gcop_fast`：速度优先方案
@@ -51,7 +51,7 @@ A: Oh My Commits 提供了多种预设的提交方案：
 A: 你可以通过以下方式切换：
 
 1. 点击状态栏中的方案名称
-2. 使用命令面板中的 `Oh My Commits: Select Model` 命令
+2. 使用命令面板中的 `Oh My Commit: Select Model` 命令
 3. 在设置界面中进行切换
 </details>
 
@@ -62,7 +62,7 @@ A: 你可以通过以下方式切换：
 
 A:
 
-1. 通过命令面板执行 `Oh My Commits: Configure API Keys`
+1. 通过命令面板执行 `Oh My Commit: Configure API Keys`
 2. 在配置界面中填入相应的 API 密钥
 3. 使用测试按钮验证 API 可用性
 </details>
@@ -81,9 +81,9 @@ A:
 ## 性能与成本
 
 <details>
-<summary>Q: Oh My Commits 的响应速度如何？</summary>
+<summary>Q: Oh My Commit 的响应速度如何？</summary>
 
-A: 在快速提交模式下，Oh My Commits 的响应时间通常小于 2 秒。具体速度取决于你选择的提交方案和网络状况。
+A: 在快速提交模式下，Oh My Commit 的响应时间通常小于 2 秒。具体速度取决于你选择的提交方案和网络状况。
 
 </details>
 
@@ -115,17 +115,17 @@ A:
 
 A: 你可以通过以下方式获取帮助：
 
-1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic-open/oh-my-commits/issues)
-2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commits)
+1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
+2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit)
 3. 查看详细的[开发文档](docs/yet-another-best-practice/)
 </details>
 
 ## 其他问题
 
 <details>
-<summary>Q: Oh My Commits 支持团队协作吗？</summary>
+<summary>Q: Oh My Commit 支持团队协作吗？</summary>
 
-A: 是的，Oh My Commits 支持：
+A: 是的，Oh My Commit 支持：
 
 - 团队配置共享
 - Git hooks 集成
@@ -134,7 +134,7 @@ A: 是的，Oh My Commits 支持：
 </details>
 
 <details>
-<summary>Q: 如何参与 Oh My Commits 的开发？</summary>
+<summary>Q: 如何参与 Oh My Commit 的开发？</summary>
 
 A: 我们欢迎社区贡献！请：
 
