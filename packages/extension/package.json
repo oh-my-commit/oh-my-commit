@@ -1,32 +1,26 @@
 {
   "name": "@oh-my-commit/extension",
-  "displayName": "Oh My Commit",
-  "description": "AI-powered commit message generator",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "main": "./dist/extension.js",
-  "module": "./dist/extension.mjs",
-  "types": "./dist/extension.d.ts",
-  "exports": {
-    "./services/*": {
-      "types": "./dist/services/*.d.ts",
-      "import": "./dist/services/*.js",
-      "require": "./dist/services/*.cjs"
-    }
+  "engines": {
+    "vscode": "^1.80.0"
   },
+  "main": "../../dist/extension.js",
+  "module": "../../dist/extension.mjs",
+  "types": "../../dist/extension.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "build": "esbuild src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
-    "dev": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
-    "clean": "rm -rf dist"
+    "dev": "pnpm build --watch",
+    "clean": "rimraf dist ../../dist"
   },
   "dependencies": {
-    "@oh-my-commit/shared": "workspace:*",
     "@anthropic-ai/sdk": "^0.32.1",
+    "@oh-my-commit/shared": "workspace:*",
     "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",
     "simple-git": "^3.27.0",
+    "vscode": "^1.1.37",
     "yaml": "^2.6.1",
     "zod": "^3.23.8"
   },

@@ -1,20 +1,15 @@
 {
-  "extends": ["../../tsconfig.json"],
+  "extends": ["../__base__/tsconfig.json"],
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "types": ["vscode"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@oh-my-commit/shared": ["../shared/src"],
-      "@oh-my-commit/shared/*": ["../shared/src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"],
   "references": [
     {
-//      "path": "../shared"
+      //      "path": "../shared"
     }
   ]
 }

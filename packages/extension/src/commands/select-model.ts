@@ -1,5 +1,5 @@
-import { BaseCommand, VscodeCommand } from "@/libs/vscode-command"
-import { AcManager } from "@/services/model.service"
+import { BaseCommand, type VscodeCommand } from "@/libs/vscode-command"
+import type { AcManager } from "@/services/model.service"
 import { COMMAND_SELECT_MODEL } from "@shared"
 import * as vscode from "vscode"
 

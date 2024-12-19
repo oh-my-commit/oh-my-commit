@@ -1,10 +1,8 @@
-import { ValidationResult } from "@/types/model";
-import vscode from "vscode";
+import type { ValidationResult } from "@/types/model"
+import vscode from "vscode"
 
 export async function validateOpenaiApiKey(): Promise<ValidationResult> {
-  const apiKey = vscode.workspace
-    .getConfiguration("oh-my-commit")
-    .get<string>("apiKeys.openai");
+  const apiKey = vscode.workspace.getConfiguration("oh-my-commit").get<string>("apiKeys.openai")
 
   if (!apiKey) {
     return {
@@ -18,7 +16,7 @@ export async function validateOpenaiApiKey(): Promise<ValidationResult> {
           settingPath: "@ext:cs-magic.oh-my-commit apiKeys.openai",
         },
       ],
-    };
+    }
   }
 
   try {
@@ -28,44 +26,37 @@ export async function validateOpenaiApiKey(): Promise<ValidationResult> {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-    });
+    })
 
     if (!response.ok) {
       const errorData = (await response.json()) as {
-        error?: { message?: string };
-      };
+        error?: { message?: string }
+      }
       return {
         valid: false,
-        error:
-          errorData.error?.message ||
-          `API validation failed: ${response.statusText}`,
-      };
+        error: errorData.error?.message || `API validation failed: ${response.statusText}`,
+      }
     }
 
     // 验证是否有 GPT-4 访问权限
     const modelsData = (await response.json()) as {
-      data: Array<{ id: string }>;
-    };
+      data: Array<{ id: string }>
+    }
 
-    const hasGPT4Access = modelsData.data.some((model) =>
-      model.id.startsWith("gpt-4")
-    );
+    const hasGPT4Access = modelsData.data.some(model => model.id.startsWith("gpt-4"))
 
     if (!hasGPT4Access) {
       return {
         valid: false,
         error: "Your API key does not have access to GPT-4",
-      };
+      }
     }
 
-    return { valid: true };
+    return { valid: true }
   } catch (error) {
     return {
       valid: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Unknown error during validation",
-    };
+      error: error instanceof Error ? error.message : "Unknown error during validation",
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { APP_NAME, BaseLogger, formatMessage, LogLevel } from "@shared"
+import { APP_NAME, BaseLogger, formatMessage, type LogLevel } from "@shared"
 import vscode from "vscode"
 
 export class VscodeExtensionLogger extends BaseLogger {

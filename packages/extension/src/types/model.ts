@@ -1,4 +1,4 @@
-import { Model as SharedModel } from "@shared"
+import type { Model as SharedModel } from "@shared"
 
 export interface ModelMetrics {
   accuracy: number
