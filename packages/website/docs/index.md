@@ -2,19 +2,19 @@
 layout: home
 
 hero:
-  name: "Oh My Commits"
+  name: "Oh My Commit"
   text: "让 Git 提交变得优雅而智能"
   tagline: 一款基于 AI 的 Git 提交助手
   image:
     src: /logo.svg
-    alt: Oh My Commits
+    alt: Oh My Commit
   actions:
     - theme: brand
       text: 快速开始
       link: /guide/getting-started
     - theme: alt
       text: 在 GitHub 上查看
-      link: https://github.com/cs-magic-open/oh-my-commits
+      link: https://github.com/cs-magic-open/oh-my-commit
 
 features:
   - icon: 🤖
@@ -31,9 +31,9 @@ features:
     details: 统一团队提交风格，提高协作效率
 ---
 
-## 为什么选择 Oh My Commits？
+## 为什么选择 Oh My Commit？
 
-Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
+Oh My Commit 是一款基于 AI 的 Git 提交助手，它能帮助你：
 
 - 🤖 **智能生成**：基于代码变更自动生成规范的提交消息
 - 🎨 **优雅交互**：提供多种交互模式，满足不同场景需求
@@ -45,15 +45,15 @@ Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
 1. 在 VS Code 中安装插件：
 
    ```bash
-   code --install-extension oh-my-commits
+   code --install-extension oh-my-commit
    ```
 
 2. 配置 AI 服务：
 
    ```json
    {
-     "oh-my-commits.ai.provider": "openai",
-     "oh-my-commits.ai.apiKey": "your-api-key"
+     "oh-my-commit.ai.provider": "openai",
+     "oh-my-commit.ai.apiKey": "your-api-key"
    }
    ```
 
@@ -74,7 +74,7 @@ Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
 ## 工作流程
 
 1. **代码变更**：修改代码并暂存更改
-2. **启动工具**：运行 `oh-my-commits` 命令
+2. **启动工具**：运行 `oh-my-commit` 命令
 3. **AI 分析**：AI 自动分析代码变更
 4. **生成信息**：生成规范的提交信息
 5. **确认提交**：确认或编辑提交信息
@@ -86,30 +86,30 @@ Oh My Commits 是一款基于 AI 的 Git 提交助手，它能帮助你：
 
 ```bash
 # 快速提交
-oh-my-commits quick
+oh-my-commit quick
 
 # 详细模式
-oh-my-commits interactive
+oh-my-commit interactive
 ```
 
 ### 团队协作
 
 ```bash
 # 应用团队规范
-oh-my-commits --team
+oh-my-commit --team
 
 # 提交并推送
-oh-my-commits --push
+oh-my-commit --push
 ```
 
 ### CI/CD 集成
 
 ```bash
 # 检查提交信息
-oh-my-commits check
+oh-my-commit check
 
 # 自动修复
-oh-my-commits fix
+oh-my-commit fix
 ```
 
 ## 最佳实践
@@ -141,7 +141,7 @@ oh-my-commits fix
 
 ```json
 {
-  "oh-my-commits.ai": {
+  "oh-my-commit.ai": {
     "provider": "azure",
     "endpoint": "YOUR_AZURE_ENDPOINT"
   }
@@ -155,7 +155,7 @@ oh-my-commits fix
 
 ```json
 {
-  "oh-my-commits.hooks": {
+  "oh-my-commit.hooks": {
     "strict": false,
     "timeout": 10000
   }
@@ -169,7 +169,7 @@ oh-my-commits fix
 
 ```json
 {
-  "oh-my-commits.team": {
+  "oh-my-commit.team": {
     "syncEnabled": true,
     "syncInterval": 3600
   }
@@ -186,7 +186,7 @@ oh-my-commits fix
 
 ## 支持我们
 
-如果您觉得 Oh My Commits 对您有帮助，欢迎：
+如果您觉得 Oh My Commit 对您有帮助，欢迎：
 
 - ⭐️ 在 GitHub 上给我们 Star
 - 📝 提交问题和建议

@@ -1,5 +1,5 @@
-export const APP_NAME = "Oh My Commits";
-// export const APP_ID = "oh-my-commits";
+export const APP_NAME = "Oh My Commit";
+// export const APP_ID = "oh-my-commit";
 export const APP_ID = "ohMyCommit";
 
 export const COMMAND_OPEN_PREFERENCE = `${APP_ID}.openPreference`;

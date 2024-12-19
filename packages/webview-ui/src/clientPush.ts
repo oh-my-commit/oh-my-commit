@@ -1,4 +1,4 @@
-import { ClientMessageEvent } from "@oh-my-commits/shared";
+import { ClientMessageEvent } from "@oh-my-commit/shared";
 import { getVSCodeAPI } from "./lib/getVSCodeAPI";
 
 export const clientPush = (

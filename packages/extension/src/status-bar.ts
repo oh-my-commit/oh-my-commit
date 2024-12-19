@@ -3,7 +3,7 @@ import { AcManager } from "@/services/models.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 import { Loggable } from "@/types/mixins";
 import { AppManager } from "@/app.manager";
-import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
+import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@oh-my-commit/shared";
 
 export class StatusBarManager
   extends Loggable(class {})

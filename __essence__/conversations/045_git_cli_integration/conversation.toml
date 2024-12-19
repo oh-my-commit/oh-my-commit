@@ -3,7 +3,7 @@ version = "3.5.0"
 # 会话元数据
 created_at = "2024-12-15T12:36:43+08:00"
 title = "Git CLI Integration"
-abstract = "探讨将 Oh My Commits 功能集成到 Git 命令行的可能性"
+abstract = "探讨将 Oh My Commit 功能集成到 Git 命令行的可能性"
 
 # 轮次记录
 [[rounds]]
@@ -11,7 +11,7 @@ number = 1
 time = "2024-12-15T12:36:43+08:00"
 query_essence = "探讨扩展 Git 命令行功能"
 key_points = """
-- 用户建议将 Oh My Commits 功能集成到 Git 命令行
+- 用户建议将 Oh My Commit 功能集成到 Git 命令行
 - 考虑通过 Git 别名机制实现命令映射
 - 需要评估实现的可行性和用户体验
 """
@@ -21,7 +21,7 @@ number = 2
 time = "2024-12-15T12:40:44+08:00"
 query_essence = "列举可能的 Git 命令映射"
 key_points = """
-- 整理所有可用的 Oh My Commits 命令
+- 整理所有可用的 Oh My Commit 命令
 - 设计对应的 Git 别名映射
 - 考虑命令的直观性和易用性
 """
@@ -112,7 +112,7 @@ number = 11
 time = "2024-12-15T12:58:10+08:00"
 query_essence = "恢复包名的 scope"
 key_points = """
-- 将包名改为 @oh-my-commits/website
+- 将包名改为 @oh-my-commit/website
 - 更新根目录命令的过滤器
 - 保持命名空间的一致性
 """
@@ -132,8 +132,8 @@ number = 13
 time = "2024-12-15T13:01:50+08:00"
 query_essence = "调整命名空间策略"
 key_points = """
-- 项目根目录使用 @cs-magic/oh-my-commits
-- 子包统一使用 @oh-my-commits/* 命名空间
+- 项目根目录使用 @cs-magic/oh-my-commit
+- 子包统一使用 @oh-my-commit/* 命名空间
 - 保持命名的层次结构
 """
 

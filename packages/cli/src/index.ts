@@ -7,8 +7,8 @@ import {
   APP_NAME,
   CommitManager,
   OmcStandardModelId,
-} from "@oh-my-commits/shared";
-import { ConsoleLogger } from "@oh-my-commits/shared";
+} from "@oh-my-commit/shared";
+import { ConsoleLogger } from "@oh-my-commit/shared";
 
 // Initialize git and commit manager
 const git = simpleGit();
@@ -34,7 +34,7 @@ const listModels = async () => {
 };
 
 const initConfig = async () => {
-  console.log(chalk.blue("Initializing Oh My Commits..."));
+  console.log(chalk.blue("Initializing Oh My Commit..."));
   try {
     // TODO: Add actual initialization logic
     // 1. Create config file if not exists
@@ -100,13 +100,13 @@ const generateAndCommit = async (options: any) => {
 // Register commands
 program
   .name("omc")
-  .description("Oh My Commits - AI-powered commit message generator")
+  .description("Oh My Commit - AI-powered commit message generator")
   .version("1.0.0");
 
 // Init command
 program
   .command("init")
-  .description("Initialize Oh My Commits configuration")
+  .description("Initialize Oh My Commit configuration")
   .action(initConfig);
 
 // List models command

@@ -26,7 +26,7 @@ module.exports = (env, argv) => {
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "../shared/src"),
         ],
-        "@oh-my-commits/shared": [path.resolve(__dirname, "../shared/src")],
+        "@oh-my-commit/shared": [path.resolve(__dirname, "../shared/src")],
       },
     },
     module: {

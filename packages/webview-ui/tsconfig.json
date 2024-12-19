@@ -8,7 +8,7 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@oh-my-commits/shared/common": ["../shared/common/index"]
+      "@oh-my-commit/shared/common": ["../shared/common/index"]
     }
   },
   "include": ["src"],

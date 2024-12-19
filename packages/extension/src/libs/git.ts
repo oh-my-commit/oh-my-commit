@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import simpleGit, { SimpleGit, DiffResult } from "simple-git";
-import { GitFileChange, GitChangeType } from "@oh-my-commits/shared";
+import { GitFileChange, GitChangeType } from "@oh-my-commit/shared";
 
 export class GitCore {
   protected git: SimpleGit;

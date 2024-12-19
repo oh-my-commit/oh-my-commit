@@ -4,7 +4,7 @@ import {
   DiffResultBinaryFile,
   DiffResultNameStatusFile,
 } from "simple-git";
-import { GitChangeType, GitFileChange } from "@oh-my-commits/shared";
+import { GitChangeType, GitFileChange } from "@oh-my-commit/shared";
 
 function getGitChangeType(status: string): GitChangeType {
   switch (status) {

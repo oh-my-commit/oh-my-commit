@@ -2,7 +2,7 @@ import { HighlightText } from "@/components/common/HighlightText";
 import { lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { diffWrapLineAtom } from "@/state/atoms/ui";
-import { GitChangeSummary, GitFileChange } from "@oh-my-commits/shared/common";
+import { GitChangeSummary, GitFileChange } from "@oh-my-commit/shared/common";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import cn from "classnames";
 import { useAtom, useSetAtom } from "jotai";

@@ -3,7 +3,7 @@ import {
   BaseLogger,
   formatMessage,
   LogLevel,
-} from "@oh-my-commits/shared/common";
+} from "@oh-my-commit/shared/common";
 
 export class VscodeClientLogger extends BaseLogger {
   protected log(level: LogLevel, ...args: any[]) {

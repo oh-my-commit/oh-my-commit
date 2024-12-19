@@ -1,6 +1,6 @@
 # 提交模式
 
-Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团队需求。
+Oh My Commit 提供了多种提交模式，以适应不同的开发场景和团队需求。
 
 ## 快速模式
 
@@ -8,7 +8,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "oh-my-commits.mode.quick": {
+  "oh-my-commit.mode.quick": {
     "enabled": true,
     "useAI": true,
     "template": "<type>(<scope>): <subject>",
@@ -23,7 +23,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "oh-my-commits.mode.interactive": {
+  "oh-my-commit.mode.interactive": {
     "enabled": true,
     "steps": ["type", "scope", "subject", "body", "breaking", "issues"],
     "validation": true
@@ -37,9 +37,9 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "oh-my-commits.mode.team": {
+  "oh-my-commit.mode.team": {
     "enabled": true,
-    "configPath": ".oh-my-commits/team.json",
+    "configPath": ".oh-my-commit/team.json",
     "enforceRules": true,
     "requireReview": true
   }
@@ -52,7 +52,7 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "oh-my-commits.mode.ai": {
+  "oh-my-commit.mode.ai": {
     "enabled": true,
     "model": "gpt-4",
     "language": "zh-CN",
@@ -68,11 +68,11 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```json
 {
-  "oh-my-commits.mode.custom": {
+  "oh-my-commit.mode.custom": {
     "enabled": true,
     "hooks": {
-      "pre-commit": ".oh-my-commits/hooks/pre-commit.js",
-      "post-commit": ".oh-my-commits/hooks/post-commit.js"
+      "pre-commit": ".oh-my-commit/hooks/pre-commit.js",
+      "post-commit": ".oh-my-commit/hooks/post-commit.js"
     },
     "templates": {
       "feature": "feat(${scope}): ${subject}",
@@ -88,20 +88,20 @@ Oh My Commits 提供了多种提交模式，以适应不同的开发场景和团
 
 ```bash
 # 切换到快速模式
-oh-my-commits mode quick
+oh-my-commit mode quick
 
 # 切换到交互模式
-oh-my-commits mode interactive
+oh-my-commit mode interactive
 
 # 切换到 AI 模式
-oh-my-commits mode ai
+oh-my-commit mode ai
 ```
 
 ### 配置文件切换
 
 ```json
 {
-  "oh-my-commits.mode": {
+  "oh-my-commit.mode": {
     "default": "interactive",
     "allowSwitch": true,
     "shortcuts": {
@@ -119,7 +119,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.hybrid": {
+  "oh-my-commit.mode.hybrid": {
     "primary": "quick",
     "secondary": "ai",
     "conditions": {
@@ -134,7 +134,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.hybrid": {
+  "oh-my-commit.mode.hybrid": {
     "primary": "team",
     "secondary": "interactive",
     "validation": true,
@@ -156,7 +156,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.optimize": {
+  "oh-my-commit.mode.optimize": {
     "cacheEnabled": true,
     "historySize": 100,
     "suggestions": true,
@@ -169,7 +169,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.workflow": {
+  "oh-my-commit.mode.workflow": {
     "branch": {
       "feature/*": "interactive",
       "bugfix/*": "quick",
@@ -193,7 +193,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.conflict": {
+  "oh-my-commit.mode.conflict": {
     "priority": ["team", "ai", "interactive", "quick"],
     "resolution": "highest"
   }
@@ -207,7 +207,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.performance": {
+  "oh-my-commit.mode.performance": {
     "cache": true,
     "timeout": 5000,
     "parallel": true,
@@ -223,7 +223,7 @@ oh-my-commits mode ai
 
 ```json
 {
-  "oh-my-commits.mode.offline": {
+  "oh-my-commit.mode.offline": {
     "fallback": "interactive",
     "cacheTemplates": true,
     "localValidation": true

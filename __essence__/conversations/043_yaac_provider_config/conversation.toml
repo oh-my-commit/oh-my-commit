@@ -1,5 +1,5 @@
 [meta]
-slug = "oh-my-commits_provider_config"
+slug = "oh-my-commit_provider_config"
 title = "ohMyCommitProvider Configuration Enhancement"
 abstract = "Implementing API key configuration reading from user settings in ohMyCommitProvider"
 

@@ -1,4 +1,4 @@
-import { BaseLogger } from "@oh-my-commits/shared";
+import { BaseLogger } from "@oh-my-commit/shared";
 import vscode from "vscode";
 
 export class VibrateWindow {

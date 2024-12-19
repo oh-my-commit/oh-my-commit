@@ -8,7 +8,7 @@ import {
   APP_NAME,
   ClientMessageEvent,
   LogLevel,
-} from "@oh-my-commits/shared";
+} from "@oh-my-commit/shared";
 
 import { Loggable } from "@/types/mixins";
 

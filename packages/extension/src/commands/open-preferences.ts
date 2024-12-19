@@ -1,6 +1,6 @@
 import { VscodeCommand } from "@/libs/vscode-command";
 import { openPreferences } from "@/utils/open-preference";
-import { COMMAND_OPEN_PREFERENCE } from "@oh-my-commits/shared";
+import { COMMAND_OPEN_PREFERENCE } from "@oh-my-commit/shared";
 
 export class OpenPreferencesCommand implements VscodeCommand {
   public id = COMMAND_OPEN_PREFERENCE;

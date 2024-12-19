@@ -1,14 +1,14 @@
-import { presetAiProviders } from "@oh-my-commits/shared/common/config/providers";
+import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
 import { Result, ResultAsync } from "neverthrow";
 import * as vscode from "vscode";
-import { CommitData, Provider, SETTING_MODEL_ID } from "@oh-my-commits/shared";
+import { CommitData, Provider, SETTING_MODEL_ID } from "@oh-my-commit/shared";
 
-import { GenerateCommitResult } from "@oh-my-commits/shared";
+import { GenerateCommitResult } from "@oh-my-commit/shared";
 import { DiffResult } from "simple-git";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
 import { AppManager } from "@/app.manager";
-import { OmcProvider } from "@oh-my-commits/shared";
+import { OmcProvider } from "@oh-my-commit/shared";
 import { convertToGitChangeSummary } from "@/utils/git-converter";
 
 export class AcManager extends Loggable(class {}) {
@@ -57,7 +57,7 @@ export class AcManager extends Loggable(class {}) {
       );
 
       if (response === configureNow) {
-        await openPreferences("oh-my-commits.apiKeys");
+        await openPreferences("oh-my-commit.apiKeys");
       }
     }
 

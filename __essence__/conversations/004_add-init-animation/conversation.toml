@@ -85,7 +85,7 @@ Updated main.tsx to:
 
 The animation sequence:
 1. Git logo scales in and rotates 360 degrees
-2. App name "Oh My Commits" and tagline slide up with fade
+2. App name "Oh My Commit" and tagline slide up with fade
 3. The entire animation fades out after 2.5s"""
 
 [[tasks.rounds]]

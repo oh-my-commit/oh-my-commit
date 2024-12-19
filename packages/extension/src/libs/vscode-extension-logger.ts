@@ -3,7 +3,7 @@ import {
   BaseLogger,
   formatMessage,
   LogLevel,
-} from "@oh-my-commits/shared";
+} from "@oh-my-commit/shared";
 import vscode from "vscode";
 
 export class VscodeExtensionLogger extends BaseLogger {

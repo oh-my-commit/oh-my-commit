@@ -1,6 +1,6 @@
 # AI 功能
 
-Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码提交。
+Oh My Commit 集成了强大的 AI 功能，帮助您更高效地管理代码提交。
 
 ## AI 提交消息生成
 
@@ -8,7 +8,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai": {
+  "oh-my-commit.ai": {
     "enabled": true,
     "provider": "openai",
     "model": "gpt-4",
@@ -22,7 +22,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.prompt": {
+  "oh-my-commit.ai.prompt": {
     "system": "你是一个专业的代码审查助手，擅长生成规范的提交信息。",
     "template": "请根据以下代码变更生成一个符合 Conventional Commits 规范的提交信息：\n\n${diff}",
     "language": "zh-CN"
@@ -34,7 +34,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.languages": {
+  "oh-my-commit.ai.languages": {
     "default": "zh-CN",
     "supported": ["zh-CN", "en-US", "ja-JP"],
     "templates": {
@@ -52,7 +52,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.review": {
+  "oh-my-commit.ai.review": {
     "enabled": true,
     "mode": "auto",
     "focus": ["security", "performance", "style", "logic"],
@@ -65,7 +65,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.suggestions": {
+  "oh-my-commit.ai.suggestions": {
     "enabled": true,
     "inline": true,
     "autoFix": true,
@@ -80,7 +80,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.completion": {
+  "oh-my-commit.ai.completion": {
     "enabled": true,
     "triggerChars": [":", "(", " "],
     "minChars": 3,
@@ -93,7 +93,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.snippets": {
+  "oh-my-commit.ai.snippets": {
     "enabled": true,
     "contexts": ["tests", "documentation", "examples"],
     "format": true
@@ -107,7 +107,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.openai": {
+  "oh-my-commit.ai.openai": {
     "apiKey": "${OPENAI_API_KEY}",
     "organization": "${OPENAI_ORG_ID}",
     "baseUrl": "https://api.openai.com/v1",
@@ -120,7 +120,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.azure": {
+  "oh-my-commit.ai.azure": {
     "enabled": true,
     "endpoint": "${AZURE_OPENAI_ENDPOINT}",
     "apiKey": "${AZURE_OPENAI_KEY}",
@@ -134,7 +134,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.custom": {
+  "oh-my-commit.ai.custom": {
     "enabled": true,
     "endpoint": "http://your-ai-service.com/api",
     "headers": {
@@ -175,7 +175,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.rateLimit": {
+  "oh-my-commit.ai.rateLimit": {
     "enabled": true,
     "maxRequests": 100,
     "interval": 3600,
@@ -191,7 +191,7 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.timeout": {
+  "oh-my-commit.ai.timeout": {
     "request": 30000,
     "generation": 60000,
     "review": 120000
@@ -206,9 +206,9 @@ Oh My Commits 集成了强大的 AI 功能，帮助您更高效地管理代码�
 
 ```json
 {
-  "oh-my-commits.ai.offline": {
+  "oh-my-commit.ai.offline": {
     "enabled": true,
-    "cachePath": ".oh-my-commits/ai-cache",
+    "cachePath": ".oh-my-commit/ai-cache",
     "maxCacheAge": 604800
   }
 }

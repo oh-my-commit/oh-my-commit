@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { GitChangeType, GitFileChange } from "@oh-my-commits/shared/common";
+import { GitChangeType, GitFileChange } from "@oh-my-commit/shared/common";
 import React from "react";
 import { STATUS_COLORS, STATUS_LABELS } from "./constants";
 import { FileItem } from "./FileItem";

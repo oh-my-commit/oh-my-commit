@@ -1,4 +1,4 @@
-import { GitChangeType } from "@oh-my-commits/shared/common";
+import { GitChangeType } from "@oh-my-commit/shared/common";
 import type { FileChange } from "../state/types";
 
 export const mockFileChanges: FileChange[] = [

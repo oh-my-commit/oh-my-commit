@@ -3,7 +3,7 @@ version = "3.5.0"
 # 会话元数据
 created_at = "2024-12-15T12:20:12+08:00"
 title = "Modern Documentation Update"
-abstract = "更新项目文档，使用新的产品名称 Oh My Commits 和配置前缀"
+abstract = "更新项目文档，使用新的产品名称 Oh My Commit 和配置前缀"
 
 # 轮次记录
 [[rounds]]
@@ -72,7 +72,7 @@ number = 7
 time = "2024-12-15T12:10:00+08:00"
 query_essence = "更改产品名称"
 key_points = """
-- 将产品名从 Oh My Commits 改为 Oh My Commits
+- 将产品名从 Oh My Commit 改为 Oh My Commit
 - 更新了网站配置和描述
 - 修改了首页内容和特性介绍
 - 更新了 API 文档中的包名和示例
@@ -90,7 +90,7 @@ key_points = """
 - 更新了 API 钩子文档
 - 更新了 API 索引文档
 - 更新了主页文档
-- 所有文档统一使用新的产品名称 Oh My Commits
+- 所有文档统一使用新的产品名称 Oh My Commit
 """
 
 [[rounds]]
@@ -106,5 +106,5 @@ key_points = """
 - 更新了 API 索引文档
 - 更新了主页文档
 - 更新了配置指南文档
-- 所有文档统一使用新的产品名称 Oh My Commits
+- 所有文档统一使用新的产品名称 Oh My Commit
 """

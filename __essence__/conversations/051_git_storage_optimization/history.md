@@ -61,7 +61,7 @@ $ find . -type f -size +1M -exec ls -lh {} \;
 
 ## .gitignore Change Analysis
 
-**USER**: The following changes were made to: file:///Users/mark/coding/apps/oh-my-commits/.gitignore
+**USER**: The following changes were made to: file:///Users/mark/coding/apps/oh-my-commit/.gitignore
 
 ```diff
 @@ -1,4 +1,4 @@

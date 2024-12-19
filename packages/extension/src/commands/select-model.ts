@@ -1,7 +1,7 @@
 import { BaseCommand, VscodeCommand } from "@/libs/vscode-command";
 import { AcManager } from "@/services/models.service";
 import * as vscode from "vscode";
-import { COMMAND_SELECT_MODEL } from "@oh-my-commits/shared";
+import { COMMAND_SELECT_MODEL } from "@oh-my-commit/shared";
 
 export class SelectModelCommand extends BaseCommand implements VscodeCommand {
   public id = COMMAND_SELECT_MODEL;

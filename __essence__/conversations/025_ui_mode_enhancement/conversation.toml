@@ -5,7 +5,7 @@ number = 1
 time = "2024-12-13 11:42:43"
 query_essence = "修改 UI 模式配置，添加 silent、notification、window、panel 几种模式"
 key_points = [
-    "在 package.json 中添加 oh-my-commits.ui.mode 配置，支持四种模式：silent、notification、window、panel",
+    "在 package.json 中添加 oh-my-commit.ui.mode 配置，支持四种模式：silent、notification、window、panel",
     "修改 commit.page.tsx，在 window 模式下只显示提交信息组件",
     "优化界面显示逻辑，根据不同模式提供不同的交互体验"
 ]

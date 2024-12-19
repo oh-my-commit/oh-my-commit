@@ -1,7 +1,7 @@
 // Get all subdirectories under a path
 
 import { getAllDirectoryPaths } from "@/utils/get-all-directory-paths";
-import { TreeNode } from "@oh-my-commits/shared/common";
+import { TreeNode } from "@oh-my-commit/shared/common";
 
 export const getSubDirectories = (
   fileTree: TreeNode,

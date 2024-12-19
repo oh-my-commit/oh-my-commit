@@ -1,4 +1,4 @@
-import { GitChangeType } from "@oh-my-commits/shared/common";
+import { GitChangeType } from "@oh-my-commit/shared/common";
 
 export const STATUS_COLORS: Record<GitChangeType, string> = {
   added: "text-git-added-fg",

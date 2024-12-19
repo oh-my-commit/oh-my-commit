@@ -5,7 +5,7 @@ abstract = "实现 Provider 中的可继承 logger，支持不同环境（CLI、
 
 [changes]
 files = [
-    "packages/shared/src/providers/oh-my-commits.ts"
+    "packages/shared/src/providers/oh-my-commit.ts"
 ]
 
 [changes.details]

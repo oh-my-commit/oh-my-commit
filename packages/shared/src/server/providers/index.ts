@@ -1,1 +1,1 @@
-export { OmcProvider } from "./oh-my-commits";
+export { OmcProvider } from "./oh-my-commit";

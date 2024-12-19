@@ -1,6 +1,6 @@
 {
-  "name": "@cs-magic/oh-my-commits",
-  "displayName": "Oh My Commits",
+  "name": "@cs-magic/oh-my-commit",
+  "displayName": "Oh My Commit",
   "version": "0.3.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "cs-magic",
@@ -8,7 +8,7 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cs-magic-open/oh-my-commits"
+    "url": "https://github.com/cs-magic-open/oh-my-commit"
   },
   "keywords": [
     "git",
@@ -29,9 +29,9 @@
     "gen-docs": "ts-node -P scripts/tsconfig.json scripts/generate-config-docs.ts",
     "prepare": "husky install",
     "build": "turbo build",
-    "docs:dev": "turbo run docs:dev --filter=@oh-my-commits/website",
-    "docs:build": "turbo run docs:build --filter=@oh-my-commits/website",
-    "docs:preview": "turbo run docs:preview --filter=@oh-my-commits/website"
+    "docs:dev": "turbo run docs:dev --filter=@oh-my-commit/website",
+    "docs:build": "turbo run docs:build --filter=@oh-my-commit/website",
+    "docs:preview": "turbo run docs:preview --filter=@oh-my-commit/website"
   },
   "devDependencies": {
     "@cs-magic/md-toc": "^0.5.1",
@@ -65,24 +65,24 @@
     "commands": [
       {
         "command": "ohMyCommit.quickCommit",
-        "title": "Oh My Commits: Quick Commit"
+        "title": "Oh My Commit: Quick Commit"
       },
       {
         "command": "ohMyCommit.selectModel",
-        "title": "Oh My Commits: Select Model"
+        "title": "Oh My Commit: Select Model"
       },
       {
         "command": "ohMyCommit.openPreference",
-        "title": "Oh My Commits: Open Preference"
+        "title": "Oh My Commit: Open Preference"
       }
     ],
     "configuration": {
-      "title": "Oh My Commits",
+      "title": "Oh My Commit",
       "properties": {
         "ohMyCommit.basic.enabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "是否启用 Oh My Commits",
+          "markdownDescription": "是否启用 Oh My Commit",
           "order": 1
         },
         "ohMyCommit.basic.uiLanguage": {

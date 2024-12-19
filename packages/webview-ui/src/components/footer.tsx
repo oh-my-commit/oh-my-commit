@@ -1,5 +1,5 @@
 import { getVSCodeAPI } from "@/lib/getVSCodeAPI";
-import { APP_NAME } from "@oh-my-commits/shared/common";
+import { APP_NAME } from "@oh-my-commit/shared/common";
 import React from "react";
 import packageJson from "../../package.json";
 
@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
     >
       <button
         onClick={() =>
-          handleLinkClick("https://github.com/cs-magic-open/oh-my-commits")
+          handleLinkClick("https://github.com/cs-magic-open/oh-my-commit")
         }
         // className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
       >

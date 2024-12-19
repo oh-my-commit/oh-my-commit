@@ -188,7 +188,7 @@ export class OmcProvider extends Provider {
           breaking: result.extra?.breaking || false,
           issues: result.extra?.issues || [],
           timestamp: new Date().toISOString(),
-          provider: "oh-my-commits",
+          provider: "oh-my-commit",
           providedModel: model.id,
         },
       });

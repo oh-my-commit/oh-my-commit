@@ -1,6 +1,6 @@
 import { HighlightText } from "@/components/common/HighlightText";
 import { cn } from "@/lib/utils";
-import { GitFileChange } from "@oh-my-commits/shared/common";
+import { GitFileChange } from "@oh-my-commit/shared/common";
 
 import React, { useEffect } from "react";
 import { Checkbox } from "../../common/Checkbox";

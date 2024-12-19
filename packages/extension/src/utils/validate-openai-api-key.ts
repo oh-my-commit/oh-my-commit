@@ -3,7 +3,7 @@ import vscode from "vscode";
 
 export async function validateOpenaiApiKey(): Promise<ValidationResult> {
   const apiKey = vscode.workspace
-    .getConfiguration("oh-my-commits")
+    .getConfiguration("oh-my-commit")
     .get<string>("apiKeys.openai");
 
   if (!apiKey) {
@@ -15,7 +15,7 @@ export async function validateOpenaiApiKey(): Promise<ValidationResult> {
           key: "apiKeys.openai",
           description: "OpenAI API Key",
           type: "string",
-          settingPath: "@ext:cs-magic.oh-my-commits apiKeys.openai",
+          settingPath: "@ext:cs-magic.oh-my-commit apiKeys.openai",
         },
       ],
     };
