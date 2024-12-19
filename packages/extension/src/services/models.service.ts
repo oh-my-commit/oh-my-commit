@@ -1,7 +1,7 @@
 import {
-  GenerateCommit,
   GenerateCommitResult,
-  Provider,
+  GenerateCommitResultDTO,
+  BaseGenerateCommitProvider,
   SETTING_MODEL_ID,
 } from "@oh-my-commit/shared";
 import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
@@ -15,7 +15,7 @@ import { OmcProvider } from "@oh-my-commit/shared";
 import { DiffResult } from "simple-git";
 
 export class AcManager extends Loggable(class {}) {
-  private providers: Provider[] = [new OmcProvider()];
+  private providers: BaseGenerateCommitProvider[] = [new OmcProvider()];
 
   constructor(app: AppManager) {
     super();
@@ -56,7 +56,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater,
+        configureLater
       );
 
       if (response === configureNow) {
@@ -67,27 +67,23 @@ export class AcManager extends Loggable(class {}) {
     return true;
   }
 
-  public generateCommit(diff: DiffResult): GenerateCommitResult {
-    return ResultAsync.fromPromise(
-      (async () => {
-        if (!this.model) {
-          throw new Error("No model selected");
-        }
+  public async generateCommit(diff: DiffResult) {
+    if (!this.model) {
+      throw new Error("No model selected");
+    }
 
-        if (!this.provider) {
-          throw new Error(`Provider ${this.model!.providerId} not found`);
-        }
+    if (!this.provider) {
+      throw new Error(`Provider ${this.model!.providerId} not found`);
+    }
 
-        return this.provider.generateCommit(diff, this.model!, {
-          lang:
-            this.config.get<string>("ohMyCommit.git.commitLanguage") ??
-            vscode.env.language,
-        });
-      })(),
-      (e: unknown) => ({
-        type: "provider-error",
-        message: e instanceof Error ? e.message : "Unknown error occurred",
-      }),
-    );
+    return await this.provider.generateCommit({
+      diff,
+      model: this.model!,
+      options: {
+        lang:
+          this.config.get<string>("ohMyCommit.git.commitLanguage") ??
+          vscode.env.language,
+      },
+    });
   }
 }

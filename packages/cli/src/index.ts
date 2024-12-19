@@ -51,7 +51,6 @@ const generateAndCommit = async (options: any) => {
   console.log(chalk.blue("Generating commit message..."));
   try {
     const model = options.model;
-    const diff = await git.diff(["--staged"]);
     const result = await commitManager.generateCommit(
       {
         changed: 0, // TODO: Parse from git diff
@@ -61,35 +60,29 @@ const generateAndCommit = async (options: any) => {
       },
       model
     );
+    if (!result.ok)
+      throw new Error(`Error(code=${result.code}), message=${result.message}`);
 
-    if (result.isOk()) {
-      const commitData = result.value;
-      console.log(chalk.green("Generated commit message:"));
-      console.log(commitData.title);
-      if (commitData.body) {
-        console.log("\n" + commitData.body);
-      }
+    const commitData = result.data;
+    console.log(chalk.green("Generated commit message:"));
+    console.log(commitData.title);
+    if (commitData.body) {
+      console.log("\n" + commitData.body);
+    }
 
-      if (options.yes) {
-        // Automatically commit if -y flag is provided
-        await git.commit([
-          commitData.title,
-          ...(commitData.body ? [commitData.body] : []),
-        ]);
-        console.log(chalk.green("Changes committed successfully!"));
-      } else {
-        // Ask for confirmation
-        console.log(chalk.yellow("\nUse -y flag to commit automatically"));
-        console.log(
-          chalk.yellow("Or run git commit manually with the message above")
-        );
-      }
+    if (options.yes) {
+      // Automatically commit if -y flag is provided
+      await git.commit([
+        commitData.title,
+        ...(commitData.body ? [commitData.body] : []),
+      ]);
+      console.log(chalk.green("Changes committed successfully!"));
     } else {
-      console.error(
-        chalk.red("Failed to generate commit message:"),
-        result.error
+      // Ask for confirmation
+      console.log(chalk.yellow("\nUse -y flag to commit automatically"));
+      console.log(
+        chalk.yellow("Or run git commit manually with the message above")
       );
-      process.exit(1);
     }
   } catch (error) {
     console.error(chalk.red("Failed to generate commit message:"), error);

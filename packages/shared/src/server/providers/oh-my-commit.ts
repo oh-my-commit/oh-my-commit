@@ -1,14 +1,18 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
 import { formatError } from "@/common/format-error";
-import { GenerateCommitInput, Model, Provider } from "@/common/types/provider";
+import {
+  GenerateCommitInput,
+  GenerateCommitResultDTO,
+  Model,
+  BaseGenerateCommitProvider,
+} from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
 import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import { join } from "path";
-import { DiffResult } from "simple-git";
 
 // 初始化模板管理器
 const templateManager = TemplateManager.getInstance(
@@ -28,7 +32,7 @@ class OmcStandardModel implements Model {
   };
 }
 
-export class OmcProvider extends Provider {
+export class OmcProvider extends BaseGenerateCommitProvider {
   override id = APP_ID;
   override displayName = `${APP_NAME} Provider`;
   override description = `Commit message generation powered by ${APP_NAME} models`;
@@ -195,9 +199,15 @@ export class OmcProvider extends Provider {
     );
   }
 
-  override generateCommit(input: GenerateCommitInput) {
+  override generateCommit(
+    input: GenerateCommitInput,
+  ): Promise<GenerateCommitResultDTO> {
     return ResultAsync.fromSafePromise(Promise.resolve(input))
       .andThen((input) => this.callApi(input))
-      .andThen((response) => this.handleApiResult(response));
+      .andThen((response) => this.handleApiResult(response))
+      .match(
+        (data) => ({ ok: true, data }),
+        (error) => ({ ok: false, code: -1, message: formatError(error) }),
+      );
   }
 }
