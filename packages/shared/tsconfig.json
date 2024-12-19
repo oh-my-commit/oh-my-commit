@@ -14,7 +14,13 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/common/index.ts",
+    "src/server/index.ts"
+  ],
   "exclude": ["node_modules", "dist"],
   "references": []
 }
