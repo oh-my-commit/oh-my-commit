@@ -14,11 +14,12 @@ import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { merge } from "lodash";
 import { Result, ResultAsync } from "neverthrow";
-import { join } from "path";
+import { dirname, join } from "path";
+import { getTemplatesDir } from "../get-templates-dir";
 
 // 初始化模板管理器
 const templateManager = TemplateManager.getInstance(
-  join(__dirname, "..", "templates")
+  getTemplatesDir()
 );
 
 class OmcStandardModel implements Model {

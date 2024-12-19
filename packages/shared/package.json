@@ -19,10 +19,16 @@
       "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.js"
-    }
+    },
+    "./templates/*": "./templates/*"
   },
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly && cp -r templates dist/",
+    "build:types": "tsc --emitDeclarationOnly",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts*\"",
