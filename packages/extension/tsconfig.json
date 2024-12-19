@@ -4,12 +4,13 @@
     "rootDir": "src",
     "outDir": "dist",
     "types": ["vscode"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "composite": true
   },
   "include": ["src"],
   "references": [
     {
-      //      "path": "../shared"
+      "path": "../shared"
     }
   ]
 }

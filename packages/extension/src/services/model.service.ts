@@ -2,8 +2,8 @@ import type { AppManager } from "@/app.manager"
 import { Loggable } from "@/types/mixins"
 import { openPreferences } from "@/utils/open-preference"
 import {
-  type BaseGenerateCommitProvider,
-  type GenerateCommitInput,
+  BaseGenerateCommitProvider,
+  GenerateCommitInput,
   presetAiProviders,
   SETTING_MODEL_ID,
 } from "@shared"

@@ -12,7 +12,8 @@
     "build": "esbuild src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
     "dev": "pnpm build --watch",
-    "clean": "rimraf dist ../../dist"
+    "clean": "rimraf dist ../../dist",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
