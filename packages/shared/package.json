@@ -27,8 +27,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly && cp -r templates dist/",
-    "build:types": "tsc --emitDeclarationOnly",
+    "build": "tsup && tsc --emitDeclarationOnly --outDir dist && cp -r templates dist/",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts*\"",
