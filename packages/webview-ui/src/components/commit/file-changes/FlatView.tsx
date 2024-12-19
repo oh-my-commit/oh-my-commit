@@ -26,9 +26,9 @@ export const FlatView: React.FC<FlatViewProps> = ({
 }) => {
   return (
     <div className={className}>
-      {files.map((file) => (
+      {files.map((file, index) => (
         <FileItem
-          key={file.path}
+          key={index}
           file={file}
           selected={selectedFiles.includes(file.path)}
           isOpen={selectedPath === file.path}

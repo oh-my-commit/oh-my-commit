@@ -20,16 +20,22 @@ export const CommitPage = () => {
   useEffect(() => {
     vscodeClientLogger.info("[useEffect] Setting up message event listener");
 
-    const handleMessage = (event: ServerMessageEvent) => {
-      switch (event.type) {
+    const handleMessage = (event: MessageEvent) => {
+      const message = event.data as ServerMessageEvent;
+
+      if (!message || !("type" in message)) {
+        vscodeClientLogger.info("Unknown event:", message);
+        return;
+      }
+
+      switch (message.type) {
         case "diff-result":
-          setDiffResult(event.data);
+          setDiffResult(message.data);
           break;
         case "commit-message":
-          const { data } = event;
-          if (data.code === 0) {
-            setTitle(data.title);
-            setBody(data.body ?? "");
+          if (message.data.ok) {
+            setTitle(message.data.data.title);
+            setBody(message.data.data.body ?? "");
           }
           break;
         case "commit-result":
@@ -37,7 +43,7 @@ export const CommitPage = () => {
         case "pong":
           break;
         default:
-          vscodeClientLogger.info("Unknown event:", event);
+          vscodeClientLogger.info("Unknown event:", message);
           return;
       }
     };

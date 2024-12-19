@@ -3,13 +3,12 @@ import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
 import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
-import { getVSCodeAPI } from "@/lib/storage";
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { CommitEvent } from "@oh-my-commits/shared/common";
+import { ClientMessageEvent } from "@oh-my-commits/shared";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MAX_SUBJECT_LENGTH = 72;
 const MAX_DETAIL_LENGTH = 1000;
@@ -40,26 +39,13 @@ export function CommitMessage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const messageHandler = (event: MessageEvent<CommitEvent>) => {
-      const message = event.data;
-      if (message.type === "commit") {
-        setIsRegenerating(false);
-      }
-    };
-
-    window.addEventListener("message", messageHandler);
-    return () => window.removeEventListener("message", messageHandler);
-  }, []);
-
   // 处理重新生成
   const handleRegenerate = () => {
     setIsRegenerating(true);
-    const vscode = getVSCodeAPI();
-    vscode.postMessage({
-      command: "generate-commit",
-      selectedFiles: selectedFiles,
-    });
+    postMessage({
+      type: "selected-files",
+      data: selectedFiles,
+    } as ClientMessageEvent);
   };
 
   return (

@@ -17,7 +17,7 @@ export class QuickCommitCommand extends BaseCommand {
   constructor(
     gitService: VscodeGitService,
     acManager: AcManager,
-    context: vscode.ExtensionContext,
+    context: vscode.ExtensionContext
   ) {
     super();
     this.gitService = gitService;
@@ -55,8 +55,10 @@ export class QuickCommitCommand extends BaseCommand {
   }
 
   private async getLatestDiff(selectedFiles?: string[]) {
+    this.logger.info("Getting latest diff");
     await this.gitService.stageAll();
     const diffResult = await this.gitService.getDiffResult();
+    this.logger.info("Done Getting Latest diff");
     if (!selectedFiles) return diffResult;
 
     const newDiffSummary: DiffResult = {

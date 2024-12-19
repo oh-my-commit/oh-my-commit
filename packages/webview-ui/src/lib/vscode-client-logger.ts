@@ -16,10 +16,7 @@ export class VscodeClientLogger extends BaseLogger {
       payload: {
         channel: this.channel,
         level,
-        rawMessage,
-        sourceInfo: {
-          isDevelopment: process.env.NODE_ENV === "development",
-        },
+        message: rawMessage,
       },
     });
   }

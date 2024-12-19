@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { WebviewApi } from "vscode-webview";
 
 // VSCode存储选项
 export interface VSCodeStorageOptions<T> {
@@ -19,48 +20,34 @@ export interface VSCodeAPI {
 
 declare global {
   interface Window {
-    acquireVsCodeApi(): VSCodeAPI;
+    acquireVsCodeApi(): WebviewApi<unknown>;
   }
 }
 
-let vscode: VSCodeAPI | undefined;
+let vscodeApi: WebviewApi<unknown> | undefined;
+
+export function getVSCodeAPI(): WebviewApi<unknown> {
+  if (!vscodeApi) {
+    vscodeApi = acquireVsCodeApi();
+  }
+  return vscodeApi;
+}
 
 function getFromLocalStorage<T>(key: string, defaultValue: T): T {
   try {
     const item = localStorage.getItem(key);
-    if (!item) return defaultValue;
-    const parsed = JSON.parse(item);
-    return parsed === undefined ? defaultValue : parsed;
-  } catch (error) {
-    console.warn(`Error reading from localStorage for key "${key}":`, error);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch {
     return defaultValue;
   }
 }
 
-function setToLocalStorage<T>(key: string, value: T): void {
+function setToLocalStorage<T>(key: string, value: T) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.warn(`Error writing to localStorage for key "${key}":`, error);
+  } catch {
+    // Ignore
   }
-}
-
-export function getVSCodeAPI(): VSCodeAPI {
-  if (!vscode) {
-    try {
-      vscode = window.acquireVsCodeApi();
-    } catch (error) {
-      // 在非VSCode环境中提供mock实现
-      console.warn("Running outside VSCode, using mock implementation");
-      const mockState: Record<string, any> = {};
-      vscode = {
-        getState: () => ({ ...mockState }),
-        setState: (state) => Object.assign(mockState, state),
-        postMessage: (message) => console.log("VSCode message:", message),
-      };
-    }
-  }
-  return vscode;
 }
 
 function getFromVSCode<T>(key: string, defaultValue: T): T {
@@ -114,4 +101,27 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
 export function atomWithStorageReadOnly<T>(options: VSCodeStorageOptions<T>) {
   const baseAtom = atomWithStorage(options);
   return atom((get) => get(baseAtom));
+}
+
+export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<T>) {
+  const baseAtom = atom<T>(defaultValue);
+
+  const derivedAtom = atom(
+    (get) => {
+      const vscode = getVSCodeAPI();
+      const state = vscode.getState() || {};
+      return state[key] ?? defaultValue;
+    },
+    (get, set, update: T) => {
+      const vscode = getVSCodeAPI();
+      const state = vscode.getState() || {};
+      vscode.setState({
+        ...state,
+        [key]: update,
+      });
+      set(baseAtom, update);
+    }
+  );
+
+  return derivedAtom;
 }

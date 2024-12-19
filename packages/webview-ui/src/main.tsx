@@ -9,6 +9,8 @@ import {
   provideVSCodeDesignSystem,
   vsCodeProgressRing,
 } from "@vscode/webview-ui-toolkit";
+import { vscodeClientLogger } from "./lib/vscode-client-logger";
+import { getVSCodeAPI } from "./lib/storage";
 
 // 注册 VSCode Design System
 provideVSCodeDesignSystem().register(vsCodeProgressRing());
@@ -21,7 +23,9 @@ const App: React.FC = () => {
   }
 
   useEffect(() => {
-    postMessage({
+    const vscode = getVSCodeAPI();
+    vscodeClientLogger.info("Sending init message");
+    vscode.postMessage({
       type: "init",
     } as ClientMessageEvent);
   }, []);
@@ -45,5 +49,5 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 );
