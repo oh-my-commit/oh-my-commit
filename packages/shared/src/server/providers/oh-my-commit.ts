@@ -1,6 +1,5 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
 import { formatError } from "@/common/format-error";
-import { CommitData } from "@/common/types/commit";
 import { Model } from "@/common/types/model";
 import { Provider } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
@@ -8,7 +7,7 @@ import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
 import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { err, ok, ResultAsync } from "neverthrow";
+import { ok, ResultAsync } from "neverthrow";
 import { join } from "path";
 import { DiffResult } from "simple-git";
 

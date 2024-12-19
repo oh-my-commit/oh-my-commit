@@ -5,7 +5,11 @@
     "moduleResolution": "NodeNext", // 为 CLI 工具使用 Node.js 特定配置
 
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@oh-my-commit/shared": ["../shared/src"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
