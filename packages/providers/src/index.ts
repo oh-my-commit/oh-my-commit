@@ -1,114 +1,103 @@
-import Anthropic from "@anthropic-ai/sdk";
+import Anthropic from "@anthropic-ai/sdk"
 
-import {
-  APP_ID,
-  APP_NAME,
-  BaseGenerateCommitProvider,
-  OmcStandardModelId,
-} from "@oh-my-commit/shared/common";
+import { APP_ID, APP_NAME, BaseGenerateCommitProvider, OmcStandardModelId } from "@shared/common"
 
+import { Message } from "@anthropic-ai/sdk/resources/messages.mjs"
 import {
+  BaseLogger,
+  formatError,
   GenerateCommitError,
   GenerateCommitInput,
   Model,
-} from "@oh-my-commit/shared/common";
-import { BaseLogger } from "@oh-my-commit/shared/common";
-import { merge } from "lodash";
-import { ResultAsync } from "neverthrow";
-import { HttpsProxyAgent } from "https-proxy-agent";
-import { formatError } from "@oh-my-commit/shared/common";
-import { Message } from "@anthropic-ai/sdk/resources/messages.mjs";
+} from "@shared/common"
+import { HttpsProxyAgent } from "https-proxy-agent"
+import { merge } from "lodash"
+import { ResultAsync } from "neverthrow"
 
 const loadPrompt = (lang: string, diff: string) => {
   // todo: parse from `commit-prompt.hbs`
-  return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`;
-};
+  return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
+}
 
 class OmcStandardModel implements Model {
-  id = OmcStandardModelId;
-  name = `Standard Model`;
-  description = "High accuracy commit messages using Claude 3.5 Sonnet";
-  providerId = APP_ID;
-  aiProviderId = "anthropic";
+  id = OmcStandardModelId
+  name = `Standard Model`
+  description = "High accuracy commit messages using Claude 3.5 Sonnet"
+  providerId = APP_ID
+  aiProviderId = "anthropic"
   metrics = {
     accuracy: 0.95,
     speed: 0.7,
     cost: 0.8,
-  };
+  }
 }
 
 export class OmcProvider extends BaseGenerateCommitProvider {
-  public logger!: BaseLogger;
-  id = APP_ID;
-  displayName = `${APP_NAME} Provider`;
-  description = `Commit message generation powered by ${APP_NAME} models`;
-  models = [new OmcStandardModel()];
+  public logger!: BaseLogger
+  id = APP_ID
+  displayName = `${APP_NAME} Provider`
+  description = `Commit message generation powered by ${APP_NAME} models`
+  models = [new OmcStandardModel()]
 
-  private anthropic: Anthropic | null = null;
+  private anthropic: Anthropic | null = null
 
   constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
-    super();
-    if (logger) this.logger = logger;
+    super()
+    if (logger) this.logger = logger
 
     // this.config = {}; // todo: load from vscode configuration
 
-    const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY;
+    const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY
     const proxy =
-      proxyUrl ||
-      process.env.HTTP_PROXY ||
-      process.env.HTTPS_PROXY ||
-      process.env.ALL_PROXY;
+      proxyUrl || process.env.HTTP_PROXY || process.env.HTTPS_PROXY || process.env.ALL_PROXY
 
-    const config: Record<string, any> = { apiKey };
+    const config: Record<string, any> = { apiKey }
 
-    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy);
+    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
 
-    if (apiKey) this.anthropic = new Anthropic(config);
+    if (apiKey) this.anthropic = new Anthropic(config)
   }
 
   generateCommit(input: GenerateCommitInput) {
-    this.logger.info("Generating commit message using OMC Provider...");
+    this.logger.info("Generating commit message using OMC Provider...")
     return (
       // 1. call api
       ResultAsync.fromPromise(
         this.callApi(input),
-        (error) =>
-          new GenerateCommitError(
-            -10086,
-            `failed to call api, reason: ${formatError(error)}`
-          )
+        error =>
+          new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
       )
         // 2. handle api result
-        .andThen((response) =>
+        .andThen(response =>
           ResultAsync.fromPromise(
             this.handleApiResult(response),
-            (error) =>
+            error =>
               new GenerateCommitError(
                 -10087,
-                `failed to handle api result, reason: ${formatError(error)}`
-              )
-          )
+                `failed to handle api result, reason: ${formatError(error)}`,
+              ),
+          ),
         )
         // 3. add metadata
-        .map((result) => {
+        .map(result => {
           merge(result.meta, {
             generatedAt: new Date().toISOString(),
             modelId: input.model.id,
             providerId: this.id,
-          });
-          return result;
+          })
+          return result
         })
-    );
+    )
   }
 
   private callApi(input: GenerateCommitInput) {
-    const lang = input.options?.lang || "en";
-    const modelName = "claude-3-sonnet-20240229";
-    if (!this.anthropic) throw new Error("Anthropic API key not configured");
-    this.logger.info("Generating commit message using Anthropic...");
+    const lang = input.options?.lang || "en"
+    const modelName = "claude-3-sonnet-20240229"
+    if (!this.anthropic) throw new Error("Anthropic API key not configured")
+    this.logger.info("Generating commit message using Anthropic...")
 
-    const diff = JSON.stringify(input.diff, null, 2);
-    const prompt = loadPrompt(lang, diff);
+    const diff = JSON.stringify(input.diff, null, 2)
+    const prompt = loadPrompt(lang, diff)
 
     return this.anthropic.messages.create({
       model: modelName,
@@ -134,8 +123,7 @@ export class OmcProvider extends BaseGenerateCommitProvider {
               },
               body: {
                 type: "string",
-                description:
-                  "Detailed explanation of what changes were made and why",
+                description: "Detailed explanation of what changes were made and why",
               },
               extra: {
                 type: "object",
@@ -181,31 +169,27 @@ export class OmcProvider extends BaseGenerateCommitProvider {
         },
       ],
       tool_choice: { type: "tool" as const, name: "generate_commit" },
-    });
+    })
   }
 
   private async handleApiResult(response: Message) {
-    this.logger.debug(
-      "Commit message generated (response): ",
-      JSON.stringify(response)
-    );
+    this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
 
-    const item = response.content[0];
-    if (item.type !== "tool_use")
-      throw new Error("Invalid tool response from AI model");
+    const item = response.content[0]
+    if (item.type !== "tool_use") throw new Error("Invalid tool response from AI model")
 
     const result = item.input as {
-      title: string;
-      body: string;
+      title: string
+      body: string
       extra?: {
-        type?: string;
-        scope?: string;
-        breaking?: boolean;
-        issues?: string[];
-      };
-    };
+        type?: string
+        scope?: string
+        breaking?: boolean
+        issues?: string[]
+      }
+    }
 
-    if (!result) throw new Error("Invalid tool response from AI model");
+    if (!result) throw new Error("Invalid tool response from AI model")
 
     return {
       title: result.title,
@@ -213,6 +197,6 @@ export class OmcProvider extends BaseGenerateCommitProvider {
       meta: {
         ...result.extra,
       },
-    };
+    }
   }
 }

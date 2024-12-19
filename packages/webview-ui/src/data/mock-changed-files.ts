@@ -1,5 +1,5 @@
-import { GitChangeType } from "@oh-my-commit/shared/common";
-import type { FileChange } from "../state/types";
+import { GitChangeType } from "@shared/common"
+import type { FileChange } from "../state/types"
 
 export const mockFileChanges: FileChange[] = [
   {
@@ -47,4 +47,4 @@ export const mockFileChanges: FileChange[] = [
     diff: "diff --git a/src/components/Settings.tsx b/src/components/Settings.tsx\n...",
     isStaged: false,
   },
-];
+]

@@ -1,13 +1,9 @@
-import { clientPush } from "@/clientPush";
-import {
-  BaseLogger,
-  formatMessage,
-  LogLevel,
-} from "@oh-my-commit/shared/common";
+import { clientPush } from "@/clientPush"
+import { BaseLogger, formatMessage, LogLevel } from "@shared/common"
 
 export class VscodeClientLogger extends BaseLogger {
   protected log(level: LogLevel, ...args: any[]) {
-    const rawMessage = formatMessage(...args);
+    const rawMessage = formatMessage(...args)
 
     clientPush({
       channel: this.channel,
@@ -16,8 +12,8 @@ export class VscodeClientLogger extends BaseLogger {
         level,
         rawMessage,
       },
-    });
+    })
   }
 }
 
-export const vscodeClientLogger = new VscodeClientLogger("Webview Default");
+export const vscodeClientLogger = new VscodeClientLogger("Webview Default")
