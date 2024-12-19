@@ -1,2 +1,2 @@
-export * from "./common/index.js"
-export * from "./server/index.js"
+export * from "./common"
+export * from "./server"

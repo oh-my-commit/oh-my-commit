@@ -14,10 +14,3 @@ node_modules/
 .DS_Store
 .swc
 
-# Compiled output
-**/*.js
-**/*.js.map
-**/*.d.ts
-!**/vite.config.js
-!**/jest.config.js
-!**/.eslintrc.js
