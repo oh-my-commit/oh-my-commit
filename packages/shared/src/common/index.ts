@@ -1,8 +1,10 @@
 export { Model } from "./types/provider.js"
 
-export { GenerateCommitInput } from "./types/provider.js"
-
-export { BaseGenerateCommitProvider } from "./types/provider.js"
+export {
+  BaseGenerateCommitProvider,
+  GenerateCommitError,
+  GenerateCommitInput,
+} from "./types/provider.js"
 
 export { ClientMessageEvent } from "./types/message-events/commit.js"
 

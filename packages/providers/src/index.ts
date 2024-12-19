@@ -1,15 +1,18 @@
 import Anthropic from "@anthropic-ai/sdk"
 
-import { APP_ID, APP_NAME, BaseGenerateCommitProvider, OmcStandardModelId } from "@shared/common"
-
-import { Message } from "@anthropic-ai/sdk/resources/messages.mjs"
 import {
+  APP_ID,
+  APP_NAME,
+  BaseGenerateCommitProvider,
   BaseLogger,
   formatError,
   GenerateCommitError,
   GenerateCommitInput,
   Model,
-} from "@shared/common"
+  OmcStandardModelId,
+} from "@shared"
+
+import { Message } from "@anthropic-ai/sdk/resources/messages.mjs"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash"
 import { ResultAsync } from "neverthrow"

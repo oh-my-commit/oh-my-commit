@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "../../tsconfig.base.json"
-  ],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
       // 当前包内的别名
