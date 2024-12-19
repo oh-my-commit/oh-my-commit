@@ -1,30 +1,31 @@
 {
   "name": "@oh-my-commit/shared",
   "version": "0.0.1",
+  "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./common": {
       "types": "./dist/common/index.d.ts",
-      "import": "./dist/common/index.js",
+      "import": "./dist/common/index.mjs",
       "require": "./dist/common/index.js"
     },
     "./server": {
       "types": "./dist/server/index.d.ts",
-      "import": "./dist/server/index.js",
+      "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.js"
     }
   },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rimraf dist tsconfig.tsbuildinfo"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

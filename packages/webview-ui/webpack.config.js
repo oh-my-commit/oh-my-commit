@@ -1,8 +1,12 @@
-const path = require("path");
+import path from "path"
+import { fileURLToPath } from "url"
 
-module.exports = (env, argv) => {
-  const isProduction = argv.mode === "production";
-  const isDevelopment = !isProduction;
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+export default (env, argv) => {
+  const isProduction = argv.mode === "production"
+  const isDevelopment = !isProduction
 
   return {
     mode: argv.mode || "development",
@@ -22,11 +26,8 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
-        "@": [
-          path.resolve(__dirname, "src"),
-          path.resolve(__dirname, "../shared/src"),
-        ],
-        "@oh-my-commit/shared": [path.resolve(__dirname, "../shared/src")],
+        "@": [path.resolve(__dirname, "src")],
+        "@shared": [path.resolve(__dirname, "../shared/src")],
       },
     },
     module: {
@@ -74,5 +75,5 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
-  };
-};
+  }
+}
