@@ -1,4 +1,4 @@
-import { LogLevel } from "../../utils/logger.ts"
+import { LogLevel } from "../../utils/logger.js"
 
 export type BaseClientMessageEvent =
   | {

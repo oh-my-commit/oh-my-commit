@@ -1,1 +1,1 @@
-export * from "./commit-manager.ts"
+export * from "./commit-manager.js"
