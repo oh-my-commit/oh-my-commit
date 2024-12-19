@@ -1,6 +1,6 @@
 import {
   GenerateCommitResult,
-  GenerateCommitResultDTO,
+  GenerateCommitDTO,
   BaseGenerateCommitProvider,
   SETTING_MODEL_ID,
 } from "@oh-my-commit/shared";

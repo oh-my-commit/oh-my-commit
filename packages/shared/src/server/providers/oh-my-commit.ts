@@ -2,21 +2,24 @@ import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
 import { formatError } from "@/common/format-error";
 import {
   GenerateCommitInput,
-  GenerateCommitResultDTO,
+  GenerateCommitDTO,
   Model,
   BaseGenerateCommitProvider,
+  GenerateCommitError,
+  GenerateCommitResult,
 } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
 import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { ResultAsync } from "neverthrow";
+import { result } from "lodash";
+import { err, ResultAsync } from "neverthrow";
 import { join } from "path";
 
 // 初始化模板管理器
 const templateManager = TemplateManager.getInstance(
-  join(__dirname, "..", "templates"),
+  join(__dirname, "..", "templates")
 );
 
 class OmcStandardModel implements Model {
@@ -148,13 +151,11 @@ export class OmcProvider extends BaseGenerateCommitProvider {
           tool_choice: { type: "tool" as const, name: "generate_commit" },
         });
       })(),
-      (error) => {
-        return {
-          ok: false,
-          code: -1,
-          message: `failed to call api, reason: ${formatError(error)}`,
-        };
-      },
+      (error) =>
+        new GenerateCommitError(
+          -1,
+          `failed to call api, reason: ${formatError(error)}`
+        )
     );
   }
 
@@ -163,7 +164,7 @@ export class OmcProvider extends BaseGenerateCommitProvider {
       (async () => {
         this.logger.debug(
           "Commit message generated (response): ",
-          JSON.stringify(response),
+          JSON.stringify(response)
         );
 
         const item = response.content[0];
@@ -186,28 +187,28 @@ export class OmcProvider extends BaseGenerateCommitProvider {
         return {
           title: result.title,
           body: result.body,
-          meta: {
+          extra: {
             ...result.extra,
           },
-        };
+        } as GenerateCommitResult;
       })(),
-      (error) => ({
-        ok: false,
-        message: `failed to handle api result, reason: ${formatError(error)}`,
-        code: -2,
-      }),
+      (error) =>
+        new GenerateCommitError(
+          -2,
+          `failed to handle api result, reason: ${formatError(error)}`
+        )
     );
   }
 
-  override generateCommit(
-    input: GenerateCommitInput,
-  ): Promise<GenerateCommitResultDTO> {
+  override generateCommit(input: GenerateCommitInput) {
     return ResultAsync.fromSafePromise(Promise.resolve(input))
-      .andThen((input) => this.callApi(input))
-      .andThen((response) => this.handleApiResult(response))
-      .match(
-        (data) => ({ ok: true, data }),
-        (error) => ({ ok: false, code: -1, message: formatError(error) }),
-      );
+      .andThen(this.callApi)
+      .andThen(this.handleApiResult)
+      .map((result) => {
+        result.extra.generatedAt = new Date().toISOString();
+        result.extra.modelId = input.model.id;
+        result.extra.providerId = this.id;
+        return result;
+      });
   }
 }

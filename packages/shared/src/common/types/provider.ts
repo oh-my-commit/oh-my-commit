@@ -1,17 +1,21 @@
 import { APP_NAME } from "@/common/constants";
 import { BaseLogger, ConsoleLogger } from "@/common/utils/logger";
-import { DiffResult } from "simple-git";
+import { CommitResult, DiffResult } from "simple-git";
+import { ResultDTO } from "./ResultDTO";
+import { ResultAsync } from "neverthrow";
 
 export type GenerateCommitInput = {
   /**
    * 用户提交的 Diff 信息
    */
-  diff: DiffResult /**
+  diff: DiffResult;
+  /**
    * 用户选用的供应商模型
-   */;
-  model: Model /**
+   */
+  model: Model;
+  /**
    * 其他用户配置
-   */;
+   */
   options?: {
     /**
      * 用户希望生成 commit 的语言
@@ -29,14 +33,23 @@ export type GenerateCommitResult = {
   extra?: any;
 };
 
-export type ResultDTO<T> =
-  | { ok: true; data: T }
-  | { ok: false; code: number; message: string };
+/**
+ * 供应商返回的错误
+ */
+export class GenerateCommitError extends Error {
+  public readonly code: number;
+
+  constructor(code: number, message: string) {
+    super(message);
+    this.code = code;
+    this.name = "GenerateCommitError";
+  }
+}
 
 /**
- * 供应商需要实现的返回结构
+ * 供应商如果需要 Restful 接口的推荐 DTO
  */
-export type GenerateCommitResultDTO = ResultDTO<GenerateCommitResult>;
+export type GenerateCommitDTO = ResultDTO<GenerateCommitResult>;
 
 /**
  * 供应商定义的模型 meta 信息，供用户候选
@@ -88,6 +101,6 @@ export abstract class BaseGenerateCommitProvider {
    * @param input
    */
   abstract generateCommit(
-    input: GenerateCommitInput,
-  ): PromiseLike<GenerateCommitResultDTO>;
+    input: GenerateCommitInput
+  ): ResultAsync<GenerateCommitResult, GenerateCommitError>;
 }

@@ -220,6 +220,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/lodash": "^4.17.13",
+    "immer": "^10.1.1",
     "lodash": "^4.17.21",
     "neverthrow": "^8.1.1"
   }
