@@ -22,7 +22,7 @@ export class VscodeWebview
   private readonly scriptUri: vscode.Uri;
   private readonly template: HandlebarsTemplateDelegate;
   private messageHandlers: Map<string, MessageHandler> = new Map();
-  private onClientMessage?: (message: ClientMessageEvent) => void;
+  private onClientMessage?: (message: ClientMessageEvent) => Promise<void>;
 
   /**
    * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
@@ -50,8 +50,8 @@ export class VscodeWebview
       title?: string;
       templatePath?: string;
       scriptPath?: string;
-      onClientMessage?: (message: ClientMessageEvent) => void;
-    },
+      onClientMessage?: (message: ClientMessageEvent) => Promise<void>;
+    }
   ) {
     super();
     this.title = title;
@@ -90,15 +90,18 @@ export class VscodeWebview
         viewColumn: vscode.ViewColumn.One,
         preserveFocus: true,
       },
-      this.getWebviewOptions(),
+      this.getWebviewOptions()
     );
 
     // Set up message handler
     panel.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
       let level: LogLevel = "info";
+      let webviewChannel: string = message.channel ?? "DEFAULT";
+      delete message.channel;
       switch (message.type) {
         case "log":
           level = message.data.level;
+          message = message.data.rawMessage;
           break;
 
         case "close-window":
@@ -112,9 +115,10 @@ export class VscodeWebview
           if (this.onClientMessage) {
             await this.onClientMessage(message);
           }
-          return;
+          break;
       }
-      this.logger[level](`[Host <-- ${this.title}] `, message);
+      this.logger.setChannel(`[Host <-- Webview(${webviewChannel})]`);
+      this.logger[level](message);
     });
 
     // Set up file watcher
@@ -156,7 +160,7 @@ export class VscodeWebview
   private setupFileWatcher(panel: vscode.WebviewPanel) {
     const mainJsPath = path.join(this.context.extensionPath, this.scriptPath);
 
-    this.logger.info(`Main.js path: ${mainJsPath}`);
+    // this.logger.info(`Main.js path: ${mainJsPath}`);
 
     // Verify paths exist
     if (!fs.existsSync(mainJsPath)) {
@@ -201,11 +205,11 @@ export class VscodeWebview
         vscode.Uri.joinPath(
           vscode.Uri.file(path.dirname(this.scriptPath)),
           "..",
-          "..",
+          ".."
         ),
       ],
     };
-    this.logger.info("Webview options:", options);
+    // this.logger.info("Webview options:", options);
     return options;
   }
 
@@ -239,7 +243,7 @@ export class VscodeWebview
 
     this.logger.info(
       "Updating webview with template data:",
-      JSON.stringify(templateData, null, 2),
+      JSON.stringify(templateData, null, 2)
     );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;

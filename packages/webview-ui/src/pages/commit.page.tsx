@@ -1,3 +1,4 @@
+import { clientPush } from "@/clientPush";
 import { CommitMessage } from "@/components/commit/CommitMessage";
 import { FileChanges } from "@/components/commit/file-changes/FileChanges";
 import { Footer } from "@/components/footer";
@@ -5,10 +6,10 @@ import { useCloseWindow } from "@/hooks/use-close-window";
 import { vscodeClientLogger } from "@/lib/vscode-client-logger";
 import { diffResultAtom } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { ClientMessageEvent, ServerMessageEvent } from "@oh-my-commits/shared";
+import { ServerMessageEvent } from "@oh-my-commits/shared";
 
 import { useSetAtom } from "jotai";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 export const CommitPage = () => {
   const setTitle = useSetAtom(commitTitleAtom);
@@ -16,6 +17,10 @@ export const CommitPage = () => {
   const setDiffResult = useSetAtom(diffResultAtom);
 
   useCloseWindow();
+
+  useEffect(() => {
+    clientPush({ type: "init", channel: "CommitPage" });
+  }, []);
 
   useEffect(() => {
     vscodeClientLogger.info("[useEffect] Setting up message event listener");
@@ -57,7 +62,8 @@ export const CommitPage = () => {
     };
   }, []);
 
-  vscodeClientLogger.info("[CommmitPage]", "== rendered ==");
+  vscodeClientLogger.setChannel("CommitPage");
+  vscodeClientLogger.info("== rendered ==");
 
   return (
     <div className="flex flex-col h-screen">

@@ -1,43 +1,18 @@
-import { ClientMessageEvent } from "@oh-my-commits/shared";
-import { Provider } from "jotai";
-import React, { useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { CommitPage } from "./pages/commit.page";
-import "./styles/global.css";
-import "@vscode/codicons/dist/codicon.css";
 import {
   provideVSCodeDesignSystem,
   vsCodeProgressRing,
 } from "@vscode/webview-ui-toolkit";
-import { vscodeClientLogger } from "./lib/vscode-client-logger";
-import { getVSCodeAPI } from "./lib/storage";
+import { Provider } from "jotai";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { CommitPage } from "./pages/commit.page";
+
+import "./styles/global.css";
+import "./styles/markdown.css";
+import "@vscode/codicons/dist/codicon.css";
 
 // 注册 VSCode Design System
 provideVSCodeDesignSystem().register(vsCodeProgressRing());
-
-const App: React.FC = () => {
-  const [showApp, setShowApp] = useState(false);
-
-  if (!showApp) {
-    // return <InitAnimation onEnter={() => setShowApp(true)} />;
-  }
-
-  useEffect(() => {
-    const vscode = getVSCodeAPI();
-    vscodeClientLogger.info("Sending init message");
-    vscode.postMessage({
-      type: "init",
-    } as ClientMessageEvent);
-  }, []);
-
-  return (
-    <Provider>
-      {/* <MockDataProvider> */}
-      <CommitPage />
-      {/* </MockDataProvider> */}
-    </Provider>
-  );
-};
 
 const container = document.getElementById("root");
 if (!container) {
@@ -47,7 +22,11 @@ if (!container) {
 
 const root = createRoot(container);
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider>
+    {/* <MockDataProvider> */}
+    <CommitPage />
+    {/* </MockDataProvider> */}
+  </Provider>
+  // </React.StrictMode>
 );

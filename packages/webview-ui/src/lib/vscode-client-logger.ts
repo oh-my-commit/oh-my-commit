@@ -1,25 +1,23 @@
+import { clientPush } from "@/clientPush";
 import {
   BaseLogger,
   formatMessage,
   LogLevel,
 } from "@oh-my-commits/shared/common";
-import { getVSCodeAPI } from "./storage";
 
 export class VscodeClientLogger extends BaseLogger {
-  private vscode = getVSCodeAPI();
-
   protected log(level: LogLevel, ...args: any[]) {
     const rawMessage = formatMessage(...args);
 
-    this.vscode.postMessage({
-      command: "log",
-      payload: {
-        channel: this.channel,
+    clientPush({
+      channel: this.channel,
+      type: "log",
+      data: {
         level,
-        message: rawMessage,
+        rawMessage,
       },
     });
   }
 }
 
-export const vscodeClientLogger = new VscodeClientLogger("Webview");
+export const vscodeClientLogger = new VscodeClientLogger("Webview Default");

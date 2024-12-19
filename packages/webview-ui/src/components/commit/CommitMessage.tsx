@@ -1,3 +1,4 @@
+import { clientPush } from "@/clientPush";
 import { CommitFormatTooltip } from "@/components/commit/commit-format-tooltip";
 import { FeedbackButton } from "@/components/commit/feedback-button";
 import { InfoIcon } from "@/components/commit/info-icon";
@@ -5,7 +6,6 @@ import { MessageInput } from "@/components/commit/message-input";
 import { Section } from "@/components/layout/Section";
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files";
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message";
-import { ClientMessageEvent } from "@oh-my-commits/shared";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
@@ -42,10 +42,10 @@ export function CommitMessage() {
   // 处理重新生成
   const handleRegenerate = () => {
     setIsRegenerating(true);
-    postMessage({
+    clientPush({
       type: "selected-files",
       data: selectedFiles,
-    } as ClientMessageEvent);
+    });
   };
 
   return (
