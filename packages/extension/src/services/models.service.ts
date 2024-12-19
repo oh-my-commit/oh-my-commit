@@ -1,22 +1,20 @@
-import {
-  GenerateCommitResult,
-  GenerateCommitDTO,
-  BaseGenerateCommitProvider,
-  SETTING_MODEL_ID,
-  GenerateCommitInput,
-} from "@oh-my-commit/shared";
-import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
-import { Result, ResultAsync } from "neverthrow";
-import * as vscode from "vscode";
-
 import { AppManager } from "@/app.manager";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
-import { OmcProvider } from "@oh-my-commit/shared";
+import {
+  BaseGenerateCommitProvider,
+  GenerateCommitInput,
+  presetAiProviders,
+  SETTING_MODEL_ID,
+} from "@oh-my-commit/shared";
 import { DiffResult } from "simple-git";
+import * as vscode from "vscode";
 
+/**
+ * todo: use AcService
+ */
 export class AcManager extends Loggable(class {}) {
-  private providers: BaseGenerateCommitProvider[] = [new OmcProvider()];
+  private providers: BaseGenerateCommitProvider[] = [];
 
   constructor(app: AppManager) {
     super();
@@ -36,7 +34,7 @@ export class AcManager extends Loggable(class {}) {
 
   get provider() {
     return this.providers.find((p) =>
-      p.models.some((model) => model.id === this.modelId)
+      p.models.some((model) => model.id === this.modelId),
     );
   }
 
@@ -57,7 +55,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater
+        configureLater,
       );
 
       if (response === configureNow) {
@@ -76,7 +74,7 @@ export class AcManager extends Loggable(class {}) {
     const provider = this.provider;
     this.logger.info(
       "[AcManager] Generating commit using provider: ",
-      provider
+      provider,
     );
     if (!provider)
       throw new Error(`Provider ${this.model!.providerId} not found`);

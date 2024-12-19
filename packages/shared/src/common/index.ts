@@ -3,3 +3,4 @@ export * from "./config/validation";
 export * from "./types";
 export * from "./utils/logger";
 export * from "./constants";
+export * from "./config/providers";
