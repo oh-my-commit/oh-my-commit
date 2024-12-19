@@ -3,6 +3,7 @@ import {
   GenerateCommitDTO,
   BaseGenerateCommitProvider,
   SETTING_MODEL_ID,
+  GenerateCommitInput,
 } from "@oh-my-commit/shared";
 import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
 import { Result, ResultAsync } from "neverthrow";
@@ -34,9 +35,9 @@ export class AcManager extends Loggable(class {}) {
   }
 
   get provider() {
-    const model = this.model;
-    if (!model) return;
-    return this.providers.find((p) => p.models.includes(model));
+    return this.providers.find((p) =>
+      p.models.some((model) => model.id === this.modelId)
+    );
   }
 
   public async selectModel(modelId: string): Promise<boolean> {
@@ -68,22 +69,30 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public async generateCommit(diff: DiffResult) {
-    if (!this.model) {
-      throw new Error("No model selected");
-    }
+    const model = this.model;
+    this.logger.info("[AcManager] Generating commit using model: ", model);
+    if (!model) throw new Error("No model selected");
 
-    if (!this.provider) {
+    const provider = this.provider;
+    this.logger.info(
+      "[AcManager] Generating commit using provider: ",
+      provider
+    );
+    if (!provider)
       throw new Error(`Provider ${this.model!.providerId} not found`);
-    }
 
-    return await this.provider.generateCommit({
+    const options = {
+      lang:
+        this.config.get<string>("ohMyCommit.git.commitLanguage") ??
+        vscode.env.language,
+    };
+    this.logger.info("options: ", options);
+
+    const input: GenerateCommitInput = {
       diff,
       model: this.model!,
-      options: {
-        lang:
-          this.config.get<string>("ohMyCommit.git.commitLanguage") ??
-          vscode.env.language,
-      },
-    });
+      options,
+    };
+    return await this.provider.generateCommit(input);
   }
 }

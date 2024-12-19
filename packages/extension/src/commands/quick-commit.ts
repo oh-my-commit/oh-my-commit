@@ -55,7 +55,7 @@ export class QuickCommitCommand extends BaseCommand {
   }
 
   private async getLatestDiff(selectedFiles?: string[]) {
-    this.logger.info("Getting latest diff");
+    this.logger.info("Getting latest diff, selectedFiles:", selectedFiles);
     await this.gitService.stageAll();
     const diffResult = await this.gitService.getDiffResult();
     this.logger.info("Done Getting Latest diff");
@@ -89,8 +89,9 @@ export class QuickCommitCommand extends BaseCommand {
       });
     }
 
+    this.logger.info("[QuickCommit] Generating commit via acManager...");
     const commit = await this.acManager.generateCommit(diffResult);
-    this.logger.info("Generated commit:", commit);
+    this.logger.info("[QuickCommit] Generated commit via acManager:", commit);
 
     if (commit.isOk()) {
       await this.webviewManager.postMessage({
