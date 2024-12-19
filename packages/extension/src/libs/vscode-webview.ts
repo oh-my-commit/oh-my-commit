@@ -60,7 +60,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
 
     // load script
     this.scriptPath = scriptPath
-    this.scriptUri = vscode.Uri.joinPath(context.extensionUri, this.scriptPath)
+    this.scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, this.scriptPath))
 
     // register webview
     context.subscriptions.push(this)
@@ -194,7 +194,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
       enableScripts: true,
       retainContextWhenHidden: true,
       localResourceRoots: [
-        vscode.Uri.joinPath(vscode.Uri.file(path.dirname(this.scriptPath)), "..", ".."),
+        vscode.Uri.file(path.dirname(this.scriptPath)),
       ],
     }
     // this.logger.info("Webview options:", options);
