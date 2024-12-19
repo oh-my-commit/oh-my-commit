@@ -2,6 +2,7 @@
   "name": "@oh-my-commit/provider-official",
   "version": "0.1.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --platform node",
