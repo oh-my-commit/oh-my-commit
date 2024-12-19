@@ -4,6 +4,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": ".",  // 相对于子包的根目录
+//    "declaration": true,
+//    "emitDeclarationOnly": true
   },
   "include": ["src/**/*"]
 }
