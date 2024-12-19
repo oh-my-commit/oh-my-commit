@@ -2,13 +2,11 @@ import {
   BaseClientMessageEvent,
   BaseServerMessageEvent,
   CommitData,
-  GenerateCommitResult,
 } from "@/common";
 import { ResultDTO } from "@/common/types/dto";
-import { Result } from "neverthrow";
 import { DiffResult } from "simple-git";
 
-export type ClientMessageEvent =
+export type ClientMessageEvent_ =
   | BaseClientMessageEvent
   | {
       type: "init";
@@ -40,3 +38,7 @@ export type ServerMessageEvent =
       type: "commit-result";
       data: ResultDTO<any>;
     };
+
+export type ClientMessageEvent = ClientMessageEvent_ & {
+  channel?: string;
+};

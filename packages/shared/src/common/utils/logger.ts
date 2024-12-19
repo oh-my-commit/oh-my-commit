@@ -3,13 +3,17 @@ export type LogLevel = "debug" | "info" | "warn" | "error" | "trace";
 export function formatMessage(...args: any[]): string {
   return args
     .map((arg) =>
-      typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg),
+      typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)
     )
     .join(" ");
 }
 
 export abstract class BaseLogger {
   protected channel = "default";
+
+  setChannel(channel: string) {
+    this.channel = channel;
+  }
 
   constructor(channel: string) {
     this.channel = channel;
@@ -41,7 +45,9 @@ export abstract class BaseLogger {
 export class ConsoleLogger extends BaseLogger {
   protected log(level: LogLevel, ...args: any[]) {
     console.log(
-      `${new Date().toISOString()} ${level.toUpperCase()} | [${this.channel}] ${formatMessage(...args)}]`,
+      `${new Date().toISOString()} ${level.toUpperCase()} | [${
+        this.channel
+      }] ${formatMessage(...args)}]`
     );
   }
 }
