@@ -1,7 +1,7 @@
 import type { DiffResult } from "simple-git"
-import { GenerateCommitResult } from "../provider.ts"
-import type { ResultDTO } from "../ResultDTO.ts"
-import { BaseClientMessageEvent, BaseServerMessageEvent } from "./base.ts"
+import { GenerateCommitResult } from "../provider.js"
+import type { ResultDTO } from "../ResultDTO.js"
+import { BaseClientMessageEvent, BaseServerMessageEvent } from "./base.js"
 
 export type ClientMessageEvent_ =
   | BaseClientMessageEvent

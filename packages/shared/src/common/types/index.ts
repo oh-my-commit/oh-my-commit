@@ -1,13 +1,13 @@
 // Git related types
-export * from "./git.ts"
+export * from "./git.js"
 
 // Provider related types
-export * from "./provider.ts"
+export * from "./provider.js"
 
 // Message event related types
-export * from "./message-events/base.ts"
-export * from "./message-events/commit.ts"
+export * from "./message-events/base.js"
+export * from "./message-events/commit.js"
 
 // Re-export specific types that are commonly used
 
-export type { TreeNode } from "./tree.ts"
+export type { TreeNode } from "./tree.js"
