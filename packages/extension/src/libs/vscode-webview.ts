@@ -11,6 +11,7 @@ import {
 } from "@oh-my-commit/shared";
 
 import { Loggable } from "@/types/mixins";
+import _ from "lodash";
 
 type MessageHandler = (message: any) => Promise<void>;
 
@@ -51,7 +52,7 @@ export class VscodeWebview
       templatePath?: string;
       scriptPath?: string;
       onClientMessage?: (message: ClientMessageEvent) => Promise<void>;
-    },
+    }
   ) {
     super();
     this.title = title;
@@ -90,13 +91,13 @@ export class VscodeWebview
         viewColumn: vscode.ViewColumn.One,
         preserveFocus: true,
       },
-      this.getWebviewOptions(),
+      this.getWebviewOptions()
     );
 
     // Set up message handler
     panel.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
       let level: LogLevel = "info";
-      let webviewChannel: string = message.channel ?? "DEFAULT";
+      let webviewChannel: string = _.camelCase(message.channel ?? "default");
       delete message.channel;
       switch (message.type) {
         case "log":
@@ -117,7 +118,7 @@ export class VscodeWebview
           }
           break;
       }
-      this.logger.setChannel(`[Host <-- Webview(${webviewChannel})]`);
+      this.logger.setChannel(`webview.${webviewChannel}`);
       this.logger[level](message);
     });
 
@@ -205,7 +206,7 @@ export class VscodeWebview
         vscode.Uri.joinPath(
           vscode.Uri.file(path.dirname(this.scriptPath)),
           "..",
-          "..",
+          ".."
         ),
       ],
     };
@@ -243,7 +244,7 @@ export class VscodeWebview
 
     this.logger.info(
       "Updating webview with template data:",
-      JSON.stringify(templateData, null, 2),
+      JSON.stringify(templateData, null, 2)
     );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;

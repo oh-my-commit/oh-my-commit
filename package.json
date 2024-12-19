@@ -219,6 +219,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "neverthrow": "^8.1.1"
   }
 }

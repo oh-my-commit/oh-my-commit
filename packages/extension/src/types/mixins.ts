@@ -8,7 +8,7 @@ export type Constructor<T = {}> = abstract new (...args: any[]) => T;
 export function Loggable<TBase extends Constructor>(Base: TBase) {
   abstract class LoggableClass extends Base {
     public config = vscode.workspace.getConfiguration();
-    public logger = new VscodeExtensionLogger("Host");
+    public logger = new VscodeExtensionLogger("host");
   }
 
   return LoggableClass;
