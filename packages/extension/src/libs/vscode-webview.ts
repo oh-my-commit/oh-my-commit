@@ -13,7 +13,7 @@ type MessageHandler = (message: any) => Promise<void>
 export class VscodeWebview extends Loggable(class {}) implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
   private readonly scriptUri: vscode.Uri
-  private readonly template: HandlebarsTemplateDelegate
+  private readonly template
   private messageHandlers: Map<string, MessageHandler> = new Map()
   private onClientMessage?: (message: ClientMessageEvent) => Promise<void>
 

@@ -5,7 +5,7 @@ import type { VscodeCommand } from "@/libs/vscode-command"
 import type { AcManager } from "@/services/model.service"
 import type { VscodeGitService } from "@/services/vscode-git.service"
 import { Loggable } from "@/types/mixins"
-import { COMMAND_OPEN_PREFERENCE } from "@shared"
+import { COMMAND_OPEN_PREFERENCE, COMMAND_QUICK_COMMIT, COMMAND_SELECT_MODEL } from "@shared"
 import * as vscode from "vscode"
 
 export class CommandManager extends Loggable(class {}) {
