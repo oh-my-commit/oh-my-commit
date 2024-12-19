@@ -1,9 +1,9 @@
 
 
-> @oh-my-commits/extension@0.1.0 build /Users/mark/coding/apps/oh-my-commits/packages/extension
+> @oh-my-commit/extension@0.1.0 build /Users/mark/coding/apps/oh-my-commit/packages/extension
 > cross-env NODE_ENV=production esbuild ./src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node --minify
 
 
-  [37m../../dist/[0m[1mextension.js[0m  [36m643.2kb[0m
+  [37m../../dist/[0m[1mextension.js[0m  [36m638.5kb[0m
 
-⚡ [32mDone in 38ms[0m
+⚡ [32mDone in 37ms[0m
