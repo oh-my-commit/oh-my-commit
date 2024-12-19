@@ -12,7 +12,7 @@
     "build": "esbuild src/extension.ts --bundle --outfile=../../dist/extension.js --external:vscode --format=cjs --platform=node",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
     "dev": "pnpm build --watch",
-    "clean": "rimraf dist ../../dist",
+    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
