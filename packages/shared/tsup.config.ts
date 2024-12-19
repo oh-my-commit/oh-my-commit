@@ -2,7 +2,10 @@ import { defineConfig } from "tsup";
 import path from "path";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/types/index.ts", "src/constants.ts"],
+  entry: {
+    index: "src/index.ts",
+    "common/index": "src/common/index.ts",
+  },
   format: ["cjs", "esm"],
   dts: {
     compilerOptions: {
