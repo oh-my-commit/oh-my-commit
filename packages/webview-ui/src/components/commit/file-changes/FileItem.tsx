@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 
 import { basename } from "@/utils/path"
 import React, { useEffect } from "react"
-import { DiffResult } from "simple-git"
+import type { DiffResult } from "simple-git"
 import { Checkbox } from "../../common/Checkbox"
 
 interface FileItemProps {

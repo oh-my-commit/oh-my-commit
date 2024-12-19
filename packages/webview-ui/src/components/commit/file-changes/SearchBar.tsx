@@ -1,14 +1,14 @@
-import { searchQueryAtom } from "@/state/atoms/search";
-import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
-import { useAtom } from "jotai";
-import React from "react";
+import { searchQueryAtom } from "@/state/atoms/search"
+import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import { useAtom } from "jotai"
+import React from "react"
 
 interface SearchBarProps {
-  className?: string;
+  className?: string
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
-  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
+  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom)
 
   return (
     <div className="relative grow overflow-hidden flex items-center  border border-[var(--vscode-input-border)] rounded-sm">
@@ -25,11 +25,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
         className="w-full search-input"
         placeholder="Filter"
         value={searchQuery}
-        onInput={(e) => {
-          const target = e.target as HTMLInputElement;
-          setSearchQuery(target.value);
+        onInput={e => {
+          const target = e.target as HTMLInputElement
+          setSearchQuery(target.value)
         }}
       />
     </div>
-  );
-};
+  )
+}

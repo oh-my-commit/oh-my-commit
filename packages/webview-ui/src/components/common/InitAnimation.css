@@ -152,7 +152,9 @@
 .orbit {
   stroke-dasharray: 300;
   stroke-dashoffset: 300;
-  animation: drawCircle 1.5s ease-out forwards, pulse 3s ease-in-out infinite;
+  animation:
+    drawCircle 1.5s ease-out forwards,
+    pulse 3s ease-in-out infinite;
 }
 
 .hexagon {
@@ -275,13 +277,17 @@
 .tech-ring {
   stroke-dasharray: 252;
   stroke-dashoffset: 252;
-  animation: drawRing 2s ease-out forwards, rotateRing 10s linear infinite;
+  animation:
+    drawRing 2s ease-out forwards,
+    rotateRing 10s linear infinite;
 }
 
 .tech-ring-2 {
   stroke-dasharray: 252;
   stroke-dashoffset: 252;
-  animation: drawRing 2s ease-out forwards, rotateRingReverse 8s linear infinite;
+  animation:
+    drawRing 2s ease-out forwards,
+    rotateRingReverse 8s linear infinite;
   opacity: 0.5;
 }
 
@@ -295,7 +301,9 @@
 .hexagon {
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
-  animation: drawHexagon 2s ease-out forwards, glowPulse 4s ease-in-out infinite;
+  animation:
+    drawHexagon 2s ease-out forwards,
+    glowPulse 4s ease-in-out infinite;
 }
 
 .circuit-path {
@@ -311,7 +319,8 @@
 .y-symbol {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  animation: drawSymbol 1s ease-out 1.5s forwards,
+  animation:
+    drawSymbol 1s ease-out 1.5s forwards,
     symbolGlow 3s ease-in-out infinite 1.5s;
 }
 

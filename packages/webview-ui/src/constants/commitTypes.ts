@@ -1,7 +1,7 @@
 interface CommitType {
-  value: string;
-  label: string;
-  description: string;
+  value: string
+  label: string
+  description: string
 }
 
 // 最常用的提交类型
@@ -31,7 +31,7 @@ export const COMMON_COMMIT_TYPES: CommitType[] = [
     label: "📚 Docs",
     description: "Add or update documentation",
   },
-];
+]
 
 // 扩展的提交类型
 export const EXTENDED_COMMIT_TYPES: CommitType[] = [
@@ -85,4 +85,4 @@ export const EXTENDED_COMMIT_TYPES: CommitType[] = [
     label: "⚙️ Config",
     description: "Change configuration files",
   },
-];
+]

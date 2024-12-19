@@ -1,35 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react"
 
 export const FeedbackButton = ({
   onFeedback,
   disabled,
 }: {
-  onFeedback?: (
-    type: "type" | "content" | "regenerate" | "other",
-    details?: string,
-  ) => void;
-  disabled?: boolean;
+  onFeedback?: (type: "type" | "content" | "regenerate" | "other", details?: string) => void
+  disabled?: boolean
 }) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        setShowMenu(false)
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
-  const handleFeedback = (
-    type: "type" | "content" | "regenerate" | "other",
-  ) => {
-    onFeedback?.(type);
-    setShowMenu(false);
-  };
+  const handleFeedback = (type: "type" | "content" | "regenerate" | "other") => {
+    onFeedback?.(type)
+    setShowMenu(false)
+  }
 
   return (
     <div className="relative" ref={menuRef}>
@@ -111,5 +106,5 @@ export const FeedbackButton = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

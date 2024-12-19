@@ -1,8 +1,8 @@
-import React from "react";
-import "./InitAnimation.css";
+import React from "react"
+import "./InitAnimation.css"
 
 interface InitAnimationProps {
-  onEnter: () => void;
+  onEnter: () => void
 }
 
 export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
@@ -10,12 +10,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
     <div className="init-animation-container">
       <div className="init-animation">
         <div className="logo-container">
-          <svg
-            className="oh-my-commit-logo"
-            viewBox="0 0 200 100"
-            width="128"
-            height="64"
-          >
+          <svg className="oh-my-commit-logo" viewBox="0 0 200 100" width="128" height="64">
             {/* 背景线条 */}
             {/* <path
               className="bg-line"
@@ -87,5 +82,5 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

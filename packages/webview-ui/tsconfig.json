@@ -1,14 +1,14 @@
 {
-  "extends": ["../../tsconfig.json"],
+  "extends": ["../__base__/tsconfig.json"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react-jsx",
     "types": ["vscode"],
     "baseUrl": ".",
-    // "noEmit": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "references": [

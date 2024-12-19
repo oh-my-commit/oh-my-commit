@@ -5,7 +5,7 @@
  * any CSS variables into Tailwind-compatible theme values with support for opacity.
  */
 
-import plugin from "tailwindcss/plugin";
+import plugin from "tailwindcss/plugin"
 
 export type ThemePluginConfig = {
   /**
@@ -13,17 +13,17 @@ export type ThemePluginConfig = {
    * Key: Tailwind class name (e.g., 'primary', 'bg-default')
    * Value: CSS value or transformation function
    */
-  mapping: Record<string, string | ((key: string) => string)>;
+  mapping: Record<string, string | ((key: string) => string)>
   /** Optional configuration for the plugin */
   pluginOptions?: {
     /** Whether to add base styles */
-    addBase?: boolean;
+    addBase?: boolean
     /** Whether to add utilities */
-    addUtilities?: boolean;
+    addUtilities?: boolean
     /** Whether to add components */
-    addComponents?: boolean;
-  };
-};
+    addComponents?: boolean
+  }
+}
 
 /**
  * Creates a Tailwind plugin that transforms CSS variables into theme values
@@ -43,37 +43,34 @@ export type ThemePluginConfig = {
  * ```
  */
 export function createTailwindThemePlugin(config: ThemePluginConfig) {
-  const { mapping, pluginOptions = {} } = config;
+  const { mapping, pluginOptions = {} } = config
 
   return plugin(
     function ({ addBase, addUtilities, addComponents }) {
       // Add any base styles if needed
       if (pluginOptions.addBase && addBase) {
-        addBase({});
+        addBase({})
       }
 
       // Add any utilities if needed
       if (pluginOptions.addUtilities && addUtilities) {
-        addUtilities({});
+        addUtilities({})
       }
 
       // Add any components if needed
       if (pluginOptions.addComponents && addComponents) {
-        addComponents({});
+        addComponents({})
       }
     },
     {
       theme: {
         extend: {
-          colors: Object.entries(mapping).reduce<Record<string, string>>(
-            (acc, [key, value]) => {
-              acc[key] = typeof value === "function" ? value(key) : value;
-              return acc;
-            },
-            {},
-          ),
+          colors: Object.entries(mapping).reduce<Record<string, string>>((acc, [key, value]) => {
+            acc[key] = typeof value === "function" ? value(key) : value
+            return acc
+          }, {}),
         },
       },
     },
-  );
+  )
 }

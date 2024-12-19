@@ -5,14 +5,10 @@
  * with support for opacity modifiers.
  */
 
-import {
-  createTailwindThemePlugin,
-  type ThemePluginConfig,
-} from "./tailwind-theme-plugin";
+import { createTailwindThemePlugin, type ThemePluginConfig } from "./tailwind-theme-plugin"
 
 // Helper function to create VSCode color value
-const createVSCodeColor = (name: string) =>
-  `rgb(from var(--vscode-${name}) r g b / <alpha-value>)`;
+const createVSCodeColor = (name: string) => `rgb(from var(--vscode-${name}) r g b / <alpha-value>)`
 
 /**
  * VSCode theme variable mapping
@@ -73,18 +69,21 @@ const VSCODE_THEME_MAPPING = {
   "sidebar-bg": "sideBar-background",
   "sidebar-title": "sideBarTitle-foreground",
   "description-fg": "descriptionForeground",
-} as const;
+} as const
 
 // VSCode theme specific configuration
 const vscodeThemeConfig: ThemePluginConfig = {
-  mapping: Object.entries(VSCODE_THEME_MAPPING).reduce((acc, [key, value]) => {
-    acc[key] = createVSCodeColor(value);
-    return acc;
-  }, {} as Record<string, string>),
-};
+  mapping: Object.entries(VSCODE_THEME_MAPPING).reduce(
+    (acc, [key, value]) => {
+      acc[key] = createVSCodeColor(value)
+      return acc
+    },
+    {} as Record<string, string>,
+  ),
+}
 
 // Create and export the VSCode theme plugin
-export default createTailwindThemePlugin(vscodeThemeConfig);
+export default createTailwindThemePlugin(vscodeThemeConfig)
 
 // Export mapping for reference
-export { VSCODE_THEME_MAPPING };
+export { VSCODE_THEME_MAPPING }

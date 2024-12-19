@@ -1,28 +1,21 @@
-import React from "react";
-import { cn } from "../../lib/utils";
+import React from "react"
+import { cn } from "../../lib/utils"
 
 interface CheckboxProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  className?: string;
+  checked: boolean
+  onChange: (checked: boolean) => void
+  className?: string
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
-  checked,
-  onChange,
-  className,
-}) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className }) => {
   return (
-    <div
-      className={cn("w-3 h-3 relative", className)}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className={cn("w-3 h-3 relative", className)} onClick={e => e.stopPropagation()}>
       <input
         type="checkbox"
         className="absolute inset-0 cursor-pointer opacity-0 w-full h-full z-10"
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        onClick={(e) => e.stopPropagation()}
+        onChange={e => onChange(e.target.checked)}
+        onClick={e => e.stopPropagation()}
       />
       <div
         className={cn(
@@ -48,5 +41,5 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

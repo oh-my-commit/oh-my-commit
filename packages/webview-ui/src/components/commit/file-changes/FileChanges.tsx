@@ -1,58 +1,55 @@
-import { Section } from "@/components/layout/Section";
+import { Section } from "@/components/layout/Section"
 
-import { cn } from "@/lib/utils";
-import { searchQueryAtom } from "@/state/atoms/search";
-import { viewModeAtom } from "@/state/atoms/ui";
-import { FileChange } from "@/state/types";
+import { cn } from "@/lib/utils"
+import { searchQueryAtom } from "@/state/atoms/search"
+import { viewModeAtom } from "@/state/atoms/ui"
 
-import { useAtom } from "jotai";
-import React, { useCallback, useEffect, useState } from "react";
+import { useAtom } from "jotai"
+import React, { useCallback, useEffect } from "react"
 
-import { DiffViewer } from "./DiffViewer";
-import { EmptyState } from "./EmptyState";
-import { FlatView } from "./FlatView";
-import { SearchBar } from "./SearchBar";
-import { vscodeClientLogger } from "@/lib/vscode-client-logger";
+import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 import {
   diffResultAtom,
   lastOpenedFilePathAtom,
   selectedFilesAtom,
-} from "@/state/atoms/commit.changed-files";
+} from "@/state/atoms/commit.changed-files"
+import { DiffViewer } from "./DiffViewer"
+import { EmptyState } from "./EmptyState"
+import { FlatView } from "./FlatView"
+import { SearchBar } from "./SearchBar"
 
 export const FileChanges: React.FC = () => {
-  const [diffResult, setDiffResult] = useAtom(diffResultAtom);
-  const initialSelection = diffResult?.files?.map((file) => file.file) || [];
+  const [diffResult, setDiffResult] = useAtom(diffResultAtom)
+  const initialSelection = diffResult?.files?.map(file => file.file) || []
 
-  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
-  );
-  const [viewMode] = useAtom(viewModeAtom);
-  const [searchQuery] = useAtom(searchQueryAtom);
+  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
+  const [viewMode] = useAtom(viewModeAtom)
+  const [searchQuery] = useAtom(searchQueryAtom)
 
   const handleSelect = useCallback(
     (path: string) => {
       setSelectedFiles(
         selectedFiles.includes(path)
-          ? selectedFiles.filter((p) => p !== path)
-          : [...selectedFiles, path]
-      );
+          ? selectedFiles.filter(p => p !== path)
+          : [...selectedFiles, path],
+      )
     },
-    [selectedFiles]
-  );
+    [selectedFiles],
+  )
 
   const hasSelectionChanged =
     initialSelection.length > 0 &&
     (initialSelection.length !== selectedFiles.length ||
-      !initialSelection.every((file) => selectedFiles.includes(file)));
+      !initialSelection.every(file => selectedFiles.includes(file)))
 
   const handleClick = (path: string) => {
-    setLastOpenedFilePath(path);
-  };
+    setLastOpenedFilePath(path)
+  }
 
   const renderFileView = () => {
     if (!diffResult?.files?.length) {
-      return <EmptyState />;
+      return <EmptyState />
     }
 
     switch (viewMode) {
@@ -66,21 +63,21 @@ export const FileChanges: React.FC = () => {
             onSelect={handleSelect}
             onClick={handleClick}
           />
-        );
+        )
       case "tree":
-        return "todo";
+        return "todo"
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   useEffect(() => {
-    vscodeClientLogger.setChannel("file-changes");
+    vscodeClientLogger.setChannel("file-changes")
     vscodeClientLogger.info({
       selectedFiles,
       lastOpenedFilePath,
-    });
-  }, [selectedFiles, lastOpenedFilePath]);
+    })
+  }, [selectedFiles, lastOpenedFilePath])
 
   return (
     <Section
@@ -89,9 +86,7 @@ export const FileChanges: React.FC = () => {
         hasSelectionChanged ? (
           <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
             <i className="codicon codicon-info" />
-            <span>
-              File selection changed. You can regenerate the commit message.
-            </span>
+            <span>File selection changed. You can regenerate the commit message.</span>
           </div>
         ) : undefined
       }
@@ -101,15 +96,13 @@ export const FileChanges: React.FC = () => {
           <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
             <SearchBar />
           </div>
-          <div className="overflow-y-auto vscode-scrollbar">
-            {renderFileView()}
-          </div>
+          <div className="overflow-y-auto vscode-scrollbar">{renderFileView()}</div>
         </div>
 
         <div
           className={cn(
             "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
-            !lastOpenedFilePath && "opacity-0"
+            !lastOpenedFilePath && "opacity-0",
           )}
         >
           {lastOpenedFilePath && (
@@ -120,5 +113,5 @@ export const FileChanges: React.FC = () => {
         </div>
       </div>
     </Section>
-  );
-};
+  )
+}

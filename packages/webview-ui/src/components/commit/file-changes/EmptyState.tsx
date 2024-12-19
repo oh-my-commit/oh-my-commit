@@ -1,14 +1,11 @@
-import React from "react";
+import React from "react"
 
 interface EmptyStateProps {
-  searchQuery?: string;
-  onClearSearch?: () => void;
+  searchQuery?: string
+  onClearSearch?: () => void
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
-  searchQuery,
-  onClearSearch,
-}) => {
+export const EmptyState: React.FC<EmptyStateProps> = ({ searchQuery, onClearSearch }) => {
   if (searchQuery) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center text-[var(--vscode-descriptionForeground)]">
@@ -21,7 +18,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           Clear Search
         </button>
       </div>
-    );
+    )
   }
 
   return (
@@ -29,5 +26,5 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       <i className="codicon codicon-git-commit text-3xl mb-4 opacity-50" />
       <p>No files have been changed</p>
     </div>
-  );
-};
+  )
+}

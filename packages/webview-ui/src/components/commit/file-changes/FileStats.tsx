@@ -1,13 +1,13 @@
-import React from "react";
+import React from "react"
 
 interface FileStatsProps {
   stats: {
-    added: number;
-    modified: number;
-    deleted: number;
-    renamed: number;
-  };
-  className?: string;
+    added: number
+    modified: number
+    deleted: number
+    renamed: number
+  }
+  className?: string
 }
 
 export const FileStats: React.FC<FileStatsProps> = ({ stats, className }) => {
@@ -25,5 +25,5 @@ export const FileStats: React.FC<FileStatsProps> = ({ stats, className }) => {
         -{stats.deleted}
       </span>
     </div>
-  );
-};
+  )
+}

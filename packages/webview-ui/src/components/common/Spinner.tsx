@@ -1,6 +1,6 @@
-import React from "react";
+import React from "react"
 
-interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {}
+type SpinnerProps = React.HTMLAttributes<HTMLDivElement>
 
 export function Spinner({ className = "", ...props }: SpinnerProps) {
   return (
@@ -8,5 +8,5 @@ export function Spinner({ className = "", ...props }: SpinnerProps) {
       className={`animate-spin rounded-full border-2 border-current border-t-transparent ${className}`}
       {...props}
     />
-  );
+  )
 }

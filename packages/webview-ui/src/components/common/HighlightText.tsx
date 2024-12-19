@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
 interface HighlightTextProps {
-  text: string;
-  highlight: string;
-  className?: string;
-  onMatchCount?: (count: number) => void;
+  text: string
+  highlight: string
+  className?: string
+  onMatchCount?: (count: number) => void
 }
 
 export const HighlightText: React.FC<HighlightTextProps> = ({
@@ -14,14 +14,14 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
   onMatchCount,
 }) => {
   if (!highlight?.trim()) {
-    onMatchCount?.(0);
-    return <span className={className}>{text}</span>;
+    onMatchCount?.(0)
+    return <span className={className}>{text}</span>
   }
 
   try {
-    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
-    const matchCount = (parts.length - 1) / 2;
-    onMatchCount?.(matchCount);
+    const parts = text.split(new RegExp(`(${highlight})`, "gi"))
+    const matchCount = (parts.length - 1) / 2
+    onMatchCount?.(matchCount)
 
     return (
       <span className={className}>
@@ -39,9 +39,9 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
           ),
         )}
       </span>
-    );
+    )
   } catch (error) {
     // 如果发生错误（比如无效的正则表达式），直接返回原文本
-    return <span className={className}>{text}</span>;
+    return <span className={className}>{text}</span>
   }
-};
+}

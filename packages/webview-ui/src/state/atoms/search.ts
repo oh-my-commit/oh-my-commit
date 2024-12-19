@@ -1,4 +1,4 @@
 // 搜索查询
-import { atom } from "jotai/index";
+import { atom } from "jotai/index"
 
-export const searchQueryAtom = atom<string>("");
+export const searchQueryAtom = atom<string>("")

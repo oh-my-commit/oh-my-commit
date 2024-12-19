@@ -1,9 +1,6 @@
-import {
-  VSCodeTextArea,
-  VSCodeTextField,
-} from "@vscode/webview-ui-toolkit/react";
-import cn from "classnames";
-import React from "react";
+import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import cn from "classnames"
+import React from "react"
 
 export const MessageInput = ({
   value,
@@ -14,20 +11,20 @@ export const MessageInput = ({
   className,
   multiline = false,
 }: {
-  value: string;
-  maxLength: number;
-  placeholder: string;
-  onChange: (value: string) => void;
-  onEnter?: () => void;
-  className?: string;
-  multiline?: boolean;
+  value: string
+  maxLength: number
+  placeholder: string
+  onChange: (value: string) => void
+  onEnter?: () => void
+  className?: string
+  multiline?: boolean
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && onEnter) {
-      e.preventDefault();
-      onEnter();
+      e.preventDefault()
+      onEnter()
     }
-  };
+  }
 
   return (
     <div className="relative group">
@@ -69,10 +66,10 @@ export const MessageInput = ({
           value={value}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          onChange={(e) => {
-            const newValue = (e.target as HTMLTextAreaElement).value;
+          onChange={e => {
+            const newValue = (e.target as HTMLTextAreaElement).value
             if (newValue.length <= maxLength) {
-              onChange(newValue);
+              onChange(newValue)
             }
           }}
         />
@@ -82,10 +79,10 @@ export const MessageInput = ({
           value={value}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          onChange={(e) => {
-            const newValue = (e.target as HTMLInputElement).value;
+          onChange={e => {
+            const newValue = (e.target as HTMLInputElement).value
             if (newValue.length <= maxLength) {
-              onChange(newValue);
+              onChange(newValue)
             }
           }}
         />
@@ -94,5 +91,5 @@ export const MessageInput = ({
         {value.length}/{maxLength}
       </div>
     </div>
-  );
-};
+  )
+}
