@@ -20,7 +20,7 @@ export class StatusBarManager
     this.acManager = app.acManager;
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
-      100
+      100,
     );
     this.statusBarItem.name = APP_NAME;
     this.gitService = new VscodeGitService();
@@ -31,14 +31,14 @@ export class StatusBarManager
         if (e.affectsConfiguration(APP_ID)) {
           this.update();
         }
-      })
+      }),
     );
 
     // 监听工作区变化（可能影响 git 状态）
     this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         this.update();
-      })
+      }),
     );
 
     this.logger.info("Initializing status bar");

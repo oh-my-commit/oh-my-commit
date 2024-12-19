@@ -1,9 +1,9 @@
 import {
   BaseClientMessageEvent,
   BaseServerMessageEvent,
-  CommitData,
+  GenerateCommit,
+  ResultDTO,
 } from "@/common";
-import { ResultDTO } from "@/common/types/dto";
 import { DiffResult } from "simple-git";
 
 export type ClientMessageEvent_ =
@@ -30,7 +30,7 @@ export type ServerMessageEvent =
   // 2. 异步生成的 commits，无论是初次，还是等用户挑选文件后的结果
   | {
       type: "commit-message";
-      data: ResultDTO<CommitData>;
+      data: ResultDTO<GenerateCommit>;
     }
 
   // 5. 提交结果

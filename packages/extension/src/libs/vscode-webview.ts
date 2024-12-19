@@ -51,7 +51,7 @@ export class VscodeWebview
       templatePath?: string;
       scriptPath?: string;
       onClientMessage?: (message: ClientMessageEvent) => Promise<void>;
-    }
+    },
   ) {
     super();
     this.title = title;
@@ -90,7 +90,7 @@ export class VscodeWebview
         viewColumn: vscode.ViewColumn.One,
         preserveFocus: true,
       },
-      this.getWebviewOptions()
+      this.getWebviewOptions(),
     );
 
     // Set up message handler
@@ -205,7 +205,7 @@ export class VscodeWebview
         vscode.Uri.joinPath(
           vscode.Uri.file(path.dirname(this.scriptPath)),
           "..",
-          ".."
+          "..",
         ),
       ],
     };
@@ -243,7 +243,7 @@ export class VscodeWebview
 
     this.logger.info(
       "Updating webview with template data:",
-      JSON.stringify(templateData, null, 2)
+      JSON.stringify(templateData, null, 2),
     );
     const html = this.template(templateData);
     this.webviewPanel.webview.html = html;
