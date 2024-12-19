@@ -1,13 +1,13 @@
-import { AppManager } from "@/app.manager"
+import type { AppManager } from "@/app.manager"
 import { Loggable } from "@/types/mixins"
 import { openPreferences } from "@/utils/open-preference"
 import {
-  BaseGenerateCommitProvider,
-  GenerateCommitInput,
+  type BaseGenerateCommitProvider,
+  type GenerateCommitInput,
   presetAiProviders,
   SETTING_MODEL_ID,
 } from "@shared"
-import { DiffResult } from "simple-git"
+import type { DiffResult } from "simple-git"
 import * as vscode from "vscode"
 
 /**

@@ -1,5 +1,6 @@
-import * as vscode from "vscode";
-import { AppManager } from "@/app.manager";
+import { AppManager } from "@/app.manager"
+
+import * as vscode from "vscode"
 
 /**
  * @description
@@ -9,15 +10,12 @@ import { AppManager } from "@/app.manager";
  */
 export async function activate(context: vscode.ExtensionContext) {
   try {
-    const app = new AppManager(context);
+    const app = new AppManager(context)
     // await app.initialize();
-    context.subscriptions.push({ dispose: () => app.dispose() });
+    context.subscriptions.push({ dispose: () => app.dispose() })
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error occurred";
-    vscode.window.showErrorMessage(
-      `Failed to initialize Oh My Commit: ${message}`
-    );
+    const message = error instanceof Error ? error.message : "Unknown error occurred"
+    vscode.window.showErrorMessage(`Failed to initialize Oh My Commit: ${message}`)
   }
 }
 

@@ -35,17 +35,5 @@
 
     "declaration": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      // 当前包内的别名
-      "@/*": ["./src/*"],
-      // 跨包引用
-      "@shared/*": ["packages/shared/src/*"],
-      "@extension/*": ["packages/extension/src/*"],
-      "@webview/*": ["packages/webview/src/*"],
-      "@cli/*": ["packages/cli/src/*"],
-      "@docs/*": ["packages/docs/src/*"],
-      "@providers/*": ["packages/providers/src/*"]
-    }
   }
 }

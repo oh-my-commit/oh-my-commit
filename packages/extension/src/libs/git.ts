@@ -1,21 +1,21 @@
-import * as fs from "fs";
-import * as path from "path";
-import simpleGit, { DiffResult, SimpleGit } from "simple-git";
+import * as fs from "fs"
+import * as path from "path"
+import simpleGit, { type DiffResult, type SimpleGit } from "simple-git"
 
 export class GitCore {
-  protected git: SimpleGit;
-  protected workspaceRoot: string;
+  protected git: SimpleGit
+  protected workspaceRoot: string
 
   constructor(workspaceRoot: string) {
-    this.workspaceRoot = workspaceRoot;
-    this.git = simpleGit(workspaceRoot);
+    this.workspaceRoot = workspaceRoot
+    this.git = simpleGit(workspaceRoot)
   }
 
   /**
    * 获取已暂存文件的统计摘要，用于生成提交信息
    */
   public async getDiffResult(): Promise<DiffResult> {
-    return this.git.diffSummary("--staged");
+    return this.git.diffSummary("--staged")
   }
 
   /**
@@ -25,66 +25,66 @@ export class GitCore {
    */
   public async stageAll(): Promise<void> {
     try {
-      await this.git.add("-A");
+      await this.git.add("-A")
     } catch (error) {
-      throw new Error(`Failed to stage changes: ${error}`);
+      throw new Error(`Failed to stage changes: ${error}`)
     }
   }
 
   public async isGitRepository(): Promise<boolean> {
     if (!this.workspaceRoot) {
-      return false;
+      return false
     }
 
-    const gitDir = path.join(this.workspaceRoot, ".git");
+    const gitDir = path.join(this.workspaceRoot, ".git")
     try {
-      const stats = await fs.promises.stat(gitDir);
-      return stats.isDirectory();
+      const stats = await fs.promises.stat(gitDir)
+      return stats.isDirectory()
     } catch (error) {
-      return false;
+      return false
     }
   }
 
   public async commit(message: string): Promise<void> {
-    console.log("[GitCore] Committing changes");
+    console.log("[GitCore] Committing changes")
     try {
-      await this.git.commit(message);
-      console.log("[GitCore] Changes committed successfully");
+      await this.git.commit(message)
+      console.log("[GitCore] Changes committed successfully")
     } catch (error) {
-      console.error("[GitCore] Failed to commit changes:", error);
-      throw error;
+      console.error("[GitCore] Failed to commit changes:", error)
+      throw error
     }
   }
 
   public async hasChanges(): Promise<boolean> {
     try {
-      const status = await this.git.status();
-      return !status.isClean();
+      const status = await this.git.status()
+      return !status.isClean()
     } catch (error) {
-      throw new Error(`Failed to check changes: ${error}`);
+      throw new Error(`Failed to check changes: ${error}`)
     }
   }
 
   public async getLastCommitMessage(): Promise<string> {
-    console.log("[GitCore] Getting last commit message");
+    console.log("[GitCore] Getting last commit message")
     try {
-      const result = await this.git.log(["-1"]);
-      console.log("[GitCore] Last commit message:", result.latest?.hash);
-      return result.latest?.message || "";
+      const result = await this.git.log(["-1"])
+      console.log("[GitCore] Last commit message:", result.latest?.hash)
+      return result.latest?.message || ""
     } catch (error) {
-      console.error("[GitCore] Failed to get last commit message:", error);
-      return "";
+      console.error("[GitCore] Failed to get last commit message:", error)
+      return ""
     }
   }
 
   public async amendCommit(message: string): Promise<void> {
-    console.log("[GitCore] Amending last commit");
+    console.log("[GitCore] Amending last commit")
     try {
-      await this.git.commit(message, ["--amend"]);
-      console.log("[GitCore] Last commit amended successfully");
+      await this.git.commit(message, ["--amend"])
+      console.log("[GitCore] Last commit amended successfully")
     } catch (error) {
-      console.error("[GitCore] Failed to amend last commit:", error);
-      throw error;
+      console.error("[GitCore] Failed to amend last commit:", error)
+      throw error
     }
   }
 }

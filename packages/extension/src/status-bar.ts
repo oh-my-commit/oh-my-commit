@@ -1,7 +1,7 @@
-import { AppManager } from "@/app.manager"
-import { AcManager } from "@/services/model.service"
+import type { AppManager } from "@/app.manager"
+import type { AcManager } from "@/services/model.service"
 import { VscodeGitService } from "@/services/vscode-git.service"
-import { Loggable } from "@/types/mixins"
+import { Loggable } from "@/types/mixins.js"
 import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@shared"
 import * as vscode from "vscode"
 

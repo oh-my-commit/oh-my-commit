@@ -1,10 +1,10 @@
 import { BaseCommand } from "@/libs/vscode-command"
 import { VscodeWebview } from "@/libs/vscode-webview"
-import { AcManager } from "@/services/model.service"
-import { VscodeGitService } from "@/services/vscode-git.service"
+import type { AcManager } from "@/services/model.service"
+import type { VscodeGitService } from "@/services/vscode-git.service"
 import { COMMAND_QUICK_COMMIT } from "@shared"
-import { DiffResult } from "simple-git"
-import * as vscode from "vscode"
+import type { DiffResult } from "simple-git"
+import type * as vscode from "vscode"
 
 export class QuickCommitCommand extends BaseCommand {
   public id = COMMAND_QUICK_COMMIT

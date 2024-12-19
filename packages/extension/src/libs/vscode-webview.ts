@@ -3,7 +3,7 @@ import * as Handlebars from "handlebars"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { APP_ID, APP_NAME, ClientMessageEvent, LogLevel } from "@shared"
+import { APP_ID, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared"
 
 import { Loggable } from "@/types/mixins"
 import _ from "lodash"
@@ -89,7 +89,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
     // Set up message handler
     panel.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
       let level: LogLevel = "info"
-      let webviewChannel: string = _.camelCase(message.channel ?? "default")
+      const webviewChannel: string = _.camelCase(message.channel ?? "default")
       delete message.channel
       switch (message.type) {
         case "log":
