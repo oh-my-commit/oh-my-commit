@@ -1,36 +1,9 @@
 {
-  "extends": [
-    "../../tsconfig.json"
-  ],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node",
-    // 覆盖以支持 Node.js 模块
-
     "outDir": "./dist",
-    "rootDir": "src",
-    "composite": true,
-    // dependent package should emit
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "rootDir": "./src",
+    "baseUrl": ".",  // 相对于子包的根目录
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.json",
-    "src/common/index.ts",
-    "src/server/index.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "references": []
+  "include": ["src/**/*"]
 }

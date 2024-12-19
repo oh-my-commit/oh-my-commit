@@ -1,1 +1,1 @@
-export * from "./commit-manager";
+export * from "./commit-manager.ts"

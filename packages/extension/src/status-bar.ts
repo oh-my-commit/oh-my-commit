@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { AcManager } from "@/services/models.service";
+import { AcManager } from "@/services/model.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 import { Loggable } from "@/types/mixins";
 import { AppManager } from "@/app.manager";

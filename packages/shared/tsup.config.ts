@@ -1,21 +1,11 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 export default defineConfig({
-  entry: {
-    index: "src/index.ts",
-    "common/index": "src/common/index.ts",
-    "server/index": "src/server/index.ts",
-  },
-  target: "es2020",
-  format: ["cjs", "esm"],
+  entry: ["src/index.ts", "src/common/index.ts", "src/server/index.ts"],
+  format: ["esm", "cjs"],
+  dts: true,
   splitting: false,
   sourcemap: true,
   clean: true,
-  bundle: true,
-  dts: false,
-  treeshake: true,
-  esbuildOptions(options) {
-    options.bundle = true;
-    options.platform = "node";
-  },
-});
+  onSuccess: "tsc --emitDeclarationOnly --declaration", // 生成类型文件
+})

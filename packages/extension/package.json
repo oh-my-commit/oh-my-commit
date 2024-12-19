@@ -5,8 +5,18 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "./dist/extension.js",
+  "module": "./dist/extension.mjs",
+  "types": "./dist/extension.d.ts",
+  "exports": {
+    "./services/*": {
+      "types": "./dist/services/*.d.ts",
+      "import": "./dist/services/*.js",
+      "require": "./dist/services/*.cjs"
+    }
+  },
   "scripts": {
-    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "build": "tsc -p tsconfig.json && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
     "dev": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
     "clean": "rm -rf dist"

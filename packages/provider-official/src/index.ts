@@ -1,20 +1,23 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { Message } from "@anthropic-ai/sdk/resources/messages.mjs";
 
 import {
   APP_ID,
   APP_NAME,
   BaseGenerateCommitProvider,
-  BaseLogger,
-  formatError,
+  OmcStandardModelId,
+} from "@oh-my-commit/shared/common";
+
+import {
   GenerateCommitError,
   GenerateCommitInput,
   Model,
-  OmcStandardModelId,
 } from "@oh-my-commit/shared/common";
-import { HttpsProxyAgent } from "https-proxy-agent";
+import { BaseLogger } from "@oh-my-commit/shared/common";
 import { merge } from "lodash";
 import { ResultAsync } from "neverthrow";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import { formatError } from "@oh-my-commit/shared/common";
+import { Message } from "@anthropic-ai/sdk/resources/messages.mjs";
 
 const loadPrompt = (lang: string, diff: string) => {
   // todo: parse from `commit-prompt.hbs`
@@ -72,8 +75,8 @@ export class OmcProvider extends BaseGenerateCommitProvider {
         (error) =>
           new GenerateCommitError(
             -10086,
-            `failed to call api, reason: ${formatError(error)}`,
-          ),
+            `failed to call api, reason: ${formatError(error)}`
+          )
       )
         // 2. handle api result
         .andThen((response) =>
@@ -82,9 +85,9 @@ export class OmcProvider extends BaseGenerateCommitProvider {
             (error) =>
               new GenerateCommitError(
                 -10087,
-                `failed to handle api result, reason: ${formatError(error)}`,
-              ),
-          ),
+                `failed to handle api result, reason: ${formatError(error)}`
+              )
+          )
         )
         // 3. add metadata
         .map((result) => {
@@ -184,7 +187,7 @@ export class OmcProvider extends BaseGenerateCommitProvider {
   private async handleApiResult(response: Message) {
     this.logger.debug(
       "Commit message generated (response): ",
-      JSON.stringify(response),
+      JSON.stringify(response)
     );
 
     const item = response.content[0];

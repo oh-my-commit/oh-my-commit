@@ -2,36 +2,29 @@
   "name": "@oh-my-commit/shared",
   "version": "0.0.1",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
     "./common": {
       "types": "./dist/common/index.d.ts",
-      "import": "./dist/common/index.mjs",
+      "import": "./dist/common/index.js",
       "require": "./dist/common/index.js"
     },
     "./server": {
       "types": "./dist/server/index.d.ts",
-      "import": "./dist/server/index.mjs",
+      "import": "./dist/server/index.js",
       "require": "./dist/server/index.js"
-    },
-    "./templates": {
-      "default": "./templates"
     }
   },
-  "files": [
-    "dist",
-    "../provider-official/templates"
-  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rm -rf dist"
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -48,6 +41,5 @@
     "simple-git": "^3.27.0",
     "yaml": "^2.6.1",
     "zod": "^3.23.8"
-  },
-  "type": "module"
+  }
 }
