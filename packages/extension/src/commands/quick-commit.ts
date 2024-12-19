@@ -92,9 +92,11 @@ export class QuickCommitCommand extends BaseCommand {
     const commit = await this.acManager.generateCommit(diffResult);
     this.logger.info("Generated commit:", commit);
 
-    await this.webviewManager.postMessage({
-      type: "commit-message",
-      data: commit,
-    });
+    if (commit.isOk()) {
+      await this.webviewManager.postMessage({
+        type: "commit-message",
+        data: commit.value,
+      });
+    }
   }
 }
