@@ -183,7 +183,7 @@ importers:
         specifier: ^2.15.0
         version: 2.15.0
 
-  packages/provider-official:
+  packages/providers:
     dependencies:
       '@anthropic-ai/sdk':
         specifier: ^0.32.1

@@ -2,6 +2,11 @@
   "extends": "./tsconfig.base.json",
   "files": [],
   "references": [
-    { "path": "./packages/shared" }
+    { "path": "./packages/shared" },
+    { "path": "./packages/providers"},
+    { "path": "./packages/webview-ui" },
+    { "path": "./packages/extension" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/website"},
   ]
 }
