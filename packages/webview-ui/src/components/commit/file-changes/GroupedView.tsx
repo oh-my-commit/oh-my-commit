@@ -43,7 +43,7 @@ export const GroupedView: React.FC<GroupedViewProps> = ({
           <div
             className={cn(
               "flex items-center gap-2 px-2 py-1 text-[12px] font-medium",
-              STATUS_COLORS[status],
+              STATUS_COLORS[status]
             )}
           >
             <span>{STATUS_LABELS[status]}</span>

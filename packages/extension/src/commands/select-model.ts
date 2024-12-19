@@ -37,7 +37,7 @@ export class SelectModelCommand extends BaseCommand implements VscodeCommand {
           placeHolder: "Select AI Model to Use",
           matchOnDescription: true,
           matchOnDetail: true,
-        },
+        }
       );
 
       if (selected) {

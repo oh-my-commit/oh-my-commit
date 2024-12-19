@@ -12,6 +12,6 @@ files = [
 summary = """
 1. 添加了 BaseLogger 接口，定义了基本的日志方法
 2. 实现了默认的 ConsoleLogger 类
-3. 修改 OhMyCommitsProvider 构造函数，支持外部传入 logger
+3. 修改 ohMyCommitProvider 构造函数，支持外部传入 logger
 4. 如果没有传入 logger，则使用默认的 ConsoleLogger
 """

@@ -5,7 +5,7 @@ import { TreeNode } from "@oh-my-commits/shared/common";
 
 export const getSubDirectories = (
   fileTree: TreeNode,
-  path: string,
+  path: string
 ): string[] => {
   const allDirs = getAllDirectoryPaths(fileTree);
   return allDirs.filter((dir) => dir.startsWith(path + "/"));

@@ -64,28 +64,28 @@
   "contributes": {
     "commands": [
       {
-        "command": "ohMyCommits.quickCommit",
+        "command": "ohMyCommit.quickCommit",
         "title": "Oh My Commits: Quick Commit"
       },
       {
-        "command": "ohMyCommits.selectModel",
+        "command": "ohMyCommit.selectModel",
         "title": "Oh My Commits: Select Model"
       },
       {
-        "command": "ohMyCommits.openPreference",
+        "command": "ohMyCommit.openPreference",
         "title": "Oh My Commits: Open Preference"
       }
     ],
     "configuration": {
       "title": "Oh My Commits",
       "properties": {
-        "ohMyCommits.basic.enabled": {
+        "ohMyCommit.basic.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用 Oh My Commits",
           "order": 1
         },
-        "ohMyCommits.basic.uiLanguage": {
+        "ohMyCommit.basic.uiLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -101,16 +101,16 @@
           "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "ohMyCommits.model.id": {
+        "ohMyCommit.model.id": {
           "type": "string",
           "enum": [
-            "ohMyCommits.standard"
+            "ohMyCommit.standard"
           ],
-          "default": "ohMyCommits.standard",
+          "default": "ohMyCommit.standard",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 3
         },
-        "ohMyCommits.git.emptyChangeBehavior": {
+        "ohMyCommit.git.emptyChangeBehavior": {
           "type": "string",
           "enum": [
             "skip",
@@ -124,13 +124,13 @@
           "markdownDescription": "当工作区没有文件变更时的行为",
           "order": 20
         },
-        "ohMyCommits.git.autoStage": {
+        "ohMyCommit.git.autoStage": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否自动暂存所有更改",
           "order": 21
         },
-        "ohMyCommits.git.commitLanguage": {
+        "ohMyCommit.git.commitLanguage": {
           "type": "string",
           "enum": [
             "system",
@@ -146,7 +146,7 @@
           "markdownDescription": "Git 提交信息的语言",
           "order": 22
         },
-        "ohMyCommits.ui.mode": {
+        "ohMyCommit.ui.mode": {
           "type": "string",
           "enum": [
             "silent",
@@ -164,7 +164,7 @@
           "markdownDescription": "提交界面显示模式",
           "order": 23
         },
-        "ohMyCommits.ai.apiKeys": {
+        "ohMyCommit.ai.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
           "additionalProperties": {
@@ -186,13 +186,13 @@
           },
           "order": 30
         },
-        "ohMyCommits.telemetry.enabled": {
+        "ohMyCommit.telemetry.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用使用数据收集（匿名）",
           "order": 50
         },
-        "ohMyCommits.telemetry.shareLevel": {
+        "ohMyCommit.telemetry.shareLevel": {
           "type": "string",
           "enum": [
             "minimal",
@@ -208,7 +208,7 @@
           "markdownDescription": "数据收集级别",
           "order": 51
         },
-        "ohMyCommits.feedback.enabled": {
+        "ohMyCommit.feedback.enabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",

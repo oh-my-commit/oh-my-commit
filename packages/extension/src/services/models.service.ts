@@ -53,7 +53,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater,
+        configureLater
       );
 
       if (response === configureNow) {
@@ -65,7 +65,7 @@ export class AcManager extends Loggable(class {}) {
   }
 
   public async generateCommit(
-    diff: DiffResult,
+    diff: DiffResult
   ): Promise<Result<CommitData, Error>> {
     if (!this.provider) {
       throw new Error(`Provider ${this.model!.providerId} not found`);
@@ -76,9 +76,9 @@ export class AcManager extends Loggable(class {}) {
       this.model!,
       {
         lang:
-          this.config.get<string>("ohMyCommits.git.commitLanguage") ??
+          this.config.get<string>("ohMyCommit.git.commitLanguage") ??
           vscode.env.language,
-      },
+      }
     );
   }
 }

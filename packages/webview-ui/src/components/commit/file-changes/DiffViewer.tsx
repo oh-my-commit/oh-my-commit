@@ -22,7 +22,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   const setLastOpenedFilePath = useSetAtom(lastOpenedFilePathAtom);
 
   const selectedFile = files?.files?.find(
-    (f) => f.path === lastOpenedFilePath,
+    (f) => f.path === lastOpenedFilePath
   ) as GitFileChange | undefined;
 
   if (!selectedFile) {
@@ -90,14 +90,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
               onClick={() => setWrapLine(!wrapLine)}
               className={cn(
                 wrapLine && "bg-[var(--vscode-toolbar-activeBackground)]",
-                "rounded-[3px]",
+                "rounded-[3px]"
               )}
             >
               <i
                 className={cn(
                   "codicon codicon-word-wrap transition-transform",
                   wrapLine && "opacity-100",
-                  !wrapLine && "opacity-60 hover:opacity-100",
+                  !wrapLine && "opacity-60 hover:opacity-100"
                 )}
               />
             </VSCodeButton>
@@ -121,15 +121,15 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             className={cn(
               "font-mono text-sm",
               wrapLine && "whitespace-pre-wrap",
-              !wrapLine && "whitespace-pre",
+              !wrapLine && "whitespace-pre"
             )}
           >
             {lines.map((line, index) => {
               const bgColor = line.startsWith("+")
                 ? "bg-opacity-20 bg-[var(--vscode-diffEditor-insertedTextBackground)]"
                 : line.startsWith("-")
-                  ? "bg-opacity-20 bg-[var(--vscode-diffEditor-removedTextBackground)]"
-                  : "";
+                ? "bg-opacity-20 bg-[var(--vscode-diffEditor-removedTextBackground)]"
+                : "";
 
               return (
                 <tr key={index}>

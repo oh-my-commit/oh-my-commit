@@ -10,7 +10,7 @@ import { DiffResult } from "simple-git";
 
 interface FileItemProps {
   file: DiffResult["files"][0];
-  diff?: string
+  diff?: string;
   selected: boolean;
   isOpen: boolean;
   viewMode: string;
@@ -21,7 +21,7 @@ interface FileItemProps {
 
 export const FileItem: React.FC<FileItemProps> = ({
   file,
-diff,
+  diff,
   selected,
   isOpen,
   viewMode,

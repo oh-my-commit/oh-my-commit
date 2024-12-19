@@ -26,7 +26,7 @@ function getGitChangeType(status: string): GitChangeType {
 }
 
 function convertDiffResultFile(
-  file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile,
+  file: DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile
 ): GitFileChange {
   const status = "status" in file ? file.status || "?" : "?";
 
