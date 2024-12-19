@@ -9,7 +9,7 @@ import {
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
 } from "@oh-my-commit/shared";
-import { AcManager } from "@/services/models.service";
+import { AcManager } from "@/services/model.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 
 export class CommandManager extends Loggable(class {}) {

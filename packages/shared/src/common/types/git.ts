@@ -16,21 +16,21 @@ export enum GitChangeType {
  */
 export interface GitFileChange {
   /** 显示名称 */
-  displayName?: string;
+  displayName?: string
   /** 文件路径 */
-  path: string;
+  path: string
   /** 文件原始路径(重命名时使用) */
-  oldPath?: string;
+  oldPath?: string
   /** 文件状态 */
-  status: GitChangeType;
+  status: GitChangeType
   /** 文件差异 */
-  diff?: string;
+  diff?: string
   /** 增加的行数 */
-  additions: number;
+  additions: number
   /** 删除的行数 */
-  deletions: number;
+  deletions: number
   /** 文件内容 */
-  content?: string;
+  content?: string
   /** 文件原始内容 */
-  oldContent?: string;
+  oldContent?: string
 }

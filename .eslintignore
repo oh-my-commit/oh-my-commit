@@ -1,0 +1,5 @@
+# .eslintignore
+node_modules
+dist
+build
+*.d.ts

@@ -1,24 +1,24 @@
-import { LogLevel } from "@/common";
+import { LogLevel } from "../../utils/logger.ts"
 
 export type BaseClientMessageEvent =
   | {
-      type: "ping";
+      type: "ping"
     }
   | {
-      type: "log";
+      type: "log"
       data: {
-        channel?: string;
-        level: LogLevel;
-        rawMessage: any;
-      };
+        channel?: string
+        level: LogLevel
+        rawMessage: any
+      }
     }
   | {
-      type: "close-window"; // todo: or window-close ?
+      type: "close-window" // todo: or window-close ?
     }
   | {
-      type: "open-external";
+      type: "open-external"
       data: {
-        url: string;
-      };
-    };
-export type BaseServerMessageEvent = { type: "pong" };
+        url: string
+      }
+    }
+export type BaseServerMessageEvent = { type: "pong" }

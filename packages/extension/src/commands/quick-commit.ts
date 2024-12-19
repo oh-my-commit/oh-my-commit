@@ -1,6 +1,6 @@
 import { BaseCommand } from "@/libs/vscode-command";
 import { VscodeWebview } from "@/libs/vscode-webview";
-import { AcManager } from "@/services/models.service";
+import { AcManager } from "@/services/model.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 import { COMMAND_QUICK_COMMIT } from "@oh-my-commit/shared";
 import { DiffResult } from "simple-git";

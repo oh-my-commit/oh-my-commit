@@ -34,7 +34,7 @@ export class AcManager extends Loggable(class {}) {
 
   get provider() {
     return this.providers.find((p) =>
-      p.models.some((model) => model.id === this.modelId),
+      p.models.some((model) => model.id === this.modelId)
     );
   }
 
@@ -55,7 +55,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater,
+        configureLater
       );
 
       if (response === configureNow) {
@@ -74,7 +74,7 @@ export class AcManager extends Loggable(class {}) {
     const provider = this.provider;
     this.logger.info(
       "[AcManager] Generating commit using provider: ",
-      provider,
+      provider
     );
     if (!provider)
       throw new Error(`Provider ${this.model!.providerId} not found`);

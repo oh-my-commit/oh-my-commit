@@ -1,7 +1,1 @@
-export const presetAiProviders = [
-  "openai",
-  "anthropic",
-  "deepseek",
-  "zhipu",
-  "groq",
-];
+export const presetAiProviders = ["openai", "anthropic", "deepseek", "zhipu", "groq"]

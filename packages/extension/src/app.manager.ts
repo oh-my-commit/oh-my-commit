@@ -1,5 +1,5 @@
 import { CommandManager } from "@/commands/command-manager";
-import { AcManager } from "@/services/models.service";
+import { AcManager } from "@/services/model.service";
 import { VscodeGitService } from "@/services/vscode-git.service";
 
 import { StatusBarManager } from "@/status-bar";
