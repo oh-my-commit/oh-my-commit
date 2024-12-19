@@ -1,5 +1,9 @@
 import { APP_NAME } from "@/common/constants";
-import { BaseLogger, ConsoleLogger } from "@/common/utils/logger";
+import {
+  BaseLogger,
+  ConsoleLogger,
+  formatMessage,
+} from "@/common/utils/logger";
 import { CommitResult, DiffResult } from "simple-git";
 import { ResultDTO } from "./ResultDTO";
 import { ResultAsync } from "neverthrow";
@@ -43,6 +47,14 @@ export class GenerateCommitError extends Error {
     super(message);
     this.code = code;
     this.name = "GenerateCommitError";
+  }
+
+  toJSON() {
+    return {
+      code: this.code,
+      name: this.name,
+      message: formatMessage(this.message),
+    };
   }
 }
 
