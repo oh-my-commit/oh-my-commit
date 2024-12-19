@@ -1,28 +1,26 @@
 import { HighlightText } from "@/components/common/HighlightText";
-import { lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files";
+import {
+  diffResultAtom,
+  lastOpenedFilePathAtom,
+} from "@/state/atoms/commit.changed-files";
 import { searchQueryAtom } from "@/state/atoms/search";
 import { diffWrapLineAtom } from "@/state/atoms/ui";
-import { GitChangeSummary, GitFileChange } from "@oh-my-commit/shared/common";
+import { GitFileChange } from "@oh-my-commit/shared/common";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import cn from "classnames";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
-interface DiffViewerProps {
-  files: GitChangeSummary | null;
-  lastOpenedFilePath: string | null;
-}
-
-export const DiffViewer: React.FC<DiffViewerProps> = ({
-  files,
-  lastOpenedFilePath,
-}) => {
+export const DiffViewer: React.FC = () => {
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom);
   const [searchQuery] = useAtom(searchQueryAtom);
-  const setLastOpenedFilePath = useSetAtom(lastOpenedFilePathAtom);
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  );
+  const [files] = useAtom(diffResultAtom);
 
   const selectedFile = files?.files?.find(
-    (f) => f.path === lastOpenedFilePath
+    (f) => f.file === lastOpenedFilePath
   ) as GitFileChange | undefined;
 
   if (!selectedFile) {

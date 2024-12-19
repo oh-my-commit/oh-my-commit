@@ -114,10 +114,7 @@ export const FileChanges: React.FC = () => {
         >
           {lastOpenedFilePath && (
             <div className="sticky top-0 h-full">
-              <DiffViewer
-                files={diffResult}
-                lastOpenedFilePath={lastOpenedFilePath}
-              />
+              <DiffViewer />
             </div>
           )}
         </div>
