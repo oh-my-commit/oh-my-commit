@@ -1,20 +1,19 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
 import { formatError } from "@/common/format-error";
 import {
-  GenerateCommitInput,
-  GenerateCommitDTO,
-  Model,
   BaseGenerateCommitProvider,
   GenerateCommitError,
+  GenerateCommitInput,
   GenerateCommitResult,
+  Model,
 } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
 import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { result } from "lodash";
-import { err, ResultAsync } from "neverthrow";
+import { merge } from "lodash";
+import { Result, ResultAsync } from "neverthrow";
 import { join } from "path";
 
 // 初始化模板管理器
@@ -64,151 +63,153 @@ export class OmcProvider extends BaseGenerateCommitProvider {
   }
 
   private callApi(input: GenerateCommitInput) {
-    return ResultAsync.fromPromise(
-      (async () => {
-        const lang = input.options?.lang || "en";
-        const modelName = "claude-3-sonnet-20240229";
-        if (!this.anthropic)
-          throw new Error("Anthropic API key not configured");
+    const lang = input.options?.lang || "en";
+    const modelName = "claude-3-sonnet-20240229";
+    if (!this.anthropic) throw new Error("Anthropic API key not configured");
+    this.logger.info("Generating commit message using Anthropic...");
 
-        const prompt = templateManager.render("commit-prompt", {
-          diff: JSON.stringify(input.diff, null, 2),
-        });
+    const prompt = templateManager.render("commit-prompt", {
+      diff: JSON.stringify(input.diff, null, 2),
+    });
 
-        this.logger.info("Generating commit message using Anthropic...");
-
-        return this.anthropic.messages.create({
-          model: modelName,
-          max_tokens: 1000,
-          temperature: 0.7,
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-          tools: [
-            {
-              name: "generate_commit",
-              description:
-                "Generate a structured commit message based on git diff",
-              input_schema: {
+    return this.anthropic.messages.create({
+      model: modelName,
+      max_tokens: 1000,
+      temperature: 0.7,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      tools: [
+        {
+          name: "generate_commit",
+          description: "Generate a structured commit message based on git diff",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: {
+                type: "string",
+                description:
+                  "Commit title following conventional commits format: <type>[optional scope]: <description>",
+              },
+              body: {
+                type: "string",
+                description:
+                  "Detailed explanation of what changes were made and why",
+              },
+              extra: {
                 type: "object",
                 properties: {
-                  title: {
+                  type: {
                     type: "string",
-                    description:
-                      "Commit title following conventional commits format: <type>[optional scope]: <description>",
+                    enum: [
+                      "feat",
+                      "fix",
+                      "docs",
+                      "style",
+                      "refactor",
+                      "perf",
+                      "test",
+                      "chore",
+                      "ci",
+                      "build",
+                      "revert",
+                    ],
+                    description: "Type of change",
                   },
-                  body: {
+                  scope: {
                     type: "string",
-                    description:
-                      "Detailed explanation of what changes were made and why",
+                    description: "Component scope of the change",
                   },
-                  extra: {
-                    type: "object",
-                    properties: {
-                      type: {
-                        type: "string",
-                        enum: [
-                          "feat",
-                          "fix",
-                          "docs",
-                          "style",
-                          "refactor",
-                          "perf",
-                          "test",
-                          "chore",
-                          "ci",
-                          "build",
-                          "revert",
-                        ],
-                        description: "Type of change",
-                      },
-                      scope: {
-                        type: "string",
-                        description: "Component scope of the change",
-                      },
-                      breaking: {
-                        type: "boolean",
-                        description: "Whether this is a breaking change",
-                      },
-                      issues: {
-                        type: "array",
-                        items: {
-                          type: "string",
-                        },
-                        description: "Related issue numbers",
-                      },
+                  breaking: {
+                    type: "boolean",
+                    description: "Whether this is a breaking change",
+                  },
+                  issues: {
+                    type: "array",
+                    items: {
+                      type: "string",
                     },
-                    required: ["type", "breaking", "issues"],
+                    description: "Related issue numbers",
                   },
                 },
-                required: ["title", "body", "extra"],
+                required: ["type", "breaking", "issues"],
               },
             },
-          ],
-          tool_choice: { type: "tool" as const, name: "generate_commit" },
-        });
-      })(),
-      (error) =>
-        new GenerateCommitError(
-          -1,
-          `failed to call api, reason: ${formatError(error)}`
-        )
-    );
+            required: ["title", "body", "extra"],
+          },
+        },
+      ],
+      tool_choice: { type: "tool" as const, name: "generate_commit" },
+    });
   }
 
-  private handleApiResult(response: Message) {
-    return ResultAsync.fromPromise(
-      (async () => {
-        this.logger.debug(
-          "Commit message generated (response): ",
-          JSON.stringify(response)
-        );
-
-        const item = response.content[0];
-        if (item.type !== "tool_use")
-          throw new Error("Invalid tool response from AI model");
-
-        const result = item.input as {
-          title: string;
-          body: string;
-          extra?: {
-            type?: string;
-            scope?: string;
-            breaking?: boolean;
-            issues?: string[];
-          };
-        };
-
-        if (!result) throw new Error("Invalid tool response from AI model");
-
-        return {
-          title: result.title,
-          body: result.body,
-          extra: {
-            ...result.extra,
-          },
-        } as GenerateCommitResult;
-      })(),
-      (error) =>
-        new GenerateCommitError(
-          -2,
-          `failed to handle api result, reason: ${formatError(error)}`
-        )
+  private async handleApiResult(response: Message) {
+    this.logger.debug(
+      "Commit message generated (response): ",
+      JSON.stringify(response)
     );
+
+    const item = response.content[0];
+    if (item.type !== "tool_use")
+      throw new Error("Invalid tool response from AI model");
+
+    const result = item.input as {
+      title: string;
+      body: string;
+      extra?: {
+        type?: string;
+        scope?: string;
+        breaking?: boolean;
+        issues?: string[];
+      };
+    };
+
+    if (!result) throw new Error("Invalid tool response from AI model");
+
+    return {
+      title: result.title,
+      body: result.body,
+      meta: {
+        ...result.extra,
+      },
+    };
   }
 
   override generateCommit(input: GenerateCommitInput) {
-    return ResultAsync.fromSafePromise(Promise.resolve(input))
-      .andThen(this.callApi)
-      .andThen(this.handleApiResult)
-      .map((result) => {
-        result.extra.generatedAt = new Date().toISOString();
-        result.extra.modelId = input.model.id;
-        result.extra.providerId = this.id;
-        return result;
-      });
+    this.logger.info("Generating commit message using OMC Provider...");
+    return (
+      // 1. call api
+      ResultAsync.fromPromise(
+        this.callApi(input),
+        (error) =>
+          new GenerateCommitError(
+            -10086,
+            `failed to call api, reason: ${formatError(error)}`
+          )
+      )
+        // 2. handle api result
+        .andThen((response) =>
+          ResultAsync.fromPromise(
+            this.handleApiResult(response),
+            (error) =>
+              new GenerateCommitError(
+                -10087,
+                `failed to handle api result, reason: ${formatError(error)}`
+              )
+          )
+        )
+        // 3. add metadata
+        .map((result) => {
+          merge(result.meta, {
+            generatedAt: new Date().toISOString(),
+            modelId: input.model.id,
+            providerId: this.id,
+          });
+          return result;
+        })
+    );
   }
 }

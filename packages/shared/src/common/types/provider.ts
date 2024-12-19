@@ -34,7 +34,7 @@ export type GenerateCommitInput = {
 export type GenerateCommitResult = {
   title: string;
   body?: string;
-  extra?: any;
+  meta?: Record<string, any>;
 };
 
 /**
@@ -115,4 +115,17 @@ export abstract class BaseGenerateCommitProvider {
   abstract generateCommit(
     input: GenerateCommitInput
   ): ResultAsync<GenerateCommitResult, GenerateCommitError>;
+
+  /**
+   * 标准化 provider 的输出，并避免供应商调试时打印一些自循环的属性导致报错
+   * @returns
+   */
+  toJSON() {
+    return {
+      id: this.id,
+      displayName: this.displayName,
+      description: this.description,
+      models: this.models.map((m) => m.id),
+    };
+  }
 }
