@@ -1,15 +1,13 @@
-import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
-import { Result, ResultAsync } from "neverthrow";
-import * as vscode from "vscode";
 import { CommitData, Provider, SETTING_MODEL_ID } from "@oh-my-commit/shared";
+import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
+import { ResultAsync } from "neverthrow";
+import * as vscode from "vscode";
 
-import { GenerateCommitResult } from "@oh-my-commit/shared";
-import { DiffResult } from "simple-git";
+import { AppManager } from "@/app.manager";
 import { Loggable } from "@/types/mixins";
 import { openPreferences } from "@/utils/open-preference";
-import { AppManager } from "@/app.manager";
 import { OmcProvider } from "@oh-my-commit/shared";
-import { convertToGitChangeSummary } from "@/utils/git-converter";
+import { DiffResult } from "simple-git";
 
 export class AcManager extends Loggable(class {}) {
   private providers: Provider[] = [new OmcProvider()];
@@ -66,19 +64,28 @@ export class AcManager extends Loggable(class {}) {
 
   public async generateCommit(
     diff: DiffResult
-  ): Promise<Result<CommitData, Error>> {
-    if (!this.provider) {
-      throw new Error(`Provider ${this.model!.providerId} not found`);
-    }
+  ): ResultAsync<CommitData, { type: string; message?: string }> {
+    return ResultAsync.fromPromise(
+      (async () => {
+        if (!this.model) {
+          throw new Error("No model selected");
+        }
 
-    return this.provider.generateCommit(
-      convertToGitChangeSummary(diff),
-      this.model!,
-      {
-        lang:
-          this.config.get<string>("ohMyCommit.git.commitLanguage") ??
-          vscode.env.language,
-      }
+        if (!this.provider) {
+          throw new Error(`Provider ${this.model!.providerId} not found`);
+        }
+
+        return this.provider.generateCommit(diff, this.model!, {
+          lang:
+            this.config.get<string>("ohMyCommit.git.commitLanguage") ??
+            vscode.env.language,
+        });
+      })(),
+      (error) => ({
+        type: "provider-error",
+        message:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      })
     );
   }
 }

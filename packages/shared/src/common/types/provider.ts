@@ -5,6 +5,11 @@ import { BaseLogger, ConsoleLogger } from "@/common/utils/logger";
 import { Result, ResultAsync } from "neverthrow";
 import { DiffResult } from "simple-git";
 
+export type GenerateCommitResult = ResultAsync<
+  CommitData,
+  { type: string; message?: string }
+>;
+
 export abstract class Provider {
   public logger: BaseLogger = new ConsoleLogger(APP_NAME);
   abstract id: string;
@@ -20,5 +25,5 @@ export abstract class Provider {
     options?: {
       lang?: string;
     }
-  ): ResultAsync<CommitData, { type: string; message?: string }>;
+  ): GenerateCommitResult;
 }
