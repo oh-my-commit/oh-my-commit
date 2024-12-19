@@ -10,7 +10,6 @@
       "@extension/*": ["../extension/src/*"],
       "@webview/*": ["../webview/src/*"],
       "@cli/*": ["../cli/src/*"],
-      "@docs/*": ["../docs/src/*"],
       "@providers/*": ["../providers/src/*"]
     }
   }

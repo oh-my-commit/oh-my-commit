@@ -1,22 +1,13 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.0.1",
-  "type": "module",
+  "version": "0.1.0",
   "bin": {
     "omc": "./dist/index.js"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --platform node",
+    "build": "tsup src/index.ts --format cjs --dts --platform node",
     "dev": "npm run build -- --watch",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
@@ -32,7 +23,7 @@
   "dependencies": {
     "@oh-my-commit/extension": "workspace:*",
     "@oh-my-commit/shared": "workspace:*",
-    "chalk": "^5.3.0",
+    "chalk": "^4.x",
     "commander": "^12.0.0",
     "inquirer": "^9.2.12",
     "neverthrow": "^8.1.1",

@@ -12,7 +12,7 @@ import {
   OmcStandardModelId,
 } from "@shared"
 
-import { Message } from "@anthropic-ai/sdk/resources/messages.mjs"
+import { Message } from "@anthropic-ai/sdk/resources"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash"
 import { ResultAsync } from "neverthrow"
@@ -36,7 +36,6 @@ class OmcStandardModel implements Model {
 }
 
 export class OmcProvider extends BaseGenerateCommitProvider {
-  public logger!: BaseLogger
   id = APP_ID
   displayName = `${APP_NAME} Provider`
   description = `Commit message generation powered by ${APP_NAME} models`
