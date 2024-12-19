@@ -1,7 +1,7 @@
 [[rounds]]
 number = 1
 query = "我想把本项目转成一个模板，因为它综合用了 turbo ts webview react tailwind vscode webpack 等很适合快速开发"
-response = "这个项目确实很适合作为一个现代化 VS Code 插件开发模板，因为它整合了以下优秀的技术栈：
+response = """这个项目确实很适合作为一个现代化 VS Code 插件开发模板，因为它整合了以下优秀的技术栈：
 
 1. Turborepo - 用于管理 monorepo，优化开发和构建流程
 2. TypeScript - 提供类型安全，是 VS Code 插件开发的首选语言
@@ -9,14 +9,13 @@ response = "这个项目确实很适合作为一个现代化 VS Code 插件开�
 4. React - 用于构建插件的用户界面，提供优秀的组件化开发体验
 5. Tailwind CSS - 快速构建美观的插件界面
 6. VS Code API - 深度集成 VS Code 功能
-7. Webpack - 优化插件打包和加载性能
 
-这个技术栈组合非常适合开发现代化的 VS Code 插件，特别是需要复杂UI交互的场景。通过模板化，可以帮助其他开发者快速启动新的插件项目。"
+这个技术栈组合非常适合开发现代化的 VS Code 插件，特别是需要复杂UI交互的场景。通过模板化，可以帮助其他开发者快速启动新的插件项目。"""
 
 [[rounds]]
 number = 2
 query = "请帮我实现一下"
-response = "我已经分析了 Oh My Commit 项目，这是一个专注于提供优秀 Git 提交体验的 VS Code 插件。让我重新设计模板结构：
+response = """我已经分析了 Oh My Commit 项目，这是一个专注于提供优秀 Git 提交体验的 VS Code 插件。让我重新设计模板结构：
 
 1. 项目结构设置：
    - 使用 Turborepo 管理多包架构
@@ -50,4 +49,4 @@ response = "我已经分析了 Oh My Commit 项目，这是一个专注于提供
 - 高性能和可扩展性
 - 开发体验优化
 
-让我开始实现这个新的模板结构。"
+让我开始实现这个新的模板结构。"""

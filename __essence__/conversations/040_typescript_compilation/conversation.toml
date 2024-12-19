@@ -14,7 +14,7 @@ duration = 720
 files = [
   "packages/shared/src/app.manager.ts",
   "packages/cli/src/app.manager.ts",
-  "packages/extension/src/providers/oh-my-commit.ts",
+  "packages/extension/src/providers/oh-my-commits.ts",
   "packages/core/tsconfig.json",
   "tsconfig.base.json",
   "packages/extension/src/core/models.service.ts"
@@ -32,6 +32,8 @@ fixed_issues = [
 ]
 
 [remaining_issues]
-- "需要解决 CommitManager 导出问题"
-- "需要解决 DiffResult 和 GitChangeSummary 类型不匹配的问题"
-- "需要处理未使用的 _lang 变量"
+issues = [
+  "需要解决 CommitManager 导出问题",
+  "需要解决 DiffResult 和 GitChangeSummary 类型不匹配的问题",
+  "需要处理未使用的 _lang 变量"
+]
