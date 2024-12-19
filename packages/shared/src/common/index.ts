@@ -1,3 +1,7 @@
+export { GitChangeType, GitFileChange } from "./types/git.js"
+
+export { TreeNode } from "./types/tree.js"
+
 export { Model } from "./types/provider.js"
 
 export {
@@ -6,7 +10,7 @@ export {
   GenerateCommitInput,
 } from "./types/provider.js"
 
-export { ClientMessageEvent } from "./types/message-events/commit.js"
+export { ClientMessageEvent, ServerMessageEvent } from "./types/message-events/commit.js"
 
 export * from "./config/providers.js"
 export * from "./config/validation.js"

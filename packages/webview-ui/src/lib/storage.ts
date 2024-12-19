@@ -30,13 +30,13 @@ function setToLocalStorage<T>(key: string, value: T) {
 
 function getFromVSCode<T>(key: string, defaultValue: T): T {
   const vscode = getVSCodeAPI()
-  const state = vscode.getState() || {}
+  const state = (vscode.getState() || {}) as Record<string, unknown>
   return (state[key] as T) ?? defaultValue
 }
 
 function setToVSCode<T>(key: string, value: T): void {
   const vscode = getVSCodeAPI()
-  const state = vscode.getState() || {}
+  const state = (vscode.getState() || {}) as Record<string, unknown>
   vscode.setState({ ...state, [key]: value })
 }
 
@@ -87,12 +87,12 @@ export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<
   const derivedAtom = atom(
     get => {
       const vscode = getVSCodeAPI()
-      const state = vscode.getState() || {}
+      const state = (vscode.getState() || {}) as Record<string, unknown>
       return state[key] ?? defaultValue
     },
     (get, set, update: T) => {
       const vscode = getVSCodeAPI()
-      const state = vscode.getState() || {}
+      const state = (vscode.getState() || {}) as Record<string, unknown>
       vscode.setState({
         ...state,
         [key]: update,
