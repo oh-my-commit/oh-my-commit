@@ -7,8 +7,8 @@ export default defineConfig({
     compilerOptions: {
       composite: false,
       incremental: false,
-      tsBuildInfoFile: undefined
-    }
+      tsBuildInfoFile: undefined,
+    },
   },
   splitting: false,
   sourcemap: true,
