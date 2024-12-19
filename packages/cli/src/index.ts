@@ -60,10 +60,14 @@ const generateAndCommit = async (options: any) => {
       },
       model
     );
-    if (!result.ok)
-      throw new Error(`Error(code=${result.code}), message=${result.message}`);
 
-    const commitData = result.data;
+    const commitData = result.match(
+      (success) => success,
+      (error) => {
+        throw new Error(`Error(code=${error.code}), message=${error.message}`);
+      }
+    );
+
     console.log(chalk.green("Generated commit message:"));
     console.log(commitData.title);
     if (commitData.body) {

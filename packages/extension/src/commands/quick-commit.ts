@@ -23,9 +23,9 @@ export class QuickCommitCommand extends BaseCommand {
     this.gitService = gitService;
     this.acManager = acManager;
 
-    // 初始化 webview 管理器
     this.webviewManager = new VscodeWebview(context, {
       onClientMessage: async (message) => {
+        this.logger.info("QuickCommit received message:", message);
         switch (message.type) {
           case "init":
             await this.syncFilesAndCommits();
@@ -90,6 +90,8 @@ export class QuickCommitCommand extends BaseCommand {
     }
 
     const commit = await this.acManager.generateCommit(diffResult);
+    this.logger.info("Generated commit:", commit);
+
     await this.webviewManager.postMessage({
       type: "commit-message",
       data: commit,

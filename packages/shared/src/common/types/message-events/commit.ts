@@ -2,9 +2,9 @@ import {
   BaseClientMessageEvent,
   BaseServerMessageEvent,
   GenerateCommitResult,
-  ResultDTO,
 } from "@/common";
 import { DiffResult } from "simple-git";
+import { ResultDTO } from "../ResultDTO";
 
 export type ClientMessageEvent_ =
   | BaseClientMessageEvent
