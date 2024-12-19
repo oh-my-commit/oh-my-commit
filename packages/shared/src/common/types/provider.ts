@@ -23,7 +23,7 @@ export type GenerateCommitInput = {
 /**
  * AI Commit 的核心生成数据
  */
-export type GenerateCommit = {
+export type GenerateCommitResult = {
   title: string;
   body?: string;
   extra?: any;
@@ -36,7 +36,7 @@ export type ResultDTO<T> =
 /**
  * 供应商需要实现的返回结构
  */
-export type GenerateCommitResult = ResultDTO<GenerateCommit>;
+export type GenerateCommitResultDTO = ResultDTO<GenerateCommitResult>;
 
 /**
  * 供应商定义的模型 meta 信息，供用户候选
@@ -57,7 +57,7 @@ export interface Model {
   };
 }
 
-export abstract class Provider {
+export abstract class BaseGenerateCommitProvider {
   /**
    * 可继承或重载的 logger
    */
@@ -87,5 +87,7 @@ export abstract class Provider {
    * 核心调用
    * @param input
    */
-  abstract generateCommit(input: GenerateCommitInput): GenerateCommitResult;
+  abstract generateCommit(
+    input: GenerateCommitInput,
+  ): PromiseLike<GenerateCommitResultDTO>;
 }

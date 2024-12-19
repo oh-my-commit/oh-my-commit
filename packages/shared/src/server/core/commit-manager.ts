@@ -1,12 +1,8 @@
-import {
-  GenerateCommit,
-  GenerateCommitResult,
-  Model,
-  Provider,
-} from "@/common/types/provider";
+import { formatError } from "@/common/format-error";
+import { BaseGenerateCommitProvider, Model } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import { OmcProvider } from "@/server/providers/oh-my-commit";
-import { err, Result } from "neverthrow";
+import { err } from "neverthrow";
 import { DiffResult } from "simple-git";
 
 export interface CommitManagerOptions {
@@ -14,7 +10,7 @@ export interface CommitManagerOptions {
 }
 
 export class CommitManager {
-  private provider: Provider;
+  private provider: BaseGenerateCommitProvider;
 
   constructor(options: CommitManagerOptions = {}) {
     this.provider = new OmcProvider(options.logger);
@@ -24,27 +20,17 @@ export class CommitManager {
     return this.provider.models;
   }
 
-  public async generateCommit(diffResult: DiffResult, modelId: string) {
+  public async generateCommit(diff: DiffResult, modelId: string) {
     const models = await this.getAvailableModels();
     const model = models.find((m) => m.id === modelId);
+    if (!model) throw new Error(`Model with id ${modelId} not found`);
 
-    if (!model) {
-      return err({
-        type: "model-not-found",
-        message: `Model with id ${modelId} not found`,
-      });
-    }
-
-    try {
-      return await this.provider.generateCommit(diffResult, model, {
+    return await this.provider.generateCommit({
+      diff: diff,
+      model,
+      options: {
         lang: "zh-CN",
-      });
-    } catch (error) {
-      return err({
-        type: "provider-error",
-        message:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
-    }
+      },
+    });
   }
 }

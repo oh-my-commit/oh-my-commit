@@ -15,4 +15,4 @@ export * from "./message-events/commit";
 
 export type { TreeNode } from "./tree";
 
-export type { Provider } from "./provider";
+export type { BaseGenerateCommitProvider } from "./provider";
