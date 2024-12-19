@@ -5,6 +5,7 @@ import {
   APP_NAME,
   BaseGenerateCommitProvider,
   BaseLogger,
+  ConsoleLogger,
   formatError,
   GenerateCommitError,
   GenerateCommitInput,
@@ -45,9 +46,9 @@ export class OmcProvider extends BaseGenerateCommitProvider {
 
   constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
     super()
-    if (logger) this.logger = logger
-
-    // this.config = {}; // todo: load from vscode configuration
+    if (logger) {
+      this.logger = logger
+    }
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY
     const proxy =
