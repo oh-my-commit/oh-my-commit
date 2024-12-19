@@ -1,26 +1,26 @@
-import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
-import { formatError } from "@/common/format-error";
+import Anthropic from "@anthropic-ai/sdk";
+import { Message } from "@anthropic-ai/sdk/resources";
+import {
+  APP_ID,
+  APP_NAME,
+  OmcStandardModelId,
+} from "@oh-my-commit/shared/common/constants";
+import { formatError } from "@oh-my-commit/shared/common/format-error";
 import {
   BaseGenerateCommitProvider,
   GenerateCommitError,
   GenerateCommitInput,
-  GenerateCommitResult,
   Model,
-} from "@/common/types/provider";
-import { BaseLogger } from "@/common/utils/logger";
-import { TemplateManager } from "@/common/utils/template-manager";
-import Anthropic from "@anthropic-ai/sdk";
-import { Message } from "@anthropic-ai/sdk/resources";
+} from "@oh-my-commit/shared/common/types/provider";
+import { BaseLogger } from "@oh-my-commit/shared/common/utils/logger";
+import { TemplateManager } from "@oh-my-commit/shared/common/utils/template-manager";
+import { getTemplatesDir } from "@oh-my-commit/shared/server/get-templates-dir";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { merge } from "lodash";
-import { Result, ResultAsync } from "neverthrow";
-import { dirname, join } from "path";
-import { getTemplatesDir } from "../get-templates-dir";
+import { ResultAsync } from "neverthrow";
 
 // 初始化模板管理器
-const templateManager = TemplateManager.getInstance(
-  getTemplatesDir()
-);
+const templateManager = TemplateManager.getInstance(getTemplatesDir());
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
@@ -61,6 +61,41 @@ export class OmcProvider extends BaseGenerateCommitProvider {
     if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy);
 
     if (apiKey) this.anthropic = new Anthropic(config);
+  }
+
+  override generateCommit(input: GenerateCommitInput) {
+    this.logger.info("Generating commit message using OMC Provider...");
+    return (
+      // 1. call api
+      ResultAsync.fromPromise(
+        this.callApi(input),
+        (error) =>
+          new GenerateCommitError(
+            -10086,
+            `failed to call api, reason: ${formatError(error)}`,
+          ),
+      )
+        // 2. handle api result
+        .andThen((response) =>
+          ResultAsync.fromPromise(
+            this.handleApiResult(response),
+            (error) =>
+              new GenerateCommitError(
+                -10087,
+                `failed to handle api result, reason: ${formatError(error)}`,
+              ),
+          ),
+        )
+        // 3. add metadata
+        .map((result) => {
+          merge(result.meta, {
+            generatedAt: new Date().toISOString(),
+            modelId: input.model.id,
+            providerId: this.id,
+          });
+          return result;
+        })
+    );
   }
 
   private callApi(input: GenerateCommitInput) {
@@ -150,7 +185,7 @@ export class OmcProvider extends BaseGenerateCommitProvider {
   private async handleApiResult(response: Message) {
     this.logger.debug(
       "Commit message generated (response): ",
-      JSON.stringify(response)
+      JSON.stringify(response),
     );
 
     const item = response.content[0];
@@ -177,40 +212,5 @@ export class OmcProvider extends BaseGenerateCommitProvider {
         ...result.extra,
       },
     };
-  }
-
-  override generateCommit(input: GenerateCommitInput) {
-    this.logger.info("Generating commit message using OMC Provider...");
-    return (
-      // 1. call api
-      ResultAsync.fromPromise(
-        this.callApi(input),
-        (error) =>
-          new GenerateCommitError(
-            -10086,
-            `failed to call api, reason: ${formatError(error)}`
-          )
-      )
-        // 2. handle api result
-        .andThen((response) =>
-          ResultAsync.fromPromise(
-            this.handleApiResult(response),
-            (error) =>
-              new GenerateCommitError(
-                -10087,
-                `failed to handle api result, reason: ${formatError(error)}`
-              )
-          )
-        )
-        // 3. add metadata
-        .map((result) => {
-          merge(result.meta, {
-            generatedAt: new Date().toISOString(),
-            modelId: input.model.id,
-            providerId: this.id,
-          });
-          return result;
-        })
-    );
   }
 }

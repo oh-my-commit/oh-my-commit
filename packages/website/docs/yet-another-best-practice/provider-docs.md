@@ -168,7 +168,7 @@ generateCommit(input: GenerateCommitInput): GenerateCommitResult {
 
 ## 完整示例
 
-> 实战示例： packages/shared/src/server/providers/oh-my-commit.ts
+> 实战示例： packages/shared/src/server/providers/index.ts
 
 ```typescript
 export class MyProvider extends Provider {

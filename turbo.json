@@ -5,20 +5,12 @@
     "install": {
       "dependsOn": ["^build"]
     },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
     "lint": {
       "outputs": []
     },
     "clean": {
       "cache": false,
       "persistent": false
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
     },
     "docs:dev": {
       "cache": false,
@@ -35,6 +27,18 @@
       "dependsOn": ["build"],
       "inputs": ["src/**/*.ts", "test/**/*.ts"],
       "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:extension": {
+      "dependsOn": ["build"],
+      "outputs": ["../../dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

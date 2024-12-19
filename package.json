@@ -220,8 +220,10 @@
   "license": "MIT",
   "dependencies": {
     "@types/lodash": "^4.17.13",
+    "https-proxy-agent": "^7.0.6",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
-    "neverthrow": "^8.1.1"
+    "neverthrow": "^8.1.1",
+    "tsup": "^8.3.5"
   }
 }

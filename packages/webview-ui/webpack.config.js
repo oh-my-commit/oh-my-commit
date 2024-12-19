@@ -8,9 +8,9 @@ module.exports = (env, argv) => {
     mode: argv.mode || "development",
     entry: "./src/main.tsx",
     output: {
-      path: path.resolve(__dirname, "../../dist/webview-ui"),
+      path: path.resolve(__dirname, "dist"),
       filename: "main.js",
-      clean: isDevelopment ? false : true,
+      clean: true,
     },
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     watch: isDevelopment,

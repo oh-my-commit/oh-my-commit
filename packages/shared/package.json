@@ -20,18 +20,18 @@
       "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.js"
     },
-    "./templates/*": "./templates/*"
+    "./templates": {
+      "default": "./templates"
+    }
   },
   "files": [
     "dist",
-    "templates"
+    "../provider-official/templates"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly --outDir dist && cp -r templates dist/",
+    "build": "tsup",
     "dev": "tsup --watch",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -44,9 +44,10 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "handlebars": "^4.7.8",
-    "https-proxy-agent": "^7.0.6",
-    "neverthrow": "^8.1.1",
-    "simple-git": "^3.27.0"
+    "lodash-es": "^4.17.21",
+    "simple-git": "^3.27.0",
+    "yaml": "^2.6.1",
+    "zod": "^3.23.8"
   },
   "type": "module"
 }

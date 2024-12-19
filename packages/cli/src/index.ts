@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
+import { AcManager } from "@oh-my-commit/extension/services/models.service";
 import { program } from "commander";
 import chalk from "chalk";
+// import {AcManager} from "packages/extension/src/services/models.service.js";
 import { simpleGit } from "simple-git";
 import {
   APP_NAME,
   CommitManager,
+  Model,
   OmcStandardModelId,
 } from "@oh-my-commit/shared";
 import { ConsoleLogger } from "@oh-my-commit/shared";
@@ -13,12 +16,13 @@ import { ConsoleLogger } from "@oh-my-commit/shared";
 // Initialize git and commit manager
 const git = simpleGit();
 const logger = new ConsoleLogger(`${APP_NAME}} CLI`);
-const commitManager = new CommitManager({ logger });
+
+const acManager = new AcManager();
 
 // Command handlers
 const listModels = async () => {
   try {
-    const models = await commitManager.getAvailableModels();
+    const models = await acManager.getAvailableModels();
     console.log(chalk.blue("Available models:"));
     for (const model of models) {
       if (model.id === OmcStandardModelId) {
@@ -51,21 +55,21 @@ const generateAndCommit = async (options: any) => {
   console.log(chalk.blue("Generating commit message..."));
   try {
     const model = options.model;
-    const result = await commitManager.generateCommit(
+    const result = await acManager.generateCommit(
       {
         changed: 0, // TODO: Parse from git diff
         files: [], // TODO: Parse from git diff
         insertions: 0, // TODO: Parse from git diff
         deletions: 0, // TODO: Parse from git diff
       },
-      model
+      model,
     );
 
     const commitData = result.match(
       (success) => success,
       (error) => {
         throw new Error(`Error(code=${error.code}), message=${error.message}`);
-      }
+      },
     );
 
     console.log(chalk.green("Generated commit message:"));
@@ -85,7 +89,7 @@ const generateAndCommit = async (options: any) => {
       // Ask for confirmation
       console.log(chalk.yellow("\nUse -y flag to commit automatically"));
       console.log(
-        chalk.yellow("Or run git commit manually with the message above")
+        chalk.yellow("Or run git commit manually with the message above"),
       );
     }
   } catch (error) {
@@ -119,7 +123,7 @@ program
   .option("-y, --yes", "Automatically commit changes")
   .option(
     "-m, --model <model>",
-    `Specify the AI model to use (\`omc list\` to see all available models)`
+    `Specify the AI model to use (\`omc list\` to see all available models)`,
   )
   .action(generateAndCommit);
 
