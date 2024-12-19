@@ -1,4 +1,4 @@
-import { getVSCodeAPI } from "@/lib/storage";
+import { getVSCodeAPI } from "@/lib/getVSCodeAPI";
 import { uiModeAtom } from "@/state/atoms/ui";
 import { useAtom } from "jotai/index";
 import { useEffect } from "react";
@@ -15,6 +15,6 @@ export const useCloseWindow = () => {
       window.addEventListener("beforeunload", handleClose);
       return () => window.removeEventListener("beforeunload", handleClose);
     }
-    return () => {}; 
+    return () => {};
   }, [uiMode]);
 };

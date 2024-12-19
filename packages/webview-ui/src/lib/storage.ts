@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { WebviewApi } from "vscode-webview";
+import { getVSCodeAPI } from "./getVSCodeAPI";
 
 // VSCode存储选项
 export interface VSCodeStorageOptions<T> {
@@ -9,28 +9,6 @@ export interface VSCodeStorageOptions<T> {
   storageType?: "vscode" | "localStorage" | "both";
   // vscode workspace/global 配置
   storage?: "global" | "workspace";
-}
-
-// VSCode API类型
-export interface VSCodeAPI {
-  getState: () => Record<string, any>;
-  setState: (state: Record<string, any>) => void;
-  postMessage: (message: any) => void;
-}
-
-declare global {
-  interface Window {
-    acquireVsCodeApi(): WebviewApi<unknown>;
-  }
-}
-
-let vscodeApi: WebviewApi<unknown> | undefined;
-
-export function getVSCodeAPI(): WebviewApi<unknown> {
-  if (!vscodeApi) {
-    vscodeApi = acquireVsCodeApi();
-  }
-  return vscodeApi;
 }
 
 function getFromLocalStorage<T>(key: string, defaultValue: T): T {
@@ -93,7 +71,7 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
       if (storageType === "vscode" || storageType === "both") {
         setToVSCode(key, update);
       }
-    },
+    }
   );
 }
 
@@ -103,7 +81,10 @@ export function atomWithStorageReadOnly<T>(options: VSCodeStorageOptions<T>) {
   return atom((get) => get(baseAtom));
 }
 
-export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<T>) {
+export function createVSCodeAtom<T>({
+  key,
+  defaultValue,
+}: VSCodeStorageOptions<T>) {
   const baseAtom = atom<T>(defaultValue);
 
   const derivedAtom = atom(

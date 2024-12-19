@@ -1,9 +1,10 @@
 import React from "react";
 import type { FileChange } from "../../../state/types";
 import { FileItem } from "./FileItem";
+import { useAtom } from "jotai";
+import { diffResultAtom } from "@/state/atoms/commit.changed-files";
 
 export interface FlatViewProps {
-  files: FileChange[];
   selectedFiles: string[];
   selectedPath?: string;
   searchQuery?: string;
@@ -15,7 +16,6 @@ export interface FlatViewProps {
 }
 
 export const FlatView: React.FC<FlatViewProps> = ({
-  files,
   selectedFiles,
   selectedPath,
   searchQuery,
@@ -24,14 +24,17 @@ export const FlatView: React.FC<FlatViewProps> = ({
   onClick,
   className,
 }) => {
+  const [diffResult] = useAtom(diffResultAtom);
+  const diff = "todo: diff"; // todo
   return (
     <div className={className}>
-      {files.map((file, index) => (
+      {diffResult?.files.map((file, index) => (
         <FileItem
           key={index}
           file={file}
-          selected={selectedFiles.includes(file.path)}
-          isOpen={selectedPath === file.path}
+          diff={diff}
+          selected={selectedFiles.includes(file.file)}
+          isOpen={selectedPath === file.file}
           viewMode="flat"
           searchQuery={searchQuery}
           onSelect={onSelect}

@@ -1,5 +1,3 @@
-declare const acquireVsCodeApi: () => { postMessage: (message: any) => void };
-
 namespace JSX {
   interface IntrinsicElements {
     "vscode-divider": React.DetailedHTMLProps<

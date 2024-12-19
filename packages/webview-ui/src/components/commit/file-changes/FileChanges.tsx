@@ -20,8 +20,8 @@ import {
 } from "@/state/atoms/commit.changed-files";
 
 export const FileChanges: React.FC = () => {
-  const [changedFiles, setChangedFiles] = useAtom(diffResultAtom);
-  const initialSelection = changedFiles?.files?.map((file) => file.path) || [];
+  const [diffResult, setDiffResult] = useAtom(diffResultAtom);
+  const initialSelection = diffResult?.files?.map((file) => file.file) || [];
 
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom);
   const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
@@ -51,21 +51,14 @@ export const FileChanges: React.FC = () => {
   };
 
   const renderFileView = () => {
-    if (!changedFiles?.files?.length) {
+    if (!diffResult?.files?.length) {
       return <EmptyState />;
     }
-
-    const fileChanges: FileChange[] = changedFiles.files.map((file) => ({
-      ...file,
-      type: file.status,
-      isStaged: false,
-    }));
 
     switch (viewMode) {
       case "flat":
         return (
           <FlatView
-            files={fileChanges}
             selectedFiles={selectedFiles}
             selectedPath={lastOpenedFilePath || undefined}
             searchQuery={searchQuery || ""}
@@ -122,7 +115,7 @@ export const FileChanges: React.FC = () => {
           {lastOpenedFilePath && (
             <div className="sticky top-0 h-full">
               <DiffViewer
-                files={changedFiles}
+                files={diffResult}
                 lastOpenedFilePath={lastOpenedFilePath}
               />
             </div>

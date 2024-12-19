@@ -6,9 +6,11 @@ import React, { useEffect } from "react";
 import { Checkbox } from "../../common/Checkbox";
 import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants";
 import { basename } from "@/utils/path";
+import { DiffResult } from "simple-git";
 
 interface FileItemProps {
-  file: GitFileChange;
+  file: DiffResult["files"][0];
+  diff?: string
   selected: boolean;
   isOpen: boolean;
   viewMode: string;
@@ -19,6 +21,7 @@ interface FileItemProps {
 
 export const FileItem: React.FC<FileItemProps> = ({
   file,
+diff,
   selected,
   isOpen,
   viewMode,
@@ -30,22 +33,22 @@ export const FileItem: React.FC<FileItemProps> = ({
   const [contentMatchCount, setContentMatchCount] = React.useState(0);
 
   const handleSelect = () => {
-    onSelect(file.path);
+    onSelect(file.file);
   };
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClick(file.path);
+    onClick(file.file);
   };
 
   // 检查文件内容中的匹配
   useEffect(() => {
-    if (!searchQuery || !file.diff) {
+    if (!searchQuery || !diff) {
       setContentMatchCount(0);
       return;
     }
 
-    const lines = file.diff.split("\n");
+    const lines = diff.split("\n");
     let count = 0;
     try {
       const regex = new RegExp(searchQuery, "gi");
@@ -61,7 +64,7 @@ export const FileItem: React.FC<FileItemProps> = ({
     }
 
     setContentMatchCount(count);
-  }, [searchQuery, file.diff]);
+  }, [searchQuery, diff]);
 
   // 只要有任何一种匹配就显示
   const hasMatch = !searchQuery || pathMatchCount > 0 || contentMatchCount > 0;
@@ -94,21 +97,22 @@ export const FileItem: React.FC<FileItemProps> = ({
 
         <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
           <div className="flex items-center gap-0.5 transition-colors duration-100">
+            // todo: STATUS
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
-                STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                // STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
                 selected && "text-inherit"
               )}
-              title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
+              // title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
-              {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
+              {/* {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]} */}
             </span>
           </div>
 
           <span className="truncate">
             <HighlightText
-              text={viewMode === "tree" ? basename(file.path) : file.path}
+              text={viewMode === "tree" ? basename(file.file) : file.file}
               highlight={searchQuery}
               onMatchCount={setPathMatchCount}
             />
@@ -140,12 +144,12 @@ export const FileItem: React.FC<FileItemProps> = ({
             )}
           </span>
         )}
-        {file.additions > 0 && (
+        {!file.binary && file.insertions > 0 && (
           <span className={cn("text-git-added-fg", selected && "text-inherit")}>
-            +{file.additions}
+            +{file.insertions}
           </span>
         )}
-        {file.deletions > 0 && (
+        {!file.binary && file.deletions > 0 && (
           <span
             className={cn("text-git-deleted-fg", selected && "text-inherit")}
           >
