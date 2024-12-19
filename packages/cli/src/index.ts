@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import { AcManager } from "@extension/services/model.service"
-import { APP_NAME, ConsoleLogger, OmcStandardModelId } from "@shared/common"
+import { APP_NAME, CommitManager, ConsoleLogger, OmcStandardModelId } from "@shared"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
@@ -10,7 +9,7 @@ import { simpleGit } from "simple-git"
 const git = simpleGit()
 const logger = new ConsoleLogger(APP_NAME)
 
-const acManager = new AcManager()
+const acManager = new CommitManager()
 
 // Command handlers
 const listModels = async () => {

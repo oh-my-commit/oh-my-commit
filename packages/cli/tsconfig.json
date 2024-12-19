@@ -1,19 +1,11 @@
 {
-  "extends": ["../../tsconfig.json"],
+  "extends": ["../__base__/tsconfig.json"],
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext", // 为 CLI 工具使用 Node.js 特定配置
-
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": ".",
-    "paths": {
-      "@oh-my-commit/shared": ["../shared/src"],
-      "@oh-my-commit/extension/*": ["../extension/src/*"],
-    }
+    "baseUrl": "."
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"],
+  "include": ["src"],
   "references": [
     {
       "path": "../shared"
