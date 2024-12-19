@@ -10,7 +10,7 @@
     {
       "files": ["packages/*/tsup.config.ts", "packages/*/*.config.ts", "packages/*/.*.js"],
       "parserOptions": {
-        "project": ["packages/*/tsconfig.build.json"]
+        "project": ["tsconfig.build.json", "packages/*/tsconfig.build.json"]
       }
     }
   ]
