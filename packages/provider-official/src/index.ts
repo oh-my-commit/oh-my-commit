@@ -1,26 +1,25 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { Message } from "@anthropic-ai/sdk/resources";
+import { Message } from "@anthropic-ai/sdk/resources/messages.mjs";
+
 import {
   APP_ID,
   APP_NAME,
-  OmcStandardModelId,
-} from "@oh-my-commit/shared/common/constants";
-import { formatError } from "@oh-my-commit/shared/common/format-error";
-import {
   BaseGenerateCommitProvider,
+  BaseLogger,
+  formatError,
   GenerateCommitError,
   GenerateCommitInput,
   Model,
-} from "@oh-my-commit/shared/common/types/provider";
-import { BaseLogger } from "@oh-my-commit/shared/common/utils/logger";
-import { TemplateManager } from "@oh-my-commit/shared/common/utils/template-manager";
-import { getTemplatesDir } from "@oh-my-commit/shared/server/get-templates-dir";
+  OmcStandardModelId,
+} from "@oh-my-commit/shared/common";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { merge } from "lodash";
 import { ResultAsync } from "neverthrow";
 
-// 初始化模板管理器
-const templateManager = TemplateManager.getInstance(getTemplatesDir());
+const loadPrompt = (lang: string, diff: string) => {
+  // todo: parse from `commit-prompt.hbs`
+  return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`;
+};
 
 class OmcStandardModel implements Model {
   id = OmcStandardModelId;
@@ -36,10 +35,11 @@ class OmcStandardModel implements Model {
 }
 
 export class OmcProvider extends BaseGenerateCommitProvider {
-  override id = APP_ID;
-  override displayName = `${APP_NAME} Provider`;
-  override description = `Commit message generation powered by ${APP_NAME} models`;
-  override models = [new OmcStandardModel()];
+  public logger!: BaseLogger;
+  id = APP_ID;
+  displayName = `${APP_NAME} Provider`;
+  description = `Commit message generation powered by ${APP_NAME} models`;
+  models = [new OmcStandardModel()];
 
   private anthropic: Anthropic | null = null;
 
@@ -63,7 +63,7 @@ export class OmcProvider extends BaseGenerateCommitProvider {
     if (apiKey) this.anthropic = new Anthropic(config);
   }
 
-  override generateCommit(input: GenerateCommitInput) {
+  generateCommit(input: GenerateCommitInput) {
     this.logger.info("Generating commit message using OMC Provider...");
     return (
       // 1. call api
@@ -104,9 +104,8 @@ export class OmcProvider extends BaseGenerateCommitProvider {
     if (!this.anthropic) throw new Error("Anthropic API key not configured");
     this.logger.info("Generating commit message using Anthropic...");
 
-    const prompt = templateManager.render("commit-prompt", {
-      diff: JSON.stringify(input.diff, null, 2),
-    });
+    const diff = JSON.stringify(input.diff, null, 2);
+    const prompt = loadPrompt(lang, diff);
 
     return this.anthropic.messages.create({
       model: modelName,
