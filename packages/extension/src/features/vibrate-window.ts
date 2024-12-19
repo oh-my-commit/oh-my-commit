@@ -1,14 +1,17 @@
-import { BaseLogger } from "@oh-my-commit/shared";
-import vscode from "vscode";
+import { BaseLogger } from "@shared"
+import vscode from "vscode"
 
 export class VibrateWindow {
-  private persistWindowState: boolean = true;
-  private savedStates: Record<string, any> = {};
+  private persistWindowState: boolean = true
+  private savedStates: Record<string, any> = {}
 
-  private logger: BaseLogger;
+  private logger: BaseLogger
 
-  constructor(logger: BaseLogger, private readonly uiMode: "window" | "panel") {
-    this.logger = logger;
+  constructor(
+    logger: BaseLogger,
+    private readonly uiMode: "window" | "panel",
+  ) {
+    this.logger = logger
   }
 
   // 窗口模式下的目标配置
@@ -25,53 +28,45 @@ export class VibrateWindow {
       "window.titleBarStyle": "native" as const,
       "window.customTitleBarVisibility": "never" as const,
     },
-  };
+  }
 
-  private getWorkspaceConfig(
-    key: keyof typeof this.windowModeConfigs.workspace
-  ) {
-    return this.windowModeConfigs.workspace[key];
+  private getWorkspaceConfig(key: keyof typeof this.windowModeConfigs.workspace) {
+    return this.windowModeConfigs.workspace[key]
   }
 
   private getUserConfig(key: keyof typeof this.windowModeConfigs.user) {
-    return this.windowModeConfigs.user[key];
+    return this.windowModeConfigs.user[key]
   }
 
   private async saveWindowState() {
     if (this.uiMode === "window" && this.persistWindowState) {
-      this.logger.info("Saving window state");
+      this.logger.info("Saving window state")
       for (const key of Object.keys(this.windowModeConfigs.workspace)) {
         // 保存当前值
-        this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
-        this.logger.trace(
-          `Saved window state: ${key}=${this.savedStates[key]}`
-        );
+        this.savedStates[key] = vscode.workspace.getConfiguration().get(key)
+        this.logger.trace(`Saved window state: ${key}=${this.savedStates[key]}`)
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.getWorkspaceConfig(
-            key as keyof typeof this.windowModeConfigs.workspace
-          ),
-          vscode.ConfigurationTarget.Workspace
-        );
+          this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
+          vscode.ConfigurationTarget.Workspace,
+        )
       }
 
       // 保存和设置用户配置
       for (const key of Object.keys(this.windowModeConfigs.user)) {
         // 保存当前值
-        this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
-        this.logger.trace(
-          `Saved window state: ${key}=${this.savedStates[key]}`
-        );
+        this.savedStates[key] = vscode.workspace.getConfiguration().get(key)
+        this.logger.trace(`Saved window state: ${key}=${this.savedStates[key]}`)
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
           this.getUserConfig(key as keyof typeof this.windowModeConfigs.user),
-          vscode.ConfigurationTarget.Global
-        );
+          vscode.ConfigurationTarget.Global,
+        )
       }
 
-      this.logger.info("Window state saved");
+      this.logger.info("Window state saved")
     }
   }
 
@@ -86,11 +81,7 @@ export class VibrateWindow {
       >) {
         await vscode.workspace
           .getConfiguration()
-          .update(
-            key,
-            this.getWorkspaceConfig(key),
-            vscode.ConfigurationTarget.Workspace
-          );
+          .update(key, this.getWorkspaceConfig(key), vscode.ConfigurationTarget.Workspace)
       }
 
       for (const key of Object.keys(this.windowModeConfigs.user) as Array<
@@ -98,25 +89,21 @@ export class VibrateWindow {
       >) {
         await vscode.workspace
           .getConfiguration()
-          .update(
-            key,
-            this.getUserConfig(key),
-            vscode.ConfigurationTarget.Global
-          );
+          .update(key, this.getUserConfig(key), vscode.ConfigurationTarget.Global)
       }
 
       // 清空保存的状态
-      this.savedStates = {};
-      this.logger.info("Window state restored");
+      this.savedStates = {}
+      this.logger.info("Window state restored")
     }
   }
 
   private async updateWorkspaceConfig(
     key: string,
     value: unknown,
-    target: vscode.ConfigurationTarget
+    target: vscode.ConfigurationTarget,
   ) {
-    this.logger.debug(`Setting ${key} to ${value} (target: ${target})`);
-    await vscode.workspace.getConfiguration().update(key, value, target);
+    this.logger.debug(`Setting ${key} to ${value} (target: ${target})`)
+    await vscode.workspace.getConfiguration().update(key, value, target)
   }
 }

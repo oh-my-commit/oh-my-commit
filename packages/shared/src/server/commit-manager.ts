@@ -9,7 +9,7 @@ export class CommitManager {
   }
 
   public registerProviders() {
-    // todo: traverse all the packages whose name starts with `@oh-my-commit/provider-`
+    // todo: traverse all the packages whose name starts with `@provider-`
     // then push into `this.providers`
   }
 
