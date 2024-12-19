@@ -22,6 +22,7 @@ export class VscodeWebview
   private readonly scriptUri: vscode.Uri;
   private readonly template: HandlebarsTemplateDelegate;
   private messageHandlers: Map<string, MessageHandler> = new Map();
+  private onClientMessage?: (message: ClientMessageEvent) => void;
 
   /**
    * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
@@ -43,17 +44,19 @@ export class VscodeWebview
       title = "Webview",
       templatePath = "assets/webview.template.html",
       scriptPath = "dist/webview-ui/main.js",
+      onClientMessage,
     }: {
       viewType?: string;
       title?: string;
       templatePath?: string;
       scriptPath?: string;
-      onClientMessage: (message: ClientMessageEvent) => void;
+      onClientMessage?: (message: ClientMessageEvent) => void;
     },
   ) {
     super();
     this.title = title;
     this.context = context;
+    this.onClientMessage = onClientMessage;
     this.logger.info(`Creating ${viewType} webview`);
 
     // load template
@@ -106,6 +109,9 @@ export class VscodeWebview
           await vscode.env.openExternal(vscode.Uri.parse(message.data.url));
           break;
         default:
+          if (this.onClientMessage) {
+            await this.onClientMessage(message);
+          }
           return;
       }
       this.logger[level](`[Host <-- ${this.title}] `, message);
