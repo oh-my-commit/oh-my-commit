@@ -7,10 +7,7 @@ export class VibrateWindow {
 
   private logger: BaseLogger;
 
-  constructor(
-    logger: BaseLogger,
-    private readonly uiMode: "window" | "panel",
-  ) {
+  constructor(logger: BaseLogger, private readonly uiMode: "window" | "panel") {
     this.logger = logger;
   }
 
@@ -31,7 +28,7 @@ export class VibrateWindow {
   };
 
   private getWorkspaceConfig(
-    key: keyof typeof this.windowModeConfigs.workspace,
+    key: keyof typeof this.windowModeConfigs.workspace
   ) {
     return this.windowModeConfigs.workspace[key];
   }
@@ -47,15 +44,15 @@ export class VibrateWindow {
         // 保存当前值
         this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
         this.logger.trace(
-          `Saved window state: ${key}=${this.savedStates[key]}`,
+          `Saved window state: ${key}=${this.savedStates[key]}`
         );
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
           this.getWorkspaceConfig(
-            key as keyof typeof this.windowModeConfigs.workspace,
+            key as keyof typeof this.windowModeConfigs.workspace
           ),
-          vscode.ConfigurationTarget.Workspace,
+          vscode.ConfigurationTarget.Workspace
         );
       }
 
@@ -64,13 +61,13 @@ export class VibrateWindow {
         // 保存当前值
         this.savedStates[key] = vscode.workspace.getConfiguration().get(key);
         this.logger.trace(
-          `Saved window state: ${key}=${this.savedStates[key]}`,
+          `Saved window state: ${key}=${this.savedStates[key]}`
         );
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
           this.getUserConfig(key as keyof typeof this.windowModeConfigs.user),
-          vscode.ConfigurationTarget.Global,
+          vscode.ConfigurationTarget.Global
         );
       }
 
@@ -92,7 +89,7 @@ export class VibrateWindow {
           .update(
             key,
             this.getWorkspaceConfig(key),
-            vscode.ConfigurationTarget.Workspace,
+            vscode.ConfigurationTarget.Workspace
           );
       }
 
@@ -104,7 +101,7 @@ export class VibrateWindow {
           .update(
             key,
             this.getUserConfig(key),
-            vscode.ConfigurationTarget.Global,
+            vscode.ConfigurationTarget.Global
           );
       }
 
@@ -117,7 +114,7 @@ export class VibrateWindow {
   private async updateWorkspaceConfig(
     key: string,
     value: unknown,
-    target: vscode.ConfigurationTarget,
+    target: vscode.ConfigurationTarget
   ) {
     this.logger.debug(`Setting ${key} to ${value} (target: ${target})`);
     await vscode.workspace.getConfiguration().update(key, value, target);

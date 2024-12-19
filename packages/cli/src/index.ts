@@ -59,7 +59,7 @@ const generateAndCommit = async (options: any) => {
         insertions: 0, // TODO: Parse from git diff
         deletions: 0, // TODO: Parse from git diff
       },
-      model,
+      model
     );
 
     if (result.isOk()) {
@@ -81,13 +81,13 @@ const generateAndCommit = async (options: any) => {
         // Ask for confirmation
         console.log(chalk.yellow("\nUse -y flag to commit automatically"));
         console.log(
-          chalk.yellow("Or run git commit manually with the message above"),
+          chalk.yellow("Or run git commit manually with the message above")
         );
       }
     } else {
       console.error(
         chalk.red("Failed to generate commit message:"),
-        result.error,
+        result.error
       );
       process.exit(1);
     }
@@ -122,7 +122,7 @@ program
   .option("-y, --yes", "Automatically commit changes")
   .option(
     "-m, --model <model>",
-    `Specify the AI model to use (\`omc list\` to see all available models)`,
+    `Specify the AI model to use (\`omc list\` to see all available models)`
   )
   .action(generateAndCommit);
 

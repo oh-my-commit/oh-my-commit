@@ -18,7 +18,7 @@ export class CommandManager extends Loggable(class {}) {
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly gitService: VscodeGitService,
-    private readonly acManager: AcManager,
+    private readonly acManager: AcManager
   ) {
     super();
 
@@ -26,11 +26,11 @@ export class CommandManager extends Loggable(class {}) {
     this.registerCommand(COMMAND_OPEN_PREFERENCE, new OpenPreferencesCommand());
     this.registerCommand(
       COMMAND_QUICK_COMMIT,
-      new QuickCommitCommand(gitService, acManager, context),
+      new QuickCommitCommand(gitService, acManager, context)
     );
     this.registerCommand(
       COMMAND_SELECT_MODEL,
-      new SelectModelCommand(acManager),
+      new SelectModelCommand(acManager)
     );
   }
 

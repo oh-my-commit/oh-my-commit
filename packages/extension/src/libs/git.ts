@@ -75,7 +75,7 @@ export class GitCore {
    * @returns GitChangeType 文件变更类型
    */
   private async getChangeType(
-    file: DiffResult["files"][0],
+    file: DiffResult["files"][0]
   ): Promise<GitChangeType> {
     const status = await this.git.status();
     const fileStatus = status.files.find((f) => f.path === file.file);

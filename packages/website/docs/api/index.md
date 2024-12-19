@@ -59,10 +59,10 @@ omc-debug            # 调试模式
 ### 基本用法
 
 ```javascript
-const { OhMyCommits } = require("oh-my-commits");
+const { ohMyCommit } = require("oh-my-commits");
 
 // 创建实例
-const omc = new OhMyCommits({
+const omc = new ohMyCommit({
   language: "zh-CN",
   convention: "conventional",
 });

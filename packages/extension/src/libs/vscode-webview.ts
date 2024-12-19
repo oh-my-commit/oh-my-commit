@@ -74,7 +74,7 @@ export class VscodeWebview
   }
 
   public get uiMode(): string {
-    return this.config.get<string>("ohMyCommits.ui.mode")!;
+    return this.config.get<string>("ohMyCommit.ui.mode")!;
   }
 
   public registerMessageHandler(command: string, handler: MessageHandler) {
