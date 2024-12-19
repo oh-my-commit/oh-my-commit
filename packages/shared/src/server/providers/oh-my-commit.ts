@@ -1,19 +1,18 @@
 import { APP_ID, APP_NAME, OmcStandardModelId } from "@/common/constants";
 import { formatError } from "@/common/format-error";
-import { Model } from "@/common/types/model";
-import { Provider } from "@/common/types/provider";
+import { GenerateCommitInput, Model, Provider } from "@/common/types/provider";
 import { BaseLogger } from "@/common/utils/logger";
 import { TemplateManager } from "@/common/utils/template-manager";
 import Anthropic from "@anthropic-ai/sdk";
 import { Message } from "@anthropic-ai/sdk/resources";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { ok, ResultAsync } from "neverthrow";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 import { join } from "path";
 import { DiffResult } from "simple-git";
 
 // 初始化模板管理器
 const templateManager = TemplateManager.getInstance(
-  join(__dirname, "..", "templates")
+  join(__dirname, "..", "templates"),
 );
 
 class OmcStandardModel implements Model {
@@ -57,22 +56,16 @@ export class OmcProvider extends Provider {
     if (apiKey) this.anthropic = new Anthropic(config);
   }
 
-  override generateCommit(
-    diff: DiffResult,
-    model: Model,
-    options?: {
-      lang?: string;
-    }
-  ) {
+  private callApi(input: GenerateCommitInput) {
     return ResultAsync.fromPromise(
       (async () => {
-        const lang = options?.lang || "en";
+        const lang = input.options?.lang || "en";
         const modelName = "claude-3-sonnet-20240229";
         if (!this.anthropic)
           throw new Error("Anthropic API key not configured");
 
         const prompt = templateManager.render("commit-prompt", {
-          diff: JSON.stringify(diff, null, 2),
+          diff: JSON.stringify(input.diff, null, 2),
         });
 
         this.logger.info("Generating commit message using Anthropic...");
@@ -151,46 +144,60 @@ export class OmcProvider extends Provider {
           tool_choice: { type: "tool" as const, name: "generate_commit" },
         });
       })(),
-      (error) => ({
-        type: "CALL_API_ERROR",
-        message: formatError(error),
-      })
-    ).andThen((response: Message) => {
-      this.logger.debug(
-        "Commit message generated (response): ",
-        JSON.stringify(response)
-      );
-
-      const item = response.content[0];
-      if (item.type !== "tool_use")
-        throw new Error("Invalid tool response from AI model");
-
-      const result = item.input as {
-        title: string;
-        body: string;
-        extra?: {
-          type?: string;
-          scope?: string;
-          breaking?: boolean;
-          issues?: string[];
+      (error) => {
+        return {
+          ok: false,
+          code: -1,
+          message: `failed to call api, reason: ${formatError(error)}`,
         };
-      };
+      },
+    );
+  }
 
-      if (!result) throw new Error("Invalid tool response from AI model");
+  private handleApiResult(response: Message) {
+    return ResultAsync.fromPromise(
+      (async () => {
+        this.logger.debug(
+          "Commit message generated (response): ",
+          JSON.stringify(response),
+        );
 
-      return ok({
-        title: result.title,
-        body: result.body,
-        meta: {
-          type: result.extra?.type,
-          scope: result.extra?.scope,
-          breaking: result.extra?.breaking || false,
-          issues: result.extra?.issues || [],
-          timestamp: new Date().toISOString(),
-          provider: "oh-my-commit",
-          providedModel: model.id,
-        },
-      });
-    });
+        const item = response.content[0];
+        if (item.type !== "tool_use")
+          throw new Error("Invalid tool response from AI model");
+
+        const result = item.input as {
+          title: string;
+          body: string;
+          extra?: {
+            type?: string;
+            scope?: string;
+            breaking?: boolean;
+            issues?: string[];
+          };
+        };
+
+        if (!result) throw new Error("Invalid tool response from AI model");
+
+        return {
+          title: result.title,
+          body: result.body,
+          meta: {
+            ...result.extra,
+          },
+        };
+      })(),
+      (error) => ({
+        ok: false,
+        message: `failed to handle api result, reason: ${formatError(error)}`,
+        code: -2,
+      }),
+    );
+  }
+
+  override generateCommit(input: GenerateCommitInput) {
+    return ResultAsync.fromSafePromise(Promise.resolve(input))
+      .andThen((input) => this.callApi(input))
+      .andThen((response) => this.handleApiResult(response));
   }
 }

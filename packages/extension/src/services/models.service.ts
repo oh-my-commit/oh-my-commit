@@ -1,6 +1,11 @@
-import { CommitData, Provider, SETTING_MODEL_ID } from "@oh-my-commit/shared";
+import {
+  GenerateCommit,
+  GenerateCommitResult,
+  Provider,
+  SETTING_MODEL_ID,
+} from "@oh-my-commit/shared";
 import { presetAiProviders } from "@oh-my-commit/shared/common/config/providers";
-import { ResultAsync } from "neverthrow";
+import { Result, ResultAsync } from "neverthrow";
 import * as vscode from "vscode";
 
 import { AppManager } from "@/app.manager";
@@ -51,7 +56,7 @@ export class AcManager extends Loggable(class {}) {
       const response = await vscode.window.showErrorMessage(
         `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
         configureNow,
-        configureLater
+        configureLater,
       );
 
       if (response === configureNow) {
@@ -62,9 +67,7 @@ export class AcManager extends Loggable(class {}) {
     return true;
   }
 
-  public async generateCommit(
-    diff: DiffResult
-  ): ResultAsync<CommitData, { type: string; message?: string }> {
+  public generateCommit(diff: DiffResult): GenerateCommitResult {
     return ResultAsync.fromPromise(
       (async () => {
         if (!this.model) {
@@ -81,11 +84,10 @@ export class AcManager extends Loggable(class {}) {
             vscode.env.language,
         });
       })(),
-      (error) => ({
+      (e: unknown) => ({
         type: "provider-error",
-        message:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      })
+        message: e instanceof Error ? e.message : "Unknown error occurred",
+      }),
     );
   }
 }
