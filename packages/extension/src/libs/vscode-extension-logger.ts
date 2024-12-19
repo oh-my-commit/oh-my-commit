@@ -13,6 +13,6 @@ export class VscodeExtensionLogger extends BaseLogger {
 
   protected log(level: LogLevel, ...args: any[]) {
     const rawMessage = formatMessage(...args);
-    this.logger[level](`OMC.${this.channel}`, rawMessage);
+    this.logger[level](`omc.${this.channel}`, rawMessage);
   }
 }

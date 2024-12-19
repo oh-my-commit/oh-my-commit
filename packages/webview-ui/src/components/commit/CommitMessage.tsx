@@ -43,6 +43,7 @@ export function CommitMessage() {
   const handleRegenerate = () => {
     setIsRegenerating(true);
     clientPush({
+      channel: "commitMesage",
       type: "selected-files",
       data: selectedFiles,
     });

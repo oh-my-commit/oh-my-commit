@@ -97,7 +97,7 @@ export const FileItem: React.FC<FileItemProps> = ({
 
         <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
           <div className="flex items-center gap-0.5 transition-colors duration-100">
-            // todo: STATUS
+            {/* // todo: STATUS */}
             <span
               className={cn(
                 "font-mono font-medium text-[12px]",
