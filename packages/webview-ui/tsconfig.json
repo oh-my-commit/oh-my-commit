@@ -5,14 +5,12 @@
     "jsx": "react-jsx",
     "types": ["vscode"],
     "baseUrl": ".",
-    "noEmit": true,
+    // "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@oh-my-commit/shared/common": ["../shared/common/index"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules"],
   "references": [
     {
       "path": "../shared"
