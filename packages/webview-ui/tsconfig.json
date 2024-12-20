@@ -4,13 +4,11 @@
     "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
-
-
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react-jsx",
     "types": ["vscode"],
     "moduleResolution": "Node",
-    "module": "CommonJS",
+    "module": "CommonJS"
   },
   "include": ["src/**/*"],
   "references": [

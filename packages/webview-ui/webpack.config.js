@@ -1,3 +1,4 @@
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 import path from "path"
 import { fileURLToPath } from "url"
@@ -61,6 +62,11 @@ export default (env, argv) => {
                   sourceMap: true,
                   noEmit: false,
                 },
+                ...(isDevelopment && {
+                  getCustomTransformers: () => ({
+                    before: [require("react-refresh-typescript")()],
+                  }),
+                }),
               },
             },
           ],
@@ -94,7 +100,8 @@ export default (env, argv) => {
       new HtmlWebpackPlugin({
         template: "./index.html",
       }),
-    ],
+      isDevelopment && new ReactRefreshWebpackPlugin(),
+    ].filter(Boolean),
     optimization: {
       minimize: isProduction,
     },
