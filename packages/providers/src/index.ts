@@ -1,204 +1,141 @@
-import Anthropic from "@anthropic-ai/sdk"
+import { OmcProvider } from "@/providers/omc-provider"
+import type { GenerateCommitError, GenerateCommitInput, GenerateCommitResult, Model } from "@shared"
+import * as fs from "fs"
+import type { ResultAsync } from "neverthrow"
+import * as os from "os"
+import * as path from "path"
 
-import {
-  APP_ID,
-  APP_NAME,
-  BaseGenerateCommitProvider,
-  BaseLogger,
-  formatError,
-  GenerateCommitError,
-  GenerateCommitInput,
-  Model,
-  OmcStandardModelId,
-} from "@shared"
+/**
+ * Core interfaces for commit message generation providers
+ */
 
-import { Message } from "@anthropic-ai/sdk/resources"
-import { HttpsProxyAgent } from "https-proxy-agent"
-import { merge } from "lodash"
-import { ResultAsync } from "neverthrow"
+export interface ICommitProvider {
+  /** Unique identifier for the provider */
+  id: string
 
-const loadPrompt = (lang: string, diff: string) => {
-  // todo: parse from `commit-prompt.hbs`
-  return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
-}
+  /** Display name shown to users */
+  displayName: string
 
-class OmcStandardModel implements Model {
-  id = OmcStandardModelId
-  name = `Standard Model`
-  description = "High accuracy commit messages using Claude 3.5 Sonnet"
-  providerId = APP_ID
-  aiProviderId = "anthropic"
-  metrics = {
-    accuracy: 0.95,
-    speed: 0.7,
-    cost: 0.8,
+  /** Provider description */
+  description: string
+
+  /** Available models supported by this provider */
+  models: Model[]
+
+  /** Provider metadata */
+  metadata?: {
+    version: string
+    author: string
+    homepage?: string
+    repository?: string
   }
+
+  /** Generate commit message implementation */
+  generateCommit(input: GenerateCommitInput): ResultAsync<GenerateCommitResult, GenerateCommitError>
 }
 
-export class OmcProvider extends BaseGenerateCommitProvider {
-  id = APP_ID
-  displayName = `${APP_NAME} Provider`
-  description = `Commit message generation powered by ${APP_NAME} models`
-  models = [new OmcStandardModel()]
+/**
+ * Provider Registry manages all available commit message providers
+ */
+export class ProviderRegistry {
+  private static instance: ProviderRegistry
+  private providers: Map<string, ICommitProvider> = new Map()
+  private userProvidersDir: string
 
-  private anthropic: Anthropic | null = null
+  private constructor() {
+    this.userProvidersDir = getUserProvidersDir()
+  }
 
-  constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
-    super()
-    if (logger) {
-      this.logger = logger
+  static getInstance(): ProviderRegistry {
+    if (!ProviderRegistry.instance) {
+      ProviderRegistry.instance = new ProviderRegistry()
     }
-
-    const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY
-    const proxy =
-      proxyUrl || process.env.HTTP_PROXY || process.env.HTTPS_PROXY || process.env.ALL_PROXY
-
-    const config: Record<string, any> = { apiKey }
-
-    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
-
-    if (apiKey) this.anthropic = new Anthropic(config)
+    return ProviderRegistry.instance
   }
 
-  generateCommit(input: GenerateCommitInput) {
-    this.logger.info("Generating commit message using OMC Provider...")
-    return (
-      // 1. call api
-      ResultAsync.fromPromise(
-        this.callApi(input),
-        error =>
-          new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
-      )
-        // 2. handle api result
-        .andThen(response =>
-          ResultAsync.fromPromise(
-            this.handleApiResult(response),
-            error =>
-              new GenerateCommitError(
-                -10087,
-                `failed to handle api result, reason: ${formatError(error)}`,
-              ),
-          ),
-        )
-        // 3. add metadata
-        .map(result => {
-          merge(result.meta, {
-            generatedAt: new Date().toISOString(),
-            modelId: input.model.id,
-            providerId: this.id,
-          })
-          return result
-        })
-    )
+  /** Initialize the registry and load all providers */
+  async initialize() {
+    // Register built-in providers
+    this.registerProvider(new OmcProvider())
+
+    // Load user providers
+    await this.loadUserProviders()
   }
 
-  private callApi(input: GenerateCommitInput) {
-    const lang = input.options?.lang || "en"
-    const modelName = "claude-3-sonnet-20240229"
-    if (!this.anthropic) throw new Error("Anthropic API key not configured")
-    this.logger.info("Generating commit message using Anthropic...")
-
-    const diff = JSON.stringify(input.diff, null, 2)
-    const prompt = loadPrompt(lang, diff)
-
-    return this.anthropic.messages.create({
-      model: modelName,
-      max_tokens: 1000,
-      temperature: 0.7,
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      tools: [
-        {
-          name: "generate_commit",
-          description: "Generate a structured commit message based on git diff",
-          input_schema: {
-            type: "object",
-            properties: {
-              title: {
-                type: "string",
-                description:
-                  "Commit title following conventional commits format: <type>[optional scope]: <description>",
-              },
-              body: {
-                type: "string",
-                description: "Detailed explanation of what changes were made and why",
-              },
-              extra: {
-                type: "object",
-                properties: {
-                  type: {
-                    type: "string",
-                    enum: [
-                      "feat",
-                      "fix",
-                      "docs",
-                      "style",
-                      "refactor",
-                      "perf",
-                      "test",
-                      "chore",
-                      "ci",
-                      "build",
-                      "revert",
-                    ],
-                    description: "Type of change",
-                  },
-                  scope: {
-                    type: "string",
-                    description: "Component scope of the change",
-                  },
-                  breaking: {
-                    type: "boolean",
-                    description: "Whether this is a breaking change",
-                  },
-                  issues: {
-                    type: "array",
-                    items: {
-                      type: "string",
-                    },
-                    description: "Related issue numbers",
-                  },
-                },
-                required: ["type", "breaking", "issues"],
-              },
-            },
-            required: ["title", "body", "extra"],
-          },
-        },
-      ],
-      tool_choice: { type: "tool" as const, name: "generate_commit" },
-    })
-  }
-
-  private async handleApiResult(response: Message) {
-    this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
-
-    const item = response.content[0]
-    if (item.type !== "tool_use") throw new Error("Invalid tool response from AI model")
-
-    const result = item.input as {
-      title: string
-      body: string
-      extra?: {
-        type?: string
-        scope?: string
-        breaking?: boolean
-        issues?: string[]
+  /** Load all providers from user directory */
+  private async loadUserProviders() {
+    try {
+      // Create providers directory if it doesn't exist
+      if (!fs.existsSync(this.userProvidersDir)) {
+        fs.mkdirSync(this.userProvidersDir, { recursive: true })
+        return
       }
-    }
 
-    if (!result) throw new Error("Invalid tool response from AI model")
+      const files = fs.readdirSync(this.userProvidersDir)
+      const providerFiles = files.filter(f => f.endsWith(".js") || f.endsWith(".ts"))
 
-    return {
-      title: result.title,
-      body: result.body,
-      meta: {
-        ...result.extra,
-      },
+      for (const file of providerFiles) {
+        const filePath = path.join(this.userProvidersDir, file)
+        const provider = await loadProviderFromFile(filePath)
+
+        if (provider) {
+          this.registerProvider(provider)
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load user providers:", error)
     }
   }
+
+  /** Register a new provider */
+  registerProvider(provider: ICommitProvider) {
+    if (this.providers.has(provider.id)) {
+      throw new Error(`Provider with id ${provider.id} already exists`)
+    }
+    this.providers.set(provider.id, provider)
+  }
+
+  /** Get provider by id */
+  getProvider(id: string): ICommitProvider | undefined {
+    return this.providers.get(id)
+  }
+
+  /** Get all registered providers */
+  getAllProviders(): ICommitProvider[] {
+    return Array.from(this.providers.values())
+  }
+}
+
+/** Get user providers directory path */
+export function getUserProvidersDir(): string {
+  const homeDir = os.homedir()
+  return path.join(homeDir, ".oh-my-commit", "providers")
+}
+
+/** Load a provider from a file */
+async function loadProviderFromFile(filePath: string): Promise<ICommitProvider | null> {
+  try {
+    const module = await import(filePath)
+    const provider = module.default || module
+
+    if (isValidProvider(provider)) {
+      return provider
+    }
+    return null
+  } catch (error) {
+    console.error(`Failed to load provider from ${filePath}:`, error)
+    return null
+  }
+}
+
+/** Validate if an object is a valid provider */
+function isValidProvider(obj: any): obj is ICommitProvider {
+  return (
+    obj &&
+    typeof obj.id === "string" &&
+    typeof obj.displayName === "string" &&
+    typeof obj.description === "string" &&
+    Array.isArray(obj.models) &&
+    typeof obj.generateCommit === "function"
+  )
 }
