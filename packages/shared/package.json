@@ -25,7 +25,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/shared"
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

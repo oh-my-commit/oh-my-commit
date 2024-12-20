@@ -1,9 +1,7 @@
 import { defineConfig } from "tsup"
+import baseConfig from "../../tsup.config"
 
 export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["cjs"],
-  dts: true,
-  clean: true,
-  external: ["@shared"],
+  ...baseConfig,
+  entry: ["./src/index.ts"],
 })
