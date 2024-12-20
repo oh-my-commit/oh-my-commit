@@ -1,16 +1,18 @@
 {
   "extends": ["../__base__/tsconfig.json"],
   "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist",
+
+
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react-jsx",
     "types": ["vscode"],
-    "baseUrl": ".",
     "moduleResolution": "Node",
     "module": "CommonJS",
-    "esModuleInterop": true,
-    "resolveJsonModule": true
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "../shared"
