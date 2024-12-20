@@ -1,14 +1,19 @@
 {
-  "extends": [
-    // "@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"
-     "plugin:@typescript-eslint/recommended",
-//    "eslint:recommended",
-  ],
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": ["plugin:@typescript-eslint/recommended"],
   "parserOptions": {
-    "project": ["tsconfig.json", "tsconfig.build.json", "packages/*/tsconfig.json"],
+    "project": [
+      // 千万不要换成 tsconfig.json，不然会溢出
+      "tsconfig.base.json",
+      // 这个要加上，否则很多文件 cover 不到，eslint 会报错
+      "packages/*/tsconfig.json",
+    ],
   },
   "env": {
     "browser": true,
+    "node": true,
+    "es2022": true,
   },
   "settings": {
     "import/resolver": {
@@ -19,9 +24,9 @@
   },
   "overrides": [
     {
-      "files": ["*.coinfig*", "packages/*/*.config*"],
+      "files": ["**/*.config.*"],
       "parserOptions": {
-        "project": ["tsconfig.build.json"],
+        "project": ["./tsconfig.build.json"],
       },
     },
   ],
@@ -32,6 +37,8 @@
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-empty-object-type": "warn",
   },
 }
