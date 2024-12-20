@@ -1,25 +1,13 @@
 {
   "extends": ["@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"],
   "parserOptions": {
-    "project": ["tsconfig.json", "tsconfig.build.json", "packages/*/tsconfig.json"]
+    "project": true,
   },
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": ["packages/*/tsconfig.json"]
-      }
-    }
+        "project": ["packages/*/tsconfig.json"],
+      },
+    },
   },
-  "env": {
-    "browser": true,
-    "node": true
-  },
-  "overrides": [
-    {
-      "files": ["packages/*/*.config.ts", "packages/*/.*.config.js"],
-      "parserOptions": {
-        "project": ["tsconfig.build.json"]
-      }
-    }
-  ]
 }
