@@ -6,8 +6,30 @@ export class VscodeExtensionLogger extends BaseLogger {
     log: true,
   })
 
+  constructor(channel: string) {
+    super(channel) // 确保调用父类构造函数
+  }
+
   protected log(level: LogLevel, ...args: any[]) {
     const rawMessage = formatMessage(...args)
-    this.logger[level](`omc.${this.channel}`, rawMessage)
+    const prefix = `omc.${this.channel}`
+    
+    switch (level) {
+      case "info":
+        this.logger.info(`${prefix} ${rawMessage}`)
+        break
+      case "error":
+        this.logger.error(`${prefix} ${rawMessage}`)
+        break
+      case "warn":
+        this.logger.warn(`${prefix} ${rawMessage}`)
+        break
+      case "debug":
+        this.logger.debug(`${prefix} ${rawMessage}`)
+        break
+      case "trace":
+        this.logger.trace(`${prefix} ${rawMessage}`)
+        break
+    }
   }
 }

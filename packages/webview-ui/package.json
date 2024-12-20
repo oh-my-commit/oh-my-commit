@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "@oh-my-commit/shared": "workspace:*",
+    "@vscode/codicons": "^0.0.36",
     "@vscode/webview-ui-toolkit": "^1.4.0",
+    "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
+    "jotai": "^2.10.4",
     "marked-react": "^3.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
@@ -22,7 +27,9 @@
     "@types/vscode-webview": "^1.57.0",
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
+    "postcss-loader": "^8.1.1",
     "style-loader": "^3.3.1",
+    "tailwindcss": "^3.4.17",
     "ts-loader": "^9.4.1",
     "typescript": "^5.0.2",
     "webpack": "^5.74.0",

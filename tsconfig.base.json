@@ -10,37 +10,12 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
 
-    // 在 monorepo 中，是否需要 composite: true 取决于你的项目需求：
-
-    // 不需要 composite: true 的情况：
-    //
-    // 如果你使用 Turborepo/pnpm workspace 这样的工具管理依赖和构建
-    // 包之间的引用通过 package.json 的依赖关系管理
-    // 使用 tsup/webpack 等构建工具单独构建每个包
-
-    // 需要 composite: true 的情况：
-    //
-    // 需要 TypeScript 原生的项目引用功能
-    // 需要更快的增量构建
-    // 需要严格的跨包类型检查
-    // 看你的项目：
-
-    // 使用了 pnpm（从错误日志可见）
-    // 使用了 Turborepo（从构建输出可见）
-    // 使用了 tsup 作为构建工具
-    // 包之间的引用通过 paths 映射实现
-    // 建议： 移除 composite: true，因为：
-
-    // 你已经有了 Turborepo 来管理构建依赖
-    // tsup 处理类型生成更高效
-    // 可以避免类型生成时的冲突
-    "composite": true,
-    // 使用 composite 选项必须开启 declaration
+    // 使用了 pnpm 和 Turborepo，不需要 composite
+    "composite": false,
     "declaration": true,
 
-    //     输出文件全部基于各个打包工具，tsc 仅用于输出 d.ts 以及静态检查
-    "noEmit": false,
-    "emitDeclarationOnly": false,
+    // 让 tsup 处理输出，但不能完全禁用 emit，否则项目引用会报错
+    "emitDeclarationOnly": true,
     "sourceMap": true,
     "declarationMap": true
   }
