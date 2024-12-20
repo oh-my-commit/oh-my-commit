@@ -26,22 +26,11 @@
     },
     "clean": {
       "cache": false,
-      "persistent": false,
-      "outputs": [
-        "dist/**",
-        "packages/*/dist/**",
-        "packages/*/tsconfig.tsbuildinfo",
-        "packages/*/.turbo"
-      ]
+      "persistent": false
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        "packages/*/dist/**",
-        "packages/*/tsconfig.tsbuildinfo",
-        "packages/*/.turbo"
-      ]
+      "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
     },
     "build:extension": {
       "dependsOn": ["build"],
