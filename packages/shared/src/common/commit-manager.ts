@@ -1,10 +1,11 @@
-import { SETTING_MODEL_ID } from "./app"
-import type { IConfig, ILogger, IUIProvider } from "./core"
+import { SETTING_MODEL_ID } from "@/common/app"
+import type { IConfig, ILogger, IUIProvider } from "@/common/core"
 import {
   type BaseGenerateCommitProvider,
-  type GenerateCommitInput,
+  type GenerateCommitOptions,
   presetAiProviders,
-} from "./generate-commit"
+} from "@/common/generate-commit"
+import type { DiffResult } from "simple-git"
 
 export class CommitManager {
   private providers: BaseGenerateCommitProvider[] = []
@@ -29,6 +30,12 @@ export class CommitManager {
 
   get provider() {
     return this.providers.find(p => p.models.some(model => model.id === this.modelId))
+  }
+
+  get options(): GenerateCommitOptions {
+    return {
+      lang: this.config.get("lang"),
+    }
   }
 
   public async selectModel(modelId: string): Promise<boolean> {
@@ -58,18 +65,15 @@ export class CommitManager {
     return true
   }
 
-  public async generateCommit(input: GenerateCommitInput) {
+  public async generateCommit(diff: DiffResult) {
     const model = this.model
-    this.logger.info("[CommitManager] Generating commit using model: ", model)
     if (!model) throw new Error("No model selected")
 
     const provider = this.provider
-    this.logger.info("[CommitManager] Generating commit using provider: ", provider)
     if (!provider) throw new Error(`Provider ${this.model.providerId} not found`)
 
-    this.logger.info("generateCommit: ", input)
-
-    return await provider.generateCommit(input)
+    const options = this.options
+    return provider.generateCommit({ model, diff, options })
   }
 
   public registerProvider(provider: BaseGenerateCommitProvider) {

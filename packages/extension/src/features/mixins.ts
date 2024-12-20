@@ -1,4 +1,4 @@
-import { VscodeExtensionLogger } from "@/libs/vscode-extension-logger"
+import { VscodeExtensionLogger } from "@/vscode-adapters"
 import vscode from "vscode" // Constructor type with static members
 
 // Constructor type with static members

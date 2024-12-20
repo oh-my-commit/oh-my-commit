@@ -43,7 +43,7 @@ key_points = """
 - Affected files:
   - quick-commit.ts: File transformation logic
   - git.ts: Git operations
-  - vscode-git.service.ts: VSCode git service
+  - vscode-git.ts: VSCode git service
 """
 
 [[rounds]]

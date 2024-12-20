@@ -3,6 +3,9 @@
   "parserOptions": {
     "project": true
   },
+  "env": {
+    "browser": true
+  },
   "settings": {
     "import/resolver": {
       "typescript": {

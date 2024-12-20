@@ -1,5 +1,5 @@
 import { getVSCodeAPI } from "@/lib/getVSCodeAPI"
-import { APP_NAME } from "@shared/common"
+import { APP_NAME } from "@shared"
 import React from "react"
 import packageJson from "../../package.json"
 

@@ -1,5 +1,5 @@
 import { clientPush } from "@/clientPush"
-import { BaseLogger, formatMessage, type LogLevel } from "@shared/common"
+import { BaseLogger, formatMessage, type LogLevel } from "@shared"
 
 export class VscodeClientLogger extends BaseLogger {
   protected channel = "default"

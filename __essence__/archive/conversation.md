@@ -403,7 +403,7 @@
 - Added new methods to GitCore class:
   - `getLastCommitMessage()`: Retrieves the message from the last commit
   - `amendCommit()`: Amends the last commit with a new message
-- Updated VscodeGitService to expose the new git methods
+- Updated VscodeGit to expose the new git methods
 - Modified QuickCommitCommand to show amend option when no changes are detected
   - Shows the last commit message and allows editing
   - Provides a quick-pick interface consistent with the regular commit flow

@@ -1,14 +1,13 @@
-import { BaseCommand, type VscodeCommand } from "@/libs/vscode-command"
-import type { AcManager } from "@/services/model.service"
-import { COMMAND_SELECT_MODEL } from "@shared"
+import { BaseCommand, type VscodeCommand } from "@/vscode-command"
+import { COMMAND_SELECT_MODEL, CommitManager } from "@shared"
 import * as vscode from "vscode"
 
 export class SelectModelCommand extends BaseCommand implements VscodeCommand {
   public id = COMMAND_SELECT_MODEL
 
-  private acManager: AcManager
+  private acManager: CommitManager
 
-  constructor(acManager: AcManager) {
+  constructor(acManager: CommitManager) {
     super()
     this.acManager = acManager
   }

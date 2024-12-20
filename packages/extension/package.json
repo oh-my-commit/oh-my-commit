@@ -9,7 +9,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
-    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo"
+    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",

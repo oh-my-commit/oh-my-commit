@@ -1,6 +1,6 @@
-import type { VscodeCommand } from "@/libs/vscode-command"
-import { openPreferences } from "@/utils/open-preference"
-import { COMMAND_OPEN_PREFERENCE } from "@shared"
+import type { VscodeCommand } from "@/vscode-command"
+import { APP_ID, COMMAND_OPEN_PREFERENCE } from "@shared"
+import vscode from "vscode"
 
 export class OpenPreferencesCommand implements VscodeCommand {
   public id = COMMAND_OPEN_PREFERENCE
@@ -8,6 +8,6 @@ export class OpenPreferencesCommand implements VscodeCommand {
   async execute(): Promise<void> {
     console.log("Open preferences command triggered")
 
-    await openPreferences()
+    await vscode.commands.executeCommand("workbench.action.openSettings", APP_ID)
   }
 }
