@@ -1,2 +1,13 @@
-*.ejs
-*.hbs
+# dependencies
+node_modules
+
+# build output
+dist
+build
+
+# generated types
+*.d.ts
+
+__essence__
+
+.vitepress

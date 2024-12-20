@@ -17,27 +17,27 @@
 - 强制开发者处理错误情况
 
 ## 2. 错误类型定义
- 
+
 ```typescript
 // 定义具体的错误类型
 type AppError =
   | { type: "VALIDATION_ERROR"; message: string }
   | { type: "API_ERROR"; message: string }
   | { type: "PROCESSING_ERROR"; message: string }
-  | { type: "UNKNOWN_ERROR"; message: string; originalError?: unknown };
+  | { type: "UNKNOWN_ERROR"; message: string; originalError?: unknown }
 
 // 错误处理函数
 const handleApiError = (e: unknown): AppError => ({
   type: "API_ERROR",
   message: `API call failed: ${formatError(e)}`,
   originalError: e,
-});
+})
 
 // 错误格式化
 const formatError = (e: unknown): string => {
-  if (e instanceof Error) return e.message;
-  return String(e);
-};
+  if (e instanceof Error) return e.message
+  return String(e)
+}
 ```
 
 ## 3. Result 模式的基本使用
@@ -50,11 +50,11 @@ function processData(): ResultAsync<Data, AppError> {
         return err({
           type: "VALIDATION_ERROR",
           message: "Invalid data format",
-        });
+        })
       }
-      return ok(rawData);
-    }
-  );
+      return ok(rawData)
+    },
+  )
 }
 ```
 
@@ -63,16 +63,16 @@ function processData(): ResultAsync<Data, AppError> {
 ```typescript
 function complexOperation(): ResultAsync<FinalData, AppError> {
   return ResultAsync.fromPromise(step1(), handleApiError)
-    .andThen((data1) => ResultAsync.fromPromise(step2(data1), handleApiError))
-    .andThen((data2) => {
+    .andThen(data1 => ResultAsync.fromPromise(step2(data1), handleApiError))
+    .andThen(data2 => {
       if (!isValid(data2)) {
         return err({
           type: "VALIDATION_ERROR",
           message: "Validation failed at step 2",
-        });
+        })
       }
-      return ok(data2);
-    });
+      return ok(data2)
+    })
 }
 ```
 
@@ -96,11 +96,11 @@ function complexOperation(): ResultAsync<FinalData, AppError> {
 
 ```typescript
 // 集中定义错误类型
-types / errors.ts; // 所有错误类型定义
+types / errors.ts // 所有错误类型定义
 
-utils / error - handlers.ts; // 错误处理函数
+utils / error - handlers.ts // 错误处理函数
 
-services / user - service.ts; // 业务逻辑，使用 Result
+services / user - service.ts // 业务逻辑，使用 Result
 ```
 
 ### 5.4 错误处理原则
@@ -131,28 +131,28 @@ services / user - service.ts; // 业务逻辑，使用 Result
 ```typescript
 // 完整的业务逻辑示例
 interface User {
-  id: string;
-  name: string;
-  email: string;
+  id: string
+  name: string
+  email: string
 }
 
 type UserError =
   | { type: "VALIDATION_ERROR"; field: string; message: string }
   | { type: "API_ERROR"; message: string }
-  | { type: "NOT_FOUND"; message: string };
+  | { type: "NOT_FOUND"; message: string }
 
 class UserService {
   createUser(data: Partial<User>): ResultAsync<User, UserError> {
-    return ResultAsync.fromPromise(this.validateUser(data), (e) => ({
+    return ResultAsync.fromPromise(this.validateUser(data), e => ({
       type: "VALIDATION_ERROR",
       field: "unknown",
       message: formatError(e),
-    })).andThen((validData) =>
-      ResultAsync.fromPromise(this.saveUser(validData), (e) => ({
+    })).andThen(validData =>
+      ResultAsync.fromPromise(this.saveUser(validData), e => ({
         type: "API_ERROR",
         message: `Failed to save user: ${formatError(e)}`,
-      }))
-    );
+      })),
+    )
   }
 
   private async validateUser(data: Partial<User>): Promise<User> {
@@ -196,8 +196,7 @@ const errorHandlers = {
 
 ```typescript
 // 使用类型守卫确保类型安全
-const isApiError = (error: AppError): error is ApiError =>
-  error.type === "API_ERROR";
+const isApiError = (error: AppError): error is ApiError => error.type === "API_ERROR"
 ```
 
 ## 9. 结论
