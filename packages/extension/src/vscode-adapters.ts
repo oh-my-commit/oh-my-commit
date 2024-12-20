@@ -1,4 +1,11 @@
-import { APP_NAME, BaseLogger, formatMessage, IConfig, IUIProvider, type LogLevel } from "@shared"
+import {
+  APP_NAME,
+  BaseLogger,
+  formatMessage,
+  IConfig,
+  IUIProvider,
+  type LogLevel,
+} from "@shared/common"
 import * as vscode from "vscode"
 
 export class VscodeConfig implements IConfig {

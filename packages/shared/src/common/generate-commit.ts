@@ -1,8 +1,8 @@
-import { APP_NAME } from "@/common/app"
-import { BaseLogger, ConsoleLogger } from "@/common/log"
-import { formatMessage, ResultDTO } from "@/common/utils"
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
+import { APP_NAME } from "./app"
+import { BaseLogger, ConsoleLogger } from "./log"
+import { formatMessage, ResultDTO } from "./utils"
 
 /**
  * 供应商定义的模型 meta 信息，供用户候选

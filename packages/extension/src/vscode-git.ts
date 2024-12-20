@@ -1,4 +1,4 @@
-import { GitCore } from "@shared/server/git"
+import { GitCore } from "@shared/server"
 import * as vscode from "vscode"
 
 export class VscodeGit extends GitCore {

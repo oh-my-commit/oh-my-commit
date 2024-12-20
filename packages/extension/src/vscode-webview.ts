@@ -4,7 +4,7 @@ import * as Handlebars from "handlebars"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { APP_ID, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared"
+import { APP_ID, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared/common"
 
 import { Loggable } from "@/features/mixins"
 import _ from "lodash"

@@ -10,5 +10,7 @@ export default defineConfig({
     },
   },
 
+  onSuccess: "tsc --emitDeclarationOnly --declaration",
+
   entry: ["src/index.ts", "src/common/index.ts", "src/server/index.ts"],
 })

@@ -1,7 +1,7 @@
 import { BaseCommand } from "@/vscode-command"
 import type { VscodeGit } from "@/vscode-git"
 import { VscodeWebview } from "@/vscode-webview"
-import { COMMAND_QUICK_COMMIT, CommitManager } from "@shared"
+import { COMMAND_QUICK_COMMIT, CommitManager } from "@shared/common"
 import type { DiffResult } from "simple-git"
 import type * as vscode from "vscode"
 

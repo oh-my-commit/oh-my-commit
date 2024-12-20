@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { APP_NAME, CommitManager, ConsoleLogger, OmcStandardModelId } from "@shared"
+import { APP_NAME, CommitManager, ConsoleLogger, OmcStandardModelId } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"

@@ -1,5 +1,10 @@
 import { OmcProvider } from "@/providers/omc-provider"
-import type { GenerateCommitError, GenerateCommitInput, GenerateCommitResult, Model } from "@shared"
+import type {
+  GenerateCommitError,
+  GenerateCommitInput,
+  GenerateCommitResult,
+  Model,
+} from "@shared/common"
 import * as fs from "fs"
 import type { ResultAsync } from "neverthrow"
 import * as os from "os"

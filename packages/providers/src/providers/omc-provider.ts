@@ -11,7 +11,7 @@ import {
   type GenerateCommitInput,
   type Model,
   OmcStandardModelId,
-} from "@shared"
+} from "@shared/common"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"

@@ -1,11 +1,11 @@
-import { SETTING_MODEL_ID } from "@/common/app"
-import type { IConfig, ILogger, IUIProvider } from "@/common/core"
+import type { DiffResult } from "simple-git"
+import { SETTING_MODEL_ID } from "./app"
+import type { IConfig, ILogger, IUIProvider } from "./core"
 import {
   type BaseGenerateCommitProvider,
   type GenerateCommitOptions,
   presetAiProviders,
-} from "@/common/generate-commit"
-import type { DiffResult } from "simple-git"
+} from "./generate-commit"
 
 export class CommitManager {
   private providers: BaseGenerateCommitProvider[] = []

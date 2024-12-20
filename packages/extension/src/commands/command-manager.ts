@@ -9,7 +9,7 @@ import {
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
   CommitManager,
-} from "@shared"
+} from "@shared/common"
 import * as vscode from "vscode"
 
 export class CommandManager extends Loggable(class {}) {
