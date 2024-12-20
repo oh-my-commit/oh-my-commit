@@ -1,7 +1,7 @@
 {
   "extends": ["@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"],
   "parserOptions": {
-    "project": true,
+    "project": ["tsconfig.json", "tsconfig.build.json", "packages/*/tsconfig.json"],
   },
   "settings": {
     "import/resolver": {

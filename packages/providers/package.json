@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --platform node",
-    "dev": "npm run build -- --watch",
-    "lint": "eslint \"src/**/*.ts*\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "keywords": [],
   "author": "",
