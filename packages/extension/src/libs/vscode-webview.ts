@@ -3,7 +3,7 @@ import * as Handlebars from "handlebars"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { APP_ID, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared"
+import { APP_ID, APP_NAME, ClientMessageEvent, type LogLevel } from "@shared"
 
 import { Loggable } from "@/types/mixins"
 import _ from "lodash"
@@ -193,9 +193,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
     const options = {
       enableScripts: true,
       retainContextWhenHidden: true,
-      localResourceRoots: [
-        vscode.Uri.file(path.dirname(this.scriptPath)),
-      ],
+      localResourceRoots: [vscode.Uri.file(path.dirname(this.scriptPath))],
     }
     // this.logger.info("Webview options:", options);
     return options

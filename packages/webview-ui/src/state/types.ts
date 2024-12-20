@@ -1,7 +1,5 @@
 // 核心业务类型
 
-import type { GitChangeType } from "@shared/common"
-
 export interface FileChange {
   path: string
   type: GitChangeType

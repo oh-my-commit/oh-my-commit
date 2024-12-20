@@ -1,4 +1,3 @@
-import { GitChangeType } from "@shared/common"
 import type { FileChange } from "../state/types"
 
 export const mockFileChanges: FileChange[] = [

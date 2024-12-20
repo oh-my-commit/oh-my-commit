@@ -5,7 +5,6 @@ import {
   APP_NAME,
   BaseGenerateCommitProvider,
   BaseLogger,
-  ConsoleLogger,
   formatError,
   GenerateCommitError,
   GenerateCommitInput,

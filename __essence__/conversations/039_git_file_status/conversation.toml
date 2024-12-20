@@ -77,7 +77,7 @@ key_points = """
   - 扩展了 GitChangeType 枚举
   - 更新了状态相关的常量映射
 - 主要修改内容：
-  - constants.ts: 更新状态颜色、字母和标签映射
+  - app.ts: 更新状态颜色、字母和标签映射
   - GroupedView.tsx: 改进文件分组逻辑
   - git.ts: 统一使用 GitChangeType
 - 改进效果：
@@ -96,7 +96,7 @@ key_points = """
   - 将 ViewMode 类型简化为字符串联合类型
   - 保留 flat 和 tree 两种视图模式
 - 主要修改内容：
-  - constants.ts: 简化 ViewMode 定义
+  - app.ts: 简化 ViewMode 定义
   - FileChanges.tsx: 替换 GroupedView 为 TreeView
   - ui.ts: 更新状态管理相关代码
 - 改进效果：

@@ -1,3 +1,5 @@
+import { formatMessage } from "./utils"
+
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 
 export abstract class BaseLogger {
@@ -31,5 +33,15 @@ export abstract class BaseLogger {
 
   trace(...args: any[]) {
     this.log("trace", ...args)
+  }
+}
+
+export class ConsoleLogger extends BaseLogger {
+  protected log(level: LogLevel, ...args: any[]) {
+    console.log(
+      `${new Date().toISOString()} ${level.toUpperCase()} | [${
+        this.channel
+      }] ${formatMessage(...args)}]`,
+    )
   }
 }

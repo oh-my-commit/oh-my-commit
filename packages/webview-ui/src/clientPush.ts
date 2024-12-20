@@ -1,4 +1,3 @@
-import type { ClientMessageEvent } from "@shared"
 import { getVSCodeAPI } from "./lib/getVSCodeAPI"
 
 export const clientPush = (message: ClientMessageEvent & { channel?: string }) => {

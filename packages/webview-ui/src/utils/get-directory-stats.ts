@@ -1,5 +1,3 @@
-import type { TreeNode } from "@shared/common"
-
 export function getDirectoryStats(node: TreeNode): TreeNode["stats"] {
   const stats = {
     totalFiles: 0,
