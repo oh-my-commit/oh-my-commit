@@ -10,4 +10,13 @@
       },
     },
   },
+
+  "overrides": [
+    {
+      "files": ["packages/*/*.config.ts", "packages/*/.*.config.js"],
+      "parserOptions": {
+        "project": ["tsconfig.build.json"],
+      },
+    },
+  ],
 }
