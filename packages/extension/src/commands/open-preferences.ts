@@ -1,5 +1,5 @@
 import type { VscodeCommand } from "@/vscode-command"
-import { APP_ID, COMMAND_OPEN_PREFERENCE } from "@shared"
+import { APP_ID, COMMAND_OPEN_PREFERENCE } from "@shared/common"
 import vscode from "vscode"
 
 export class OpenPreferencesCommand implements VscodeCommand {

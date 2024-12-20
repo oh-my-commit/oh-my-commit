@@ -1,1 +1,1 @@
-export * from "@/server/git"
+export * from "./git"

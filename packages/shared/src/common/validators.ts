@@ -1,4 +1,4 @@
-import { IConfig } from "@/common/core"
+import { IConfig } from "./core"
 
 export interface ValidationResult {
   valid: boolean

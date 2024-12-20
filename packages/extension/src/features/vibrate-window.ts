@@ -1,4 +1,4 @@
-import type { BaseLogger } from "@shared"
+import type { BaseLogger } from "@shared/common"
 import vscode from "vscode"
 
 export class VibrateWindow {

@@ -1,4 +1,4 @@
-import type { BaseGenerateCommitProvider, GenerateCommitInput } from "@/common/generate-commit"
+import type { BaseGenerateCommitProvider, GenerateCommitInput } from "./generate-commit"
 
 export interface IConfig {
   get<T>(key: string): T | undefined

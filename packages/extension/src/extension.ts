@@ -2,7 +2,7 @@ import { CommandManager } from "@/commands/command-manager"
 import { VscodeConfig, VscodeExtensionLogger, VscodeUIProvider } from "@/vscode-adapters"
 import { VscodeGit } from "@/vscode-git"
 import { StatusBarManager } from "@/vscode-statusbar"
-import { CommitManager } from "@shared"
+import { CommitManager } from "@shared/common"
 
 import * as vscode from "vscode"
 

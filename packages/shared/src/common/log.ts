@@ -1,5 +1,5 @@
-import type { ILogger } from "@/common/core"
-import { formatMessage } from "@/common/utils"
+import type { ILogger } from "./core"
+import { formatMessage } from "./utils"
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 

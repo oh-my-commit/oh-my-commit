@@ -1,5 +1,5 @@
 import { BaseCommand, type VscodeCommand } from "@/vscode-command"
-import { COMMAND_SELECT_MODEL, CommitManager } from "@shared"
+import { COMMAND_SELECT_MODEL, CommitManager } from "@shared/common"
 import * as vscode from "vscode"
 
 export class SelectModelCommand extends BaseCommand implements VscodeCommand {

@@ -1,4 +1,4 @@
-import path from "path"
+import { resolve } from "path"
 import { defineConfig } from "tsup"
 
 export default defineConfig({
@@ -18,7 +18,8 @@ export default defineConfig({
 
   esbuildOptions: options => {
     options.alias = {
-      "@": path.resolve(".", "./src"),
+      "@": resolve("src"),
+      "@shared": resolve(__dirname, "packages/shared/src"),
     }
   },
 })

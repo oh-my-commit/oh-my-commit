@@ -59,7 +59,7 @@ yo vscode-modern
    create package.json
    create README.md
    create tsconfig.json
-   create webpack.config.js
+   create webpack.config.mjs
    create src/extension.ts
    create webview/postcss.config.js
    create webview/tailwind.config.js
