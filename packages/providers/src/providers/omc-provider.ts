@@ -5,12 +5,12 @@ import {
   APP_ID,
   APP_NAME,
   BaseGenerateCommitProvider,
-  type BaseLogger,
-  formatError,
   GenerateCommitError,
+  OmcStandardModelId,
+  formatError,
+  type BaseLogger,
   type GenerateCommitInput,
   type Model,
-  OmcStandardModelId,
 } from "@shared/common"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"

@@ -1,7 +1,6 @@
 {
   "root": true,
-  "parser": "@typescript-eslint/parser",
-  "extends": ["plugin:@typescript-eslint/recommended"],
+  "extends": ["@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"],
   "parserOptions": {
     "project": [
       // 千万不要换成 tsconfig.json，不然会溢出
@@ -39,6 +38,6 @@
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-empty-object-type": "warn",
+    // "@typescript-eslint/no-empty-object-type": "warn",
   },
 }

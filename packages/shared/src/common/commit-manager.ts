@@ -2,9 +2,9 @@ import type { DiffResult } from "simple-git"
 import { SETTING_MODEL_ID } from "./app"
 import type { IConfig, ILogger, IUIProvider } from "./core"
 import {
+  presetAiProviders,
   type BaseGenerateCommitProvider,
   type GenerateCommitOptions,
-  presetAiProviders,
 } from "./generate-commit"
 
 export class CommitManager {

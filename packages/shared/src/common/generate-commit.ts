@@ -1,7 +1,7 @@
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
 import { APP_NAME } from "./app"
-import { type BaseLogger, ConsoleLogger } from "./log"
+import { ConsoleLogger, type BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
 
 /**
