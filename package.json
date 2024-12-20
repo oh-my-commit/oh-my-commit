@@ -232,10 +232,12 @@
   "license": "MIT",
   "dependencies": {
     "@types/lodash": "^4.17.13",
+    "handlebars": "^4.7.8",
     "https-proxy-agent": "^7.0.6",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
     "neverthrow": "^8.1.1",
+    "simple-git": "^3.27.0",
     "tsup": "^8.3.5"
   }
 }

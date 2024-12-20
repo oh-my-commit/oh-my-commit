@@ -1,3 +1,4 @@
+import HtmlWebpackPlugin from "html-webpack-plugin"
 import path from "path"
 import { fileURLToPath } from "url"
 
@@ -12,9 +13,9 @@ export default (env, argv) => {
     mode: argv.mode || "development",
     entry: "./src/main.tsx",
     output: {
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, "../../dist/webview-ui"),
       filename: "main.js",
-      clean: true,
+      clean: isProduction,
     },
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     watch: isDevelopment,
@@ -22,6 +23,11 @@ export default (env, argv) => {
       ignored: /node_modules/,
       aggregateTimeout: 100,
       poll: 1000,
+    },
+    devServer: {
+      devMiddleware: {
+        writeToDisk: true,
+      },
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
@@ -72,6 +78,11 @@ export default (env, argv) => {
         },
       ],
     },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "./index.html",
+      }),
+    ],
     optimization: {
       minimize: isProduction,
     },

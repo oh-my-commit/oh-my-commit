@@ -11,6 +11,9 @@ importers:
       '@types/lodash':
         specifier: ^4.17.13
         version: 4.17.13
+      handlebars:
+        specifier: ^4.7.8
+        version: 4.7.8
       https-proxy-agent:
         specifier: ^7.0.6
         version: 7.0.6
@@ -23,6 +26,9 @@ importers:
       neverthrow:
         specifier: ^8.1.1
         version: 8.1.1
+      simple-git:
+        specifier: ^3.27.0
+        version: 3.27.0
       tsup:
         specifier: ^8.3.5
         version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(typescript@5.7.2)(yaml@2.6.1)
