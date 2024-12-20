@@ -5,9 +5,6 @@
   "engines": {
     "vscode": "^1.80.0"
   },
-  "main": "../../dist/extension.js",
-  "module": "../../dist/extension.mjs",
-  "types": "../../dist/extension.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

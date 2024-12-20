@@ -6,15 +6,5 @@
     "outDir": "dist",
     "composite": true
   },
-  "files": [
-    "src/common/app.ts",
-    "src/common/generate-commit.ts",
-    "src/common/index.ts",
-    "src/common/log.ts",
-    "src/common/transport.ts",
-    "src/common/utils.ts",
-    "src/server/commit-manager.ts",
-    "src/server/index.ts",
-    "src/index.ts",
-  ]
+  "include": ["src/**/*"]
 }
