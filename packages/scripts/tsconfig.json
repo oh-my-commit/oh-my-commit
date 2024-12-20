@@ -3,8 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist",
-    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
+    "outDir": "dist"
   },
   "include": ["src/**/*"]
 }

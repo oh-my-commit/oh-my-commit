@@ -1,1 +1,1 @@
-module.exports = require("@cs-magic/prettier-config")
+module.exports = { ...require("@cs-magic/prettier-config"), semi: false }
