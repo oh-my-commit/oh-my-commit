@@ -1,14 +1,14 @@
-import type { PropsWithChildren } from "react"
+import type { PropsWithChildren, ReactNode } from "react"
 
 interface SectionProps extends PropsWithChildren {
   className?: string
   title?: string
-  actions?: React.ReactNode
+  actions?: ReactNode
 }
 
 interface SectionHeaderProps extends PropsWithChildren {
   title?: string
-  actions?: React.ReactNode
+  actions?: ReactNode
 }
 
 interface SectionContentProps extends PropsWithChildren {

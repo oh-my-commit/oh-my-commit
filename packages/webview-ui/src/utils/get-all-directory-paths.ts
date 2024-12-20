@@ -1,3 +1,5 @@
+import { TreeNode } from "@shared/common"
+
 export function getAllDirectoryPaths(node: TreeNode): string[] {
   const paths: string[] = []
 

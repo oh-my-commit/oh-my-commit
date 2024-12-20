@@ -1,3 +1,5 @@
+import { GitFileChange } from "@shared/common"
+
 export interface CommitState {
   message: string
   detail: string

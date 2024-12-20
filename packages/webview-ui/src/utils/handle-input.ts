@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from "react"
+
 // Helper function to get the indentation level of a line
 export const getIndentationLevel = (line: string): number => {
   const match = line.match(/^\s*/)
@@ -15,7 +17,7 @@ export const getPreviousLineIndentLevel = (text: string, currentLineStart: numbe
 
 // Handle keydown events for the markdown editor
 export const handleKeyDown = (
-  e: React.KeyboardEvent,
+  e: KeyboardEvent,
   text: string,
   selectionStart: number,
   selectionEnd: number,
@@ -221,7 +223,7 @@ export const handleKeyDown = (
   }
 }
 
-const handleKeyDownOriginal = (e: React.KeyboardEvent, onValueChange: (value: string) => void) => {
+const handleKeyDownOriginal = (e: KeyboardEvent, onValueChange: (value: string) => void) => {
   console.log("Key pressed:", e)
   // Prevent default Tab behavior
   if (e.key === "Tab") {

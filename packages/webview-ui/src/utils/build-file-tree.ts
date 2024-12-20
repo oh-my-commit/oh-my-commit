@@ -1,3 +1,5 @@
+import { GitFileChange, TreeNode } from "@shared/common"
+
 function createFileNode(file: GitFileChange): TreeNode {
   return {
     name: file.path.split("/").pop() || "",
