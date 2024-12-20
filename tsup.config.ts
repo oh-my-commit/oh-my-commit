@@ -8,7 +8,7 @@ export default defineConfig({
 
   format: ["esm", "cjs"],
   splitting: false,
-  sourcemap: false,
+  sourcemap: true,
   clean: true,
   treeshake: true,
   shims: true,

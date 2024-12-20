@@ -1,8 +1,30 @@
 import type { DiffResult } from "simple-git"
-import { GenerateCommitResult } from "../provider.js"
-import type { ResultDTO } from "../ResultDTO.js"
-import { BaseClientMessageEvent, BaseServerMessageEvent } from "./base.js"
+import { GenerateCommitResult } from "./generate-commit"
+import { LogLevel } from "./log"
+import { ResultDTO } from "./utils"
 
+export type BaseClientMessageEvent =
+  | {
+      type: "ping"
+    }
+  | {
+      type: "log"
+      data: {
+        channel?: string
+        level: LogLevel
+        rawMessage: any
+      }
+    }
+  | {
+      type: "close-window" // todo: or window-close ?
+    }
+  | {
+      type: "open-external"
+      data: {
+        url: string
+      }
+    }
+export type BaseServerMessageEvent = { type: "pong" }
 export type ClientMessageEvent_ =
   | BaseClientMessageEvent
   | {
@@ -35,7 +57,6 @@ export type ServerMessageEvent =
       type: "commit-result"
       data: ResultDTO<any>
     }
-
 export type ClientMessageEvent = ClientMessageEvent_ & {
   channel?: string
 }
