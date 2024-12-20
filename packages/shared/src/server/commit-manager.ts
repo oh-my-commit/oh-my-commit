@@ -1,5 +1,5 @@
+import type { BaseGenerateCommitProvider, Model } from "@/common"
 import type { DiffResult } from "simple-git"
-import type { BaseGenerateCommitProvider, Model } from "../common/types/provider.js"
 
 export class CommitManager {
   private providers: BaseGenerateCommitProvider[]
