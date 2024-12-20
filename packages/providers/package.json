@@ -14,5 +14,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@oh-my-commit/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "lodash-es": "^4.17.21"
   }
 }
