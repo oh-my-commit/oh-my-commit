@@ -1,6 +1,6 @@
 import { Loggable } from "@/features/mixins"
-import { VscodeGit } from "@/vscode-git"
-import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL, CommitManager } from "@shared/common"
+import type { VscodeGit } from "@/vscode-git"
+import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
 import * as vscode from "vscode"
 
 export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
