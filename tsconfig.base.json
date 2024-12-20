@@ -10,7 +10,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
 
-    "incremental": true,
     "declaration": true,
     "composite": true,
 
