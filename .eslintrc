@@ -1,25 +1,25 @@
 {
   "extends": ["@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"],
   "parserOptions": {
-    "project": true
+    "project": ["tsconfig.json", "tsconfig.build.json"],
   },
   "env": {
-    "browser": true
+    "browser": true,
   },
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": ["packages/*/tsconfig.json"]
-      }
-    }
+        "project": ["packages/*/tsconfig.json"],
+      },
+    },
   },
   "overrides": [
     {
-      "files": ["packages/*/*.config.ts", "packages/*/.*.config.js"],
+      "files": ["*.coinfig*", "packages/*/*.config*"],
       "parserOptions": {
-        "project": ["tsconfig.build.json"]
-      }
-    }
+        "project": ["tsconfig.build.json"],
+      },
+    },
   ],
   "rules": {
     "@typescript-eslint/no-unsafe-assignment": "off",
@@ -27,6 +27,6 @@
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
-    "@typescript-eslint/prefer-nullish-coalescing": "off"
-  }
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+  },
 }
