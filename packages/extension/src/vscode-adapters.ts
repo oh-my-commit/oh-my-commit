@@ -2,8 +2,8 @@ import {
   APP_NAME,
   BaseLogger,
   formatMessage,
-  IConfig,
-  IUIProvider,
+  type IConfig,
+  type IUIProvider,
   type LogLevel,
 } from "@shared/common"
 import * as vscode from "vscode"

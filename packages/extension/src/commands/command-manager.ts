@@ -8,7 +8,7 @@ import {
   COMMAND_OPEN_PREFERENCE,
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
-  CommitManager,
+  type CommitManager,
 } from "@shared/common"
 import * as vscode from "vscode"
 
