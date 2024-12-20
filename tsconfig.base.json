@@ -10,11 +10,9 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
 
-    // 使用了 pnpm 和 Turborepo，不需要 composite
-    "composite": false,
+    "incremental": true,
     "declaration": true,
 
-    // 让 tsup 处理输出，但不能完全禁用 emit，否则项目引用会报错
     "emitDeclarationOnly": true,
     "sourceMap": true,
     "declarationMap": true

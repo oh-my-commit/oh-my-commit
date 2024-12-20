@@ -40,7 +40,7 @@ export class GitCore {
     try {
       const stats = await fs.promises.stat(gitDir)
       return stats.isDirectory()
-    } catch (error) {
+    } catch (_error) {
       return false
     }
   }
