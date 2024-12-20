@@ -1,8 +1,8 @@
+import { APP_NAME } from "@/common/app"
+import { BaseLogger, ConsoleLogger } from "@/common/log"
+import { formatMessage, ResultDTO } from "@/common/utils"
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
-import { APP_NAME } from "./app"
-import { BaseLogger, ConsoleLogger } from "./log"
-import { formatMessage, ResultDTO } from "./utils"
 
 /**
  * 供应商定义的模型 meta 信息，供用户候选
@@ -45,13 +45,13 @@ export abstract class BaseGenerateCommitProvider {
   abstract description: string
 
   /**
-   * 供应商模型列表，具体调用要在 @generateCommit 里 switch 实现
+   * 供应商模型列表，具体调用要在 .generateCommit 里 switch 实现
    */
   abstract models: Model[]
 
   /**
    * 核心调用
-   * @param input
+   * .param input
    */
   abstract generateCommit(
     input: GenerateCommitInput,
@@ -59,7 +59,7 @@ export abstract class BaseGenerateCommitProvider {
 
   /**
    * 标准化 provider 的输出，并避免供应商调试时打印一些自循环的属性导致报错
-   * @returns
+   * .returns
    */
   toJSON() {
     return {
@@ -71,29 +71,36 @@ export abstract class BaseGenerateCommitProvider {
   }
 }
 
-export type GenerateCommitInput = {
+/**
+ * 其他用户配置
+ */
+export interface GenerateCommitOptions {
+  /**
+   * 用户希望生成 commit 的语言
+   */
+  lang?: string
+}
+
+export interface GenerateCommitCoreInput {
   /**
    * 用户提交的 Diff 信息
    */
   diff: DiffResult
+
+  options?: GenerateCommitOptions
+}
+
+export interface GenerateCommitInput extends GenerateCommitCoreInput {
   /**
    * 用户选用的供应商模型
    */
   model: Model
-  /**
-   * 其他用户配置
-   */
-  options?: {
-    /**
-     * 用户希望生成 commit 的语言
-     */
-    lang?: string
-  }
 }
+
 /**
  * AI Commit 的核心生成数据
  */
-export type GenerateCommitResult = {
+export interface GenerateCommitResult {
   title: string
   body?: string
   meta?: Record<string, any>

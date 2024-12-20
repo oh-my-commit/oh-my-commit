@@ -1,7 +1,7 @@
-import { GitCore } from "@/libs/git"
+import { GitCore } from "@shared/server/git"
 import * as vscode from "vscode"
 
-export class VscodeGitService extends GitCore {
+export class VscodeGit extends GitCore {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>
   readonly onGitStatusChanged: vscode.Event<boolean>
   private fsWatcher: vscode.FileSystemWatcher | undefined

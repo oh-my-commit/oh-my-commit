@@ -1,8 +1,9 @@
-import { formatMessage } from "./utils"
+import type { ILogger } from "@/common/core"
+import { formatMessage } from "@/common/utils"
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 
-export abstract class BaseLogger {
+export abstract class BaseLogger implements ILogger {
   protected channel = "default"
 
   setChannel(channel: string) {

@@ -1,7 +1,7 @@
+import type { GenerateCommitResult } from "@/common/generate-commit"
+import type { LogLevel } from "@/common/log"
+import type { ResultDTO } from "@/common/utils"
 import type { DiffResult } from "simple-git"
-import type { GenerateCommitResult } from "./generate-commit"
-import type { LogLevel } from "./log"
-import type { ResultDTO } from "./utils"
 
 export type BaseClientMessageEvent =
   | {

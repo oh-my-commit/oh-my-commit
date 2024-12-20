@@ -1,8 +1,7 @@
-import { BaseCommand } from "@/libs/vscode-command"
-import { VscodeWebview } from "@/libs/vscode-webview"
-import type { AcManager } from "@/services/model.service"
-import type { VscodeGitService } from "@/services/vscode-git.service"
-import { COMMAND_QUICK_COMMIT } from "@shared"
+import { BaseCommand } from "@/vscode-command"
+import type { VscodeGit } from "@/vscode-git"
+import { VscodeWebview } from "@/vscode-webview"
+import { COMMAND_QUICK_COMMIT, CommitManager } from "@shared"
 import type { DiffResult } from "simple-git"
 import type * as vscode from "vscode"
 
@@ -11,17 +10,19 @@ export class QuickCommitCommand extends BaseCommand {
   public name = "Quick Commit"
 
   private webviewManager: VscodeWebview
-  private gitService: VscodeGitService
-  private acManager: AcManager
+  // todo: move it into shared
+  private gitService: VscodeGit
+  private acManager: CommitManager
 
   constructor(
-    gitService: VscodeGitService,
-    acManager: AcManager,
+    gitService: VscodeGit,
     context: vscode.ExtensionContext,
+    commitManager: CommitManager,
   ) {
     super()
     this.gitService = gitService
-    this.acManager = acManager
+
+    this.acManager = commitManager
 
     this.webviewManager = new VscodeWebview(context, {
       onClientMessage: async message => {
@@ -81,16 +82,16 @@ export class QuickCommitCommand extends BaseCommand {
   }
 
   private async syncFilesAndCommits(selectedFiles?: string[]) {
-    const diffResult = await this.getLatestDiff(selectedFiles)
+    const diff = await this.getLatestDiff(selectedFiles)
     if (!selectedFiles) {
       await this.webviewManager.postMessage({
         type: "diff-result",
-        data: diffResult,
+        data: diff,
       })
     }
 
     this.logger.info("[QuickCommit] Generating commit via acManager...")
-    const commit = await this.acManager.generateCommit(diffResult)
+    const commit = await this.acManager.generateCommit(diff)
     this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
 
     if (commit.isOk()) {

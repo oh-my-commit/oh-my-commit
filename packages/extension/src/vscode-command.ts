@@ -1,4 +1,4 @@
-import { Loggable } from "@/types/mixins"
+import { Loggable } from "@/features/mixins"
 
 export interface VscodeCommand {
   id: string

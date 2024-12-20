@@ -1,8 +1,18 @@
-import type { ValidationResult } from "@/types/model"
-import vscode from "vscode"
+import { IConfig } from "@/common/core"
 
-export async function validateOpenaiApiKey(): Promise<ValidationResult> {
-  const apiKey = vscode.workspace.getConfiguration("oh-my-commit").get<string>("apiKeys.openai")
+export interface ValidationResult {
+  valid: boolean
+  error?: string
+  requiredConfig?: {
+    key: string
+    description: string
+    type: "string" | "boolean" | "number"
+    settingPath?: string
+  }[]
+}
+
+export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationResult> {
+  const apiKey = config.get("apiKeys.openai")
 
   if (!apiKey) {
     return {

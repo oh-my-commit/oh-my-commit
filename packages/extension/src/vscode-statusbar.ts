@@ -1,23 +1,22 @@
-import type { AppManager } from "@/app.manager"
-import type { AcManager } from "@/services/model.service"
-import { VscodeGitService } from "@/services/vscode-git.service"
-import { Loggable } from "@/types/mixins.js"
-import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL } from "@shared"
+import { Loggable } from "@/features/mixins"
+import { VscodeGit } from "@/vscode-git"
+import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL, CommitManager } from "@shared"
 import * as vscode from "vscode"
 
 export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
-  private statusBarItem: vscode.StatusBarItem
-  private gitService: VscodeGitService
-  private disposables: vscode.Disposable[] = []
-  private acManager: AcManager
+  private gitService: VscodeGit
+  private commitManager: CommitManager
 
-  constructor(app: AppManager) {
+  private disposables: vscode.Disposable[] = []
+  private statusBarItem: vscode.StatusBarItem
+
+  constructor(commitManager: CommitManager, gitService: VscodeGit) {
     super()
 
-    this.acManager = app.acManager
+    this.commitManager = commitManager
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
-    this.gitService = new VscodeGitService()
+    this.gitService = gitService
 
     // 监听配置变化
     this.disposables.push(
@@ -41,8 +40,8 @@ export class StatusBarManager extends Loggable(class {}) implements vscode.Dispo
   }
 
   private async update(): Promise<void> {
-    const modelId = this.acManager.modelId
-    const model = this.acManager.model
+    const modelId = this.commitManager.modelId
+    const model = this.commitManager.model
     this.logger.info(`Updating status: `, { modelId, model })
     const isGitRepo = await this.gitService.isGitRepository()
 
