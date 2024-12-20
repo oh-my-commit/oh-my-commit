@@ -2,6 +2,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 import path from "path"
 import { fileURLToPath } from "url"
+import reactRefreshTypeScript from "react-refresh-typescript"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -64,7 +65,7 @@ export default (env, argv) => {
                 },
                 ...(isDevelopment && {
                   getCustomTransformers: () => ({
-                    before: [require("react-refresh-typescript")()],
+                    before: [reactRefreshTypeScript()],
                   }),
                 }),
               },
