@@ -13,13 +13,12 @@ export default defineConfig({
   treeshake: true,
   shims: true,
 
-  dts: false, // 禁用 tsup 的 dts 生成
-  onSuccess: "tsc --emitDeclarationOnly --declaration --declarationMap", // 使用 tsc 生成声明文件
+  // 默认不生成类型声明文件，由各个包自己决定
+  dts: false,
 
   esbuildOptions: options => {
     options.alias = {
       "@": path.resolve(".", "./src"),
-      "@shared": path.resolve(__dirname, "./packages/shared/src"),
     }
   },
 })
