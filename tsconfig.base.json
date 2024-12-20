@@ -38,10 +38,9 @@
     // 使用 composite 选项必须开启 declaration
     "declaration": true,
 
-//     输出文件全部基于各个打包工具，tsc 仅用于输出 d.ts 以及静态检查
+    //     输出文件全部基于各个打包工具，tsc 仅用于输出 d.ts 以及静态检查
     "noEmit": false,
     "emitDeclarationOnly": false,
-    "sourceMap": true,
-
+    "sourceMap": true
   }
 }
