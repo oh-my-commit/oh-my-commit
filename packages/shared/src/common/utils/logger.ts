@@ -1,11 +1,5 @@
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 
-export function formatMessage(...args: any[]): string {
-  return args
-    .map(arg => (typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)))
-    .join(" ")
-}
-
 export abstract class BaseLogger {
   protected channel = "default"
 
@@ -37,15 +31,5 @@ export abstract class BaseLogger {
 
   trace(...args: any[]) {
     this.log("trace", ...args)
-  }
-}
-
-export class ConsoleLogger extends BaseLogger {
-  protected log(level: LogLevel, ...args: any[]) {
-    console.log(
-      `${new Date().toISOString()} ${level.toUpperCase()} | [${
-        this.channel
-      }] ${formatMessage(...args)}]`,
-    )
   }
 }

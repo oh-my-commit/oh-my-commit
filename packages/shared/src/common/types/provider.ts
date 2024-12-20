@@ -1,7 +1,9 @@
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
 import { APP_NAME } from "../constants"
-import { type BaseLogger, ConsoleLogger, formatMessage } from "../utils/logger"
+import { ConsoleLogger } from "../utils/console-logger"
+import { formatMessage } from "../utils/format-message"
+import type { BaseLogger } from "../utils/logger"
 import type { ResultDTO } from "./ResultDTO"
 
 export type GenerateCommitInput = {
