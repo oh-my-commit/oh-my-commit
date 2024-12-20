@@ -1,10 +1,10 @@
 # .eslintignore
 # dependencies
-node_modules
+**/node_modules
 
 # build output
-dist
-build
+**/dist
+**/build
 
 # generated types
 *.d.ts
