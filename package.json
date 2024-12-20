@@ -1,7 +1,7 @@
 {
   "name": "@cs-magic/oh-my-commit",
   "displayName": "Oh My Commit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "cs-magic",
   "publisher": "cs-magic",
