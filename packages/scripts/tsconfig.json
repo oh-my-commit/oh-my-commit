@@ -1,12 +1,10 @@
 {
-  "extends": [
-    "../__base__/tsconfig.json"
-  ],
+  "extends": ["../__base__/tsconfig.json"],
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist"
-
+    "outDir": "dist",
+    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*"]
 }

@@ -8,10 +8,6 @@
     "lint": {
       "outputs": []
     },
-    "clean": {
-      "cache": false,
-      "persistent": false
-    },
     "docs:dev": {
       "cache": false,
       "persistent": true
@@ -28,13 +24,28 @@
       "inputs": ["src/**/*.ts", "test/**/*.ts"],
       "outputs": []
     },
+    "clean": {
+      "cache": false,
+      "persistent": false,
+      "outputs": [
+        "dist/**",
+        "packages/*/dist/**",
+        "packages/*/tsconfig.tsbuildinfo",
+        "packages/*/.turbo"
+      ]
+    },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "dist/**",
+        "packages/*/dist/**",
+        "packages/*/tsconfig.tsbuildinfo",
+        "packages/*/.turbo"
+      ]
     },
     "build:extension": {
       "dependsOn": ["build"],
-      "outputs": ["../../dist/**"]
+      "outputs": ["dist/**"]
     },
     "dev": {
       "cache": false,
