@@ -193,7 +193,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
     const options = {
       enableScripts: true,
       retainContextWhenHidden: true,
-      localResourceRoots: [vscode.Uri.file(path.dirname(this.scriptPath))],
+      localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, "dist"))],
     }
     // this.logger.info("Webview options:", options);
     return options
