@@ -1,3 +1,4 @@
+import * as crypto from "crypto"
 import * as fs from "fs"
 import * as Handlebars from "handlebars"
 import * as path from "path"
@@ -201,12 +202,16 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
 
   private getCspSettings(): string {
     const webview = this.webviewPanel!.webview
-    const csp = `default-src 'none';
+    return `default-src 'none';
             img-src ${webview.cspSource} https: data:;
             script-src ${webview.cspSource} 'unsafe-inline';
             style-src ${webview.cspSource} 'unsafe-inline';
-            font-src ${webview.cspSource};`
-    return csp
+            font-src ${webview.cspSource};
+            connect-src ws://localhost:8081 ${webview.cspSource};`
+  }
+
+  private getNonce(): string {
+    return crypto.randomBytes(16).toString("base64")
   }
 
   private getScriptUri(): vscode.Uri {

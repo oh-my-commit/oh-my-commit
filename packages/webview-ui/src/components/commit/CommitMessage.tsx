@@ -118,7 +118,7 @@ export function CommitMessage() {
                 />
               </span>
             ) : (
-              "Regenerate"
+              "Regenerate2"
             )}
           </VSCodeButton>
 

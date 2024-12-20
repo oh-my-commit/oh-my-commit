@@ -26,7 +26,19 @@ export default (env, argv) => {
     },
     devServer: {
       devMiddleware: {
-        writeToDisk: true,
+        writeToDisk: true, // 仍然写入磁盘作为备份
+      },
+      hot: true,
+      host: "localhost",
+      port: 8081,
+      allowedHosts: "all", // 允许所有主机
+      client: {
+        webSocketURL: "ws://localhost:8081/ws",
+        // 允许所有源
+        webSocketTransport: "ws",
+      },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
       },
     },
     resolve: {
