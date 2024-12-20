@@ -5,6 +5,7 @@ import baseConfig from "../../webpack.config.mjs"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+/** @type {import('webpack').Configuration} */
 export default (env, argv) => {
   const isProduction = argv.mode === "production"
   const isDevelopment = !isProduction

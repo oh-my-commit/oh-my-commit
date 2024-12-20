@@ -1,8 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-const vsTheme = require("./src/lib/vscode-theme-plugin");
+import vsTheme from "./src/lib/vscode-theme-plugin"
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
 
   plugins: [vsTheme],
-};
+}
