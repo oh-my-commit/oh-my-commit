@@ -20,19 +20,19 @@ POST `/models/register`
 
 ```typescript
 interface Model {
-  id: string; // 方案唯一标识
-  name: string; // 显示名称（可由用户自定义）
-  provider: string; // 提供商标识
-  description: string; // 方案描述
+  id: string // 方案唯一标识
+  name: string // 显示名称（可由用户自定义）
+  provider: string // 提供商标识
+  description: string // 方案描述
   metrics: {
-    cost: number; // 成本指标 (1-10)
-    performance: number; // 性能指标 (1-10)
-    quality: number; // 质量指标 (1-10)
-  };
+    cost: number // 成本指标 (1-10)
+    performance: number // 性能指标 (1-10)
+    quality: number // 质量指标 (1-10)
+  }
   config?: {
     // 方案特定配置
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
 }
 ```
 
@@ -43,27 +43,27 @@ POST `/commit/generate`
 ```typescript
 interface CommitRequest {
   // 核心参数
-  diff: string; // Git diff 内容
-  modelId: string; // 使用的方案 ID
+  diff: string // Git diff 内容
+  modelId: string // 使用的方案 ID
 
   // 可选上下文
   context?: {
-    recentCommits?: string[]; // 最近的提交记录
-    branch?: string; // 当前分支
-    projectInfo?: object; // 项目信息
-  };
+    recentCommits?: string[] // 最近的提交记录
+    branch?: string // 当前分支
+    projectInfo?: object // 项目信息
+  }
 }
 
 interface CommitResponse {
   message: {
-    title: string; // 提交标题
-    body?: string; // 提交正文
-    footer?: string; // 提交脚注
-  };
+    title: string // 提交标题
+    body?: string // 提交正文
+    footer?: string // 提交脚注
+  }
   metrics: {
-    latency: number; // 响应时间 (ms)
-    cost: number; // 实际成本
-  };
+    latency: number // 响应时间 (ms)
+    cost: number // 实际成本
+  }
 }
 ```
 
@@ -75,13 +75,13 @@ POST `/config/api`
 
 ```typescript
 interface ApiConfig {
-  provider: string; // 服务提供商
+  provider: string // 服务提供商
   credentials: {
-    [key: string]: string; // API 密钥等凭证
-  };
+    [key: string]: string // API 密钥等凭证
+  }
   settings?: {
-    [key: string]: any; // 其他设置
-  };
+    [key: string]: any // 其他设置
+  }
 }
 ```
 
@@ -91,11 +91,11 @@ POST `/config/model`
 
 ```typescript
 interface ModelConfig {
-  modelId: string;
-  name?: string; // 自定义名称
+  modelId: string
+  name?: string // 自定义名称
   settings?: {
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
 }
 ```
 
@@ -134,10 +134,10 @@ $ [tool-name] generate --diff "git diff content"
 
 ```typescript
 interface ErrorResponse {
-  code: string;
-  message: string;
-  model?: string; // 建议的模型
-  details?: any;
+  code: string
+  message: string
+  model?: string // 建议的模型
+  details?: any
 }
 ```
 

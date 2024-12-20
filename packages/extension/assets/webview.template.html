@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,30 +13,28 @@
     <div id="root"></div>
     <script nonce="{{nonce}}">
       // 设置全局变量
-      window.vscode = acquireVsCodeApi();
+      window.vscode = acquireVsCodeApi()
 
       // 添加热更新支持
-      window.addEventListener("message", (event) => {
-        const message = event.data;
+      window.addEventListener("message", event => {
+        const message = event.data
         if (message.command === "reload") {
           // 保存当前状态
-          const state = window.vscode.getState();
+          const state = window.vscode.getState()
 
           // 重新加载页面
-          window.location.reload();
+          window.location.reload()
 
           // 在页面加载完成后恢复状态
           window.addEventListener("load", () => {
             if (state) {
-              window.vscode.setState(state);
+              window.vscode.setState(state)
               // 触发状态恢复事件
-              window.dispatchEvent(
-                new CustomEvent("stateRestored", { detail: state })
-              );
+              window.dispatchEvent(new CustomEvent("stateRestored", { detail: state }))
             }
-          });
+          })
         }
-      });
+      })
     </script>
     <script src="{{scriptUri}}" nonce="{{nonce}}"></script>
   </body>

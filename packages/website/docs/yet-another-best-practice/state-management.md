@@ -20,26 +20,26 @@ const baseAtoms = {
   detail: atomWithStorage("detail", ""),
   message: atomWithStorage("message", ""),
   files: atomWithStorage("files", []),
-};
+}
 
 // 2. 派生状态层 - 计算和转换数据
 const derivedAtoms = {
-  fileStats: atom((get) => ({
-    added: get(baseAtoms.files).filter((f) => f.status === "added").length,
+  fileStats: atom(get => ({
+    added: get(baseAtoms.files).filter(f => f.status === "added").length,
     // ...
   })),
-  isValid: atom((get) => get(baseAtoms.message).length > 0),
-};
+  isValid: atom(get => get(baseAtoms.message).length > 0),
+}
 
 // 3. 操作层 - 处理状态变更
 const actionAtoms = {
   addFile: atom(null, (get, set, file) => {
-    set(baseAtoms.files, [...get(baseAtoms.files), file]);
+    set(baseAtoms.files, [...get(baseAtoms.files), file])
   }),
   reset: atom(null, (get, set) => {
-    Object.values(baseAtoms).forEach((a) => set(a, null));
+    Object.values(baseAtoms).forEach(a => set(a, null))
   }),
-};
+}
 
 // 4. 封装层 - 提供友好的 API
 export function useCommitState() {
@@ -51,7 +51,7 @@ export function useCommitState() {
     // 操作
     addFile: useSetAtom(actionAtoms.addFile),
     reset: useSetAtom(actionAtoms.reset),
-  };
+  }
 }
 ```
 
@@ -71,12 +71,12 @@ const bigStateAtom = atom({
   stats: {
     /* ... */
   },
-});
+})
 
 // ✅ 推荐：拆分成小的原子
-const messageAtom = atom("");
-const filesAtom = atom([]);
-const isValidAtom = atom((get) => get(messageAtom).length > 0);
+const messageAtom = atom("")
+const filesAtom = atom([])
+const isValidAtom = atom(get => get(messageAtom).length > 0)
 ```
 
 ### 3. 更新策略
@@ -85,17 +85,17 @@ const isValidAtom = atom((get) => get(messageAtom).length > 0);
 
 ```typescript
 // ❌ 避免：直接修改复杂状态
-setCommit((prev) => ({
+setCommit(prev => ({
   ...prev,
   files: [...prev.files, newFile],
   message: `更新了${prev.files.length + 1}个文件`,
-}));
+}))
 
 // ✅ 推荐：使用专门的 action atoms
 const addFileAtom = atom(null, (get, set, file) => {
-  set(filesAtom, [...get(filesAtom), file]);
-  set(messageAtom, `更新了${get(filesAtom).length}个文件`);
-});
+  set(filesAtom, [...get(filesAtom), file])
+  set(messageAtom, `更新了${get(filesAtom).length}个文件`)
+})
 ```
 
 ### 4. API 设计
@@ -109,7 +109,7 @@ export {
   commitMessageAtom,
   commitFilesAtom,
   // ...更多原子
-};
+}
 
 // ✅ 推荐：提供高级抽象
 export function useCommit() {
@@ -129,7 +129,7 @@ export function useCommit() {
     get stats() {
       /* ... */
     },
-  };
+  }
 }
 ```
 
@@ -139,26 +139,26 @@ export function useCommit() {
 
 ```typescript
 // ❌ 避免：频繁重新计算
-const statsAtom = atom((get) => {
-  const files = get(filesAtom);
+const statsAtom = atom(get => {
+  const files = get(filesAtom)
   return {
-    added: files.filter((f) => f.status === "added").length,
-    modified: files.filter((f) => f.status === "modified").length,
+    added: files.filter(f => f.status === "added").length,
+    modified: files.filter(f => f.status === "modified").length,
     // ... 多次遍历
-  };
-});
+  }
+})
 
 // ✅ 推荐：一次遍历
-const statsAtom = atom((get) => {
-  const files = get(filesAtom);
+const statsAtom = atom(get => {
+  const files = get(filesAtom)
   return files.reduce(
     (stats, file) => {
-      stats[file.status]++;
-      return stats;
+      stats[file.status]++
+      return stats
     },
-    { added: 0, modified: 0 }
-  );
-});
+    { added: 0, modified: 0 },
+  )
+})
 ```
 
 ### 6. 错误处理
@@ -168,14 +168,14 @@ const statsAtom = atom((get) => {
 ```typescript
 const addFileAtom = atom(null, (get, set, file) => {
   try {
-    if (get(filesAtom).some((f) => f.path === file.path)) {
-      throw new Error("文件已存在");
+    if (get(filesAtom).some(f => f.path === file.path)) {
+      throw new Error("文件已存在")
     }
-    set(filesAtom, [...get(filesAtom), file]);
+    set(filesAtom, [...get(filesAtom), file])
   } catch (error) {
-    set(errorAtom, error.message);
+    set(errorAtom, error.message)
   }
-});
+})
 ```
 
 ### 7. 测试友好
@@ -186,25 +186,25 @@ const addFileAtom = atom(null, (get, set, file) => {
 describe("commit state", () => {
   // 1. 测试基础原子
   it("should store basic data", () => {
-    const store = createStore();
-    store.set(baseAtoms.message, "test");
-    expect(store.get(baseAtoms.message)).toBe("test");
-  });
+    const store = createStore()
+    store.set(baseAtoms.message, "test")
+    expect(store.get(baseAtoms.message)).toBe("test")
+  })
 
   // 2. 测试派生状态
   it("should calculate stats correctly", () => {
-    const store = createStore();
-    store.set(baseAtoms.files, [{ status: "added" }]);
-    expect(store.get(derivedAtoms.fileStats).added).toBe(1);
-  });
+    const store = createStore()
+    store.set(baseAtoms.files, [{ status: "added" }])
+    expect(store.get(derivedAtoms.fileStats).added).toBe(1)
+  })
 
   // 3. 测试操作
   it("should handle actions", () => {
-    const store = createStore();
-    store.set(actionAtoms.addFile, { path: "test.ts" });
-    expect(store.get(baseAtoms.files)).toHaveLength(1);
-  });
-});
+    const store = createStore()
+    store.set(actionAtoms.addFile, { path: "test.ts" })
+    expect(store.get(baseAtoms.files)).toHaveLength(1)
+  })
+})
 ```
 
 ## 总结
