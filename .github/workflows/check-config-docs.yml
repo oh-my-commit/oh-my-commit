@@ -6,7 +6,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "README.md"
-      - "scripts/generate-config-docs.ts"
+      - "../../packages/scripts/generate-config-docs.ts"
       - ".github/workflows/check-config-docs.yml"
       - "docs/**"
   pull_request:
@@ -14,7 +14,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "README.md"
-      - "scripts/generate-config-docs.ts"
+      - "../../packages/scripts/generate-config-docs.ts"
       - ".github/workflows/check-config-docs.yml"
       - "docs/**"
 

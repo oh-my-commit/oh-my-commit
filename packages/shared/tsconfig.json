@@ -1,28 +1,12 @@
 {
   "extends": "../__base__/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": ".",
-    "declaration": true,
-    "declarationMap": true,
-    "noEmit": false,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "allowJs": false,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "rootDir": "src",
+    "outDir": "dist"
+
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".turbo",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "src/**/*"
   ]
 }

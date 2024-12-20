@@ -35,7 +35,13 @@
     // tsup 处理类型生成更高效
     // 可以避免类型生成时的冲突
     "composite": true,
+    // 使用 composite 选项必须开启 declaration
     "declaration": true,
-    "sourceMap": false
+
+//     输出文件全部基于各个打包工具，tsc 仅用于输出 d.ts 以及静态检查
+    "noEmit": false,
+    "emitDeclarationOnly": false,
+    "sourceMap": true,
+
   }
 }

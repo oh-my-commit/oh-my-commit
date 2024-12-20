@@ -4,9 +4,10 @@
     "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
+
     "types": ["vscode"]
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "../shared"
