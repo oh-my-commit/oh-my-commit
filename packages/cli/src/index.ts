@@ -1,19 +1,29 @@
 import "reflect-metadata"
 
 // 确保 reflect-metadata 最先导入
-import { initContainer } from "@/cli-commit-manager"
-import { APP_NAME, SETTING_MODEL_ID } from "@shared/common"
+import { CliConfig } from "@/cli-config"
+import { APP_NAME, CommitManager, ConsoleLogger, SETTING_MODEL_ID, TOKENS } from "@shared/common"
+import { ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
+import { Container } from "typedi"
 
 console.log(chalk.blue(APP_NAME))
-
 // Initialize git and commit manager
 const git = simpleGit()
 
-// Initialize container
-const cliCommitManager = initContainer()
+// 1. 注册 config
+Container.set(TOKENS.Config, CliConfig)
+
+// 2. 注册 logger 服务
+Container.set(TOKENS.Logger, ConsoleLogger)
+
+// 3. 注册 provider registry
+Container.set(TOKENS.ProviderManager, ProviderRegistry)
+
+// 4. 获取 CommitManager 实例
+const cliCommitManager = Container.get(CommitManager)
 
 // Command handlers
 const listModels = async () => {
