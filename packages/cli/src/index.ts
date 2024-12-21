@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { cliCommitManager } from "@/cli-commit-manager"
-import { APP_NAME, ConsoleLogger, OmcStandardModelId } from "@shared/common"
+import { APP_NAME, ConsoleLogger } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
@@ -13,14 +13,11 @@ const logger = new ConsoleLogger(APP_NAME)
 // Command handlers
 const listModels = async () => {
   try {
+    await cliCommitManager.initProviders()
     const models = cliCommitManager.models
     console.log(chalk.blue("Available models:"))
     for (const model of models) {
-      if (model.id === OmcStandardModelId) {
-        console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
-      } else {
-        console.log(`  - ${model.id} - ${model.name}`)
-      }
+      console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
     }
   } catch (error) {
     console.error(chalk.red("Failed to list models:"), error)
