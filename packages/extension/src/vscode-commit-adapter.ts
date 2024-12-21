@@ -3,9 +3,10 @@ import {
   BaseLogger,
   CommitManager,
   formatMessage,
-  IConfig,
+  type IConfig,
   type LogLevel,
 } from "@shared/common"
+import { ProviderRegistry } from "@shared/server"
 import vscode from "vscode"
 
 export class VscodeConfig implements IConfig {
@@ -37,6 +38,7 @@ export class VscodeLogger extends BaseLogger {
 }
 
 export const vscodeCommitManager = CommitManager.create({
-  logger: new VscodeLogger(),
-  config: new VscodeConfig(),
+  createLogger: () => new VscodeLogger(),
+  createProvidersManager: () => new ProviderRegistry(),
+  createConfig: () => new VscodeConfig(),
 })
