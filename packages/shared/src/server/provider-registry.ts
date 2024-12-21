@@ -104,7 +104,8 @@ export async function loadProviderFromFile(
     }
     return null
   } catch (error) {
-    throw new Error(`Failed to load provider from ${filePath}: ${error}`)
+    console.error(`Failed to load provider from ${filePath}:`, error)
+    return null
   }
 }
 

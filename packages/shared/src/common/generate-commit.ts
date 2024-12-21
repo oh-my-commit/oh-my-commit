@@ -5,7 +5,7 @@ import { z } from "zod"
 import { APP_NAME, SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
 import { ConsoleLogger, type BaseLogger } from "./log"
-import { formatError, formatMessage, type ResultDTO } from "./utils"
+import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
 
@@ -52,8 +52,10 @@ export class CommitManager {
       this.logger.info(`Loaded ${this.providers.length} providers`)
       this.status.loadingProviders = "success"
     } catch (error) {
-      this.logger.error(`Failed to load providers: ${formatError(error)}`)
       this.status.loadingProviders = "error"
+      this.logger.error(
+        `Failed to load providers: ${error instanceof Error ? error.message : String(error)}`,
+      )
       throw error // Re-throw to propagate the error
     }
   }

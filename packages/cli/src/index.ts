@@ -7,7 +7,7 @@ import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
 
-console.log(chalk.blue("OMC"))
+console.log(chalk.blue(APP_NAME))
 
 // Initialize git and commit manager
 const git = simpleGit()
