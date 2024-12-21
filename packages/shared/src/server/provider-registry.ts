@@ -89,11 +89,16 @@ async function loadProviderFromFile(filePath: string): Promise<BaseGenerateCommi
   console.log(`Attempting to load provider from file: ${filePath}`)
   try {
     const module = await import(filePath)
+    // 支持 default export 和 module.exports
     const provider = module.default || module
+    const ProviderClass = provider.default || provider
 
-    if (isValidProvider(provider)) {
+    // 如果是类，实例化它
+    const instance = typeof ProviderClass === "function" ? new ProviderClass() : ProviderClass
+
+    if (isValidProvider(instance)) {
       console.log(`Successfully loaded provider from ${filePath}`)
-      return provider
+      return instance
     }
     console.warn(`Invalid provider structure in ${filePath}`)
     return null
@@ -111,7 +116,7 @@ function isValidProvider(obj: any): obj is BaseGenerateCommitProvider {
   }
 
   const requiredProps = [
-    // { name: "id", type: "string" },
+    { name: "id", type: "string" },
     { name: "displayName", type: "string" },
     { name: "description", type: "string" },
     { name: "models", type: "array" },
@@ -119,17 +124,25 @@ function isValidProvider(obj: any): obj is BaseGenerateCommitProvider {
   ]
 
   for (const prop of requiredProps) {
-    if (prop.type !== "function") {
-      console.log(`${prop.name}:`, obj[prop.name])
+    const value = obj[prop.name]
+    console.log(`Checking ${prop.name}:`, value)
+
+    if (!value) {
+      console.error(`Provider validation failed: missing '${prop.name}'`)
+      return false
     }
-    if (
-      prop.type === "array" ? !Array.isArray(obj[prop.name]) : typeof obj[prop.name] !== prop.type
-    ) {
+
+    if (prop.type === "array") {
+      if (!Array.isArray(value)) {
+        console.error(`Provider validation failed: '${prop.name}' is not an array`)
+        return false
+      }
+    } else if (typeof value !== prop.type) {
       console.error(`Provider validation failed: '${prop.name}' is not a ${prop.type}`)
       return false
     }
   }
 
-  console.log("Provider validation result: Valid")
+  console.log("Provider validation succeeded")
   return true
 }
