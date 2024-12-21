@@ -1,7 +1,8 @@
-import { IProviderManager } from "@/common"
+import type { IProviderManager } from "@/common"
 import fs from "node:fs"
 import path from "node:path"
-import { BaseGenerateCommitProvider } from "../common/generate-commit"
+import type { BaseGenerateCommitProvider } from "../common/generate-commit"
+import { ProviderSchema } from "../common/generate-commit"
 import { omcProvidersDir } from "./config"
 
 /**
@@ -108,41 +109,37 @@ async function loadProviderFromFile(filePath: string): Promise<BaseGenerateCommi
   }
 }
 
-/** Validate if an object is a valid provider */
+/**
+ * 验证对象是否为有效的 Provider
+ * @param obj - 待验证的对象
+ * @returns 是否为有效的 Provider
+ */
 function isValidProvider(obj: any): obj is BaseGenerateCommitProvider {
   if (!obj) {
-    console.error("Provider validation failed: object is null or undefined")
+    console.error("[Provider 验证失败] 对象为空")
     return false
   }
 
-  const requiredProps = [
-    { name: "id", type: "string" },
-    { name: "displayName", type: "string" },
-    { name: "description", type: "string" },
-    { name: "models", type: "array" },
-    { name: "generateCommit", type: "function" },
-  ]
+  const result = ProviderSchema.safeParse(obj)
+  if (!result.success) {
+    console.error("[Provider 验证失败] 字段校验错误:")
 
-  for (const prop of requiredProps) {
-    const value = obj[prop.name]
-    console.log(`Checking ${prop.name}:`, value)
+    // 格式化错误信息
+    const errors = result.error.format()
+    Object.entries(errors).forEach(([path, error]) => {
+      if (path === "_errors") return
+      console.error(`  - ${path}: ${(error as any)._errors.join(", ")}`)
+    })
 
-    if (!value) {
-      console.error(`Provider validation failed: missing '${prop.name}'`)
-      return false
-    }
-
-    if (prop.type === "array") {
-      if (!Array.isArray(value)) {
-        console.error(`Provider validation failed: '${prop.name}' is not an array`)
-        return false
-      }
-    } else if (typeof value !== prop.type) {
-      console.error(`Provider validation failed: '${prop.name}' is not a ${prop.type}`)
-      return false
-    }
+    return false
   }
 
-  console.log("Provider validation succeeded")
+  // 额外验证 generateCommit 方法
+  if (typeof obj.generateCommit !== "function") {
+    console.error("[Provider 验证失败] generateCommit 必须是一个函数")
+    return false
+  }
+
+  console.log("[Provider 验证成功] 所有字段校验通过")
   return true
 }
