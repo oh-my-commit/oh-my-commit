@@ -21,19 +21,18 @@ export class ProviderRegistry implements IProviderManager {
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
-    // Register built-in providers
-    // this.registerProvider()
-
-    // Load user providers
+    console.log("Initializing ProviderRegistry")
     await this.loadProviders()
-    return Object.values(this.providers)
+    console.log(`Loaded ${this.providers.size} providers`)
+    return Array.from(this.providers.values())
   }
 
   /** Load all providers from user directory */
   private async loadProviders() {
+    console.log(`Loading user providers from ${this.omcProvidersDir}`)
     try {
-      // Create providers directory if it doesn't exist
       if (!fs.existsSync(this.omcProvidersDir)) {
+        console.log(`Creating providers directory: ${this.omcProvidersDir}`)
         fs.mkdirSync(this.omcProvidersDir, { recursive: true })
         return
       }
@@ -42,13 +41,17 @@ export class ProviderRegistry implements IProviderManager {
       const providerDirs = directories.filter(dir => dir.isDirectory())
 
       for (const dir of providerDirs) {
-        console.log(`Loading provider: ${dir.name}`)
+        console.log(`Loading provider from directory: ${dir.name}`)
         const filePath = path.join(this.omcProvidersDir, dir.name, "index.js")
         if (fs.existsSync(filePath)) {
           const provider = await loadProviderFromFile(filePath)
           if (provider) {
             this.registerProvider(provider)
+          } else {
+            console.warn(`Failed to load provider from ${filePath}`)
           }
+        } else {
+          console.warn(`index.js not found in ${dir.name}`)
         }
       }
     } catch (error) {
@@ -58,32 +61,41 @@ export class ProviderRegistry implements IProviderManager {
 
   /** Register a new provider */
   registerProvider(provider: BaseGenerateCommitProvider) {
+    console.log(`Registering provider: ${provider.id}`)
     if (this.providers.has(provider.id)) {
-      throw new Error(`Provider with id ${provider.id} already exists`)
+      console.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
+      return
     }
     this.providers.set(provider.id, provider)
+    console.log(`Successfully registered provider: ${provider.id}`)
   }
 
   /** Get provider by id */
   getProvider(id: string): BaseGenerateCommitProvider | undefined {
-    return this.providers.get(id)
+    const provider = this.providers.get(id)
+    console.log(provider ? `Found provider: ${id}` : `Provider not found: ${id}`)
+    return provider
   }
 
   /** Get all registered providers */
   getAllProviders(): BaseGenerateCommitProvider[] {
+    console.log(`Retrieving all providers. Count: ${this.providers.size}`)
     return Array.from(this.providers.values())
   }
 }
 
 /** Load a provider from a file */
 async function loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
+  console.log(`Attempting to load provider from file: ${filePath}`)
   try {
     const module = await import(filePath)
     const provider = module.default || module
 
     if (isValidProvider(provider)) {
+      console.log(`Successfully loaded provider from ${filePath}`)
       return provider
     }
+    console.warn(`Invalid provider structure in ${filePath}`)
     return null
   } catch (error) {
     console.error(`Failed to load provider from ${filePath}:`, error)
@@ -93,12 +105,31 @@ async function loadProviderFromFile(filePath: string): Promise<BaseGenerateCommi
 
 /** Validate if an object is a valid provider */
 function isValidProvider(obj: any): obj is BaseGenerateCommitProvider {
-  return (
-    obj &&
-    typeof obj.id === "string" &&
-    typeof obj.displayName === "string" &&
-    typeof obj.description === "string" &&
-    Array.isArray(obj.models) &&
-    typeof obj.generateCommit === "function"
-  )
+  if (!obj) {
+    console.error("Provider validation failed: object is null or undefined")
+    return false
+  }
+
+  const requiredProps = [
+    // { name: "id", type: "string" },
+    { name: "displayName", type: "string" },
+    { name: "description", type: "string" },
+    { name: "models", type: "array" },
+    { name: "generateCommit", type: "function" },
+  ]
+
+  for (const prop of requiredProps) {
+    if (prop.type !== "function") {
+      console.log(`${prop.name}:`, obj[prop.name])
+    }
+    if (
+      prop.type === "array" ? !Array.isArray(obj[prop.name]) : typeof obj[prop.name] !== prop.type
+    ) {
+      console.error(`Provider validation failed: '${prop.name}' is not a ${prop.type}`)
+      return false
+    }
+  }
+
+  console.log("Provider validation result: Valid")
+  return true
 }

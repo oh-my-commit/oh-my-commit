@@ -5,11 +5,12 @@ import {
   APP_NAME,
   BaseGenerateCommitProvider,
   GenerateCommitError,
+  IProvider,
   OmcStandardModelId,
   formatError,
   type BaseLogger,
   type GenerateCommitInput,
-  type Model,
+  type IModel,
 } from "@shared/common"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
@@ -20,7 +21,7 @@ export const loadPrompt = (lang: string, diff: string) => {
   return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
 }
 
-class OmcStandardModel implements Model {
+class OmcStandardModel implements IModel {
   id = OmcStandardModelId
   name = `Standard Model`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
@@ -33,9 +34,9 @@ class OmcStandardModel implements Model {
   }
 }
 
-export class OmcOfficialProvider extends BaseGenerateCommitProvider {
-  id = APP_ID_CAMEL
-  displayName = `${APP_NAME} Provider`
+export class OmcOfficialProvider extends BaseGenerateCommitProvider implements IProvider {
+  public id = APP_ID_CAMEL
+  public displayName = `${APP_NAME} Provider`
   description = `Commit message generation powered by ${APP_NAME} models`
   models = [new OmcStandardModel()]
   metadata = {
@@ -206,3 +207,5 @@ export class OmcOfficialProvider extends BaseGenerateCommitProvider {
     }
   }
 }
+
+export default OmcOfficialProvider

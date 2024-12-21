@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsup --tsconfig tsconfig.build.json",
-    "dev": "tsup --tsconfig tsconfig.build.json --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "clean": "rimraf ../providers/dist tsconfig.tsbuildinfo .turbo"
   },
   "keywords": [],
