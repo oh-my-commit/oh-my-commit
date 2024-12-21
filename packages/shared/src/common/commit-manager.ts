@@ -44,38 +44,25 @@ export class CommitManager {
     await CommitManager.instance
   }
 
-  private async update(key: string, value: any) {
-    try {
-      await this.config.update(key, value, true)
-    } catch (error) {
-      this.logger.error(`Failed to update config: ${formatError(error)}`)
-      throw error
-    }
-  }
-
   async generateCommit(diff: DiffResult, options?: GenerateCommitOptions) {
     // Initialize providers if not already done
     await this.initProviders()
 
     // Get selected model from config
-    const modelId = this.config.get<string>(SETTING_MODEL_ID)
-    const provider = modelId
-      ? this.providers.find(p => p.models.some(model => model.id === modelId))
-      : this.providers[0]
-
-    if (!provider) {
-      throw new Error(`No provider found${modelId ? ` for model ${modelId}` : ""}`)
+    const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
+    if (!modelId) {
+      throw new Error("No model available")
     }
 
-    const model = provider.models.find(model => model.id === modelId)
-    if (!model) {
-      this.logger.error(`Model ${modelId} not found`)
+    const provider = this.providers.find(p => p.models.some(model => model.id === modelId))
+    if (!provider) {
+      throw new Error(`No provider found for model ${modelId}`)
     }
 
     const generateOptions = options || {
       lang: this.config.get("lang"),
     }
 
-    return provider.generateCommit({ model, diff, options: generateOptions })
+    return provider.generateCommit({ model: modelId, diff, options: generateOptions })
   }
 }

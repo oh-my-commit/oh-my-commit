@@ -1,10 +1,10 @@
 import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
-import { Container, Inject, Service } from "typedi"
+import { Container, Inject, Service, Token } from "typedi"
 
 export const TOKENS = {
-  Config: Symbol("Config"),
-  Logger: Symbol("Logger"),
-  ProviderManager: Symbol("ProviderManager"),
+  Config: new Token<IConfig>("Config"),
+  Logger: new Token<ILogger>("Logger"),
+  ProviderManager: new Token<IProviderManager>("ProviderManager"),
 } as const
 
 @Service()
@@ -38,7 +38,7 @@ export interface ILogger {
 }
 
 export interface IProviderManager {
-  init: (logger?: ILogger) => Promise<BaseGenerateCommitProvider[]>
+  init(): Promise<BaseGenerateCommitProvider[]>
 }
 
 export interface IUIProvider {
