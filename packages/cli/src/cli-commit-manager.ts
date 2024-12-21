@@ -1,6 +1,7 @@
+import "reflect-metadata"
+
 import { APP_NAME, CommitManager, ConsoleLogger, TOKENS } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
-import "reflect-metadata"
 import { Container } from "typedi"
 import { CliConfig } from "./cli-config"
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import "reflect-metadata"
 
 import { cliCommitManager } from "@/cli-commit-manager"
 import { APP_NAME, SETTING_MODEL_ID } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
-import "reflect-metadata"
 import { simpleGit } from "simple-git"
 
 console.log(chalk.blue("OMC"))

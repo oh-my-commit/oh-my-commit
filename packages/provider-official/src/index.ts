@@ -16,7 +16,7 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
 
-export const loadPrompt = (lang: string, diff: string) => {
+export const loadPrompt = (_lang: string, diff: string) => {
   // todo: parse from `commit-prompt.hbs`
   return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
 }
@@ -91,7 +91,7 @@ export class OfficialProvider extends BaseGenerateCommitProvider implements IPro
         .map(result => {
           merge(result.meta, {
             generatedAt: new Date().toISOString(),
-            modelId: input.model.id,
+            modelId: input.model,
             providerId: this.id,
           })
           return result
