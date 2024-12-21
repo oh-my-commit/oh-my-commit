@@ -1,7 +1,7 @@
-import type { IConfig } from "@shared/common"
-import { USER_CONFIG_PATH, USERS_DIR } from "@shared/server"
+import { CommitManager, ConsoleLogger, TOKENS, type IConfig } from "@shared/common"
+import { ProviderRegistry, USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 import fs from "node:fs"
-import { Service } from "typedi"
+import { Container, Service } from "typedi"
 
 @Service()
 export class CliConfig implements IConfig {
@@ -46,4 +46,20 @@ export class CliConfig implements IConfig {
     this.config[key] = value
     this.saveConfig()
   }
+}
+
+export const getCliCommitManager = () => {
+  // 1. 注册 config
+  Container.set(TOKENS.Config, Container.get(CliConfig))
+
+  // 2. 注册 logger 服务
+  Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
+
+  // 3. 注册 provider registry (depends logger)
+  Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+
+  // 4. 获取 CommitManager 实例
+  const cliCommitManager: CommitManager = Container.get(CommitManager)
+
+  return cliCommitManager
 }
