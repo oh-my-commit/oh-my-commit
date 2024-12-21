@@ -1,23 +1,23 @@
-import {
-  APP_NAME,
-  CommitManager,
-  ConsoleLogger,
-  IProviderManager,
-  type IConfig,
-  type ILogger,
-} from "@shared/common"
+import { APP_NAME, CommitManager, ConsoleLogger, TOKENS } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
+import { Container } from "typedi"
 import { CliConfig } from "./cli-config"
 
-export const cliCommitManager = CommitManager.create({
-  createConfig(): IConfig {
-    return new CliConfig()
-  },
-  createLogger(channel: string = `${APP_NAME} Cli`): ILogger {
-    return new ConsoleLogger(channel)
-  },
-
-  createProvidersManager(): IProviderManager {
-    return ProviderRegistry.getInstance()
-  },
+// 配置依赖注入
+Container.set({
+  id: TOKENS.Config,
+  value: new CliConfig(),
 })
+
+Container.set({
+  id: TOKENS.Logger,
+  value: new ConsoleLogger(`${APP_NAME} Cli`),
+})
+
+Container.set({
+  id: TOKENS.ProviderManager,
+  value: new ProviderRegistry(Container.get(TOKENS.Logger)),
+})
+
+// 获取 CommitManager 实例
+export const cliCommitManager = Container.get(CommitManager)

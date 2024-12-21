@@ -1,7 +1,9 @@
 import { IConfig } from "@shared/common"
 import { omcConfigPath, omcUserDir } from "@shared/server"
 import fs from "node:fs"
+import { Service } from "typedi"
 
+@Service()
 export class CliConfig implements IConfig {
   private config: Record<string, any> = {}
 

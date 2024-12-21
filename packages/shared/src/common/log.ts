@@ -1,3 +1,4 @@
+import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
@@ -37,7 +38,8 @@ export abstract class BaseLogger implements ILogger {
   }
 }
 
-export class ConsoleLogger extends BaseLogger {
+@Service()
+export class ConsoleLogger extends BaseLogger implements ILogger {
   protected log(level: LogLevel, ...args: any[]) {
     console.log(
       `${new Date().toISOString()} ${level.toUpperCase()} | [${
