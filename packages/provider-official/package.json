@@ -1,0 +1,22 @@
+{
+  "name": "@oh-my-commit/official-provider",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup --tsconfig tsconfig.build.json",
+    "dev": "tsup --tsconfig tsconfig.build.json --watch",
+    "clean": "rimraf ../providers/dist tsconfig.tsbuildinfo .turbo"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@oh-my-commit/shared": "workspace:*",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12"
+  }
+}

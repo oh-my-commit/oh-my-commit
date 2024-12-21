@@ -1,6 +1,6 @@
 import { Loggable } from "@/features/mixins"
 import type { VscodeGit } from "@/vscode-git"
-import { APP_ID, APP_NAME, COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
+import { APP_ID_CAMEL, APP_NAME, COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
 import * as vscode from "vscode"
 
 export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
@@ -21,7 +21,7 @@ export class StatusBarManager extends Loggable(class {}) implements vscode.Dispo
     // 监听配置变化
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration(APP_ID)) {
+        if (e.affectsConfiguration(APP_ID_CAMEL)) {
           this.update()
         }
       }),

@@ -20,7 +20,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@oh-my-commit/extension": "workspace:*",
     "@oh-my-commit/shared": "workspace:*",
     "chalk": "^4.x",
     "commander": "^12.0.0",
