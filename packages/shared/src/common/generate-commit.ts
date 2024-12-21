@@ -1,5 +1,6 @@
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
+import { z } from "zod"
 import { APP_NAME } from "./app"
 import { ConsoleLogger, type BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
@@ -7,29 +8,76 @@ import { formatMessage, type ResultDTO } from "./utils"
 /**
  * 供应商定义的模型 meta 信息，供用户候选
  */
-export interface IModel {
-  providerId: string
-  id: string
-  name: string
-  description: string
+export const ModelSchema = z.object({
+  /** 供应商唯一标识符，用于区分不同的供应商 */
+  providerId: z.string().describe("供应商唯一标识符，用于区分不同的供应商"),
 
-  /**
-   * 一些供用户明确准确度、性能、成本的指标
-   */
-  metrics?: {
-    accuracy: number
-    speed: number
-    cost: number
-  }
-}
+  /** 模型唯一标识符，在同一供应商下必须唯一 */
+  id: z.string().describe("模型唯一标识符，在同一供应商下必须唯一"),
 
-export interface IProvider {
-  id: string
-  displayName: string
-  description: string
-  models: IModel[]
-  generateCommit(input: GenerateCommitInput): ResultAsync<GenerateCommitResult, GenerateCommitError>
-}
+  /** 模型显示名称，用于在 UI 中展示 */
+  name: z.string().describe("模型显示名称，用于在 UI 中展示"),
+
+  /** 模型详细描述，说明模型的特点和适用场景 */
+  description: z.string().describe("模型详细描述，说明模型的特点和适用场景"),
+
+  /** 模型性能指标，用于评估模型的各项能力 */
+  metrics: z
+    .object({
+      /** 准确度评分 (0-1)，越高表示生成的提交信息越准确 */
+      accuracy: z.number().min(0).max(1).describe("准确度评分 (0-1)，越高表示生成的提交信息越准确"),
+
+      /** 速度评分 (0-1)，越高表示生成速度越快 */
+      speed: z.number().min(0).max(1).describe("速度评分 (0-1)，越高表示生成速度越快"),
+
+      /** 成本评分 (0-1)，越高表示使用成本越高 */
+      cost: z.number().min(0).max(1).describe("成本评分 (0-1)，越高表示使用成本越高"),
+    })
+    .describe("模型性能指标，用于评估模型的各项能力")
+    .optional(),
+})
+
+export const GenerateCommitInputSchema = z.object({
+  /** 选择的模型信息 */
+  model: ModelSchema.describe("选择的模型信息"),
+
+  /** Git diff 信息，包含文件变更的详细内容 */
+  diff: z.any().describe("Git diff 信息，包含文件变更的详细内容"), // DiffResult 类型较复杂，这里简化处理
+
+  /** 生成选项配置 */
+  options: z
+    .object({
+      /** 期望生成的提交信息语言，例如 'en' 或 'zh' */
+      lang: z.string().optional().describe("期望生成的提交信息语言，例如 'en' 或 'zh'"),
+    })
+    .describe("生成选项配置")
+    .optional(),
+})
+
+export const ProviderSchema = z.object({
+  /** 供应商唯一标识符 */
+  id: z.string().describe("供应商唯一标识符"),
+
+  /** 供应商显示名称，用于在 UI 中展示 */
+  displayName: z.string().describe("供应商显示名称，用于在 UI 中展示"),
+
+  /** 供应商详细描述，说明支持的功能和特点 */
+  description: z.string().describe("供应商详细描述，说明支持的功能和特点"),
+
+  /** 供应商提供的模型列表 */
+  models: z.array(ModelSchema).describe("供应商提供的模型列表"),
+
+  /** 生成提交信息的核心方法 */
+  generateCommit: z
+    .function()
+    .args(GenerateCommitInputSchema)
+    .returns(z.any())
+    .describe("生成提交信息的核心方法"), // ResultAsync 类型较复杂，这里简化处理
+})
+
+export type IModel = z.infer<typeof ModelSchema>
+export type IProvider = z.infer<typeof ProviderSchema>
+export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
 export abstract class BaseGenerateCommitProvider implements IProvider {
   /**
@@ -96,13 +144,6 @@ export interface GenerateCommitCoreInput {
   diff: DiffResult
 
   options?: GenerateCommitOptions
-}
-
-export interface GenerateCommitInput extends GenerateCommitCoreInput {
-  /**
-   * 用户选用的供应商模型
-   */
-  model: IModel
 }
 
 /**
