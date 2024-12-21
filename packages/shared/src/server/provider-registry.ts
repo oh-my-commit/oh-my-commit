@@ -1,10 +1,9 @@
-import type { ILogger, IProviderManager } from "@/common"
-import { TOKENS } from "@/common"
 import fs from "node:fs"
 import path from "node:path"
 import { Inject, Service } from "typedi"
-import type { BaseGenerateCommitProvider } from "../common/generate-commit"
-import { ProviderSchema } from "../common/generate-commit"
+import type { BaseGenerateCommitProvider, ILogger, IProviderManager } from "../common"
+import { ProviderSchema, TOKENS } from "../common"
+
 import { omcProvidersDir } from "./config"
 
 /**
@@ -12,18 +11,10 @@ import { omcProvidersDir } from "./config"
  */
 @Service()
 export class ProviderRegistry implements IProviderManager {
-  private static instance: ProviderRegistry
   private providers = new Map<string, BaseGenerateCommitProvider>()
   private omcProvidersDir = omcProvidersDir
 
   constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {}
-
-  static getInstance(): ProviderRegistry {
-    if (!ProviderRegistry.instance) {
-      ProviderRegistry.instance = new ProviderRegistry()
-    }
-    return ProviderRegistry.instance
-  }
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {

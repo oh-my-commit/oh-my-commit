@@ -39,7 +39,7 @@ export const ModelSchema = z.object({
 
 export const GenerateCommitInputSchema = z.object({
   /** 选择的模型信息 */
-  model: ModelSchema.describe("选择的模型信息"),
+  model: z.string().describe("选择的模型 ID"),
 
   /** Git diff 信息，包含文件变更的详细内容 */
   diff: z.any().describe("Git diff 信息，包含文件变更的详细内容"), // DiffResult 类型较复杂，这里简化处理
