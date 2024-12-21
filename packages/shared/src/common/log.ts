@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
@@ -64,10 +65,11 @@ export class ConsoleLogger extends BaseLogger implements ILogger {
   protected name = "console"
 
   protected log(level: LogLevel, message: string, ...args: any[]) {
-    console.log(
-      `${new Date().toISOString()} ${level.toUpperCase()} | [${
-        this.name || "unknown"
-      }] ${formatMessage(message, args)}`,
-    )
+    const timestamp = `${new Date().toISOString()}`
+    const levelStr = `${level.toUpperCase().padEnd(5)}`
+    const loggerName = this.name || "unknown"
+    const formattedMsg = formatMessage(message, args)
+
+    console.log(chalk.green(`${timestamp} ${levelStr}`) + ` | [${loggerName}] ${formattedMsg}`)
   }
 }

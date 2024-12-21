@@ -13,21 +13,22 @@ import { program } from "commander"
 import { simpleGit } from "simple-git"
 import { getCliCommitManager } from "./cli-commit-manager-adapter"
 
-console.log(chalk.blue(APP_NAME))
 // Initialize git and commit manager
 const git = simpleGit()
 
 const commitManager = getCliCommitManager()
 
+commitManager.logger.info(chalk.blue("our coooooooool commit manager initialized"))
+
 // Command handlers
 const listModels = async () => {
   try {
-    console.log(chalk.blue("Listing models..."))
+    commitManager.logger.info(chalk.blue("Listing models..."))
     await commitManager.initProviders()
     const models = commitManager.models
-    console.log(chalk.blue("Available models:"))
+    commitManager.logger.info(chalk.blue("Available models:"))
     for (const model of models) {
-      console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
+      commitManager.logger.info(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
     }
   } catch (error) {
     console.error(chalk.red("Failed to list models:"), error)
@@ -36,13 +37,13 @@ const listModels = async () => {
 }
 
 const initConfig = async () => {
-  console.log(chalk.blue("Initializing Oh My Commit..."))
+  commitManager.logger.info(chalk.blue("Initializing Oh My Commit..."))
   try {
     // TODO: Add actual initialization logic
     // 1. Create config file if not exists
     // 2. Set up default model
     // 3. Configure git hooks if needed
-    console.log(chalk.green("Initialization completed!"))
+    commitManager.logger.info(chalk.green("Initialization completed!"))
   } catch (error) {
     console.error(chalk.red("Failed to initialize:"), error)
     process.exit(1)
@@ -50,7 +51,7 @@ const initConfig = async () => {
 }
 
 const selectModel = async (modelId: string) => {
-  console.log(chalk.blue(`Selecting model: ${modelId}`))
+  commitManager.logger.info(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
     await commitManager.initProviders()
@@ -64,7 +65,7 @@ const selectModel = async (modelId: string) => {
 
     // Set the selected model in config
     await commitManager.config.update(SETTING_MODEL_ID, modelId)
-    console.log(chalk.green(`Successfully set default model to: ${modelId}`))
+    commitManager.logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
     console.error(chalk.red("Failed to select model:"), error)
     process.exit(1)
@@ -72,7 +73,7 @@ const selectModel = async (modelId: string) => {
 }
 
 const generateAndCommit = async (options: { yes?: boolean; model?: string }) => {
-  console.log(chalk.blue("Generating commit message..."))
+  commitManager.logger.info(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
     if (commitManager.providers.length === 0) {
@@ -107,20 +108,20 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
       },
     )
 
-    console.log(chalk.green("Generated commit message:"))
-    console.log(commitData.title)
+    commitManager.logger.info(chalk.green("Generated commit message:"))
+    commitManager.logger.info(commitData.title)
     if (commitData.body) {
-      console.log("\n" + commitData.body)
+      commitManager.logger.info("\n" + commitData.body)
     }
 
     if (options.yes) {
       // Automatically commit if -y flag is provided
       await git.commit([commitData.title, ...(commitData.body ? [commitData.body] : [])])
-      console.log(chalk.green("Changes committed successfully!"))
+      commitManager.logger.info(chalk.green("Changes committed successfully!"))
     } else {
       // Ask for confirmation
-      console.log(chalk.yellow("\nUse -y flag to commit automatically"))
-      console.log(chalk.yellow("Or run git commit manually with the message above"))
+      commitManager.logger.info(chalk.yellow("\nUse -y flag to commit automatically"))
+      commitManager.logger.info(chalk.yellow("Or run git commit manually with the message above"))
     }
   } catch (error) {
     console.error(chalk.red("Failed to generate commit message:"), error)
