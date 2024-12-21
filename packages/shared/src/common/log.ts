@@ -1,4 +1,3 @@
-import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
@@ -26,7 +25,6 @@ export abstract class BaseLogger implements ILogger {
   protected abstract log(level: LogLevel, message: string, ...args: any[]): void
 }
 
-@Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
   protected log(level: LogLevel, message: string, ...args: any[]) {
     console.log(
