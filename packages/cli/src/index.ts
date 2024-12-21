@@ -3,43 +3,28 @@ import "reflect-metadata"
 // 确保 reflect-metadata 最先导入
 import {
   APP_NAME,
-  CommitManager,
-  ConsoleLogger,
   SETTING_MODEL_ID,
-  TOKENS,
   type GenerateCommitError,
   type GenerateCommitResult,
   type IModel,
 } from "@shared/common"
-import { ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
-import { Container } from "typedi"
-import { CliConfig } from "./cli-config"
+import { getCliCommitManager } from "./cli-commit-manager-adapter"
 
 console.log(chalk.blue(APP_NAME))
 // Initialize git and commit manager
 const git = simpleGit()
 
-// 1. 注册 config
-Container.set(TOKENS.Config, Container.get(CliConfig))
-
-// 2. 注册 logger 服务
-Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
-
-// 3. 注册 provider registry
-Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
-
-// 4. 获取 CommitManager 实例
-const cliCommitManager: CommitManager = Container.get(CommitManager)
+const commitManager = getCliCommitManager()
 
 // Command handlers
 const listModels = async () => {
   try {
     console.log(chalk.blue("Listing models..."))
-    await cliCommitManager.initProviders()
-    const models = cliCommitManager.models
+    await commitManager.initProviders()
+    const models = commitManager.models
     console.log(chalk.blue("Available models:"))
     for (const model of models) {
       console.log(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
@@ -68,9 +53,9 @@ const selectModel = async (modelId: string) => {
   console.log(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
-    await cliCommitManager.initProviders()
+    await commitManager.initProviders()
 
-    const availableModels: IModel[] = cliCommitManager.models
+    const availableModels: IModel[] = commitManager.models
     const selectedModel = availableModels.find(m => m.id === modelId)
     if (!selectedModel) {
       console.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
@@ -78,7 +63,7 @@ const selectModel = async (modelId: string) => {
     }
 
     // Set the selected model in config
-    await cliCommitManager.config.update(SETTING_MODEL_ID, modelId)
+    await commitManager.config.update(SETTING_MODEL_ID, modelId)
     console.log(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
     console.error(chalk.red("Failed to select model:"), error)
@@ -90,13 +75,13 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
   console.log(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
-    if (cliCommitManager.providers.length === 0) {
-      await cliCommitManager.initProviders()
+    if (commitManager.providers.length === 0) {
+      await commitManager.initProviders()
     }
 
     // If model is specified, validate and set it
     if (options.model) {
-      const availableModels: IModel[] = cliCommitManager.models
+      const availableModels: IModel[] = commitManager.models
       const selectedModel = availableModels.find(m => m.id === options.model)
       if (!selectedModel) {
         console.error(
@@ -105,10 +90,10 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
         process.exit(1)
       }
       // Set the selected model in config
-      await cliCommitManager.config.update(SETTING_MODEL_ID, options.model)
+      await commitManager.config.update(SETTING_MODEL_ID, options.model)
     }
 
-    const result = await cliCommitManager.generateCommit({
+    const result = await commitManager.generateCommit({
       changed: 0, // TODO: Parse from git diff
       files: [], // TODO: Parse from git diff
       insertions: 0, // TODO: Parse from git diff
