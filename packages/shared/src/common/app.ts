@@ -7,5 +7,3 @@ export const COMMAND_QUICK_COMMIT = `${APP_ID_CAMEL}.quickCommit`
 export const COMMAND_SELECT_MODEL = `${APP_ID_CAMEL}.selectModel`
 
 export const SETTING_MODEL_ID = `${APP_ID_CAMEL}.model.id`
-
-export const OmcStandardModelId = `${APP_ID_CAMEL}.standard`

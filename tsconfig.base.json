@@ -13,6 +13,7 @@
     "declaration": true,
     "composite": true,
 
+    "plugins": [],
     "emitDeclarationOnly": true,
     "sourceMap": true,
     "declarationMap": true

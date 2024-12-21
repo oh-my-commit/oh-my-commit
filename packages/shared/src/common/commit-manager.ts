@@ -27,20 +27,48 @@ export class CommitManager {
   } = {
     loadingProviders: "pending",
   }
+  private initializationPromise: Promise<void> | null = null
 
   constructor(context: CommitManagerContext) {
     this.context = context
-    this.context.providersManager
-      .init()
-      .then(providers => {
+  }
+
+  /**
+   * 目标：多线程安全
+   * 1. s = success/error, return
+   * 2. s = pending, then running and return
+   * 3. s = running, then waiting to return
+   */
+  async initProviders() {
+    // 如果已经成功或失败，直接返回
+    if (this.status.loadingProviders === "success" || this.status.loadingProviders === "error") {
+      return
+    }
+
+    // 如果已经有初始化进程在运行，等待它完成
+    if (this.initializationPromise) {
+      await this.initializationPromise
+      return
+    }
+
+    // 创建新的初始化进程
+    this.status.loadingProviders = "running"
+    this.initializationPromise = (async () => {
+      try {
+        const providers = await this.context.providersManager.init()
         this.providers = providers
         this.context.logger.info(`Loaded ${providers.length} providers`)
         this.status.loadingProviders = "success"
-      })
-      .catch(error => {
+      } catch (error) {
         this.context.logger.error(`Failed to load providers: ${error}`)
         this.status.loadingProviders = "error"
-      })
+        throw error
+      } finally {
+        this.initializationPromise = null
+      }
+    })()
+
+    await this.initializationPromise
   }
 
   static create(adapter: CommitManagerAdapter) {
