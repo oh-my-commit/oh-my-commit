@@ -1,5 +1,5 @@
 import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
-import { Token } from "typedi"
+import { Service, Token } from "typedi"
 
 export const TOKENS = {
   Config: new Token<IConfig>("Config"),

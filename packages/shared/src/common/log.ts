@@ -1,8 +1,10 @@
+import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 
+@Service()
 export abstract class BaseLogger implements ILogger {
   constructor(protected readonly name?: string) {}
 
@@ -25,6 +27,7 @@ export abstract class BaseLogger implements ILogger {
   protected abstract log(level: LogLevel, message: string, ...args: any[]): void
 }
 
+@Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
   protected log(level: LogLevel, message: string, ...args: any[]) {
     console.log(

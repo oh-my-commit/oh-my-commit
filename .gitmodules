@@ -4,3 +4,6 @@
 [submodule "vscode-extension-template"]
 	path = vscode-extension-template
 	url = ./vscode-extension-template
+[submodule "third-parties/typedi"]
+	path = third-parties/typedi
+	url = git@github.com:typestack/typedi.git

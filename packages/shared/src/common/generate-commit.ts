@@ -26,6 +26,7 @@ export class CommitManager {
     @Inject(TOKENS.ProviderManager) private readonly providersManager: IProviderManager,
   ) {
     console.log("init CommitManager: ", { config, logger, providersManager })
+    // console.log("init CommitManager: ", JSON.stringify(config, null, 2))
   }
 
   get models() {
