@@ -1,3 +1,5 @@
+import "reflect-metadata"
+
 import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
 import { Container, Inject, Service, Token } from "typedi"
 

@@ -1,4 +1,4 @@
-import { omcProvidersDir } from "@shared/server"
+import { PROVIDERS_DIR } from "@shared/server"
 import * as path from "node:path"
 import { defineConfig } from "tsup"
 import baseConfig from "../../tsup.config"
@@ -11,5 +11,5 @@ export default defineConfig({
   sourcemap: false,
   clean: true,
   noExternal: [/.*/], // 打包所有依赖
-  outDir: path.join(omcProvidersDir, "official"),
+  outDir: path.join(PROVIDERS_DIR, "official"),
 })

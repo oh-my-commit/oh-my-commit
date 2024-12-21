@@ -1,5 +1,4 @@
 export * from "./app"
-export * from "./commit-manager"
 export * from "./core"
 export * from "./generate-commit"
 export * from "./log"

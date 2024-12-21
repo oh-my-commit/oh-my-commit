@@ -4,7 +4,7 @@ import { Inject, Service } from "typedi"
 import type { BaseGenerateCommitProvider, ILogger, IProviderManager } from "../common"
 import { ProviderSchema, TOKENS } from "../common"
 
-import { omcProvidersDir } from "./config"
+import { PROVIDERS_DIR } from "./config"
 
 /**
  * Provider Registry manages all available commit message providers
@@ -12,9 +12,9 @@ import { omcProvidersDir } from "./config"
 @Service()
 export class ProviderRegistry implements IProviderManager {
   private providers = new Map<string, BaseGenerateCommitProvider>()
-  private omcProvidersDir = omcProvidersDir
+  private providersDir = PROVIDERS_DIR
 
-  constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {}
+  constructor(@Inject(TOKENS.Logger) public readonly logger: ILogger) {}
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
@@ -26,20 +26,20 @@ export class ProviderRegistry implements IProviderManager {
 
   /** Load all providers from user directory */
   private async loadProviders(): Promise<void> {
-    this.logger.debug(`Loading user providers from ${this.omcProvidersDir}`)
+    this.logger.debug(`Loading user providers from ${this.providersDir}`)
     try {
-      if (!fs.existsSync(this.omcProvidersDir)) {
-        this.logger.debug(`Creating providers directory: ${this.omcProvidersDir}`)
-        fs.mkdirSync(this.omcProvidersDir, { recursive: true })
+      if (!fs.existsSync(this.providersDir)) {
+        this.logger.debug(`Creating providers directory: ${this.providersDir}`)
+        fs.mkdirSync(this.providersDir, { recursive: true })
         return
       }
 
-      const directories = fs.readdirSync(this.omcProvidersDir, { withFileTypes: true })
+      const directories = fs.readdirSync(this.providersDir, { withFileTypes: true })
       const providerDirs = directories.filter(dir => dir.isDirectory())
 
       for (const dir of providerDirs) {
         this.logger.debug(`Loading provider from directory: ${dir.name}`)
-        const filePath = path.join(this.omcProvidersDir, dir.name, "index.js")
+        const filePath = path.join(this.providersDir, dir.name, "index.js")
         if (fs.existsSync(filePath)) {
           try {
             const provider = await loadProviderFromFile(filePath)
