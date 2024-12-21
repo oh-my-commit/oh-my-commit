@@ -19,16 +19,9 @@ export class CommitManager {
   }
   private static initPromise: Promise<void> | null = null
 
-  constructor(
-    @Inject(TOKENS.Config) public readonly config: IConfig,
-
-    @Inject(TOKENS.Logger) public readonly logger: ILogger,
-
-    @Inject(TOKENS.ProviderManager) private readonly providersManager: IProviderManager,
-  ) {
-    console.log("init CommitManager: ", { config, logger, providersManager })
-    // console.log("init CommitManager: ", JSON.stringify(config, null, 2))
-  }
+  @Inject(TOKENS.Config) public readonly config!: IConfig
+  @Inject(TOKENS.Logger) public readonly logger!: ILogger
+  @Inject(TOKENS.ProviderManager) public readonly providersManager!: IProviderManager
 
   get models(): IModel[] {
     return this.providers.flatMap(provider => provider.models)
@@ -51,6 +44,7 @@ export class CommitManager {
   }
 
   private async doInitProviders() {
+    console.log("[CommitManager] Loading providers: ", {logger: this.logger, config: this.config, providersManager: this.providersManager})
     this.status.loadingProviders = "running"
     try {
       this.providers = await this.providersManager.init()

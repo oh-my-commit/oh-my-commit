@@ -10,7 +10,7 @@ export default defineConfig({
   // splitting: false,
   // sourcemap: false,
   // clean: true,
-  // noExternal: [/.*/], // 打包所有依赖
+  noExternal: [/.*/], // 打包所有依赖
   outDir: path.join(PROVIDERS_DIR, "official"),
   // onSuccess: "tsc --experimentalDecorators --emitDecoratorMetadata",
 })
