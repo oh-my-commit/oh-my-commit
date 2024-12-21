@@ -5,6 +5,9 @@ import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
+import { createJiti } from "jiti"
+const jiti = createJiti(import.meta.url)
+
 /**
  * Provider Registry manages all available commit message providers
  */
@@ -17,9 +20,7 @@ export class ProviderRegistry implements IProviderManager {
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
-    console.log("[ProviderRegistry] Initializing 1")
     this.logger.debug("Initializing ProviderRegistry")
-    console.log("[ProviderRegistry] Initializing 2")
     await this.loadProviders()
     this.logger.debug(`Loaded ${this.providers.size} providers`)
     return Array.from(this.providers.values())
@@ -85,13 +86,13 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
-      const module = await import(filePath)
-      const Provider = module.default || module
+      const Provider = await jiti.import(filePath, { default: true })
 
-      if (ProviderSchema.safeParse(Provider).success) {
-        const provider = new Provider(this.logger)
-        return provider
-      }
+      // @ts-expect-error - Provider must be a subclass of BaseGenerateCommitProvider
+      const provider = new Provider()
+
+      ProviderSchema.parse(provider)
+      return provider
     } catch (error) {
       this.logger.error(`Error loading provider from ${filePath}: ${formatError(error)}`)
     }

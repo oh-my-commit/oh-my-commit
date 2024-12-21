@@ -32,6 +32,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "handlebars": "^4.7.8",
+    "jiti": "^2.4.2",
     "lodash-es": "^4.17.21",
     "neverthrow": "^8.1.1",
     "simple-git": "^3.27.0",

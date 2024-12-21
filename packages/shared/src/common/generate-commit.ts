@@ -159,8 +159,7 @@ export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 @Service()
 export abstract class BaseGenerateCommitProvider implements IProvider {
 
-  @Inject(TOKENS.Logger)
-  protected logger!: BaseLogger
+  @Inject(TOKENS.Logger) public logger!: BaseLogger
 
 
   abstract id: string
@@ -188,7 +187,7 @@ export abstract class BaseGenerateCommitProvider implements IProvider {
     input: GenerateCommitInput,
   ): ResultAsync<GenerateCommitResult, GenerateCommitError>
 
-  /**
+  /**x
    * 标准化 provider 的输出，并避免供应商调试时打印一些自循环的属性导致报错
    * .returns
    */
