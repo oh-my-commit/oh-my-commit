@@ -8,7 +8,7 @@ export class VscodeClientLogger extends BaseLogger {
     super(channel)
   }
 
-  protected log(level: LogLevel, ...args: any[]) {
+  protected _log(level: LogLevel, ...args: any[]) {
     const rawMessage = formatMessage(...args)
 
     clientPush({
