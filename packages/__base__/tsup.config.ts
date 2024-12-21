@@ -6,9 +6,9 @@ export default defineConfig({
   // 必须，否则打包有问题
   dts: false,
 
-  minify: false,
+  minify: true,
   sourcemap: true,
-  splitting: false,
+  splitting: true,
   treeshake: true,
   format: ["cjs", "esm"],
   esbuildOptions(options) {

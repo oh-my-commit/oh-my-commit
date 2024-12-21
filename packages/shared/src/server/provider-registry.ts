@@ -13,11 +13,13 @@ export class ProviderRegistry implements IProviderManager {
   private providers = new Map<string, BaseGenerateCommitProvider>()
   private providersDir = PROVIDERS_DIR
 
-  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
+  @Inject(TOKENS.Logger) public readonly logger!: BaseLogger
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
+    console.log("[ProviderRegistry] Initializing 1")
     this.logger.debug("Initializing ProviderRegistry")
+    console.log("[ProviderRegistry] Initializing 2")
     await this.loadProviders()
     this.logger.debug(`Loaded ${this.providers.size} providers`)
     return Array.from(this.providers.values())

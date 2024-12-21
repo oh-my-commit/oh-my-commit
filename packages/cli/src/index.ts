@@ -23,13 +23,13 @@ console.log(chalk.blue(APP_NAME))
 const git = simpleGit()
 
 // 1. 注册 config
-Container.set(TOKENS.Config, CliConfig)
+Container.set(TOKENS.Config, Container.get(CliConfig))
 
 // 2. 注册 logger 服务
-Container.set(TOKENS.Logger, ConsoleLogger)
+Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
 
 // 3. 注册 provider registry
-Container.set(TOKENS.ProviderManager, ProviderRegistry)
+Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
 
 // 4. 获取 CommitManager 实例
 const cliCommitManager: CommitManager = Container.get(CommitManager)

@@ -29,6 +29,8 @@ export abstract class BaseLogger implements ILogger {
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
+  protected name = "console"
+
   protected log(level: LogLevel, message: string, ...args: any[]) {
     console.log(
       `${new Date().toISOString()} ${level.toUpperCase()} | [${
