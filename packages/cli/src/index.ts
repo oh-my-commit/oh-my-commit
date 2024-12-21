@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { cliCommitManager } from "@/cli-commit-manager"
-import { APP_NAME, ConsoleLogger } from "@shared/common"
+import { APP_NAME, ConsoleLogger, SETTING_MODEL_ID } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
@@ -39,9 +39,50 @@ const initConfig = async () => {
   }
 }
 
-const generateAndCommit = async (options: { yes?: boolean }) => {
+const selectModel = async (modelId: string) => {
+  console.log(chalk.blue(`Selecting model: ${modelId}`))
+  try {
+    // Initialize providers if not already done
+    await cliCommitManager.initProviders()
+
+    const availableModels = cliCommitManager.models
+    const selectedModel = availableModels.find(m => m.id === modelId)
+    if (!selectedModel) {
+      console.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
+      process.exit(1)
+    }
+
+    // Set the selected model in config
+    await cliCommitManager.context.config.set(SETTING_MODEL_ID, modelId)
+    console.log(chalk.green(`Successfully set default model to: ${modelId}`))
+  } catch (error) {
+    console.error(chalk.red("Failed to select model:"), error)
+    process.exit(1)
+  }
+}
+
+const generateAndCommit = async (options: { yes?: boolean; model?: string }) => {
   console.log(chalk.blue("Generating commit message..."))
   try {
+    // Initialize providers if not already done
+    if (cliCommitManager.providers.length === 0) {
+      await cliCommitManager.initProviders()
+    }
+
+    // If model is specified, validate and set it
+    if (options.model) {
+      const availableModels = cliCommitManager.models
+      const selectedModel = availableModels.find(m => m.id === options.model)
+      if (!selectedModel) {
+        console.error(
+          chalk.red(`Model "${options.model}" not found. Use 'list' to see available models.`),
+        )
+        process.exit(1)
+      }
+      // Set the selected model in config
+      await cliCommitManager.context.config.set(SETTING_MODEL_ID, options.model)
+    }
+
     const result = await cliCommitManager.generateCommit({
       changed: 0, // TODO: Parse from git diff
       files: [], // TODO: Parse from git diff
@@ -79,7 +120,7 @@ const generateAndCommit = async (options: { yes?: boolean }) => {
 
 // Register commands
 program
-  .name("omc")
+  .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
   .version("1.0.0")
 
@@ -87,7 +128,13 @@ program
 program.command("init").description("Initialize Oh My Commit configuration").action(initConfig)
 
 // List models command
-program.command("list").description("List all available AI Commit models").action(listModels)
+program.command("list-models").description("List all available AI Commit models").action(listModels)
+
+// Select model command
+program
+  .command("select-model <modelId>")
+  .description("Set the default model to use for commit generation")
+  .action(selectModel)
 
 // Generate command
 program

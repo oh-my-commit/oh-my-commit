@@ -2,6 +2,7 @@ import type { DiffResult } from "simple-git"
 import { SETTING_MODEL_ID } from "./app"
 import type { IConfig, ILogger, IProviderManager } from "./core"
 import type { BaseGenerateCommitProvider, GenerateCommitOptions } from "./generate-commit"
+import { formatError } from "./utils"
 
 export interface CommitManagerContext {
   config: IConfig
@@ -27,48 +28,32 @@ export class CommitManager {
   } = {
     loadingProviders: "pending",
   }
-  private initializationPromise: Promise<void> | null = null
+  private static instance: Promise<void> | null = null
 
   constructor(context: CommitManagerContext) {
     this.context = context
   }
 
   /**
-   * 目标：多线程安全
-   * 1. s = success/error, return
-   * 2. s = pending, then running and return
-   * 3. s = running, then waiting to return
+   * 线程安全的初始化方法
    */
   async initProviders() {
-    // 如果已经成功或失败，直接返回
-    if (this.status.loadingProviders === "success" || this.status.loadingProviders === "error") {
-      return
+    // 使用静态单例确保全局唯一初始化
+    if (!CommitManager.instance) {
+      CommitManager.instance = (async () => {
+        this.status.loadingProviders = "running"
+        try {
+          this.providers = await this.context.providersManager.init()
+          this.context.logger.info(`Loaded ${this.providers.length} providers`)
+          this.status.loadingProviders = "success"
+        } catch (error) {
+          this.context.logger.error(`Failed to load providers: ${formatError(error)}`)
+          this.status.loadingProviders = "error"
+          throw error
+        }
+      })()
     }
-
-    // 如果已经有初始化进程在运行，等待它完成
-    if (this.initializationPromise) {
-      await this.initializationPromise
-      return
-    }
-
-    // 创建新的初始化进程
-    this.status.loadingProviders = "running"
-    this.initializationPromise = (async () => {
-      try {
-        const providers = await this.context.providersManager.init()
-        this.providers = providers
-        this.context.logger.info(`Loaded ${providers.length} providers`)
-        this.status.loadingProviders = "success"
-      } catch (error) {
-        this.context.logger.error(`Failed to load providers: ${error}`)
-        this.status.loadingProviders = "error"
-        throw error
-      } finally {
-        this.initializationPromise = null
-      }
-    })()
-
-    await this.initializationPromise
+    return CommitManager.instance
   }
 
   static create(adapter: CommitManagerAdapter) {
