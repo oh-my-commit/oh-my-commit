@@ -7,7 +7,7 @@ import { formatMessage, type ResultDTO } from "./utils"
 /**
  * 供应商定义的模型 meta 信息，供用户候选
  */
-export interface Model {
+export interface IModel {
   providerId: string
   id: string
   name: string
@@ -23,7 +23,15 @@ export interface Model {
   }
 }
 
-export abstract class BaseGenerateCommitProvider {
+export interface IProvider {
+  id: string
+  displayName: string
+  description: string
+  models: IModel[]
+  generateCommit(input: GenerateCommitInput): ResultAsync<GenerateCommitResult, GenerateCommitError>
+}
+
+export abstract class BaseGenerateCommitProvider implements IProvider {
   /**
    * 可继承或重载的 logger
    */
@@ -47,7 +55,7 @@ export abstract class BaseGenerateCommitProvider {
   /**
    * 供应商模型列表，具体调用要在 .generateCommit 里 switch 实现
    */
-  abstract models: Model[]
+  abstract models: IModel[]
 
   /**
    * 核心调用
@@ -94,7 +102,7 @@ export interface GenerateCommitInput extends GenerateCommitCoreInput {
   /**
    * 用户选用的供应商模型
    */
-  model: Model
+  model: IModel
 }
 
 /**
