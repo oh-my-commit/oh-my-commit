@@ -5,46 +5,34 @@ import { formatMessage } from "./utils"
 export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
 
 export abstract class BaseLogger implements ILogger {
-  protected channel = "default"
+  constructor(protected readonly name?: string) {}
 
-  setChannel(channel: string) {
-    this.channel = channel
+  info(message: string, ...args: any[]): void {
+    this.log("info", message, ...args)
   }
 
-  constructor(channel: string) {
-    this.channel = channel
+  error(message: string, ...args: any[]): void {
+    this.log("error", message, ...args)
   }
 
-  protected abstract log(level: LogLevel, ...args: any[]): void
-
-  debug(...args: any[]) {
-    this.log("debug", ...args)
+  warn(message: string, ...args: any[]): void {
+    this.log("warn", message, ...args)
   }
 
-  info(...args: any[]) {
-    this.log("info", ...args)
+  debug(message: string, ...args: any[]): void {
+    this.log("debug", message, ...args)
   }
 
-  warn(...args: any[]) {
-    this.log("warn", ...args)
-  }
-
-  error(...args: any[]) {
-    this.log("error", ...args)
-  }
-
-  trace(...args: any[]) {
-    this.log("trace", ...args)
-  }
+  protected abstract log(level: LogLevel, message: string, ...args: any[]): void
 }
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
-  protected log(level: LogLevel, ...args: any[]) {
+  protected log(level: LogLevel, message: string, ...args: any[]) {
     console.log(
       `${new Date().toISOString()} ${level.toUpperCase()} | [${
-        this.channel
-      }] ${formatMessage(...args)}]`,
+        this.name || "unknown"
+      }] ${formatMessage(message, args)}`,
     )
   }
 }
