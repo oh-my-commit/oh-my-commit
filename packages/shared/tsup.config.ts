@@ -1,5 +1,5 @@
 import { defineConfig } from "tsup"
-import baseConfig from "../../tsup.config"
+import baseConfig from "../__base__/tsup.config"
 
 export default defineConfig({
   ...baseConfig,
@@ -7,10 +7,13 @@ export default defineConfig({
   dts: {
     compilerOptions: {
       composite: false,
+      experimentalDecorators: true,
+      emitDecoratorMetadata: true,
+      // --experimentalDecorators --emitDecoratorMetadata
     },
   },
 
   onSuccess: "tsc --emitDeclarationOnly --declaration",
 
-  entry: ["src/index.ts", "src/common/index.ts", "src/server/index.ts"],
+  entry: ["src/common/index.ts", "src/server/index.ts"],
 })

@@ -5,6 +5,7 @@ import { z } from "zod"
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
 import { formatMessage, type ResultDTO } from "./utils"
+import { BaseLogger } from "./log"
 
 export type Status = "pending" | "running" | "success" | "error"
 
@@ -29,7 +30,7 @@ export class CommitManager {
     // console.log("init CommitManager: ", JSON.stringify(config, null, 2))
   }
 
-  get models() {
+  get models(): IModel[] {
     return this.providers.flatMap(provider => provider.models)
   }
 
@@ -161,12 +162,12 @@ export type IModel = z.infer<typeof ModelSchema>
 export type IProvider = z.infer<typeof ProviderSchema>
 export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
+@Service()
 export abstract class BaseGenerateCommitProvider implements IProvider {
-  protected logger: ILogger
 
-  constructor(logger: ILogger) {
-    this.logger = logger
-  }
+  @Inject(TOKENS.Logger)
+  protected logger!: BaseLogger
+
 
   abstract id: string
 

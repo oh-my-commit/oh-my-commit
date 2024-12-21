@@ -1,6 +1,9 @@
 {
   "root": true,
-  "extends": ["@cs-magic/eslint-config/typescript", "@cs-magic/eslint-config/prettier"],
+  "extends": [
+    "@cs-magic/eslint-config/typescript",
+     "@cs-magic/eslint-config/prettier"
+    ],
   "parserOptions": {
     "project": [
       // 千万不要换成 tsconfig.json，不然会溢出

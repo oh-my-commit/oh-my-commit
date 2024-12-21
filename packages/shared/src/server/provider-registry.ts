@@ -2,8 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { Inject, Service } from "typedi"
 import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
-import { ILogger, ProviderSchema, TOKENS, formatError } from "../common"
-
+import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
 /**
@@ -14,7 +13,7 @@ export class ProviderRegistry implements IProviderManager {
   private providers = new Map<string, BaseGenerateCommitProvider>()
   private providersDir = PROVIDERS_DIR
 
-  constructor(@Inject(TOKENS.Logger) public readonly logger: ILogger) {}
+  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {

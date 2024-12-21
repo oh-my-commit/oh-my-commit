@@ -1,5 +1,5 @@
-import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
-import { Service, Token } from "typedi"
+import { Token } from "typedi"
+import type { BaseGenerateCommitProvider } from "./generate-commit"
 
 export const TOKENS = {
   Config: new Token<IConfig>("Config"),
@@ -7,16 +7,16 @@ export const TOKENS = {
   ProviderManager: new Token<IProviderManager>("ProviderManager"),
 } as const
 
-export interface IConfig {
-  get<T>(key: string): T | undefined
-  update(key: string, value: any, global?: boolean): Promise<void>
-}
-
 export interface ILogger {
   info(message: string, ...args: any[]): void
   error(message: string, ...args: any[]): void
   warn(message: string, ...args: any[]): void
   debug(message: string, ...args: any[]): void
+}
+
+export interface IConfig {
+  get<T>(key: string): T | undefined
+  update(key: string, value: any, global?: boolean): Promise<void>
 }
 
 export interface IProviderManager {
