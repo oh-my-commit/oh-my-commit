@@ -1,8 +1,8 @@
 import fs from "node:fs"
 import path from "node:path"
 import { Inject, Service } from "typedi"
-import type { BaseGenerateCommitProvider, ILogger, IProviderManager } from "../common"
-import { ProviderSchema, TOKENS } from "../common"
+import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
+import { ILogger, ProviderSchema, TOKENS, formatError } from "../common"
 
 import { PROVIDERS_DIR } from "./config"
 
@@ -42,22 +42,19 @@ export class ProviderRegistry implements IProviderManager {
         const filePath = path.join(this.providersDir, dir.name, "index.js")
         if (fs.existsSync(filePath)) {
           try {
-            const provider = await loadProviderFromFile(filePath)
+            const provider = await this.loadProviderFromFile(filePath)
             if (provider) {
               this.registerProvider(provider)
             } else {
               this.logger.warn(`Failed to load provider from ${filePath}: Invalid provider format`)
             }
           } catch (error) {
-            this.logger.error(`Error loading provider from ${filePath}: ${error}`)
+            this.logger.error(`Failed to load provider from ${filePath}: ${error}`)
           }
-        } else {
-          this.logger.warn(`No index.js found in provider directory: ${dir.name}`)
         }
       }
     } catch (error) {
-      this.logger.error(`Error loading providers: ${error}`)
-      // Don't throw error here, just log it
+      this.logger.error(`Failed to load providers: ${error}`)
     }
   }
 
@@ -84,40 +81,19 @@ export class ProviderRegistry implements IProviderManager {
     this.logger.debug(`Retrieving all providers. Count: ${this.providers.size}`)
     return Array.from(this.providers.values())
   }
-}
 
-/** Load a provider from a file */
-export async function loadProviderFromFile(
-  filePath: string,
-): Promise<BaseGenerateCommitProvider | null> {
-  try {
-    const module = await import(filePath)
-    // 支持 default export 和 module.exports
-    const provider = module.default || module
-    const ProviderClass = provider.default || provider
+  private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
+    try {
+      const module = await import(filePath)
+      const Provider = module.default || module
 
-    // 如果是类，实例化它
-    const instance = typeof ProviderClass === "function" ? new ProviderClass() : ProviderClass
-
-    if (isValidProvider(instance)) {
-      return instance
+      if (ProviderSchema.safeParse(Provider).success) {
+        const provider = new Provider(this.logger)
+        return provider
+      }
+    } catch (error) {
+      this.logger.error(`Error loading provider from ${filePath}: ${formatError(error)}`)
     }
     return null
-  } catch (error) {
-    console.error(`Failed to load provider from ${filePath}:`, error)
-    return null
-  }
-}
-
-/** Validate if an object is a valid provider */
-function isValidProvider(obj: any): obj is BaseGenerateCommitProvider {
-  if (!obj) return false
-
-  try {
-    // 验证基本结构
-    const result = ProviderSchema.safeParse(obj)
-    return result.success
-  } catch (error) {
-    return false
   }
 }

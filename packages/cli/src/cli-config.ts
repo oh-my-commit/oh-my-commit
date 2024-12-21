@@ -1,5 +1,3 @@
-import "reflect-metadata"
-
 import type { IConfig } from "@shared/common"
 import { USER_CONFIG_PATH, USERS_DIR } from "@shared/server"
 import fs from "node:fs"

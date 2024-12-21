@@ -63,6 +63,7 @@
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "turbo": "^2.3.3",
+    "typedi": "^0.10.0",
     "typescript": "5.3.3",
     "zod": "^3.24.1"
   },
@@ -242,7 +243,6 @@
     "neverthrow": "^8.1.1",
     "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0",
-    "tsup": "^8.3.5",
-    "typedi": "^0.10.0"
+    "tsup": "^8.3.5"
   }
 }

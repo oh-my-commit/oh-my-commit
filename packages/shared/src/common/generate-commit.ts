@@ -2,9 +2,8 @@ import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import { z } from "zod"
-import { APP_NAME, SETTING_MODEL_ID } from "./app"
+import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
-import { ConsoleLogger, type BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
@@ -21,9 +20,13 @@ export class CommitManager {
 
   constructor(
     @Inject(TOKENS.Config) public readonly config: IConfig,
+
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
+
     @Inject(TOKENS.ProviderManager) private readonly providersManager: IProviderManager,
-  ) {}
+  ) {
+    console.log("init CommitManager: ", { config, logger, providersManager })
+  }
 
   get models() {
     return this.providers.flatMap(provider => provider.models)
@@ -158,14 +161,12 @@ export type IProvider = z.infer<typeof ProviderSchema>
 export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
 export abstract class BaseGenerateCommitProvider implements IProvider {
-  /**
-   * 可继承或重载的 logger
-   */
-  public logger: BaseLogger = new ConsoleLogger(APP_NAME)
+  protected logger: ILogger
 
-  /**
-   * 供应商 ID
-   */
+  constructor(logger: ILogger) {
+    this.logger = logger
+  }
+
   abstract id: string
 
   /**

@@ -1,7 +1,7 @@
-#!/usr/bin/env node
 import "reflect-metadata"
 
-import { cliCommitManager } from "@/cli-commit-manager"
+// 确保 reflect-metadata 最先导入
+import { initContainer } from "@/cli-commit-manager"
 import { APP_NAME, SETTING_MODEL_ID } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
@@ -11,6 +11,9 @@ console.log(chalk.blue(APP_NAME))
 
 // Initialize git and commit manager
 const git = simpleGit()
+
+// Initialize container
+const cliCommitManager = initContainer()
 
 // Command handlers
 const listModels = async () => {

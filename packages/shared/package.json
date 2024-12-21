@@ -33,7 +33,9 @@
     "@anthropic-ai/sdk": "^0.32.1",
     "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",
+    "neverthrow": "^8.1.1",
     "simple-git": "^3.27.0",
+    "typedi": "^0.10.0",
     "yaml": "^2.6.1",
     "zod": "^3.23.8"
   }
