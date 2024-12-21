@@ -1,13 +1,22 @@
 import "reflect-metadata"
 
 // 确保 reflect-metadata 最先导入
-import { CliConfig } from "@/cli-config"
-import { APP_NAME, CommitManager, ConsoleLogger, SETTING_MODEL_ID, TOKENS } from "@shared/common"
+import {
+  APP_NAME,
+  CommitManager,
+  ConsoleLogger,
+  SETTING_MODEL_ID,
+  TOKENS,
+  type GenerateCommitError,
+  type GenerateCommitResult,
+  type IModel,
+} from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
 import { Container } from "typedi"
+import { CliConfig } from "./cli-config"
 
 console.log(chalk.blue(APP_NAME))
 // Initialize git and commit manager
@@ -23,7 +32,7 @@ Container.set(TOKENS.Logger, ConsoleLogger)
 Container.set(TOKENS.ProviderManager, ProviderRegistry)
 
 // 4. 获取 CommitManager 实例
-const cliCommitManager = Container.get(CommitManager)
+const cliCommitManager: CommitManager = Container.get(CommitManager)
 
 // Command handlers
 const listModels = async () => {
@@ -61,7 +70,7 @@ const selectModel = async (modelId: string) => {
     // Initialize providers if not already done
     await cliCommitManager.initProviders()
 
-    const availableModels = cliCommitManager.models
+    const availableModels: IModel[] = cliCommitManager.models
     const selectedModel = availableModels.find(m => m.id === modelId)
     if (!selectedModel) {
       console.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
@@ -87,7 +96,7 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 
     // If model is specified, validate and set it
     if (options.model) {
-      const availableModels = cliCommitManager.models
+      const availableModels: IModel[] = cliCommitManager.models
       const selectedModel = availableModels.find(m => m.id === options.model)
       if (!selectedModel) {
         console.error(
@@ -107,8 +116,8 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
     })
 
     const commitData = result.match(
-      success => success,
-      error => {
+      (success: GenerateCommitResult) => success,
+      (error: GenerateCommitError) => {
         throw new Error(`Error(code=${error.code}), message=${error.message}`)
       },
     )

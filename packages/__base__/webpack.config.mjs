@@ -42,7 +42,7 @@ export default (env, argv) => {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
       alias: {
         "@": [path.resolve(".", "src")],
-        "@shared": [path.resolve(__dirname, "packages/shared/src")],
+        "@shared": [path.resolve(__dirname, "../shared/src")],
       },
     },
     module: {

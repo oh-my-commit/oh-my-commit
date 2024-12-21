@@ -1,6 +1,6 @@
 import path, { resolve } from "path"
 import { fileURLToPath } from "url"
-import baseConfig from "../../webpack.config.mjs"
+import baseConfig from "../__base__/webpack.config.mjs"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
