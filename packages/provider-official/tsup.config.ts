@@ -1,4 +1,4 @@
-import { PROVIDERS_DIR } from "@shared/server"
+import { PROVIDERS_DIR } from "@shared/server/config"
 import * as path from "node:path"
 import { defineConfig } from "tsup"
 import baseConfig from "../__base__/tsup.config"
