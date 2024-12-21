@@ -1,17 +1,31 @@
 import { defineConfig } from "tsup"
 import baseConfig from "../__base__/tsup.config"
 
-export default defineConfig({
-  ...baseConfig,
-  // dts: {
-  //   compilerOptions: {
-  //     composite: false,
-  //     experimentalDecorators: true,
-  //     emitDecoratorMetadata: true,
-  //     // --experimentalDecorators --emitDecoratorMetadata
-  //   },
-  // },
-  entry: ["./src/index.ts"],
-  format: ["cjs"],
-  // onSuccess: "tsc --experimentalDecorators --emitDecoratorMetadata",
+/**
+ * TODO(watch-mode): Improve watch mode for monorepo
+ * 
+ * Current limitation: tsup's watch mode doesn't detect changes in workspace dependencies (e.g., shared package)
+ * 
+ * Potential solutions:
+ * 1. Use chokidar to watch shared package files
+ * 2. Integrate with turborepo's watch feature
+ * 3. Use nodemon for development
+ * 
+ * Related discussions:
+ * - tsup issue: https://github.com/egoist/tsup/issues/647
+ * - turbo issue: https://github.com/vercel/turbo/issues/986
+ */
+export default defineConfig(options => {
+  console.log("tsup options:", options)
+
+  return {
+    ...baseConfig,
+    entry: ["./src/index.ts"],
+    format: ["cjs"],
+    // 不要将 shared 包视为外部依赖
+    noExternal: ["@oh-my-commit/shared"],
+    onSuccess: async () => {
+      console.log("Build succeeded! Watching for changes...")
+    },
+  }
 })
