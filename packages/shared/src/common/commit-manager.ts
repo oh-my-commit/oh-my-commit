@@ -1,28 +1,16 @@
 import type { DiffResult } from "simple-git"
+import { Inject, Service } from "typedi"
 import { SETTING_MODEL_ID } from "./app"
 import type { IConfig, ILogger, IProviderManager } from "./core"
+import { TOKENS } from "./core"
 import type { BaseGenerateCommitProvider, GenerateCommitOptions } from "./generate-commit"
 import { formatError } from "./utils"
 
-export interface CommitManagerContext {
-  config: IConfig
-  logger: ILogger
-  providersManager: IProviderManager
-}
-
-export interface CommitManagerAdapter {
-  createConfig(): IConfig
-
-  createLogger(): ILogger
-
-  createProvidersManager(): IProviderManager
-}
-
 export type Status = "pending" | "running" | "success" | "error"
 
+@Service()
 export class CommitManager {
   public providers: BaseGenerateCommitProvider[] = []
-  public context: CommitManagerContext
   public status: {
     loadingProviders: Status
   } = {
@@ -30,87 +18,64 @@ export class CommitManager {
   }
   private static instance: Promise<void> | null = null
 
-  constructor(context: CommitManagerContext) {
-    this.context = context
-  }
+  constructor(
+    @Inject(TOKENS.Config) private readonly config: IConfig,
+    @Inject(TOKENS.Logger) private readonly logger: ILogger,
+    @Inject(TOKENS.ProviderManager) private readonly providersManager: IProviderManager,
+  ) {}
 
   /**
    * 线程安全的初始化方法
    */
-  async initProviders() {
-    // 使用静态单例确保全局唯一初始化
+  private async initProviders() {
     if (!CommitManager.instance) {
       CommitManager.instance = (async () => {
         this.status.loadingProviders = "running"
         try {
-          this.providers = await this.context.providersManager.init()
-          this.context.logger.info(`Loaded ${this.providers.length} providers`)
+          this.providers = await this.providersManager.init()
+          this.logger.info(`Loaded ${this.providers.length} providers`)
           this.status.loadingProviders = "success"
         } catch (error) {
-          this.context.logger.error(`Failed to load providers: ${formatError(error)}`)
+          this.logger.error(`Failed to load providers: ${formatError(error)}`)
           this.status.loadingProviders = "error"
-          throw error
         }
       })()
     }
-    return CommitManager.instance
+    await CommitManager.instance
   }
-
-  static create(adapter: CommitManagerAdapter) {
-    return new CommitManager({
-      config: adapter.createConfig(),
-      providersManager: adapter.createProvidersManager(),
-      logger: adapter.createLogger(),
-    })
-  }
-
-  // public initProviders(): void
 
   private async update(key: string, value: any) {
     try {
-      await this.context.config.update(key, value, true)
-      return true
+      await this.config.update(key, value, true)
     } catch (error) {
-      return false
+      this.logger.error(`Failed to update config: ${formatError(error)}`)
+      throw error
     }
   }
 
-  get models() {
-    return this.providers.flatMap(p => p.models)
-  }
+  async generateCommit(diff: DiffResult, options?: GenerateCommitOptions) {
+    // Initialize providers if not already done
+    await this.initProviders()
 
-  get modelId() {
-    return this.context.config.get<string>(SETTING_MODEL_ID)
-  }
+    // Get selected model from config
+    const modelId = this.config.get<string>(SETTING_MODEL_ID)
+    const provider = modelId
+      ? this.providers.find(p => p.models.some(model => model.id === modelId))
+      : this.providers[0]
 
-  get model() {
-    const model = this.models.find(model => model.id === this.modelId)
-    if (!model) this.context.logger.error(`Model ${this.modelId} not found`)
-    return model
-  }
-
-  get provider() {
-    return this.providers.find(p => p.models.some(model => model.id === this.modelId))
-  }
-
-  get options(): GenerateCommitOptions {
-    return {
-      lang: this.context.config.get("lang"),
+    if (!provider) {
+      throw new Error(`No provider found${modelId ? ` for model ${modelId}` : ""}`)
     }
-  }
 
-  public async selectModel(modelId: string): Promise<boolean> {
-    return await this.update(SETTING_MODEL_ID, modelId)
-  }
+    const model = provider.models.find(model => model.id === modelId)
+    if (!model) {
+      this.logger.error(`Model ${modelId} not found`)
+    }
 
-  public async generateCommit(diff: DiffResult) {
-    const model = this.model
-    if (!model) throw new Error("No model selected")
+    const generateOptions = options || {
+      lang: this.config.get("lang"),
+    }
 
-    const provider = this.provider
-    if (!provider) throw new Error(`Provider ${this.model.providerId} not found`)
-
-    const options = this.options
-    return provider.generateCommit({ model, diff, options })
+    return provider.generateCommit({ model, diff, options: generateOptions })
   }
 }

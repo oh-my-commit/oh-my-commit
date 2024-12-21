@@ -1,4 +1,29 @@
 import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
+import { Container, Inject, Service } from "typedi"
+
+export const TOKENS = {
+  Config: Symbol("Config"),
+  Logger: Symbol("Logger"),
+  ProviderManager: Symbol("ProviderManager"),
+} as const
+
+@Service()
+export class AppContainer {
+  private static instance: AppContainer
+
+  static getInstance(): AppContainer {
+    if (!AppContainer.instance) {
+      AppContainer.instance = Container.get(AppContainer)
+    }
+    return AppContainer.instance
+  }
+
+  constructor(
+    @Inject(TOKENS.Config) public readonly config: IConfig,
+    @Inject(TOKENS.Logger) public readonly logger: ILogger,
+    @Inject(TOKENS.ProviderManager) public readonly providerManager: IProviderManager,
+  ) {}
+}
 
 export interface IConfig {
   get<T>(key: string): T | undefined
@@ -13,7 +38,7 @@ export interface ILogger {
 }
 
 export interface IProviderManager {
-  init: () => Promise<BaseGenerateCommitProvider[]>
+  init: (logger?: ILogger) => Promise<BaseGenerateCommitProvider[]>
 }
 
 export interface IUIProvider {

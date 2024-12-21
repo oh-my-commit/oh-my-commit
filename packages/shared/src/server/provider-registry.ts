@@ -1,6 +1,8 @@
-import type { IProviderManager } from "@/common"
+import type { ILogger, IProviderManager } from "@/common"
+import { TOKENS } from "@/common"
 import fs from "node:fs"
 import path from "node:path"
+import { Inject, Service } from "typedi"
 import type { BaseGenerateCommitProvider } from "../common/generate-commit"
 import { ProviderSchema } from "../common/generate-commit"
 import { omcProvidersDir } from "./config"
@@ -8,10 +10,13 @@ import { omcProvidersDir } from "./config"
 /**
  * Provider Registry manages all available commit message providers
  */
+@Service()
 export class ProviderRegistry implements IProviderManager {
   private static instance: ProviderRegistry
   private providers = new Map<string, BaseGenerateCommitProvider>()
   private omcProvidersDir = omcProvidersDir
+
+  constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {}
 
   static getInstance(): ProviderRegistry {
     if (!ProviderRegistry.instance) {
@@ -22,18 +27,18 @@ export class ProviderRegistry implements IProviderManager {
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
-    console.log("Initializing ProviderRegistry")
+    this.logger.debug("Initializing ProviderRegistry")
     await this.loadProviders()
-    console.log(`Loaded ${this.providers.size} providers`)
+    this.logger.debug(`Loaded ${this.providers.size} providers`)
     return Array.from(this.providers.values())
   }
 
   /** Load all providers from user directory */
   private async loadProviders() {
-    console.log(`Loading user providers from ${this.omcProvidersDir}`)
+    this.logger.debug(`Loading user providers from ${this.omcProvidersDir}`)
     try {
       if (!fs.existsSync(this.omcProvidersDir)) {
-        console.log(`Creating providers directory: ${this.omcProvidersDir}`)
+        this.logger.debug(`Creating providers directory: ${this.omcProvidersDir}`)
         fs.mkdirSync(this.omcProvidersDir, { recursive: true })
         return
       }
@@ -42,45 +47,46 @@ export class ProviderRegistry implements IProviderManager {
       const providerDirs = directories.filter(dir => dir.isDirectory())
 
       for (const dir of providerDirs) {
-        console.log(`Loading provider from directory: ${dir.name}`)
+        this.logger.debug(`Loading provider from directory: ${dir.name}`)
         const filePath = path.join(this.omcProvidersDir, dir.name, "index.js")
         if (fs.existsSync(filePath)) {
           const provider = await loadProviderFromFile(filePath)
           if (provider) {
             this.registerProvider(provider)
           } else {
-            console.warn(`Failed to load provider from ${filePath}`)
+            this.logger.warn(`Failed to load provider from ${filePath}: Invalid provider format`)
           }
         } else {
-          console.warn(`index.js not found in ${dir.name}`)
+          this.logger.warn(`No index.js found in provider directory: ${dir.name}`)
         }
       }
     } catch (error) {
-      console.error("Failed to load user providers:", error)
+      this.logger.error(`Error loading providers: ${error}`)
+      throw error
     }
   }
 
   /** Register a new provider */
   registerProvider(provider: BaseGenerateCommitProvider) {
-    console.log(`Registering provider: ${provider.id}`)
+    this.logger.debug(`Registering provider: ${provider.id}`)
     if (this.providers.has(provider.id)) {
-      console.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
+      this.logger.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
       return
     }
     this.providers.set(provider.id, provider)
-    console.log(`Successfully registered provider: ${provider.id}`)
+    this.logger.debug(`Successfully registered provider: ${provider.id}`)
   }
 
   /** Get provider by id */
   getProvider(id: string): BaseGenerateCommitProvider | undefined {
     const provider = this.providers.get(id)
-    console.log(provider ? `Found provider: ${id}` : `Provider not found: ${id}`)
+    this.logger.debug(provider ? `Found provider: ${id}` : `Provider not found: ${id}`)
     return provider
   }
 
   /** Get all registered providers */
   getAllProviders(): BaseGenerateCommitProvider[] {
-    console.log(`Retrieving all providers. Count: ${this.providers.size}`)
+    this.logger.debug(`Retrieving all providers. Count: ${this.providers.size}`)
     return Array.from(this.providers.values())
   }
 }
