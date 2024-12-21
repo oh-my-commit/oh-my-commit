@@ -25,6 +25,9 @@ importers:
       neverthrow:
         specifier: ^8.1.1
         version: 8.1.1
+      reflect-metadata:
+        specifier: ^0.2.1
+        version: 0.2.2
       simple-git:
         specifier: ^3.27.0
         version: 3.27.0
@@ -7105,6 +7108,12 @@ packages:
       }
     engines: { node: ">= 0.10" }
 
+  reflect-metadata@0.2.2:
+    resolution:
+      {
+        integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==,
+      }
+
   reflect.getprototypeof@1.0.9:
     resolution:
       {
@@ -13153,6 +13162,8 @@ snapshots:
   rechoir@0.7.1:
     dependencies:
       resolve: 1.22.10
+
+  reflect-metadata@0.2.2: {}
 
   reflect.getprototypeof@1.0.9:
     dependencies:

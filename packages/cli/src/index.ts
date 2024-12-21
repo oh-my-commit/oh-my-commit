@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 
 import { cliCommitManager } from "@/cli-commit-manager"
-import { APP_NAME, ConsoleLogger, SETTING_MODEL_ID } from "@shared/common"
+import { APP_NAME, SETTING_MODEL_ID } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
+import "reflect-metadata"
 import { simpleGit } from "simple-git"
+
+console.log(chalk.blue("OMC"))
 
 // Initialize git and commit manager
 const git = simpleGit()
-const logger = new ConsoleLogger(APP_NAME)
 
 // Command handlers
 const listModels = async () => {
   try {
+    console.log(chalk.blue("Listing models..."))
     await cliCommitManager.initProviders()
     const models = cliCommitManager.models
     console.log(chalk.blue("Available models:"))
@@ -53,7 +56,7 @@ const selectModel = async (modelId: string) => {
     }
 
     // Set the selected model in config
-    await cliCommitManager.context.config.set(SETTING_MODEL_ID, modelId)
+    await cliCommitManager.config.update(SETTING_MODEL_ID, modelId)
     console.log(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
     console.error(chalk.red("Failed to select model:"), error)
@@ -80,7 +83,7 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
         process.exit(1)
       }
       // Set the selected model in config
-      await cliCommitManager.context.config.set(SETTING_MODEL_ID, options.model)
+      await cliCommitManager.config.update(SETTING_MODEL_ID, options.model)
     }
 
     const result = await cliCommitManager.generateCommit({
