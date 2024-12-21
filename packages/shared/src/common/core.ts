@@ -1,4 +1,4 @@
-import type { BaseGenerateCommitProvider, GenerateCommitInput } from "./generate-commit"
+import type { BaseGenerateCommitProvider } from "@/common/generate-commit"
 
 export interface IConfig {
   get<T>(key: string): T | undefined
@@ -12,13 +12,11 @@ export interface ILogger {
   debug(message: string, ...args: any[]): void
 }
 
+export interface IProviderManager {
+  init: () => Promise<BaseGenerateCommitProvider[]>
+}
+
 export interface IUIProvider {
   showError(message: string, ...actions: string[]): Promise<string | undefined>
   showInfo(message: string): Promise<string | undefined>
-}
-
-export interface ICommitManager {
-  providers: BaseGenerateCommitProvider[]
-  generateCommit(input: GenerateCommitInput): Promise<string>
-  selectModel(modelId: string): Promise<boolean>
 }

@@ -1,8 +1,7 @@
-import type { ICommitProvider } from "@/index"
 import Anthropic from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
 import {
-  APP_ID,
+  APP_ID_CAMEL,
   APP_NAME,
   BaseGenerateCommitProvider,
   GenerateCommitError,
@@ -25,7 +24,7 @@ class OmcStandardModel implements Model {
   id = OmcStandardModelId
   name = `Standard Model`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
-  providerId = APP_ID
+  providerId = APP_ID_CAMEL
   aiProviderId = "anthropic"
   metrics = {
     accuracy: 0.95,
@@ -34,16 +33,16 @@ class OmcStandardModel implements Model {
   }
 }
 
-export class OmcProvider extends BaseGenerateCommitProvider implements ICommitProvider {
-  id = APP_ID
+export class OmcOfficialProvider extends BaseGenerateCommitProvider {
+  id = APP_ID_CAMEL
   displayName = `${APP_NAME} Provider`
   description = `Commit message generation powered by ${APP_NAME} models`
   models = [new OmcStandardModel()]
   metadata = {
-    version: "1.0.0",
-    author: "Your Name",
-    homepage: "https://your-homepage.com",
-    repository: "https://your-repo.com",
+    version: "0.1.0",
+    author: "CS Magic",
+    homepage: "https://github.com/cs-magic-open/oh-my-commits",
+    repository: "https://github.com/cs-magic-open/oh-my-commits",
   }
 
   private anthropic: Anthropic | null = null

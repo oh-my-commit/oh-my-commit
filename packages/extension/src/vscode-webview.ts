@@ -4,7 +4,7 @@ import * as Handlebars from "handlebars"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { APP_ID, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared/common"
+import { APP_ID_CAMEL, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared/common"
 
 import { Loggable } from "@/features/mixins"
 import _ from "lodash"
@@ -78,7 +78,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
   public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
     this.logger.info("Creating webview panel...")
     const panel = vscode.window.createWebviewPanel(
-      APP_ID,
+      APP_ID_CAMEL,
       APP_NAME,
       {
         viewColumn: vscode.ViewColumn.One,

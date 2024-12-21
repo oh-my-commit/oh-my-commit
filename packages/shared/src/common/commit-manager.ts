@@ -1,31 +1,79 @@
 import type { DiffResult } from "simple-git"
 import { SETTING_MODEL_ID } from "./app"
-import type { IConfig, ILogger, IUIProvider } from "./core"
-import {
-  presetAiProviders,
-  type BaseGenerateCommitProvider,
-  type GenerateCommitOptions,
-} from "./generate-commit"
+import type { IConfig, ILogger, IProviderManager } from "./core"
+import type { BaseGenerateCommitProvider, GenerateCommitOptions } from "./generate-commit"
+
+export interface CommitManagerContext {
+  config: IConfig
+  logger: ILogger
+  providersManager: IProviderManager
+}
+
+export interface CommitManagerAdapter {
+  createConfig(): IConfig
+
+  createLogger(): ILogger
+
+  createProvidersManager(): IProviderManager
+}
+
+export type Status = "pending" | "running" | "success" | "error"
 
 export class CommitManager {
-  private providers: BaseGenerateCommitProvider[] = []
+  public providers: BaseGenerateCommitProvider[] = []
+  public context: CommitManagerContext
+  public status: {
+    loadingProviders: Status
+  } = {
+    loadingProviders: "pending",
+  }
 
-  constructor(
-    private config: IConfig,
-    private logger: ILogger,
-    private uiProvider: IUIProvider,
-  ) {}
+  constructor(context: CommitManagerContext) {
+    this.context = context
+    this.context.providersManager
+      .init()
+      .then(providers => {
+        this.providers = providers
+        this.context.logger.info(`Loaded ${providers.length} providers`)
+        this.status.loadingProviders = "success"
+      })
+      .catch(error => {
+        this.context.logger.error(`Failed to load providers: ${error}`)
+        this.status.loadingProviders = "error"
+      })
+  }
+
+  static create(adapter: CommitManagerAdapter) {
+    return new CommitManager({
+      config: adapter.createConfig(),
+      providersManager: adapter.createProvidersManager(),
+      logger: adapter.createLogger(),
+    })
+  }
+
+  // public initProviders(): void
+
+  private async update(key: string, value: any) {
+    try {
+      await this.context.config.update(key, value, true)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
 
   get models() {
     return this.providers.flatMap(p => p.models)
   }
 
   get modelId() {
-    return this.config.get<string>(SETTING_MODEL_ID)
+    return this.context.config.get<string>(SETTING_MODEL_ID)
   }
 
   get model() {
-    return this.models.find(model => model.id === this.modelId)
+    const model = this.models.find(model => model.id === this.modelId)
+    if (!model) this.context.logger.error(`Model ${this.modelId} not found`)
+    return model
   }
 
   get provider() {
@@ -34,35 +82,12 @@ export class CommitManager {
 
   get options(): GenerateCommitOptions {
     return {
-      lang: this.config.get("lang"),
+      lang: this.context.config.get("lang"),
     }
   }
 
   public async selectModel(modelId: string): Promise<boolean> {
-    const model = this.models.find(s => s.id === modelId)
-
-    if (!model) {
-      this.logger.error(`Model ${modelId} not found`)
-      return false
-    }
-
-    await this.config.update(SETTING_MODEL_ID, modelId, true)
-
-    const providerId = model.providerId
-    if (presetAiProviders.includes(providerId)) {
-      const response = await this.uiProvider.showError(
-        `使用该模型需要先填写目标 ${providerId.toUpperCase()}_API_KEY`,
-        "Configure Now",
-        "Configure Later",
-      )
-
-      if (response === "Configure Now") {
-        // Platform specific configuration should be handled by the UI provider
-        this.uiProvider.showInfo("Please configure your API key in the settings")
-      }
-    }
-
-    return true
+    return await this.update(SETTING_MODEL_ID, modelId)
   }
 
   public async generateCommit(diff: DiffResult) {
@@ -74,9 +99,5 @@ export class CommitManager {
 
     const options = this.options
     return provider.generateCommit({ model, diff, options })
-  }
-
-  public registerProvider(provider: BaseGenerateCommitProvider) {
-    this.providers.push(provider)
   }
 }

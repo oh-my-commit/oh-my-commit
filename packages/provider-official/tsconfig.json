@@ -3,9 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "~/.oh-my-commit/providers/official"
   },
-  "include": ["src/**/*"],
+  "include": ["./src/**/*"],
   "references": [
     {
       "path": "../shared"

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { APP_NAME, CommitManager, ConsoleLogger, OmcStandardModelId } from "@shared/common"
+import { cliCommitManager } from "@/cli-commit-manager"
+import { APP_NAME, ConsoleLogger, OmcStandardModelId } from "@shared/common"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
@@ -9,12 +10,10 @@ import { simpleGit } from "simple-git"
 const git = simpleGit()
 const logger = new ConsoleLogger(APP_NAME)
 
-const acManager = new CommitManager()
-
 // Command handlers
 const listModels = async () => {
   try {
-    const models = await acManager.getAvailableModels()
+    const models = cliCommitManager.models
     console.log(chalk.blue("Available models:"))
     for (const model of models) {
       if (model.id === OmcStandardModelId) {
@@ -43,19 +42,15 @@ const initConfig = async () => {
   }
 }
 
-const generateAndCommit = async (options: any) => {
+const generateAndCommit = async (options: { yes?: boolean }) => {
   console.log(chalk.blue("Generating commit message..."))
   try {
-    const model = options.model
-    const result = await acManager.generateCommit(
-      {
-        changed: 0, // TODO: Parse from git diff
-        files: [], // TODO: Parse from git diff
-        insertions: 0, // TODO: Parse from git diff
-        deletions: 0, // TODO: Parse from git diff
-      },
-      model,
-    )
+    const result = await cliCommitManager.generateCommit({
+      changed: 0, // TODO: Parse from git diff
+      files: [], // TODO: Parse from git diff
+      insertions: 0, // TODO: Parse from git diff
+      deletions: 0, // TODO: Parse from git diff
+    })
 
     const commitData = result.match(
       success => success,

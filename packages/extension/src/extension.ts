@@ -1,23 +1,16 @@
 import { CommandManager } from "@/commands/command-manager"
-import { VscodeConfig, VscodeExtensionLogger, VscodeUIProvider } from "@/vscode-adapters"
+import { vscodeCommitManager } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
 import { StatusBarManager } from "@/vscode-statusbar"
-import { CommitManager } from "@shared/common"
 
 import * as vscode from "vscode"
 
 export async function activate(context: vscode.ExtensionContext) {
   try {
-    const commitManager = new CommitManager(
-      new VscodeConfig(),
-      new VscodeExtensionLogger("host"),
-      new VscodeUIProvider(),
-    )
-
     const gitService = new VscodeGit()
-    new CommandManager(context, gitService, commitManager)
+    new CommandManager(context, gitService, vscodeCommitManager)
 
-    new StatusBarManager(commitManager, gitService)
+    new StatusBarManager(vscodeCommitManager, gitService)
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
