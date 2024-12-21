@@ -30,7 +30,7 @@ export class VscodeLogger extends BaseLogger {
     super(channel) // 确保调用父类构造函数
   }
 
-  protected log(level: LogLevel, ...args: any[]) {
+  protected _log(level: LogLevel, ...args: any[]) {
     const rawMessage = formatMessage(...args)
     const prefix = `omc.${this.channel}`
     this.logger[level]?.(`${prefix} ${rawMessage}`)
