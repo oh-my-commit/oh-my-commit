@@ -1,5 +1,5 @@
 import { Token } from "typedi"
-import type { BaseGenerateCommitProvider } from "./generate-commit"
+import type { BaseGenerateCommitProvider, CommitManager } from "./generate-commit"
 
 export interface ILogger {
   info(message: string, ...args: any[]): void
@@ -26,4 +26,6 @@ export const TOKENS = {
   Config: new Token<IConfig>("Config"),
   Logger: new Token<ILogger>("Logger"),
   ProviderManager: new Token<IProviderManager>("ProviderManager"),
+  CommitManager: new Token<CommitManager>("CommitManager"),
+  UIProvider: new Token<IUIProvider>("UIProvider"),
 } as const

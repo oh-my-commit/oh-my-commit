@@ -1,14 +1,8 @@
-import {
-  APP_NAME,
-  BaseLogger,
-  CommitManager,
-  formatMessage,
-  type IConfig,
-  type LogLevel,
-} from "@shared/common"
-import { ProviderRegistry } from "@shared/server"
+import { APP_NAME, BaseLogger, formatMessage, type IConfig, type LogLevel } from "@shared/common"
+import { Service } from "typedi"
 import vscode from "vscode"
 
+@Service()
 export class VscodeConfig implements IConfig {
   private config = vscode.workspace.getConfiguration()
 
@@ -21,24 +15,20 @@ export class VscodeConfig implements IConfig {
   }
 }
 
+@Service()
 export class VscodeLogger extends BaseLogger {
   private logger = vscode.window.createOutputChannel(APP_NAME, {
     log: true,
   })
 
-  constructor(channel = "host") {
-    super(channel) // 确保调用父类构造函数
+  constructor(name = "host") {
+    super(name)
   }
 
-  protected _log(level: LogLevel, ...args: any[]) {
-    const rawMessage = formatMessage(...args)
-    const prefix = `omc.${this.channel}`
+  protected log(level: LogLevel, ...args: any[]) {
+    // todo: better handle with formatMessage
+    const rawMessage = formatMessage("", ...args)
+    const prefix = `omc.${this.name}`
     this.logger[level]?.(`${prefix} ${rawMessage}`)
   }
 }
-
-export const vscodeCommitManager = CommitManager.create({
-  createLogger: () => new VscodeLogger(),
-  createProvidersManager: () => new ProviderRegistry(),
-  createConfig: () => new VscodeConfig(),
-})

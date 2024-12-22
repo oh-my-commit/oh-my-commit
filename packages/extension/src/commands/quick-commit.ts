@@ -1,30 +1,27 @@
-import { BaseCommand } from "@/vscode-command"
-import type { VscodeGit } from "@/vscode-git"
+import type { BaseCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VscodeGit } from "@/vscode-git"
+import { VSCODE_TOKENS } from "@/vscode-token"
 import { VscodeWebview } from "@/vscode-webview"
-import { COMMAND_QUICK_COMMIT, type CommitManager } from "@shared/common"
+import { COMMAND_QUICK_COMMIT, TOKENS, type CommitManager } from "@shared/common"
 import type { DiffResult } from "simple-git"
-import type * as vscode from "vscode"
+import { Inject, Service } from "typedi"
+import * as vscode from "vscode"
 
-export class QuickCommitCommand extends BaseCommand {
+@Service()
+export class QuickCommitCommand implements BaseCommand {
   public id = COMMAND_QUICK_COMMIT
   public name = "Quick Commit"
 
+  @Inject(VSCODE_TOKENS.GitService) private gitService!: VscodeGit
+  @Inject(TOKENS.CommitManager) private commitManager!: CommitManager
+  @Inject(TOKENS.Logger) private logger!: VscodeLogger
+  @Inject(VSCODE_TOKENS.Context) private context!: vscode.ExtensionContext
+
   private webviewManager: VscodeWebview
-  // todo: move it into shared
-  private gitService: VscodeGit
-  private acManager: CommitManager
 
-  constructor(
-    gitService: VscodeGit,
-    context: vscode.ExtensionContext,
-    commitManager: CommitManager,
-  ) {
-    super()
-    this.gitService = gitService
-
-    this.acManager = commitManager
-
-    this.webviewManager = new VscodeWebview(context, {
+  constructor() {
+    this.webviewManager = new VscodeWebview({
       onClientMessage: async message => {
         this.logger.info("QuickCommit received message:", message)
         switch (message.type) {
@@ -44,7 +41,7 @@ export class QuickCommitCommand extends BaseCommand {
     })
 
     // Clean up file watcher when extension is deactivated
-    context.subscriptions.push(this)
+    this.context.subscriptions.push(this)
   }
 
   public dispose(): void {
@@ -91,7 +88,7 @@ export class QuickCommitCommand extends BaseCommand {
     }
 
     this.logger.info("[QuickCommit] Generating commit via acManager...")
-    const commit = await this.acManager.generateCommit(diff)
+    const commit = await this.commitManager.generateCommit(diff)
     this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
 
     if (commit.isOk()) {

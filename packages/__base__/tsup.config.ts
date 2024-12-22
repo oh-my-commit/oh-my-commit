@@ -20,11 +20,11 @@ export default defineConfig({
       "@shared": resolve(__dirname, "../shared/src"),
     }
 
-    if (isDev) {
-      options.sourcemap = true
-      options.sourcesContent = true
-      options.sourceRoot = resolve(__dirname)
-    }
+    // if (isDev) {
+    //   options.sourcemap = true
+    //   options.sourcesContent = true
+    //   options.sourceRoot = resolve(__dirname)
+    // }
   },
 
 

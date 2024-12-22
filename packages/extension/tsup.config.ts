@@ -12,17 +12,16 @@ export default defineConfig({
       outDir: "../../dist",
     }
   },
-  esbuildOptions(options) {
-    options.sourcemap = true
-    options.sourcesContent = true
-    options.sourceRoot = "/"
-    options.keepNames = true
-    options.legalComments = "inline"
-    options.metafile = true
-    options.define = {
-      "process.env.NODE_ENV": '"development"'
-    }
-
-  }
+  // esbuildOptions(options) {
+  //   options.sourcemap = true
+  //   options.sourcesContent = true
+  //   options.sourceRoot = "/"
+  //   options.keepNames = true
+  //   options.legalComments = "inline"
+  //   options.metafile = true
+  //   options.define = {
+  //     "process.env.NODE_ENV": '"development"'
+  //   }
+  // }
   // onSuccess: "tsc --emitDeclarationOnly --declaration"
 })

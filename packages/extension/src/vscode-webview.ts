@@ -1,22 +1,37 @@
-import * as crypto from "crypto"
 import * as fs from "fs"
 import * as Handlebars from "handlebars"
 import * as path from "path"
 import * as vscode from "vscode"
 
-import { APP_ID_CAMEL, APP_NAME, type ClientMessageEvent, type LogLevel } from "@shared/common"
+import {
+  APP_ID_CAMEL,
+  APP_NAME,
+  TOKENS,
+  formatMessage,
+  type ClientMessageEvent,
+  type LogLevel,
+} from "@shared/common"
 
-import { Loggable } from "@/features/mixins"
 import _ from "lodash"
+import { Inject, Service } from "typedi"
+import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
+import { VSCODE_TOKENS } from "./vscode-token"
 
 type MessageHandler = (message: any) => Promise<void>
 
-export class VscodeWebview extends Loggable(class {}) implements vscode.Disposable {
+@Service()
+export class VscodeWebview implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
   private readonly scriptUri: vscode.Uri
   private readonly template
   private messageHandlers: Map<string, MessageHandler> = new Map()
   private onClientMessage?: (message: ClientMessageEvent) => Promise<void>
+
+  @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
+
+  @Inject(TOKENS.Config) private readonly config!: VscodeConfig
+
+  @Inject(VSCODE_TOKENS.Context) private readonly context!: vscode.ExtensionContext
 
   /**
    * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
@@ -28,34 +43,24 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
    */
   private readonly scriptPath: string
 
-  private context: vscode.ExtensionContext
-  private title: string
-
-  constructor(
-    context: vscode.ExtensionContext,
-    {
-      viewType = "webview",
-      title = "Webview",
-      templatePath = "assets/webview.template.html",
-      scriptPath = "dist/webview-ui/main.js",
-      onClientMessage,
-    }: {
-      viewType?: string
-      title?: string
-      templatePath?: string
-      scriptPath?: string
-      onClientMessage?: (message: ClientMessageEvent) => Promise<void>
-    },
-  ) {
-    super()
-    this.title = title
-    this.context = context
+  constructor({
+    viewType = "webview",
+    templatePath = "assets/webview.template.html",
+    scriptPath = "dist/webview-ui/main.js",
+    onClientMessage,
+  }: {
+    viewType?: string
+    title?: string
+    templatePath?: string
+    scriptPath?: string
+    onClientMessage?: (message: ClientMessageEvent) => Promise<void>
+  }) {
     this.onClientMessage = onClientMessage
     this.logger.info(`Creating ${viewType} webview`)
 
     // load template
     this.templatePath = templatePath
-    this.templatePath = path.join(context.extensionPath, this.templatePath)
+    this.templatePath = path.join(this.context.extensionPath, this.templatePath)
     const templateContent = fs.readFileSync(this.templatePath, "utf8")
     this.template = Handlebars.compile(templateContent)
 
@@ -64,7 +69,7 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
     this.scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, this.scriptPath))
 
     // register webview
-    context.subscriptions.push(this)
+    this.context.subscriptions.push(this)
   }
 
   public get uiMode(): string {
@@ -111,8 +116,8 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
           }
           break
       }
-      this.logger.setChannel(`webview.${webviewChannel}`)
-      this.logger[level](message)
+      this.logger.setName(`webview.${webviewChannel}`)
+      this.logger[level](formatMessage("", message))
     })
 
     // Set up file watcher
@@ -208,10 +213,6 @@ export class VscodeWebview extends Loggable(class {}) implements vscode.Disposab
             style-src ${webview.cspSource} 'unsafe-inline';
             font-src ${webview.cspSource};
             connect-src ws://localhost:8081 ${webview.cspSource};`
-  }
-
-  private getNonce(): string {
-    return crypto.randomBytes(16).toString("base64")
   }
 
   private getScriptUri(): vscode.Uri {
