@@ -10,6 +10,6 @@
     { "path": "./packages/cli" },
 
     // providers
-    { "path": "./packages/provider-official" },
+    { "path": "./packages/provider-official" }
   ]
 }

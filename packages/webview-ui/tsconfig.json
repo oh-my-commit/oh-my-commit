@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "types": ["vscode"],
     "moduleResolution": "bundler",
-    "module": "ESNext",
+    "module": "ESNext"
   },
   "include": ["src/**/*"],
   "references": [
