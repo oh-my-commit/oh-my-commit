@@ -13,4 +13,9 @@ export default defineConfig({
   noExternal: [/.*/], // 打包所有依赖
   outDir: path.join(PROVIDERS_DIR, "official"),
   // onSuccess: "tsc --experimentalDecorators --emitDecoratorMetadata",
+  esbuildOptions: options => {
+    options.alias = {
+      "@shared": path.resolve(__dirname, "../shared/src"),
+    }
+  },
 })

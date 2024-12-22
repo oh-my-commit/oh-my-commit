@@ -4,8 +4,8 @@ import { Inject, Service } from "typedi"
 import { z } from "zod"
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
-import { formatMessage, type ResultDTO } from "./utils"
 import { BaseLogger } from "./log"
+import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
 
@@ -44,7 +44,11 @@ export class CommitManager {
   }
 
   private async doInitProviders() {
-    this.logger.info("[CommitManager] Loading providers: ", {logger: this.logger, config: this.config, providersManager: this.providersManager})
+    this.logger.info("[CommitManager] Loading providers: ", {
+      logger: this.logger,
+      config: this.config,
+      providersManager: this.providersManager,
+    })
     this.status.loadingProviders = "running"
     try {
       this.providers = await this.providersManager.init()
@@ -158,9 +162,7 @@ export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
 @Service()
 export abstract class BaseGenerateCommitProvider implements IProvider {
-
   @Inject(TOKENS.Logger) public logger!: BaseLogger
-
 
   abstract id: string
 

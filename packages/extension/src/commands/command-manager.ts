@@ -41,7 +41,7 @@ export class CommandManager extends Loggable(class {}) {
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Unknown error occurred"
         this.logger.error(`Command ${id} failed: ${message}`)
-        vscode.window.showErrorMessage(`Command failed: ${message}`)
+        void vscode.window.showErrorMessage(`Command failed: ${message}`)
       }
     })
 

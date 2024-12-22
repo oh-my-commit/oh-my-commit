@@ -9,7 +9,11 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
+    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo",
+    "type-check": "tsc --build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

@@ -5,13 +5,18 @@
   "exports": {
     "./common": {
       "types": "./dist/common/index.d.ts",
-      "import": "./dist/common/index.mjs",
-      "require": "./dist/common/index.js"
+      "import": "./dist/common/index.js",
+      "require": "./dist/common/index.cjs"
     },
     "./server": {
       "types": "./dist/server/index.d.ts",
-      "import": "./dist/server/index.mjs",
-      "require": "./dist/server/index.js"
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
+    },
+    "./server/config": {
+      "types": "./dist/server/config.d.ts",
+      "import": "./dist/server/config.js",
+      "require": "./dist/server/config.cjs"
     }
   },
   "scripts": {
