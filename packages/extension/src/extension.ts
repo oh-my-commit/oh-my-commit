@@ -4,7 +4,7 @@ import Container from "typedi"
 import * as vscode from "vscode"
 import { VSCODE_TOKENS } from "./vscode-token"
 
-console.log({ aaa: "123       " })
+console.log({ aaa: "123  " })
 
 export async function activate(context: vscode.ExtensionContext) {
   try {
@@ -31,7 +31,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
-    console.log("Extension activated 5 ")
+    console.log("Extension activated 56 ")
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error occurred"
     void vscode.window.showErrorMessage(`Failed to initialize Oh My Commit: ${message}`)
