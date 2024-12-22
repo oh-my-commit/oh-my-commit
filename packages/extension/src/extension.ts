@@ -30,7 +30,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
-    console.log("Extension activated 3")
+    console.log("Extension activated 4")
+
 
 
   } catch (error: unknown) {

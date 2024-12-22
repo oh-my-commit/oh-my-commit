@@ -1,31 +1,20 @@
 import { resolve } from "path"
 import { defineConfig } from "tsup"
 
-const isDev = true; // process.env.NODE_ENV === "development"
-
+const isDev = process.env.NODE_ENV !== "production"
 
 export default defineConfig({
-  clean: true,
-  // 必须，否则打包有问题
+  clean: isDev ? false : true,
   dts: false,
-
   minify: !isDev,
   sourcemap: isDev,
-  splitting: true,
-  treeshake: true,
+  splitting: false, 
+  treeshake: !isDev,
   format: ["cjs", "esm"],
   esbuildOptions(options) {
     options.alias = {
       "@": resolve("src"),
       "@shared": resolve(__dirname, "../shared/src"),
     }
-
-    // if (isDev) {
-    //   options.sourcemap = true
-    //   options.sourcesContent = true
-    //   options.sourceRoot = resolve(__dirname)
-    // }
   },
-
-
 })

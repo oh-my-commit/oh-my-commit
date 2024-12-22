@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
+    "dev": "nodemon --watch src -e ts --exec 'tsup'",
     "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
     "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo",
     "type-check": "tsc --noEmit"
@@ -27,6 +27,7 @@
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.80.0",
     "esbuild": "^0.19.11",
+    "nodemon": "^2.0.22",
     "tsup": "^8.3.5",
     "typescript": "^5.0.2",
     "vsce": "^2.15.0"
