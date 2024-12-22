@@ -1,22 +1,28 @@
-import { Loggable } from "@/features/mixins"
-import type { VscodeGit } from "@/vscode-git"
-import { APP_ID_CAMEL, APP_NAME, COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
+import { VscodeGit } from "@/vscode-git"
+import {
+  APP_ID_CAMEL,
+  APP_NAME,
+  BaseLogger,
+  COMMAND_SELECT_MODEL,
+  TOKENS,
+  type CommitManager,
+} from "@shared/common"
+import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+import { VSCODE_TOKENS } from "./vscode-token"
 
-export class StatusBarManager extends Loggable(class {}) implements vscode.Disposable {
-  private gitService: VscodeGit
-  private commitManager: CommitManager
-
+@Service()
+export class StatusBarManager implements vscode.Disposable {
   private disposables: vscode.Disposable[] = []
   private statusBarItem: vscode.StatusBarItem
 
-  constructor(commitManager: CommitManager, gitService: VscodeGit) {
-    super()
+  @Inject(TOKENS.Logger) private readonly logger!: BaseLogger
+  @Inject(TOKENS.CommitManager) private readonly commitManager!: CommitManager
+  @Inject(VSCODE_TOKENS.GitService) private readonly gitService!: VscodeGit
 
-    this.commitManager = commitManager
+  constructor() {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
-    this.gitService = gitService
 
     // 监听配置变化
     this.disposables.push(

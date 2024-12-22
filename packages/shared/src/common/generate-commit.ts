@@ -27,6 +27,18 @@ export class CommitManager {
     return this.providers.flatMap(provider => provider.models)
   }
 
+  get modelId() {
+    return this.config.get<string>(SETTING_MODEL_ID)
+  }
+
+  get model() {
+    return this.models.find(model => model.id === this.modelId)
+  }
+
+  selectModel(modelId: string) {
+    this.config.update(SETTING_MODEL_ID, modelId)
+  }
+
   /**
    * 线程安全的初始化方法
    */

@@ -3,7 +3,7 @@ import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
-export type LogLevel = "debug" | "info" | "warn" | "error" | "trace"
+export type LogLevel = "debug" | "trace" | "info" | "warn" | "error"
 
 const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
   debug: 10,
@@ -62,8 +62,12 @@ function getCallerInfo(): string {
 export abstract class BaseLogger implements ILogger {
   protected minLevel: LogLevel
 
-  constructor(protected readonly name?: string) {
+  constructor(protected name?: string) {
     this.minLevel = getLogLevelFromEnv()
+  }
+
+  setName(name: string): void {
+    this.name = name
   }
 
   setMinLevel(level: LogLevel): void {
@@ -88,6 +92,10 @@ export abstract class BaseLogger implements ILogger {
 
   debug(message: string, ...args: any[]): void {
     this._log("debug", message, ...args)
+  }
+
+  trace(message: string, ...args: any[]): void {
+    this._log("trace", message, ...args)
   }
 
   protected _log(level: LogLevel, message: string, ...args: any[]): void {

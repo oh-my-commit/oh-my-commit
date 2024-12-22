@@ -1,21 +1,20 @@
-import { BaseCommand, type VscodeCommand } from "@/vscode-command"
-import { COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
+import type { BaseCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
+import { COMMAND_SELECT_MODEL, TOKENS, type CommitManager } from "@shared/common"
+import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-export class SelectModelCommand extends BaseCommand implements VscodeCommand {
+@Service()
+export class SelectModelCommand implements BaseCommand {
   public id = COMMAND_SELECT_MODEL
 
-  private acManager: CommitManager
-
-  constructor(acManager: CommitManager) {
-    super()
-    this.acManager = acManager
-  }
+  @Inject(TOKENS.CommitManager) private commitManager!: CommitManager
+  @Inject(TOKENS.Logger) private logger!: VscodeLogger
 
   async execute(): Promise<void> {
     this.logger.info("Manage models command triggered")
 
-    if (this.acManager.models.length === 0) {
+    if (this.commitManager.models.length === 0) {
       this.logger.info("No available models found")
       vscode.window.showErrorMessage("No available models")
       return
@@ -23,14 +22,14 @@ export class SelectModelCommand extends BaseCommand implements VscodeCommand {
 
     try {
       const selected = await vscode.window.showQuickPick(
-        this.acManager.models.map(s => ({
+        this.commitManager.models.map(s => ({
           ...s,
           label: s.name,
           description: s.description,
           detail: s.metrics
             ? `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}`
             : "No metrics available",
-          picked: this.acManager.model?.id === s.id,
+          picked: this.commitManager.model?.id === s.id,
         })),
         {
           placeHolder: "Select AI Model to Use",
@@ -40,12 +39,16 @@ export class SelectModelCommand extends BaseCommand implements VscodeCommand {
       )
 
       if (selected) {
-        await this.acManager.selectModel(selected.id)
+        await this.commitManager.selectModel(selected.id)
       }
     } catch (error: unknown) {
       console.error("Error in manage models command:", error)
       const message = error instanceof Error ? error.message : "Unknown error occurred"
       vscode.window.showErrorMessage(`Failed to manage models: ${message}`)
     }
+  }
+
+  async dispose(): Promise<void> {
+    this.logger.info("Manage models command disposed")
   }
 }

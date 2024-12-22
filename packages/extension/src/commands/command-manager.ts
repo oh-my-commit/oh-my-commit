@@ -1,34 +1,30 @@
-import { OpenPreferencesCommand } from "@/commands/open-preferences"
-import { QuickCommitCommand } from "@/commands/quick-commit"
-import { SelectModelCommand } from "@/commands/select-model"
-import { Loggable } from "@/features/mixins"
 import type { VscodeCommand } from "@/vscode-command"
-import type { VscodeGit } from "@/vscode-git"
+import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VSCODE_TOKENS } from "@/vscode-token"
 import {
   COMMAND_OPEN_PREFERENCE,
   COMMAND_QUICK_COMMIT,
   COMMAND_SELECT_MODEL,
-  type CommitManager,
+  TOKENS,
 } from "@shared/common"
+import { Container, Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-export class CommandManager extends Loggable(class {}) {
+@Service()
+export class CommandManager {
   private readonly commands: Map<string, VscodeCommand> = new Map()
 
-  constructor(
-    private readonly context: vscode.ExtensionContext,
-    private readonly gitService: VscodeGit,
-    private readonly commitManager: CommitManager,
-  ) {
-    super()
+  @Inject(VSCODE_TOKENS.Context) private readonly context!: vscode.ExtensionContext
+  @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
 
+  constructor() {
     // Register all commands
-    this.registerCommand(COMMAND_OPEN_PREFERENCE, new OpenPreferencesCommand())
     this.registerCommand(
-      COMMAND_QUICK_COMMIT,
-      new QuickCommitCommand(gitService, context, commitManager),
+      COMMAND_OPEN_PREFERENCE,
+      Container.get(VSCODE_TOKENS.OpenPreferencesService),
     )
-    this.registerCommand(COMMAND_SELECT_MODEL, new SelectModelCommand(commitManager))
+    this.registerCommand(COMMAND_QUICK_COMMIT, Container.get(VSCODE_TOKENS.QuickCommitService))
+    this.registerCommand(COMMAND_SELECT_MODEL, Container.get(VSCODE_TOKENS.SelectModelService))
   }
 
   private registerCommand(id: string, command: VscodeCommand): void {
