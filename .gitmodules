@@ -7,3 +7,6 @@
 [submodule "third-parties/typedi"]
 	path = third-parties/typedi
 	url = git@github.com:typestack/typedi.git
+[submodule "third-parties/tsup"]
+	path = third-parties/tsup
+	url = git@github.com:egoist/tsup.git
