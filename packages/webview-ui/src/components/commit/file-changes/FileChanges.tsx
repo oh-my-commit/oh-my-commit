@@ -5,9 +5,8 @@ import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
 
 import { useAtom } from "jotai"
-import { useCallback, useEffect, type FC } from "react"
+import { useCallback, type FC } from "react"
 
-import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 import {
   diffResultAtom,
   lastOpenedFilePathAtom,
@@ -56,12 +55,12 @@ export const FileChanges: FC = () => {
       case "flat":
         return (
           <FlatView
+            hasOpenedFile={!!lastOpenedFilePath}
+            searchQuery={searchQuery || ""}
             selectedFiles={selectedFiles}
             selectedPath={lastOpenedFilePath || undefined}
-            searchQuery={searchQuery || ""}
-            hasOpenedFile={!!lastOpenedFilePath}
-            onSelect={handleSelect}
             onClick={handleClick}
+            onSelect={handleSelect}
           />
         )
       case "tree":
@@ -71,17 +70,8 @@ export const FileChanges: FC = () => {
     }
   }
 
-  useEffect(() => {
-    vscodeClientLogger.setChannel("file-changes")
-    vscodeClientLogger.info({
-      selectedFiles,
-      lastOpenedFilePath,
-    })
-  }, [selectedFiles, lastOpenedFilePath])
-
   return (
     <Section
-      title="Changed Files"
       actions={
         hasSelectionChanged ? (
           <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
@@ -90,6 +80,7 @@ export const FileChanges: FC = () => {
           </div>
         ) : undefined
       }
+      title="Changed Files"
     >
       <div className="flex flex-col sm:flex-row h-full relative">
         <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">

@@ -6,7 +6,7 @@ import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import { useAtom } from "jotai"
 import { useEffect, useRef, useState } from "react"
 
@@ -109,12 +109,8 @@ export function CommitMessage() {
           >
             {isRegenerating ? (
               <span className="w-full flex items-center gap-2">
-                <vscode-progress-ring
-                  style={{
-                    width: "16px",
-                    height: "16px",
-                    "--vscode-progressBar-background": "var(--vscode-button-foreground)",
-                  }}
+                <VSCodeProgressRing
+                className="w-4 h-4 bg-[var(--vscode-button-foreground)]"
                 />
               </span>
             ) : (
