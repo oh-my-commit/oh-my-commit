@@ -31,7 +31,8 @@
     "type-check": "tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "clean:modules": "./packages/scripts/clean-modules.sh"
   },
   "devDependencies": {
     "@cs-magic/eslint-config": "^0.6.1",

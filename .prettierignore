@@ -9,5 +9,6 @@ build
 *.d.ts
 
 __essence__
+third-parties  
 
 .vitepress
