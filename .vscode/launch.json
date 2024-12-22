@@ -7,6 +7,15 @@
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
+      "trace": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "sourceMapRenames": true,
+      "sourceMapPathOverrides": {
+        "webpack:///*": "${workspaceFolder}/*",
+        "webpack:///./*": "${workspaceFolder}/*",
+        "webpack:///src/*": "${workspaceFolder}/src/*"
+      },
       "preLaunchTask": "pnpm: dev",
       "env": {
         "NODE_ENV": "development",

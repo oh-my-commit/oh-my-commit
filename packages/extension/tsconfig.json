@@ -3,9 +3,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "../../dist",
 
-    "types": ["vscode"]
+    "types": ["vscode"],
+
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
   },
   "include": ["src/**/*"],
   "references": [

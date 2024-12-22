@@ -2,5 +2,14 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsserver.pluginPaths": [],
-  "typescript.tsserver.experimental.enableProjectDiagnostics": false
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+    "debug.node.autoAttach": "on",
+    "debug.javascript.autoAttachFilter": "always",
+    "debug.javascript.terminalOptions": {
+        "skipFiles": [
+            "<node_internals>/**"
+        ]
+    },
+    "debug.javascript.usePreview": true,
+    "debug.javascript.codelens.npmScripts": "all"
 }
