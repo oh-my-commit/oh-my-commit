@@ -1,6 +1,6 @@
 import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import cn from "classnames"
-import React from "react"
+import * as React from "react"
 
 export const MessageInput = ({
   value,

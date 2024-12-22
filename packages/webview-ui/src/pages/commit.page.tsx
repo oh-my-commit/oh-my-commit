@@ -6,7 +6,7 @@ import { useCloseWindow } from "@/hooks/use-close-window"
 import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message"
-import { ServerMessageEvent } from "@shared/common"
+import type { ServerMessageEvent } from "@shared/common"
 
 import { useSetAtom } from "jotai"
 import { useEffect } from "react"
@@ -62,7 +62,6 @@ export const CommitPage = () => {
     }
   }, [])
 
-  vscodeClientLogger.setChannel("CommitPage")
   vscodeClientLogger.info("== rendered ==")
 
   return (

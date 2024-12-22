@@ -7,7 +7,11 @@
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development",
-    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
+    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo",
+    "type-check": "tsc --build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@oh-my-commit/shared": "workspace:*",
@@ -28,6 +32,7 @@
     "@types/react-dom": "^18.2.0",
     "@types/vscode-webview": "^1.57.0",
     "css-loader": "^6.7.1",
+    "eslint-import-resolver-typescript": "^3.7.0",
     "html-webpack-plugin": "^5.5.0",
     "postcss-loader": "^8.1.1",
     "react-refresh": "^0.16.0",

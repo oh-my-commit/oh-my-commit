@@ -1,6 +1,6 @@
 import { getVSCodeAPI } from "@/lib/getVSCodeAPI"
 import { APP_NAME } from "@shared/common"
-import React from "react"
+import * as React from "react"
 import packageJson from "../../package.json"
 
 interface FooterProps {

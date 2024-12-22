@@ -1,6 +1,6 @@
 {
-  "extends": "./tsconfig.base.json",
   // 如果不加这个的话，默认为编译当前目录下所有的 ts 文件，这不符合预期
+  "files": [],
   "include": [],
   // 我们希望这里只是一个入口，具体编译哪些文件由各个子包决定
   "references": [
@@ -10,6 +10,6 @@
     { "path": "./packages/cli" },
 
     // providers
-    { "path": "./packages/provider-official" }
+    { "path": "./packages/provider-official" },
   ]
 }

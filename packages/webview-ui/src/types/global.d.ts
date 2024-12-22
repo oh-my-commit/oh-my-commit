@@ -1,3 +1,5 @@
+import * as React from "react"
+
 namespace JSX {
   interface IntrinsicElements {
     "vscode-divider": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>

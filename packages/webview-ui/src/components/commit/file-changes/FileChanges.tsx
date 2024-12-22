@@ -5,7 +5,7 @@ import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
 
 import { useAtom } from "jotai"
-import React, { useCallback, useEffect } from "react"
+import { useCallback, useEffect, type FC } from "react"
 
 import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 import {
@@ -18,7 +18,7 @@ import { EmptyState } from "./EmptyState"
 import { FlatView } from "./FlatView"
 import { SearchBar } from "./SearchBar"
 
-export const FileChanges: React.FC = () => {
+export const FileChanges: FC = () => {
   const [diffResult, setDiffResult] = useAtom(diffResultAtom)
   const initialSelection = diffResult?.files?.map(file => file.file) || []
 

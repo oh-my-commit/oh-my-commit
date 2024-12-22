@@ -18,7 +18,7 @@ export function CommitMessage() {
   const [body, setBody] = useAtom(commitBodyAtom)
   const [showTooltip, setShowTooltip] = useState(false)
   const [isRegenerating, setIsRegenerating] = useState(false)
-  const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
+  const [selectedFiles, _setSelectedFiles] = useAtom(selectedFilesAtom)
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
   const isSubjectValid = subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH
@@ -50,9 +50,8 @@ export function CommitMessage() {
 
   return (
     <Section
-      title="Commit Message"
       actions={
-        <div className="relative" ref={tooltipContainerRef}>
+        <div ref={tooltipContainerRef} className="relative">
           <button
             className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
             onClick={() => setShowTooltip(!showTooltip)}
@@ -62,28 +61,29 @@ export function CommitMessage() {
           {showTooltip && <CommitFormatTooltip />}
         </div>
       }
+      title="Commit Message"
     >
       <Section.Content>
         <div className="flex flex-col gap-1.5">
           <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">Summary</div>
           <MessageInput
-            value={title}
+            className="h-[32px]"
             maxLength={MAX_SUBJECT_LENGTH}
             placeholder="Write a brief description of your changes"
+            value={title}
             onChange={setTitle}
-            className="h-[32px]"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
           <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">Details</div>
           <MessageInput
-            value={body}
+            multiline
+            className="min-h-[120px]"
             maxLength={MAX_DETAIL_LENGTH}
             placeholder="Add a detailed description of your changes (optional)"
+            value={body}
             onChange={setBody}
-            className="min-h-[120px]"
-            multiline
           />
         </div>
       </Section.Content>
@@ -95,15 +95,15 @@ export function CommitMessage() {
           </span>
         )}
         <FeedbackButton
+          disabled={disabled}
           onFeedback={() => {
             // todo: feedback
           }}
-          disabled={disabled}
         />
         <div className="flex items-center gap-4 shrink-0">
           <VSCodeButton
-            className="w-32 shrink-0 overflow-hidden"
             appearance="secondary"
+            className="w-32 shrink-0 overflow-hidden"
             disabled={isRegenerating}
             onClick={handleRegenerate}
           >

@@ -7,8 +7,8 @@
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react-jsx",
     "types": ["vscode"],
-    "moduleResolution": "Node",
-    "module": "ESNext"
+    "moduleResolution": "bundler",
+    "module": "ESNext",
   },
   "include": ["src/**/*"],
   "references": [

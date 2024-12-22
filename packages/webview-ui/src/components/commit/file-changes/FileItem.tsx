@@ -2,7 +2,8 @@ import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
 
 import { basename } from "@/utils/path"
-import React, { useEffect } from "react"
+import * as React from "react"
+import { useEffect } from "react"
 import type { DiffResult } from "simple-git"
 import { Checkbox } from "../../common/Checkbox"
 
@@ -71,9 +72,10 @@ export const FileItem: React.FC<FileItemProps> = ({
   }
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out",
+        "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out w-full text-left",
         isOpen
           ? "bg-list-active-bg text-list-active-fg shadow-sm"
           : selected
@@ -81,17 +83,24 @@ export const FileItem: React.FC<FileItemProps> = ({
             : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50",
       )}
       onClick={handleClick}
+      onKeyDown={e => {
+        if (e.key === "Enter" || e.key === " ") {
+          handleClick()
+        }
+      }}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
-        <div
-          className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100 cursor-pointer"
+        <button
+          type="button"
+          className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100"
           onClick={e => {
             e.stopPropagation()
             handleSelect()
           }}
+          aria-label={selected ? "Deselect file" : "Select file"}
         >
           <Checkbox checked={selected} onChange={handleSelect} />
-        </div>
+        </button>
 
         <div className="flex-1 flex items-center gap-2 truncate text-[13px] pl-1 pr-2">
           <div className="flex items-center gap-0.5 transition-colors duration-100">
@@ -110,8 +119,8 @@ export const FileItem: React.FC<FileItemProps> = ({
 
           <span className="truncate">
             <HighlightText
-              text={viewMode === "tree" ? basename(file.file) : file.file}
               highlight={searchQuery}
+              text={viewMode === "tree" ? basename(file.file) : file.file}
               onMatchCount={setPathMatchCount}
             />
           </span>
@@ -147,6 +156,6 @@ export const FileItem: React.FC<FileItemProps> = ({
           </span>
         )}
       </div>
-    </div>
+    </button>
   )
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 import { cn } from "../../lib/utils"
 
 interface CheckboxProps {
@@ -9,13 +9,14 @@ interface CheckboxProps {
 
 export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className }) => {
   return (
-    <div className={cn("w-3 h-3 relative", className)} onClick={e => e.stopPropagation()}>
+    <label className={cn("w-3 h-3 relative block", className)}>
       <input
         type="checkbox"
         className="absolute inset-0 cursor-pointer opacity-0 w-full h-full z-10"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
         onClick={e => e.stopPropagation()}
+        aria-checked={checked}
       />
       <div
         className={cn(
@@ -24,9 +25,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className
           checked &&
             "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]",
         )}
+        aria-hidden="true"
       />
       {checked && (
-        <div className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]">
+        <div
+          className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]"
+          aria-hidden="true"
+        >
           <svg
             className="w-2 h-2"
             viewBox="0 0 16 16"
@@ -40,6 +45,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className
           </svg>
         </div>
       )}
-    </div>
+    </label>
   )
 }

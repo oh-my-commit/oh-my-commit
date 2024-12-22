@@ -1,6 +1,6 @@
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 import { useAtom } from "jotai"
-import React from "react"
+import * as React from "react"
 import type { FileChange } from "../../../state/types"
 import { FileItem } from "./FileItem"
 
