@@ -28,6 +28,7 @@
     "@types/vscode": "^1.80.0",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",
+    "tsup": "workspace:^",
     "typescript": "^5.0.2",
     "vsce": "^2.15.0"
   }
