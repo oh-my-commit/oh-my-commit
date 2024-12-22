@@ -1,12 +1,17 @@
 import { defineConfig } from "tsup"
-import baseConfig from "../__base__/tsup.config"
 
 export default defineConfig({
-  ...baseConfig,
-  entry: ["./src/extension.ts"],
+  entry: ["src/extension.ts"],
   outDir: "../../dist",
   format: ["cjs"],
-  watch: "./src/**/*.ts",  // 直接指定监听的文件模式
+  platform: "node",
+  target: "node16",
   sourcemap: true,
   clean: false,
+  minify: false,
+  watch: true,
+  esbuildOptions(options) {
+    options.external = ["vscode"]
+    options.keepNames = true
+  }
 })
