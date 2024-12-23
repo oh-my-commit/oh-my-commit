@@ -45,7 +45,9 @@ export async function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.ProviderRegistry, Container.get(ProviderRegistry))
 
     logger.info("Initializing Commit Manager")
-    Container.set(TOKENS.CommitManager, Container.get(CommitManager))
+    const commitManager = Container.get(CommitManager)
+    await commitManager.initProviders()
+    Container.set(TOKENS.CommitManager, commitManager)
 
     logger.info("Initializing Quick Commit Command")
     const quickCommitCommand = Container.get(QuickCommitCommand)
