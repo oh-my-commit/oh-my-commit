@@ -9,6 +9,9 @@ import {
 } from "@shared/common"
 import { Container, Inject, Service } from "typedi"
 import * as vscode from "vscode"
+import { OpenPreferencesCommand } from "./open-preferences"
+import { QuickCommitCommand } from "./quick-commit"
+import { SelectModelCommand } from "./select-model"
 
 @Service()
 export class CommandManager {
@@ -17,16 +20,11 @@ export class CommandManager {
   @Inject(VSCODE_TOKENS.Context) private readonly context!: vscode.ExtensionContext
   @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
 
-  constructor() {
-    this.logger.info("Initializing command manager")
-
+  initialize() {
     // Register all commands
-    this.registerCommand(
-      COMMAND_OPEN_PREFERENCE,
-      Container.get(VSCODE_TOKENS.OpenPreferencesService),
-    )
-    this.registerCommand(COMMAND_QUICK_COMMIT, Container.get(VSCODE_TOKENS.QuickCommitService))
-    this.registerCommand(COMMAND_SELECT_MODEL, Container.get(VSCODE_TOKENS.SelectModelService))
+    this.registerCommand(COMMAND_OPEN_PREFERENCE, Container.get(OpenPreferencesCommand))
+    this.registerCommand(COMMAND_QUICK_COMMIT, Container.get(QuickCommitCommand))
+    this.registerCommand(COMMAND_SELECT_MODEL, Container.get(SelectModelCommand))
   }
 
   private registerCommand(id: string, command: VscodeCommand): void {
