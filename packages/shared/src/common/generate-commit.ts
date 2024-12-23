@@ -56,11 +56,11 @@ export class CommitManager {
   }
 
   private async doInitProviders() {
-    this.logger.info("[CommitManager] Loading providers: ", {
-      logger: this.logger,
-      config: this.config,
-      providersManager: this.providersManager,
-    })
+    // this.logger.info("[CommitManager] Loading providers: ", {
+    //   logger: this.logger,
+    //   config: this.config,
+    //   providersManager: this.providersManager,
+    // })
     this.status.loadingProviders = "running"
     try {
       this.providers = await this.providersManager.init()

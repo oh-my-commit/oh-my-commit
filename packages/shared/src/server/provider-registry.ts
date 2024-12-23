@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
-import { Inject, Service } from "typedi"
+import { Container, Inject, Service } from "typedi"
 import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
@@ -86,10 +86,16 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
+      this.logger.info(`Loading provider from file ==: ${filePath}`)
       const Provider = await jiti.import(filePath, { default: true })
+      this.logger.info(`imported provider: `)
+      this.logger.info(Provider)
 
       // @ts-expect-error - Provider must be a subclass of BaseGenerateCommitProvider
-      const provider = new Provider()
+      const provider = Container.get(Provider) as BaseGenerateCommitProvider
+      // const provider = new Provider()
+      this.logger.info(`Loaded provider: `)
+      this.logger.info(provider)
 
       ProviderSchema.parse(provider)
       return provider

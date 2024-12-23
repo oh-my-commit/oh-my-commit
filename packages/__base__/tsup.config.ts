@@ -1,7 +1,7 @@
 import { resolve } from "path"
 import { defineConfig } from "tsup"
 
-const isDev = process.env.NODE_ENV !== "production"
+const isDev = true // process.env.NODE_ENV !== "production"
 
 export default defineConfig({
   clean: isDev ? false : true,
