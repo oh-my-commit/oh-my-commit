@@ -16,10 +16,13 @@
     "@oh-my-commit/shared": "workspace:*",
     "lodash-es": "^4.17.21",
     "neverthrow": "^8.1.1",
+    "reflect-metadata": "^0.2.1",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
-    "tsup": "workspace:^"
+    "@types/node": "^22.10.2",
+    "tsup": "workspace:^",
+    "typescript": "^5.7.2"
   }
 }

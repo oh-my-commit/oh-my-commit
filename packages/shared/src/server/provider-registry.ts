@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
-import { Container, Inject, Service, Token } from "typedi"
+import { Container, Inject, Service } from "typedi"
 import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
@@ -92,6 +92,8 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
+      // 动态导入辅助函数
+
       const module = jiti(filePath)
       const Provider = module.default
 
@@ -100,28 +102,10 @@ export class ProviderRegistry implements IProviderManager {
         return null
       }
 
-      this.logger.debug(`Provider prototype: ${Object.getOwnPropertyNames(Provider.prototype)}`)
-      // @ts-ignore
-      this.logger.debug(`Provider metadata: ${Reflect.getMetadataKeys(Provider)}`)
-
-      // 确保 logger 已经被注册
-      Container.set(TOKENS.Logger, this.logger)
-      this.logger.debug(`Container has logger: ${Container.has(TOKENS.Logger)}`)
-
-      // 注册环境变量
-      Container.set("ANTHROPIC_API_KEY", process.env["ANTHROPIC_API_KEY"] || "")
-      Container.set(
-        "HTTP_PROXY",
-        process.env["HTTP_PROXY"] || process.env["HTTPS_PROXY"] || process.env["ALL_PROXY"] || "",
-      )
-
-      // 注册 provider 类型
-      const token = new Token<typeof Provider>(`provider-${Date.now()}`)
-      Container.set({ id: token, type: Provider })
-
-      // 从容器中获取实例
-      const provider = Container.get(token) as BaseGenerateCommitProvider
-      this.logger.debug(`Provider instance: ${Object.getOwnPropertyNames(provider)}`)
+      const provider = new Provider() as BaseGenerateCommitProvider
+      provider.logger = Container.get(TOKENS.Logger)
+      this.logger.debug(`Provider instance: `)
+      this.logger.debug(Object.getOwnPropertyNames(provider))
       this.logger.debug(`Provider logger: ${provider.logger}, type: ${typeof provider.logger}`)
 
       this.logger.debug(`Provider prototype: ${Object.getOwnPropertyNames(Provider.prototype)}`)

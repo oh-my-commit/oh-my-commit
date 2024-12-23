@@ -54,10 +54,10 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   private anthropic: Anthropic | null = null
 
   @Inject("ANTHROPIC_API_KEY")
-  private readonly apiKey!: string
+  private readonly apiKey: string = ""
 
   @Inject("HTTP_PROXY")
-  private readonly proxyUrl!: string
+  private readonly proxyUrl: string = ""
 
   private async init() {
     if (this.anthropic) return
@@ -67,8 +67,8 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
     if (this.apiKey) this.anthropic = new Anthropic(config)
   }
 
-  async generateCommit(input: GenerateCommitInput) {
-    await this.init()
+  generateCommit(input: GenerateCommitInput) {
+    this.init()
 
     this.logger.info("Generating commit message using OMC Provider...")
     return (
@@ -187,6 +187,8 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
     this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
 
     const item = response.content[0]
+    if (!item) throw new Error("Invalid tool response from AI model")
+
     if (item.type !== "tool_use") throw new Error("Invalid tool response from AI model")
 
     const result = item.input as {

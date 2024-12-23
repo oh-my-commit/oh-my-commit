@@ -5,7 +5,8 @@
     "rootDir": "src",
     "outDir": "dist",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "types": ["reflect-metadata", "node"],
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/server/provider-registry.ts", "../provider-official/helper.ts"]
 }
