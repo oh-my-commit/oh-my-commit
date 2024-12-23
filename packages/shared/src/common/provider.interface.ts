@@ -1,67 +1,11 @@
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
-import { Inject, Service } from "typedi"
 import { z } from "zod"
-import { SETTING_MODEL_ID } from "./app"
-import { TOKENS, type IConfig, type IProviderManager } from "./core"
-import { BaseLogger } from "./log"
+import type { IConfig } from "./core"
+import type { BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
-
-@Service()
-export class CommitManager {
-  public status: {
-    loadingProviders: Status
-  } = {
-    loadingProviders: "pending",
-  }
-
-  get providers() {
-    return this.providersManager.providers
-  }
-
-  constructor(
-    @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
-    @Inject(TOKENS.Config) public readonly config: IConfig,
-    @Inject(TOKENS.ProviderManager) public readonly providersManager: IProviderManager,
-  ) {}
-
-  get models(): IModel[] {
-    return this.providers.flatMap(provider => provider.models)
-  }
-
-  get modelId() {
-    return this.config.get<string>(SETTING_MODEL_ID)
-  }
-
-  get model() {
-    return this.models.find(model => model.id === this.modelId)
-  }
-
-  selectModel(modelId: string) {
-    this.config.update(SETTING_MODEL_ID, modelId)
-  }
-
-  async generateCommit(diff: DiffResult, options?: GenerateCommitOptions) {
-    // Get selected model from config
-    const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
-    if (!modelId) {
-      throw new Error("No model available")
-    }
-
-    const provider = this.providers.find(p => p.models.some(model => model.id === modelId))
-    if (!provider) {
-      throw new Error(`No provider found for model ${modelId}`)
-    }
-
-    const generateOptions = options || {
-      lang: this.config.get("lang"),
-    }
-
-    return provider.generateCommit({ model: modelId, diff, options: generateOptions })
-  }
-}
 
 /**
  * 供应商定义的模型 meta 信息，供用户候选
@@ -137,8 +81,17 @@ export type IModel = z.infer<typeof ModelSchema>
 export type IProvider = z.infer<typeof ProviderSchema>
 export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
+export interface ProviderContext {
+  logger: BaseLogger
+  config: IConfig
+}
+
 export abstract class BaseGenerateCommitProvider implements IProvider {
-  constructor(_context: { logger: BaseLogger; config: IConfig }) {}
+  protected context: ProviderContext
+
+  constructor(context: ProviderContext) {
+    this.context = context
+  }
 
   abstract id: string
 
@@ -176,6 +129,14 @@ export abstract class BaseGenerateCommitProvider implements IProvider {
       description: this.description,
       models: this.models.map(m => m.id),
     }
+  }
+
+  get logger() {
+    return this.context.logger
+  }
+
+  get config() {
+    return this.context.config
   }
 }
 
