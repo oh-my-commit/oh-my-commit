@@ -248,6 +248,9 @@ importers:
       neverthrow:
         specifier: ^8.1.1
         version: 8.1.1
+      reflect-metadata:
+        specifier: ^0.2.1
+        version: 0.2.2
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -255,9 +258,15 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.10.2
       tsup:
         specifier: workspace:^
         version: link:../../third-parties/tsup
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
 
   packages/shared:
     dependencies:
