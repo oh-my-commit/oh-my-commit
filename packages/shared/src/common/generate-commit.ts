@@ -4,7 +4,7 @@ import { Inject, Service } from "typedi"
 import { z } from "zod"
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
-import { BaseLogger } from "./log"
+import type { BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
@@ -172,9 +172,8 @@ export type IModel = z.infer<typeof ModelSchema>
 export type IProvider = z.infer<typeof ProviderSchema>
 export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
-@Service()
 export abstract class BaseGenerateCommitProvider implements IProvider {
-  @Inject(TOKENS.Logger) public logger!: BaseLogger
+  constructor(_context: { logger: BaseLogger; config: IConfig }) {}
 
   abstract id: string
 

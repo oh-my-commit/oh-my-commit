@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { Container, Inject, Service } from "typedi"
-import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
+import type { BaseGenerateCommitProvider, IConfig, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
@@ -93,20 +93,21 @@ export class ProviderRegistry implements IProviderManager {
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
       const module = jiti(filePath)
-      const Provider = module.default
+      const Provider = module.default as new (context: {
+        logger: BaseLogger
+        config: IConfig
+      }) => BaseGenerateCommitProvider
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)
         return null
       }
 
-      // 我希望用户在实现自己的 provider 的时候能用上我们的装饰器，
-      // 但应该它们会被编译成 js，再导入回来，试了很多办法都不行……
-      // 所以目前阶段是手动注入
-      // todo: 寻求大佬自动注入的手段
-      const provider = new Provider() as BaseGenerateCommitProvider
-
-      provider.logger ??= Container.get(TOKENS.Logger)
+      const provider = new Provider({
+        logger: Container.get(TOKENS.Logger),
+        config: Container.get(TOKENS.Config),
+      })
+      this.logger.debug(`Successfully instantiated provider: `, provider)
 
       ProviderSchema.parse(provider)
       return provider
