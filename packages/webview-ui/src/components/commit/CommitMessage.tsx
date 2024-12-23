@@ -109,7 +109,7 @@ export function CommitMessage() {
           >
             {isRegenerating ? (
               <span className="w-full flex items-center gap-2">
-                <VSCodeProgressRing className="w-4 h-4 bg-[var(--vscode-button-foreground)]" />
+                <VSCodeProgressRing className="w-4 h-4 " />
               </span>
             ) : (
               "Regenerate3"

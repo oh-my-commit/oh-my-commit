@@ -1,5 +1,3 @@
-import "reflect-metadata"
-
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
 import {
@@ -9,14 +7,15 @@ import {
   BaseGenerateCommitProvider,
   GenerateCommitError,
   formatError,
+  type BaseLogger,
   type GenerateCommitInput,
+  type IConfig,
   type IModel,
   type IProvider,
 } from "@shared/common"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
-import { Inject, Service } from "typedi"
 
 const loadPrompt = (_lang: string, diff: string) => {
   // todo: parse from `commit-prompt.hbs`
@@ -38,13 +37,12 @@ class StandardModel implements IModel {
   }
 }
 
-@Service()
 class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
-  public readonly id = APP_ID_CAMEL
-  public readonly displayName = `${APP_NAME} Provider`
-  public readonly description = `Commit message generation powered by ${APP_NAME} models`
-  public readonly models = [new StandardModel()]
-  public readonly metadata = {
+  id = APP_ID_CAMEL
+  displayName = `${APP_NAME} Provider`
+  description = `Commit message generation powered by ${APP_NAME} models`
+  models = [new StandardModel()]
+  metadata = {
     version: "0.1.0",
     author: "CS Magic",
     homepage: "https://github.com/cs-magic-open/oh-my-commits",
@@ -52,24 +50,24 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   }
 
   private anthropic: Anthropic | null = null
+  private logger: BaseLogger
+  private config: IConfig
 
-  @Inject("ANTHROPIC_API_KEY")
-  private readonly apiKey: string = ""
+  constructor(private context: { logger: BaseLogger; config: IConfig }) {
+    super(context)
+    this.logger = context.logger
+    this.config = context.config
+    this.logger.info("Initializing Anthropic API...")
+    const proxy = this.config.get<string | undefined>("proxy")
+    const apiKey = this.config.get<string | undefined>("apiKeys.anthropic")
 
-  @Inject("HTTP_PROXY")
-  private readonly proxyUrl: string = ""
-
-  private async init() {
-    if (this.anthropic) return
-
-    const config: Record<string, any> = { apiKey: this.apiKey }
-    if (this.proxyUrl) config["httpAgent"] = new HttpsProxyAgent(this.proxyUrl)
-    if (this.apiKey) this.anthropic = new Anthropic(config)
+    const config: Record<string, any> = { apiKey }
+    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
+    this.logger.info("Initializing Anthropic API: ", config)
+    this.anthropic = new Anthropic(config)
   }
 
   generateCommit(input: GenerateCommitInput) {
-    this.init()
-
     this.logger.info("Generating commit message using OMC Provider...")
     return (
       // 1. call api
@@ -102,10 +100,10 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   }
 
   private callApi(input: GenerateCommitInput) {
+    this.logger.info("Generating commit message using Anthropic...")
     const lang = input.options?.lang || "en"
     const modelName = "claude-3-sonnet-20240229"
     if (!this.anthropic) throw new Error("Anthropic API key not configured")
-    this.logger.info("Generating commit message using Anthropic...")
 
     const diff = JSON.stringify(input.diff, null, 2)
     const prompt = loadPrompt(lang, diff)
