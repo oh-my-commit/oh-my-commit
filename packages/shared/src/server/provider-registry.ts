@@ -15,21 +15,28 @@ const jiti = createJiti(__filename)
 export class ProviderRegistry implements IProviderManager {
   private providers = new Map<string, BaseGenerateCommitProvider>()
   private providersDir = PROVIDERS_DIR
+  public initialized = false
 
-  @Inject(TOKENS.Logger) public readonly logger!: BaseLogger
+  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {
+    void this.init()
+  }
 
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
-    this.logger.debug("Initializing ProviderRegistry")
+    try {
+      this.logger.debug("Initializing ProviderRegistry")
 
-    // 确保 logger 已经被注册
-    if (!Container.has(TOKENS.Logger)) {
-      Container.set(TOKENS.Logger, this.logger)
+      // 确保 logger 已经被注册
+      if (!Container.has(TOKENS.Logger)) {
+        Container.set(TOKENS.Logger, this.logger)
+      }
+
+      await this.loadProviders()
+      this.logger.debug(`Loaded ${this.providers.size} providers`)
+      return Array.from(this.providers.values())
+    } finally {
+      this.initialized = true
     }
-
-    await this.loadProviders()
-    this.logger.debug(`Loaded ${this.providers.size} providers`)
-    return Array.from(this.providers.values())
   }
 
   /** Load all providers from user directory */

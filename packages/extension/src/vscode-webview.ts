@@ -22,12 +22,6 @@ export class VscodeWebview implements vscode.Disposable {
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private title: string
 
-  @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
-
-  @Inject(TOKENS.Config) private readonly config!: VscodeConfig
-
-  @Inject(VSCODE_TOKENS.Context) private readonly context!: vscode.ExtensionContext
-
   /**
    * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
    */
@@ -38,24 +32,25 @@ export class VscodeWebview implements vscode.Disposable {
    */
   private readonly scriptPath: string
 
-  constructor({
-    title = `${APP_NAME} Webview`,
-    templatePath = "assets/webview.template.html",
-    scriptPath = "dist/webview-ui/main.js",
-  }: {
-    title?: string
-    templatePath?: string
-    scriptPath?: string
-  } = {}) {
+  constructor(
+    @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
+    @Inject(TOKENS.Config) private readonly config: VscodeConfig,
+    @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    {
+      title = `${APP_NAME} Webview`,
+      templatePath = "assets/webview.template.html",
+      scriptPath = "dist/webview-ui/main.js",
+    }: {
+      title?: string
+      templatePath?: string
+      scriptPath?: string
+    } = {},
+  ) {
     this.title = title
     this.templatePath = templatePath
     this.scriptPath = scriptPath
-  }
 
-  initialize() {
-    this.logger.info("Initializing webview .")
     this.context.subscriptions.push(this)
-    this.logger.info("Initializing webview ..")
   }
 
   setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {

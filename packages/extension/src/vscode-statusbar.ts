@@ -1,14 +1,14 @@
-import { VscodeGit } from "@/vscode-git"
 import {
   APP_ID_CAMEL,
   APP_NAME,
   BaseLogger,
   COMMAND_SELECT_MODEL,
+  CommitManager,
   TOKENS,
-  type CommitManager,
 } from "@shared/common"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+import { VscodeGit } from "./vscode-git"
 import { VSCODE_TOKENS } from "./vscode-token"
 
 @Service()
@@ -16,11 +16,11 @@ export class StatusBarManager implements vscode.Disposable {
   private disposables: vscode.Disposable[] = []
   private statusBarItem: vscode.StatusBarItem
 
-  @Inject(TOKENS.Logger) private readonly logger!: BaseLogger
-  @Inject(TOKENS.CommitManager) private readonly commitManager!: CommitManager
-  @Inject(VSCODE_TOKENS.GitService) private readonly gitService!: VscodeGit
-
-  constructor() {
+  constructor(
+    @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
+    @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
+    @Inject(VSCODE_TOKENS.GitService) private readonly gitService: VscodeGit,
+  ) {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
 
@@ -43,12 +43,10 @@ export class StatusBarManager implements vscode.Disposable {
         this.update()
       }),
     )
-  }
 
-  async initialize(): Promise<void> {
-    this.logger.info("Initializing status bar")
-    await this.update()
-    this.logger.info("Status bar initialized")
+    this.commitManager.providersManager.init().then(() => {
+      void this.update()
+    })
   }
 
   private async update(): Promise<void> {

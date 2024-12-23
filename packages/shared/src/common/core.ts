@@ -15,6 +15,7 @@ export interface IConfig {
 }
 
 export interface IProviderManager {
+  initialized?: boolean
   init(): Promise<BaseGenerateCommitProvider[]>
 }
 
@@ -26,7 +27,7 @@ export interface IUIProvider {
 export const TOKENS = {
   Config: new Token<IConfig>("Config"),
   Logger: new Token<BaseLogger>("Logger"),
-  ProviderRegistry: new Token<IProviderManager>("ProviderManager"),
+  ProviderManager: new Token<IProviderManager>("ProviderManager"),
   CommitManager: new Token<CommitManager>("CommitManager"),
   UIProvider: new Token<IUIProvider>("UIProvider"),
 } as const

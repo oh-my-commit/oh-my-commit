@@ -1,12 +1,7 @@
 import type { VscodeCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
 import { VSCODE_TOKENS } from "@/vscode-token"
-import {
-  COMMAND_OPEN_PREFERENCE,
-  COMMAND_QUICK_COMMIT,
-  COMMAND_SELECT_MODEL,
-  TOKENS,
-} from "@shared/common"
+import { COMMAND_OPEN_PREFERENCE, COMMAND_QUICK_COMMIT, COMMAND_SELECT_MODEL } from "@shared/common"
 import { Container, Inject, Service } from "typedi"
 import * as vscode from "vscode"
 import { OpenPreferencesCommand } from "./open-preferences"
@@ -17,13 +12,15 @@ import { SelectModelCommand } from "./select-model"
 export class CommandManager {
   private readonly commands: Map<string, VscodeCommand> = new Map()
 
-  @Inject(VSCODE_TOKENS.Context) private readonly context!: vscode.ExtensionContext
-  @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
-
-  initialize() {
+  constructor(
+    @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    private readonly logger: VscodeLogger,
+  ) {
     // Register all commands
     this.registerCommand(COMMAND_OPEN_PREFERENCE, Container.get(OpenPreferencesCommand))
+
     this.registerCommand(COMMAND_QUICK_COMMIT, Container.get(QuickCommitCommand))
+
     this.registerCommand(COMMAND_SELECT_MODEL, Container.get(SelectModelCommand))
   }
 
@@ -42,6 +39,7 @@ export class CommandManager {
     })
 
     this.context.subscriptions.push(disposable)
+    this.logger.info(`Registered command: ${id}`)
   }
 
   public dispose(): void {
