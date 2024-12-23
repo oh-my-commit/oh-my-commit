@@ -81,43 +81,43 @@ export abstract class BaseLogger implements ILogger {
     return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.minLevel]
   }
 
-  info(message: string, ...args: any[]): void {
-    this._log("info", message, ...args)
+  info(...args: any[]): void {
+    this._log("info", ...args)
   }
 
-  error(message: string, ...args: any[]): void {
-    this._log("error", message, ...args)
+  error(...args: any[]): void {
+    this._log("error", ...args)
   }
 
-  warn(message: string, ...args: any[]): void {
-    this._log("warn", message, ...args)
+  warn(...args: any[]): void {
+    this._log("warn", ...args)
   }
 
-  debug(message: string, ...args: any[]): void {
-    this._log("debug", message, ...args)
+  debug(...args: any[]): void {
+    this._log("debug", ...args)
   }
 
-  trace(message: string, ...args: any[]): void {
-    this._log("trace", message, ...args)
+  trace(...args: any[]): void {
+    this._log("trace", ...args)
   }
 
-  protected _log(level: LogLevel, message: string, ...args: any[]): void {
+  protected _log(level: LogLevel, ...args: any[]): void {
     if (!this.shouldLog(level)) return
-    this.log(level, message, ...args)
+    this.log(level, ...args)
   }
 
-  protected abstract log(level: LogLevel, message: string, ...args: any[]): void
+  protected abstract log(level: LogLevel, ...args: any[]): void
 }
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
   protected name = "console"
 
-  protected log(level: LogLevel, message: string, ...args: any[]) {
+  protected log(level: LogLevel, ...args: any[]) {
     const timestamp = `${new Date().toISOString()}`
     const levelStr = `${level.toUpperCase().padEnd(5)}`
     const loggerName = this.name || "unknown"
-    const formattedMsg = formatMessage(message, args)
+    const formattedMsg = formatMessage(...args)
     const caller = getCallerInfo()
 
     console.log(

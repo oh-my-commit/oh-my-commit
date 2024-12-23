@@ -7,7 +7,7 @@ export class VscodeClientLogger extends BaseLogger {
   }
 
   protected log(level: LogLevel, ...args: any[]) {
-    const message = formatMessage("", ...args)
+    const message = formatMessage(...args)
 
     // 推送到 VSCode
     clientPush({

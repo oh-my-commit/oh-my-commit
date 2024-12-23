@@ -13,8 +13,10 @@ export function formatError(error: unknown): string {
   return String(error)
 }
 
-export function formatMessage(message: string, ...args: any[]): string {
-  return args.length ? `${message} ${args.join(" ")}` : message
+export function formatMessage(...args: any[]): string {
+  return args
+    .map(arg => (typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)))
+    .join(" ")
 }
 
 export type ResultDTO<T> = { ok: true; data: T } | { ok: false; code: number; message: string }

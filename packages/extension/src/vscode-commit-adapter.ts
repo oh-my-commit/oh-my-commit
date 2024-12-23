@@ -35,7 +35,7 @@ export class VscodeLogger extends BaseLogger {
 
   protected log(level: LogLevel, ...args: any[]) {
     // todo: better handle with formatMessage
-    const rawMessage = formatMessage("", ...args)
+    const rawMessage = formatMessage(...args)
     const prefix = `omc.${this.name}`
     this.logger[level]?.(`${prefix} ${rawMessage}`)
   }

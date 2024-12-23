@@ -61,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const commandManager = Container.get(CommandManager)
     logger.info("Initializing command manager ..")
     commandManager.initialize()
-    logger.info("Initialized command manager... ", commandManager)
+    logger.info("Initialized command manager... ")
 
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
