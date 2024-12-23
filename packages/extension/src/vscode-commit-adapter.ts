@@ -30,7 +30,7 @@ export class VscodeLogger extends BaseLogger {
 
   constructor(name = "host") {
     super(name)
-    this.minLevel = normalizeLogLevel(process.env.LOG_LEVEL)
+    this.minLevel = normalizeLogLevel(process.env["LOG_LEVEL"])
   }
 
   protected log(level: LogLevel, ...args: any[]) {

@@ -10,7 +10,7 @@ export class VscodeGit extends GitCore {
 
   constructor() {
     const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders ? workspaceFolders[0].uri.fsPath : ""
+    const workspaceRoot = workspaceFolders ? workspaceFolders[0]!.uri.fsPath : ""
 
     super(workspaceRoot)
 

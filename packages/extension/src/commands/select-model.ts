@@ -1,15 +1,17 @@
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
-import { COMMAND_SELECT_MODEL, TOKENS, type CommitManager } from "@shared/common"
-import { Inject, Service } from "typedi"
+import { COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
+import { Service } from "typedi"
 import * as vscode from "vscode"
 
 @Service()
 export class SelectModelCommand implements BaseCommand {
   public id = COMMAND_SELECT_MODEL
 
-  @Inject(TOKENS.CommitManager) private commitManager!: CommitManager
-  @Inject(TOKENS.Logger) private logger!: VscodeLogger
+  constructor(
+    private readonly commitManager: CommitManager,
+    private readonly logger: VscodeLogger,
+  ) {}
 
   async execute(): Promise<void> {
     this.logger.info("Manage models command triggered")
@@ -29,7 +31,7 @@ export class SelectModelCommand implements BaseCommand {
           detail: s.metrics
             ? `Accuracy: ${s.metrics.accuracy}, Speed: ${s.metrics.speed}, Cost: ${s.metrics.cost}`
             : "No metrics available",
-          picked: this.commitManager.model?.id === s.id,
+          picked: this.commitManager.modelId === s.id,
         })),
         {
           placeHolder: "Select AI Model to Use",

@@ -13,15 +13,13 @@ export class QuickCommitCommand implements BaseCommand {
   public id = COMMAND_QUICK_COMMIT
   public name = "Quick Commit"
 
-  @Inject(TOKENS.Logger) private logger!: VscodeLogger
-  @Inject(VSCODE_TOKENS.Context) private context!: vscode.ExtensionContext
-  @Inject(VSCODE_TOKENS.GitService) private gitService!: VscodeGit
-  @Inject(TOKENS.CommitManager) private commitManager!: CommitManager
-  @Inject(VSCODE_TOKENS.WebviewService) private webviewManager!: VscodeWebview
-
-  initialize() {
-    this.logger.info("Initializing quick commit command")
-
+  constructor(
+    @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
+    @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
+    @Inject(VSCODE_TOKENS.GitService) private readonly gitService: VscodeGit,
+    @Inject(VSCODE_TOKENS.WebviewService) private readonly webviewManager: VscodeWebview,
+  ) {
     // 设置 webview 的消息处理
     this.webviewManager.setMessageHandler(async message => {
       switch (message.type) {
@@ -38,9 +36,6 @@ export class QuickCommitCommand implements BaseCommand {
           break
       }
     })
-
-    this.webviewManager.initialize()
-    this.logger.info("Quick commit command initialized")
 
     // Clean up file watcher when extension is deactivated
     this.context.subscriptions.push(this)

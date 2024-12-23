@@ -28,7 +28,7 @@ Container.set(TOKENS.Config, Container.get(CliConfig))
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
 
 // 3. 注册 provider registry (depends logger)
-Container.set(TOKENS.ProviderRegistry, Container.get(ProviderRegistry))
+Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
 
 // 4. 获取 CommitManager 实例
 const commitManager: CommitManager = Container.get(CommitManager)
@@ -39,7 +39,7 @@ commitManager.logger.info(chalk.blue("our coooooooool commit manager initialized
 const listModels = async () => {
   try {
     commitManager.logger.info(chalk.blue("Listing models..."))
-    await commitManager.initProviders()
+    await commitManager.initialize()
     const models = commitManager.models
     commitManager.logger.info(chalk.blue("Available models:"))
     for (const model of models) {
@@ -69,7 +69,7 @@ const selectModel = async (modelId: string) => {
   commitManager.logger.info(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
-    await commitManager.initProviders()
+    await commitManager.initialize()
 
     const availableModels: IModel[] = commitManager.models
     const selectedModel = availableModels.find(m => m.id === modelId)
@@ -92,7 +92,7 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
   try {
     // Initialize providers if not already done
     if (commitManager.providers.length === 0) {
-      await commitManager.initProviders()
+      await commitManager.initialize()
     }
 
     // If model is specified, validate and set it

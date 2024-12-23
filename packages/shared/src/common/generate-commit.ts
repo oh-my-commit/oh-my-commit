@@ -3,8 +3,8 @@ import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import { z } from "zod"
 import { SETTING_MODEL_ID } from "./app"
-import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
-import type { BaseLogger } from "./log"
+import { TOKENS, type IConfig, type IProviderManager } from "./core"
+import { BaseLogger } from "./log"
 import { formatMessage, type ResultDTO } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
@@ -19,9 +19,13 @@ export class CommitManager {
   }
   private static initPromise: Promise<void> | null = null
 
-  @Inject(TOKENS.Config) public readonly config!: IConfig
-  @Inject(TOKENS.Logger) public readonly logger!: ILogger
-  @Inject(TOKENS.ProviderRegistry) public readonly providersManager!: IProviderManager
+  constructor(
+    @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
+    @Inject(TOKENS.Config) public readonly config: IConfig,
+    @Inject(TOKENS.ProviderManager) public readonly providersManager: IProviderManager,
+  ) {
+    void this.initialize()
+  }
 
   get models(): IModel[] {
     return this.providers.flatMap(provider => provider.models)
@@ -42,7 +46,7 @@ export class CommitManager {
   /**
    * 线程安全的初始化方法
    */
-  public async initProviders() {
+  public async initialize() {
     if (!CommitManager.initPromise) {
       CommitManager.initPromise = this.doInitProviders()
     }
@@ -77,7 +81,7 @@ export class CommitManager {
 
   async generateCommit(diff: DiffResult, options?: GenerateCommitOptions) {
     // Initialize providers if not already done
-    await this.initProviders()
+    await this.initialize()
 
     // Get selected model from config
     const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id

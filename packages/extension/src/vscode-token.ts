@@ -12,9 +12,9 @@ export const VSCODE_TOKENS = {
   Context: new Token<vscode.ExtensionContext>("VSCodeContext"),
   GitService: new Token<VscodeGit>("VscodeGitService"),
   WebviewService: new Token<VscodeWebview>("VscodeWebviewService"),
-  QuickCommitService: new Token<QuickCommitCommand>("VscodeQuickCommitService"),
+  QuickCommitCommand: new Token<QuickCommitCommand>("VscodeQuickCommitService"),
   StatusbarService: new Token<StatusBarManager>("VscodeStatusbarService"),
-  CommandService: new Token<CommandManager>("VscodeCommandService"),
-  OpenPreferencesService: new Token<OpenPreferencesCommand>("VscodeOpenPreferencesService"),
+  CommandManager: new Token<CommandManager>("VscodeCommandService"),
+  OpenPreferencesCommand: new Token<OpenPreferencesCommand>("VscodeOpenPreferencesService"),
   SelectModelService: new Token<SelectModelCommand>("VscodeSelectModelService"),
 } as const
