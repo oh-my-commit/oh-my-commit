@@ -92,8 +92,6 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
-      // 动态导入辅助函数
-
       const module = jiti(filePath)
       const Provider = module.default
 
@@ -102,15 +100,12 @@ export class ProviderRegistry implements IProviderManager {
         return null
       }
 
+      // 我希望用户在实现自己的 provider 的时候能用上我们的装饰器，
+      // 但应该它们会被编译成 js，再导入回来，试了很多办法都不行……
+      // 所以目前阶段是手动注入
+      // todo: 寻求大佬自动注入的手段
       const provider = new Provider() as BaseGenerateCommitProvider
       provider.logger = Container.get(TOKENS.Logger)
-      this.logger.debug(`Provider instance: `)
-      this.logger.debug(Object.getOwnPropertyNames(provider))
-      this.logger.debug(`Provider logger: ${provider.logger}, type: ${typeof provider.logger}`)
-
-      this.logger.debug(`Provider prototype: ${Object.getOwnPropertyNames(Provider.prototype)}`)
-      // @ts-ignore
-      this.logger.debug(`Provider metadata: ${Reflect.getMetadataKeys(Provider)}`)
 
       ProviderSchema.parse(provider)
       return provider
