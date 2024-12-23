@@ -13,36 +13,18 @@ const jiti = createJiti(__filename)
  */
 @Service()
 export class ProviderRegistry implements IProviderManager {
-  private providers = new Map<string, BaseGenerateCommitProvider>()
+  initialized = false
+  providers: BaseGenerateCommitProvider[] = []
   private providersDir = PROVIDERS_DIR
-  public initialized = false
 
-  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {
-    void this.init()
-  }
-
-  /** Initialize the registry and load all providers */
-  async init(): Promise<BaseGenerateCommitProvider[]> {
-    try {
-      this.logger.debug("Initializing ProviderRegistry")
-
-      // 确保 logger 已经被注册
-      if (!Container.has(TOKENS.Logger)) {
-        Container.set(TOKENS.Logger, this.logger)
-      }
-
-      await this.loadProviders()
-      this.logger.debug(`Loaded ${this.providers.size} providers`)
-      return Array.from(this.providers.values())
-    } finally {
-      this.initialized = true
-    }
-  }
+  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
 
   /** Load all providers from user directory */
-  private async loadProviders(): Promise<void> {
-    this.logger.debug(`Loading user providers from ${this.providersDir}`)
+  public async initialize() {
+    if (this.initialized) return
+
     try {
+      this.logger.debug(`Loading user providers from ${this.providersDir}`)
       if (!fs.existsSync(this.providersDir)) {
         this.logger.debug(`Creating providers directory: ${this.providersDir}`)
         fs.mkdirSync(this.providersDir, { recursive: true })
@@ -60,8 +42,6 @@ export class ProviderRegistry implements IProviderManager {
             const provider = await this.loadProviderFromFile(filePath)
             if (provider) {
               this.registerProvider(provider)
-            } else {
-              this.logger.warn(`Failed to load provider from ${filePath}: Invalid provider format`)
             }
           } catch (error) {
             this.logger.error(`Failed to load provider from ${filePath}: ${error}`)
@@ -70,40 +50,32 @@ export class ProviderRegistry implements IProviderManager {
       }
     } catch (error) {
       this.logger.error(`Failed to load providers: ${error}`)
+    } finally {
+      this.initialized = true
     }
   }
 
   /** Register a new provider */
   registerProvider(provider: BaseGenerateCommitProvider) {
     this.logger.debug(`Registering provider: ${provider.id}`)
-    if (this.providers.has(provider.id)) {
+    if (this.providers.some(p => p.id === provider.id)) {
       this.logger.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
       return
     }
-    this.providers.set(provider.id, provider)
+    this.providers.push(provider)
     this.logger.debug(`Successfully registered provider: ${provider.id}`)
-  }
-
-  /** Get provider by id */
-  getProvider(id: string): BaseGenerateCommitProvider | undefined {
-    const provider = this.providers.get(id)
-    this.logger.debug(provider ? `Found provider: ${id}` : `Provider not found: ${id}`)
-    return provider
-  }
-
-  /** Get all registered providers */
-  getAllProviders(): BaseGenerateCommitProvider[] {
-    this.logger.debug(`Retrieving all providers. Count: ${this.providers.size}`)
-    return Array.from(this.providers.values())
   }
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
-      const module = jiti(filePath)
-      const Provider = module.default as new (context: {
-        logger: BaseLogger
-        config: IConfig
-      }) => BaseGenerateCommitProvider
+      const module = await jiti.import(filePath, { default: true })
+      const Provider =
+        // @ts-ignore
+        module.default ||
+        (module as new (context: {
+          logger: BaseLogger
+          config: IConfig
+        }) => BaseGenerateCommitProvider)
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)

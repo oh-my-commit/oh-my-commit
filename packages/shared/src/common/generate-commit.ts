@@ -11,21 +11,21 @@ export type Status = "pending" | "running" | "success" | "error"
 
 @Service()
 export class CommitManager {
-  public providers: BaseGenerateCommitProvider[] = []
   public status: {
     loadingProviders: Status
   } = {
     loadingProviders: "pending",
   }
-  private static initPromise: Promise<void> | null = null
+
+  get providers() {
+    return this.providersManager.providers
+  }
 
   constructor(
     @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
     @Inject(TOKENS.Config) public readonly config: IConfig,
     @Inject(TOKENS.ProviderManager) public readonly providersManager: IProviderManager,
-  ) {
-    void this.initialize()
-  }
+  ) {}
 
   get models(): IModel[] {
     return this.providers.flatMap(provider => provider.models)
@@ -43,46 +43,7 @@ export class CommitManager {
     this.config.update(SETTING_MODEL_ID, modelId)
   }
 
-  /**
-   * 线程安全的初始化方法
-   */
-  public async initialize() {
-    if (!CommitManager.initPromise) {
-      CommitManager.initPromise = this.doInitProviders()
-    }
-    try {
-      await CommitManager.initPromise
-    } catch (error) {
-      // Reset initPromise so we can try again
-      CommitManager.initPromise = null
-      throw error
-    }
-  }
-
-  private async doInitProviders() {
-    // this.logger.info("[CommitManager] Loading providers: ", {
-    //   logger: this.logger,
-    //   config: this.config,
-    //   providersManager: this.providersManager,
-    // })
-    this.status.loadingProviders = "running"
-    try {
-      this.providers = await this.providersManager.init()
-      this.logger.info(`Loaded ${this.providers.length} providers`)
-      this.status.loadingProviders = "success"
-    } catch (error) {
-      this.status.loadingProviders = "error"
-      this.logger.error(
-        `Failed to load providers: ${error instanceof Error ? error.message : String(error)}`,
-      )
-      throw error // Re-throw to propagate the error
-    }
-  }
-
   async generateCommit(diff: DiffResult, options?: GenerateCommitOptions) {
-    // Initialize providers if not already done
-    await this.initialize()
-
     // Get selected model from config
     const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
     if (!modelId) {
