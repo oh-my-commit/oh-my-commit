@@ -40,6 +40,7 @@ export class StatusBarManager implements vscode.Disposable {
       }),
     )
 
+    console.log("Initializing status bar....")
     this.logger.info("Initializing status bar")
     this.statusBarItem.show()
     this.update()

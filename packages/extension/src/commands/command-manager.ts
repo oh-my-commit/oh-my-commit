@@ -18,6 +18,8 @@ export class CommandManager {
   @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
 
   constructor() {
+    this.logger.info("Initializing command manager")
+
     // Register all commands
     this.registerCommand(
       COMMAND_OPEN_PREFERENCE,
