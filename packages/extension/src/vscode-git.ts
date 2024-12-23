@@ -1,6 +1,8 @@
 import { GitCore } from "@shared/server"
+import { Service } from "typedi"
 import * as vscode from "vscode"
 
+@Service()
 export class VscodeGit extends GitCore {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>
   readonly onGitStatusChanged: vscode.Event<boolean>

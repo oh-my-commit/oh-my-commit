@@ -15,9 +15,12 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
 
 const DEFAULT_LOG_LEVEL: LogLevel = "info"
 
-function getLogLevelFromEnv(): LogLevel {
-  const envLevel = process.env.LOG_LEVEL?.toLowerCase()
-  return envLevel && envLevel in LOG_LEVEL_PRIORITY ? (envLevel as LogLevel) : DEFAULT_LOG_LEVEL
+export const normalizeLogLevel = (s?: string): LogLevel => {
+  if (s) {
+    const level = s.toLowerCase()
+    if (Object.keys(LOG_LEVEL_PRIORITY).includes(level)) return level as LogLevel
+  }
+  return DEFAULT_LOG_LEVEL
 }
 
 function getCallerInfo(): string {
@@ -60,10 +63,10 @@ function getCallerInfo(): string {
 
 @Service()
 export abstract class BaseLogger implements ILogger {
-  protected minLevel: LogLevel
+  protected minLevel: LogLevel = DEFAULT_LOG_LEVEL
 
   constructor(protected name?: string) {
-    this.minLevel = getLogLevelFromEnv()
+    this.name = name
   }
 
   setName(name: string): void {

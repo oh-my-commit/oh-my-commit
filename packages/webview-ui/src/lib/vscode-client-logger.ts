@@ -2,24 +2,23 @@ import { clientPush } from "@/clientPush"
 import { BaseLogger, formatMessage, type LogLevel } from "@shared/common"
 
 export class VscodeClientLogger extends BaseLogger {
-  protected channel = "default"
-
-  constructor(channel: string) {
-    super(channel)
+  constructor(name: string) {
+    super(name)
   }
 
-  protected _log(level: LogLevel, ...args: any[]) {
-    const rawMessage = formatMessage(...args)
+  protected log(level: LogLevel, ...args: any[]) {
+    const message = formatMessage("", ...args)
 
+    // 推送到 VSCode
     clientPush({
-      channel: this.channel,
+      channel: this.name,
       type: "log",
       data: {
         level,
-        rawMessage,
+        rawMessage: message,
       },
     })
   }
 }
 
-export const vscodeClientLogger = new VscodeClientLogger("Webview Default")
+export const vscodeClientLogger = new VscodeClientLogger("Webview")

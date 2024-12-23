@@ -24,6 +24,10 @@ export class StatusBarManager implements vscode.Disposable {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
 
+    // 设置初始状态
+    this.statusBarItem.text = `$(sync~spin) ${APP_NAME} (Initializing...)`
+    this.statusBarItem.show()
+
     // 监听配置变化
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(e => {
@@ -39,8 +43,12 @@ export class StatusBarManager implements vscode.Disposable {
         this.update()
       }),
     )
+  }
 
-    this.statusBarItem.show()
+  async initialize(): Promise<void> {
+    this.logger.info("Initializing status bar")
+    await this.update()
+    this.logger.info("Status bar initialized")
   }
 
   private async update(): Promise<void> {

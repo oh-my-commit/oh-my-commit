@@ -21,7 +21,7 @@ export class CommitManager {
 
   @Inject(TOKENS.Config) public readonly config!: IConfig
   @Inject(TOKENS.Logger) public readonly logger!: ILogger
-  @Inject(TOKENS.ProviderManager) public readonly providersManager!: IProviderManager
+  @Inject(TOKENS.ProviderRegistry) public readonly providersManager!: IProviderManager
 
   get models(): IModel[] {
     return this.providers.flatMap(provider => provider.models)

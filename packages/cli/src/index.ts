@@ -28,7 +28,7 @@ Container.set(TOKENS.Config, Container.get(CliConfig))
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
 
 // 3. 注册 provider registry (depends logger)
-Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+Container.set(TOKENS.ProviderRegistry, Container.get(ProviderRegistry))
 
 // 4. 获取 CommitManager 实例
 const commitManager: CommitManager = Container.get(CommitManager)
