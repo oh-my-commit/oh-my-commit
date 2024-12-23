@@ -1,6 +1,7 @@
 import { Token } from "typedi"
-import type { BaseGenerateCommitProvider, CommitManager } from "./generate-commit"
+import type { CommitManager } from "./CommitManager"
 import type { BaseLogger } from "./log"
+import type { BaseGenerateCommitProvider } from "./provider.interface"
 
 export interface ILogger {
   info(message: string, ...args: any[]): void

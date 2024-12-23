@@ -7,11 +7,10 @@ import {
   BaseGenerateCommitProvider,
   GenerateCommitError,
   formatError,
-  type BaseLogger,
   type GenerateCommitInput,
-  type IConfig,
   type IModel,
   type IProvider,
+  type ProviderContext,
 } from "@shared/common"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
@@ -50,13 +49,10 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   }
 
   private anthropic: Anthropic | null = null
-  private logger: BaseLogger
-  private config: IConfig
 
-  constructor(private context: { logger: BaseLogger; config: IConfig }) {
+  constructor(context: ProviderContext) {
     super(context)
-    this.logger = context.logger
-    this.config = context.config
+
     this.logger.info("Initializing Anthropic API...")
     const proxy = this.config.get<string | undefined>("proxy")
     const apiKey = this.config.get<string | undefined>("apiKeys.anthropic")
