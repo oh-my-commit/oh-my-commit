@@ -58,7 +58,7 @@ export class QuickCommitCommand implements BaseCommand {
     this.logger.info("Getting latest diff, selectedFiles:", selectedFiles)
     await this.gitService.stageAll()
     const diffResult = await this.gitService.getDiffResult()
-    this.logger.info("Done Getting Latest diff")
+    this.logger.info("Done Getting Latest diff: ", diffResult)
     if (!selectedFiles) return diffResult
 
     const newDiffSummary: DiffResult = {
@@ -76,6 +76,7 @@ export class QuickCommitCommand implements BaseCommand {
         }
       }
     })
+    this.logger.info("New Diff Summary: ", newDiffSummary)
 
     return newDiffSummary
   }

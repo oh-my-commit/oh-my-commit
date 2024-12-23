@@ -7,7 +7,6 @@ import {
   APP_ID_CAMEL,
   APP_NAME,
   TOKENS,
-  formatMessage,
   type ClientMessageEvent,
   type LogLevel,
 } from "@shared/common"
@@ -16,8 +15,6 @@ import _ from "lodash"
 import { Inject, Service } from "typedi"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
-
-type MessageHandler = (message: any) => Promise<void>
 
 @Service()
 export class VscodeWebview implements vscode.Disposable {
@@ -79,10 +76,6 @@ export class VscodeWebview implements vscode.Disposable {
     return this.config.get<string>("ohMyCommit.ui.mode")!
   }
 
-  public registerMessageHandler(command: string, handler: MessageHandler) {
-    // this.messageHandlers.set(command, handler)
-  }
-
   public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
     this.logger.info("Creating webview panel...")
     const panel = vscode.window.createWebviewPanel(
@@ -120,7 +113,7 @@ export class VscodeWebview implements vscode.Disposable {
           break
       }
       this.logger.setName(`webview.${webviewChannel}`)
-      this.logger[level](formatMessage("", message))
+      this.logger[level](message)
     })
 
     // Set up file watcher
