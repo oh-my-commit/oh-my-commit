@@ -7,7 +7,6 @@ import {
   BaseGenerateCommitProvider,
   GenerateCommitError,
   formatError,
-  type BaseLogger,
   type GenerateCommitInput,
   type IModel,
   type IProvider,
@@ -16,12 +15,12 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
 
-export const loadPrompt = (_lang: string, diff: string) => {
+const loadPrompt = (_lang: string, diff: string) => {
   // todo: parse from `commit-prompt.hbs`
   return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
 }
 
-export const StandardModelId = `${APP_ID_DASH}.standard`
+const StandardModelId = `${APP_ID_DASH}.standard`
 
 class StandardModel implements IModel {
   id = StandardModelId
@@ -36,7 +35,7 @@ class StandardModel implements IModel {
   }
 }
 
-export class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
+class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   public id = APP_ID_CAMEL
   public displayName = `${APP_NAME} Provider`
   description = `Commit message generation powered by ${APP_NAME} models`
@@ -50,11 +49,9 @@ export class OfficialProvider extends BaseGenerateCommitProvider implements IPro
 
   private anthropic: Anthropic | null = null
 
-  constructor(logger?: BaseLogger, _apiKey?: string, proxyUrl?: string) {
+  constructor(_apiKey?: string, proxyUrl?: string) {
     super()
-    if (logger) {
-      this.logger = logger
-    }
+    // this.logger = new ConsoleLogger("OfficialProvider")
 
     const apiKey = _apiKey || process.env.ANTHROPIC_API_KEY
     const proxy =

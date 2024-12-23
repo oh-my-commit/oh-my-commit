@@ -13,7 +13,7 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
   error: 50,
 }
 
-const DEFAULT_LOG_LEVEL: LogLevel = "info"
+const DEFAULT_LOG_LEVEL: LogLevel = "debug"
 
 export const normalizeLogLevel = (s?: string): LogLevel => {
   if (s) {

@@ -53,7 +53,8 @@
     "no-extra-semi": "off",  // 让 Prettier 接管分号相关的规则
 
     "@typescript-eslint/no-floating-promises": "off",
-    "empty-import-meta": "off"
+    "empty-import-meta": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off"
 
   },
 
