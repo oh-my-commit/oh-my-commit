@@ -72,8 +72,7 @@ export const FileItem: React.FC<FileItemProps> = ({
   }
 
   return (
-    <button
-      type="button"
+    <div
       className={cn(
         "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out w-full text-left",
         isOpen
@@ -82,22 +81,24 @@ export const FileItem: React.FC<FileItemProps> = ({
             ? "bg-list-inactive-bg text-list-inactive-fg"
             : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50",
       )}
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
       onKeyDown={e => {
         if (e.key === "Enter" || e.key === " ") {
-          handleClick()
+          handleClick(e)
         }
       }}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
         <button
-          type="button"
+          aria-label={selected ? "Deselect file" : "Select file"}
           className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100"
+          type="button"
           onClick={e => {
             e.stopPropagation()
             handleSelect()
           }}
-          aria-label={selected ? "Deselect file" : "Select file"}
         >
           <Checkbox checked={selected} onChange={handleSelect} />
         </button>
@@ -156,6 +157,6 @@ export const FileItem: React.FC<FileItemProps> = ({
           </span>
         )}
       </div>
-    </button>
+    </div>
   )
 }
