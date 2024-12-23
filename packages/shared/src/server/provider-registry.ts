@@ -105,7 +105,8 @@ export class ProviderRegistry implements IProviderManager {
       // 所以目前阶段是手动注入
       // todo: 寻求大佬自动注入的手段
       const provider = new Provider() as BaseGenerateCommitProvider
-      provider.logger = Container.get(TOKENS.Logger)
+
+      provider.logger ??= Container.get(TOKENS.Logger)
 
       ProviderSchema.parse(provider)
       return provider
