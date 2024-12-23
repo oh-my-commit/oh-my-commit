@@ -64,6 +64,7 @@
     "react-refresh-typescript": "^2.0.9",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "tsup": "workspace:*",
     "turbo": "^2.3.3",
     "typedi": "^0.10.0",
     "typescript": "5.3.3",

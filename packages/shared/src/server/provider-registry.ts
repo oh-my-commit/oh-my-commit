@@ -1,12 +1,12 @@
 import fs from "node:fs"
 import path from "node:path"
-import { Container, Inject, Service } from "typedi"
+import { Container, Inject, Service, Token } from "typedi"
 import type { BaseGenerateCommitProvider, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
 import { createJiti } from "jiti"
-const jiti = createJiti(import.meta.url)
+const jiti = createJiti(__filename)
 
 /**
  * Provider Registry manages all available commit message providers
@@ -21,6 +21,12 @@ export class ProviderRegistry implements IProviderManager {
   /** Initialize the registry and load all providers */
   async init(): Promise<BaseGenerateCommitProvider[]> {
     this.logger.debug("Initializing ProviderRegistry")
+
+    // 确保 logger 已经被注册
+    if (!Container.has(TOKENS.Logger)) {
+      Container.set(TOKENS.Logger, this.logger)
+    }
+
     await this.loadProviders()
     this.logger.debug(`Loaded ${this.providers.size} providers`)
     return Array.from(this.providers.values())
@@ -86,22 +92,47 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
     try {
-      this.logger.info(`Loading provider from file ==: ${filePath}`)
-      const Provider = await jiti.import(filePath, { default: true })
-      this.logger.info(`imported provider: `)
-      this.logger.info(Provider)
+      const module = jiti(filePath)
+      const Provider = module.default
 
-      // @ts-expect-error - Provider must be a subclass of BaseGenerateCommitProvider
-      const provider = Container.get(Provider) as BaseGenerateCommitProvider
-      // const provider = new Provider()
-      this.logger.info(`Loaded provider: `)
-      this.logger.info(provider)
+      if (!Provider || typeof Provider !== "function") {
+        this.logger.warn(`No default export found in ${filePath}`)
+        return null
+      }
+
+      this.logger.debug(`Provider prototype: ${Object.getOwnPropertyNames(Provider.prototype)}`)
+      // @ts-ignore
+      this.logger.debug(`Provider metadata: ${Reflect.getMetadataKeys(Provider)}`)
+
+      // 确保 logger 已经被注册
+      Container.set(TOKENS.Logger, this.logger)
+      this.logger.debug(`Container has logger: ${Container.has(TOKENS.Logger)}`)
+
+      // 注册环境变量
+      Container.set("ANTHROPIC_API_KEY", process.env["ANTHROPIC_API_KEY"] || "")
+      Container.set(
+        "HTTP_PROXY",
+        process.env["HTTP_PROXY"] || process.env["HTTPS_PROXY"] || process.env["ALL_PROXY"] || "",
+      )
+
+      // 注册 provider 类型
+      const token = new Token<typeof Provider>(`provider-${Date.now()}`)
+      Container.set({ id: token, type: Provider })
+
+      // 从容器中获取实例
+      const provider = Container.get(token) as BaseGenerateCommitProvider
+      this.logger.debug(`Provider instance: ${Object.getOwnPropertyNames(provider)}`)
+      this.logger.debug(`Provider logger: ${provider.logger}, type: ${typeof provider.logger}`)
+
+      this.logger.debug(`Provider prototype: ${Object.getOwnPropertyNames(Provider.prototype)}`)
+      // @ts-ignore
+      this.logger.debug(`Provider metadata: ${Reflect.getMetadataKeys(Provider)}`)
 
       ProviderSchema.parse(provider)
       return provider
     } catch (error) {
       this.logger.error(`Error loading provider from ${filePath}: ${formatError(error)}`)
+      return null
     }
-    return null
   }
 }
