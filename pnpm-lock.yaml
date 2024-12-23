@@ -120,6 +120,9 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.10.1)(@types/node@22.10.2)(typescript@5.3.3)
+      tsup:
+        specifier: workspace:*
+        version: link:third-parties/tsup
       turbo:
         specifier: ^2.3.3
         version: 2.3.3
@@ -242,6 +245,12 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      neverthrow:
+        specifier: ^8.1.1
+        version: 8.1.1
+      typedi:
+        specifier: ^0.10.0
+        version: 0.10.0
     devDependencies:
       '@types/lodash-es':
         specifier: ^4.17.12

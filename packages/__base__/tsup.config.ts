@@ -8,13 +8,21 @@ export default defineConfig({
   dts: false,
   minify: !isDev,
   sourcemap: isDev,
-  splitting: false, 
+  splitting: false,
   treeshake: !isDev,
   format: ["cjs", "esm"],
+
+  // 启用装饰器和元数据支持
   esbuildOptions(options) {
     options.alias = {
       "@": resolve("src"),
-      "@shared": resolve(__dirname, "../shared/src"),
+      "@shared": resolve("../shared/src"),
     }
+    options.target = "es2020"
+    options.define = {
+      "process.env.REFLECT_METADATA": "true",
+    }
+    options.jsx = "transform"
+    options.tsconfig = resolve(__dirname, "tsconfig.json")
   },
 })

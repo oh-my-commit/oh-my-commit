@@ -1,6 +1,6 @@
 import type { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
-import { Inject, Service } from "typedi"
+import Container, { Inject, Service } from "typedi"
 import { z } from "zod"
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type ILogger, type IProviderManager } from "./core"
@@ -174,7 +174,15 @@ export type GenerateCommitInput = z.infer<typeof GenerateCommitInputSchema>
 
 @Service()
 export abstract class BaseGenerateCommitProvider implements IProvider {
-  @Inject(TOKENS.Logger) public logger!: BaseLogger
+  @Inject(TOKENS.Logger)
+  public readonly logger!: BaseLogger
+
+  constructor() {
+    // 如果注入失败，使用默认 logger
+    if (!this.logger) {
+      this.logger = Container.get(TOKENS.Logger) as BaseLogger
+    }
+  }
 
   abstract id: string
 
@@ -201,7 +209,7 @@ export abstract class BaseGenerateCommitProvider implements IProvider {
     input: GenerateCommitInput,
   ): ResultAsync<GenerateCommitResult, GenerateCommitError>
 
-  /**x
+  /**
    * 标准化 provider 的输出，并避免供应商调试时打印一些自循环的属性导致报错
    * .returns
    */

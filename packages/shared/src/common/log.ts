@@ -23,49 +23,12 @@ export const normalizeLogLevel = (s?: string): LogLevel => {
   return DEFAULT_LOG_LEVEL
 }
 
-function getCallerInfo(): string {
-  const error = new Error()
-  const stackLines = error.stack?.split("\n") || []
-
-  // Find the actual caller by skipping internal methods
-  let callerLine = ""
-  for (let i = 3; i < stackLines.length; i++) {
-    const line = stackLines[i]
-    if (!line.includes("_log") && !line.includes("getCallerInfo")) {
-      callerLine = line
-      break
-    }
-  }
-
-  if (!callerLine) return "unknown"
-
-  // Try to match the file path and line number
-  const fileMatch = callerLine.match(/\((.*?):(\d+):(\d+)\)/)
-  if (!fileMatch) return "unknown"
-
-  const filePath = fileMatch[1]
-  // Get the relative path from the last 'src' directory
-  const srcIndex = filePath.lastIndexOf("/src/")
-  const relativePath = (
-    srcIndex !== -1
-      ? filePath.substring(srcIndex + 5) // +5 to skip "/src/"
-      : filePath.split("/").pop() || "unknown"
-  ).replace(".js", ".ts") // Convert JS extension to TS
-
-  const lineNumber = fileMatch[2]
-
-  // Try to get the method name
-  const methodMatch = callerLine.match(/at\s+([\w.]+)\s+\(/)
-  const methodName = methodMatch ? methodMatch[1].split(".").pop() : "unknown"
-
-  return `${relativePath}:${methodName}:${lineNumber}`
-}
-
 @Service()
 export abstract class BaseLogger implements ILogger {
   protected minLevel: LogLevel = DEFAULT_LOG_LEVEL
+  protected name?: string
 
-  constructor(protected name?: string) {
+  constructor(name?: string) {
     this.name = name
   }
 
@@ -111,20 +74,14 @@ export abstract class BaseLogger implements ILogger {
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
-  protected name = "console"
+  protected override name = "console"
 
   protected log(level: LogLevel, ...args: any[]) {
     const timestamp = `${new Date().toISOString()}`
     const levelStr = `${level.toUpperCase().padEnd(5)}`
     const loggerName = this.name || "unknown"
     const formattedMsg = formatMessage(...args)
-    const caller = getCallerInfo()
 
-    console.log(
-      chalk.green(`${timestamp} ${levelStr}`) +
-        ` | [${loggerName}] ` +
-        chalk.blue(`[${caller}] `) +
-        formattedMsg,
-    )
+    console.log(chalk.green(`${timestamp} ${levelStr}`) + ` | [${loggerName}] ` + formattedMsg)
   }
 }
