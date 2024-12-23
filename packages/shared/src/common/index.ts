@@ -1,3 +1,4 @@
+export * from "./CommitManager"
 export * from "./app"
 export * from "./core"
 export * from "./log"
