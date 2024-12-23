@@ -35,9 +35,11 @@ export async function activate(context: vscode.ExtensionContext) {
     logger.info("Initializing statusbar service")
     Container.set(VSCODE_TOKENS.StatusbarService, Container.get(StatusBarManager))
 
-    logger.info("Initializing command manager")
+    logger.info("Initializing command manager .")
     const commandManager = Container.get(CommandManager)
-    logger.info("Initialized command manager: ", commandManager)
+    logger.info("Initializing command manager ..")
+    commandManager.initialize()
+    logger.info("Initialized command manager... ", commandManager)
 
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
