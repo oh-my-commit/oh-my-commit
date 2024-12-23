@@ -22,10 +22,8 @@ type MessageHandler = (message: any) => Promise<void>
 @Service()
 export class VscodeWebview implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
-  private readonly scriptUri: vscode.Uri
-  private readonly template
-  private messageHandlers: Map<string, MessageHandler> = new Map()
-  private onClientMessage?: (message: ClientMessageEvent) => Promise<void>
+  private messageHandler?: (message: ClientMessageEvent) => Promise<void>
+  private title: string
 
   @Inject(TOKENS.Logger) private readonly logger!: VscodeLogger
 
@@ -44,32 +42,37 @@ export class VscodeWebview implements vscode.Disposable {
   private readonly scriptPath: string
 
   constructor({
-    viewType = "webview",
+    title = `${APP_NAME} Webview`,
     templatePath = "assets/webview.template.html",
     scriptPath = "dist/webview-ui/main.js",
-    onClientMessage,
   }: {
-    viewType?: string
     title?: string
     templatePath?: string
     scriptPath?: string
-    onClientMessage?: (message: ClientMessageEvent) => Promise<void>
-  }) {
-    this.onClientMessage = onClientMessage
-    this.logger.info(`Creating ${viewType} webview`)
-
-    // load template
+  } = {}) {
+    this.title = title
     this.templatePath = templatePath
-    this.templatePath = path.join(this.context.extensionPath, this.templatePath)
-    const templateContent = fs.readFileSync(this.templatePath, "utf8")
-    this.template = Handlebars.compile(templateContent)
-
-    // load script
     this.scriptPath = scriptPath
-    this.scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, this.scriptPath))
+  }
 
-    // register webview
+  initialize() {
+    this.logger.info("Initializing webview .")
     this.context.subscriptions.push(this)
+    this.logger.info("Initializing webview ..")
+  }
+
+  setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
+    this.messageHandler = handler
+  }
+
+  get template() {
+    const templatePath = path.join(this.context.extensionPath, this.templatePath)
+    const templateContent = fs.readFileSync(templatePath, "utf8")
+    return Handlebars.compile(templateContent)
+  }
+
+  public get scriptUri() {
+    return vscode.Uri.file(path.join(this.context.extensionPath, this.scriptPath))
   }
 
   public get uiMode(): string {
@@ -77,7 +80,7 @@ export class VscodeWebview implements vscode.Disposable {
   }
 
   public registerMessageHandler(command: string, handler: MessageHandler) {
-    this.messageHandlers.set(command, handler)
+    // this.messageHandlers.set(command, handler)
   }
 
   public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
@@ -111,8 +114,8 @@ export class VscodeWebview implements vscode.Disposable {
           await vscode.env.openExternal(vscode.Uri.parse(message.data.url))
           break
         default:
-          if (this.onClientMessage) {
-            await this.onClientMessage(message)
+          if (this.messageHandler) {
+            await this.messageHandler(message)
           }
           break
       }

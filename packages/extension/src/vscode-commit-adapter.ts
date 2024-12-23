@@ -1,4 +1,11 @@
-import { APP_NAME, BaseLogger, formatMessage, type IConfig, type LogLevel } from "@shared/common"
+import {
+  APP_NAME,
+  BaseLogger,
+  formatMessage,
+  normalizeLogLevel,
+  type IConfig,
+  type LogLevel,
+} from "@shared/common"
 import { Service } from "typedi"
 import vscode from "vscode"
 
@@ -23,6 +30,7 @@ export class VscodeLogger extends BaseLogger {
 
   constructor(name = "host") {
     super(name)
+    this.minLevel = normalizeLogLevel(process.env.LOG_LEVEL)
   }
 
   protected log(level: LogLevel, ...args: any[]) {
