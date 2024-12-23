@@ -16,7 +16,7 @@ export const DiffViewer: FC = () => {
   const scrollPositionRef = useRef<{ [key: string]: number }>({})
 
   const selectedFile = files?.files?.find(f => f.file === lastOpenedFilePath)
-  const ext = selectedFile?.path.split(".").pop()?.toLowerCase() || "text"
+  const ext = selectedFile?.file.split(".").pop()?.toLowerCase() || "text"
   const language = useMemo(() => getLanguageFromExtension(ext), [ext])
 
   const saveScrollPosition = useCallback(() => {
@@ -40,11 +40,11 @@ export const DiffViewer: FC = () => {
     return null
   }
 
-  if (!selectedFile.diff) {
+  if (selectedFile.binary) {
     return <div className="flex items-center justify-center h-full">No diff available</div>
   }
 
-  const lines: string[] = selectedFile.diff.split("\n")
+  const lines: string[] = ["todo: fetch diff"]
 
   const handleClose = () => {
     saveScrollPosition()
@@ -56,11 +56,18 @@ export const DiffViewer: FC = () => {
       <div className="border-b min-w-0">
         <div className="flex items-center justify-between p-2 gap-2">
           <div className="min-w-0">
-            <span className="font-medium truncate block">{selectedFile.path}</span>
+            <span className="font-medium truncate block">{selectedFile.file}</span>
           </div>
           <div className="flex items-center gap-4 shrink-0">
-            <span className="text-green-600 dark:text-green-400">+{selectedFile.additions}</span>
-            <span className="text-red-600 dark:text-red-400">-{selectedFile.deletions}</span>
+            {!selectedFile.binary && (
+              <>
+                <span className="text-green-600 dark:text-green-400">
+                  +{selectedFile.insertions}
+                </span>
+                <span className="text-red-600 dark:text-red-400">-{selectedFile.deletions}</span>
+              </>
+            )}
+
             <VSCodeButton
               appearance="icon"
               className={cn(
