@@ -17,8 +17,8 @@ export class QuickCommitCommand implements BaseCommand {
     @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(VSCODE_TOKENS.GitService) private readonly gitService: VscodeGit,
-    @Inject(VSCODE_TOKENS.WebviewService) private readonly webviewManager: VscodeWebview,
+    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
+    @Inject(VSCODE_TOKENS.Webview) private readonly webviewManager: VscodeWebview,
   ) {
     // 设置 webview 的消息处理
     this.webviewManager.setMessageHandler(async message => {

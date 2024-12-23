@@ -1,7 +1,7 @@
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
-import { COMMAND_SELECT_MODEL, type CommitManager } from "@shared/common"
-import { Service } from "typedi"
+import { COMMAND_SELECT_MODEL, TOKENS, type CommitManager } from "@shared/common"
+import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
 @Service()
@@ -9,8 +9,8 @@ export class SelectModelCommand implements BaseCommand {
   public id = COMMAND_SELECT_MODEL
 
   constructor(
-    private readonly commitManager: CommitManager,
-    private readonly logger: VscodeLogger,
+    @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
+    @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
   ) {}
 
   async execute(): Promise<void> {

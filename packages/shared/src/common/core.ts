@@ -15,8 +15,9 @@ export interface IConfig {
 }
 
 export interface IProviderManager {
+  providers: BaseGenerateCommitProvider[]
   initialized?: boolean
-  init(): Promise<BaseGenerateCommitProvider[]>
+  initialize(): Promise<void>
 }
 
 export interface IUIProvider {

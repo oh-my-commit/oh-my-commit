@@ -19,7 +19,7 @@ export class StatusBarManager implements vscode.Disposable {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(VSCODE_TOKENS.GitService) private readonly gitService: VscodeGit,
+    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
   ) {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
@@ -44,34 +44,46 @@ export class StatusBarManager implements vscode.Disposable {
       }),
     )
 
-    this.commitManager.providersManager.init().then(() => {
-      void this.update()
-    })
+    void this.update()
   }
 
   private async update(): Promise<void> {
-    const modelId = this.commitManager.modelId
-    const model = this.commitManager.model
-    this.logger.info(`Updating status: `, { modelId, model })
-    const isGitRepo = await this.gitService.isGitRepository()
+    try {
+      if (!this.commitManager?.providersManager) {
+        this.statusBarItem.text = `$(error) ${APP_NAME} (Initializing...)`
+        this.statusBarItem.tooltip = "Provider manager is not initialized"
+        this.statusBarItem.command = undefined
+        return
+      }
 
-    if (!isGitRepo) {
-      this.statusBarItem.text = `$(error) ${APP_NAME} (Not a Git repository)`
-      this.statusBarItem.tooltip = "This workspace is not a Git repository"
-      this.statusBarItem.command = undefined
-      return
-    }
+      const modelId = this.commitManager.modelId
+      const model = this.commitManager.model
+      this.logger.info(`Updating status: `, { modelId, model })
+      const isGitRepo = await this.gitService.isGitRepository()
 
-    if (!model) {
-      this.statusBarItem.text = `$(error) ${APP_NAME} (No model selected)`
-      this.statusBarItem.tooltip = "Click to select a model"
+      if (!isGitRepo) {
+        this.statusBarItem.text = `$(error) ${APP_NAME} (Not a Git repository)`
+        this.statusBarItem.tooltip = "This workspace is not a Git repository"
+        this.statusBarItem.command = undefined
+        return
+      }
+
+      if (!model) {
+        this.statusBarItem.text = `$(error) ${APP_NAME} (No model selected)`
+        this.statusBarItem.tooltip = "Click to select a model"
+        this.statusBarItem.command = COMMAND_SELECT_MODEL
+        return
+      }
+
+      this.statusBarItem.text = `$(git-commit) ${APP_NAME} (${model.name})`
+      this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`
       this.statusBarItem.command = COMMAND_SELECT_MODEL
-      return
+    } catch (error) {
+      this.logger.error("Error updating status bar:", error)
+      this.statusBarItem.text = `$(error) ${APP_NAME} (Error)`
+      this.statusBarItem.tooltip = "Error updating status. Check logs for details."
+      this.statusBarItem.command = undefined
     }
-
-    this.statusBarItem.text = `$(git-commit) ${APP_NAME} (${model.name})`
-    this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`
-    this.statusBarItem.command = COMMAND_SELECT_MODEL
   }
 
   public dispose(): void {

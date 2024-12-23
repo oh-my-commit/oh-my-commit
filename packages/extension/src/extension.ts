@@ -1,6 +1,6 @@
 import "reflect-metadata"
 
-import { CommitManager, TOKENS, formatError } from "@shared/common"
+import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 import { Container } from "typedi"
 import * as vscode from "vscode"
@@ -8,37 +8,30 @@ import { CommandManager } from "./commands/command-manager"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git"
 import { StatusBarManager } from "./vscode-statusbar"
-import { VSCODE_TOKENS } from "./vscode-token"
+import { VSCODE_TOKENS as TOKENS_VSCODE } from "./vscode-token"
 import { VscodeWebview } from "./vscode-webview"
 
 export async function activate(context: vscode.ExtensionContext) {
-  /**
-   * logger(VscodeLogger)
-   * config(VscodeConfig)
-   * context(VscodeContext)
-   * git(VscodeGit)
-   *
-   * webview(VscodeWebview)
-   * providerRegistry(ProviderRegistry)
-   * commitManager(CommitManager)
-   * commandManager(CommandManager
-   */
   try {
-    const logger = new VscodeLogger()
-    logger.info("Initializing Oh My Commit")
+    const logger = Container.get(VscodeLogger)
+    logger.info(`Initializing ${APP_NAME} extension...`)
 
-    Container.set(VSCODE_TOKENS.Context, context)
+    Container.set(TOKENS_VSCODE.Context, context)
     Container.set(TOKENS.Logger, logger)
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
-    Container.set(VSCODE_TOKENS.GitService, Container.get(VscodeGit))
-    Container.set(VSCODE_TOKENS.WebviewService, Container.get(VscodeWebview))
+    Container.set(TOKENS_VSCODE.Git, Container.get(VscodeGit))
+    Container.set(TOKENS_VSCODE.Webview, Container.get(VscodeWebview))
     Container.set(TOKENS.CommitManager, Container.get(CommitManager))
 
-    logger.info("Initializing command manager .")
+    logger.info(`Initializing Background`)
+    // init providers, MUST wait
+    await Container.get(ProviderRegistry).initialize()
+    // register commands
     Container.get(CommandManager)
 
-    logger.info("Initializing status bar")
+    logger.info(`Initializing UI`)
+    // status bar would call `select-model` or any other commands
     Container.get(StatusBarManager)
 
     // await app.initialize();

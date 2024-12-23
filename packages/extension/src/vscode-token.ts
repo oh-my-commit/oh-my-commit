@@ -10,8 +10,8 @@ import type { VscodeWebview } from "./vscode-webview"
 
 export const VSCODE_TOKENS = {
   Context: new Token<vscode.ExtensionContext>("VSCodeContext"),
-  GitService: new Token<VscodeGit>("VscodeGitService"),
-  WebviewService: new Token<VscodeWebview>("VscodeWebviewService"),
+  Git: new Token<VscodeGit>("VscodeGitService"),
+  Webview: new Token<VscodeWebview>("VscodeWebviewService"),
   QuickCommitCommand: new Token<QuickCommitCommand>("VscodeQuickCommitService"),
   StatusbarService: new Token<StatusBarManager>("VscodeStatusbarService"),
   CommandManager: new Token<CommandManager>("VscodeCommandService"),
