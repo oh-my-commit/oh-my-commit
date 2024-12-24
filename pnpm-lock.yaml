@@ -242,6 +242,9 @@ importers:
       '@oh-my-commit/shared':
         specifier: workspace:*
         version: link:../shared
+      handlebars:
+        specifier: ^4.7.8
+        version: 4.7.8
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
