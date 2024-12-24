@@ -3,6 +3,10 @@
   "version": "0.5.0",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -25,5 +29,6 @@
     "@types/node": "^22.10.2",
     "tsup": "workspace:^",
     "typescript": "^5.7.2"
-  }
+  },
+  "gitHead": "b642fb2921e3f62189d77a6c8f58bf2807f514bc"
 }
