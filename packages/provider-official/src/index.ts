@@ -12,31 +12,13 @@ import {
   type IProvider,
   type ProviderContext,
 } from "@shared/common"
-import { readFileSync } from "fs"
-import Handlebars, { type TemplateDelegate } from "handlebars"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
-import { join } from "path"
-
-const TEMPLATE_PATH = join(__dirname, "../templates/commit-prompt.hbs")
-
-// 编译模板（只需编译一次）
-let compiledTemplate: TemplateDelegate | null = null
-
-const loadPrompt = async (input: { lang: string; diff: string }) => {
-  if (!compiledTemplate) {
-    const template = readFileSync(TEMPLATE_PATH, "utf-8")
-    compiledTemplate = Handlebars.compile(template)
-  }
-
-  return compiledTemplate(input)
-}
-
-const StandardModelId = `${APP_ID_DASH}.standard`
+import { TemplateProcessor } from "./TemplateProcessor"
 
 class StandardModel implements IModel {
-  id = StandardModelId
+  id = `${APP_ID_DASH}.standard`
   name = `${APP_NAME} Standard Model`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
   providerId = APP_ID_CAMEL
@@ -61,6 +43,7 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   }
 
   private anthropic: Anthropic | null = null
+  private templateProcessor = new TemplateProcessor()
 
   constructor(context: ProviderContext) {
     super(context)
@@ -83,7 +66,7 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
     return (
       // 1. load prompt
       ResultAsync.fromPromise(
-        loadPrompt({ diff, lang }),
+        Promise.resolve(this.templateProcessor.loadPrompt({ diff, lang })),
         error =>
           new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
       )
