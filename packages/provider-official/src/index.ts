@@ -49,18 +49,18 @@ class OfficialProvider extends BaseProvider implements IProvider {
   constructor(context: ProviderContext) {
     super(context)
 
-    this.logger.info("Initializing Anthropic API...")
+    this.logger.debug("Initializing Anthropic API...")
     const proxy = this.config.get<string | undefined>("proxy")
     const apiKey = this.config.get<string | undefined>("apiKeys.anthropic")
 
     const config: Record<string, any> = { apiKey }
     if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
-    this.logger.info("Initializing Anthropic API: ", config)
+    this.logger.debug("Initializing Anthropic API: ", config)
     this.anthropic = new Anthropic(config)
   }
 
   async generateCommit(input: IInput): Promise<IResultDTO> {
-    this.logger.info("Generating commit message using OMC Provider...")
+    this.logger.debug("Generating commit message using OMC Provider...")
     const diff = JSON.stringify(input.diff, null, 2)
     const lang = input.options?.lang || "en"
 
@@ -97,7 +97,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
   }
 
   private callApi(prompt: string) {
-    this.logger.info("Generating commit message using Anthropic...")
+    this.logger.debug("Generating commit message using Anthropic...")
     const modelName = "claude-3-sonnet-20240229"
     if (!this.anthropic) throw new Error("Anthropic API key not configured")
 

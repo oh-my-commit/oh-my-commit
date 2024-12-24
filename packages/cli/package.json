@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.2.4",
+  "version": "0.2.7",
   "bin": {
     "omc": "./dist/index.js"
   },
@@ -23,7 +23,6 @@
     "@types/node": "^20.0.0",
     "chokidar": "^4.0.3",
     "eslint": "^8.0.0",
-    "eslint-config-custom": "*",
     "tsconfig": "*",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"

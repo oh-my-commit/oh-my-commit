@@ -116,11 +116,11 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 
     const commitData: IResult = result.data
 
-    commitManager.logger.info(chalk.green("Generated commit message:"))
-    commitManager.logger.info(commitData.title)
-    if (commitData.body) {
-      commitManager.logger.info("\n" + commitData.body)
-    }
+    commitManager.logger.info(
+      chalk.green(
+        [`Generated commit message:`, commitData.title, `---`, commitData.body].join("\n"),
+      ),
+    )
 
     if (options.yes) {
       // Automatically commit if -y flag is provided
