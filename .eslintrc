@@ -7,16 +7,11 @@
   ],
   "parserOptions":  {
     "projectService": true,
-    "project": [
-      "tsconfig.base.json",
-      "packages/*/tsconfig.json"
-    ]
+    "project": true
   },
   "settings": {
     "import/resolver": {
-      "typescript": {
-        "project": ["tsconfig.base.json", "packages/__base__/tsconfig.json", "packages/*/tsconfig.json"]
-      }
+      "typescript": true
     }
   },
   "overrides": [
@@ -27,7 +22,7 @@
       }
     }
   ],
-  "ignorePatterns": ["*.config.*"],
+  "ignorePatterns": ["*.config.*", "dist"],
   "env": {
     "browser": true,
     "commonjs": true,

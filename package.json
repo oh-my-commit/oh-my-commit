@@ -57,6 +57,7 @@
     "glob": "^11.0.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.3",
+    "lerna": "^8.1.9",
     "lodash-es": "^4.17.21",
     "markdown-toc": "^1.2.0",
     "minimist": "^1.2.8",
