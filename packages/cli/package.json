@@ -36,5 +36,6 @@
     "neverthrow": "^8.1.1",
     "simple-git": "^3.22.0",
     "typedi": "^0.10.0"
-  }
+  },
+  "gitHead": "b642fb2921e3f62189d77a6c8f58bf2807f514bc"
 }
