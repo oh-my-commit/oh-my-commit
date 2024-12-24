@@ -202,7 +202,7 @@ generateCommit(input: GenerateCommitInput): GenerateCommitResult {
   generateCommit(
     input: GenerateCommitInput,
   ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
-    this.logger.info("Generating commit message using OMC Provider...")
+    this.logger.debug("Generating commit message using OMC Provider...")
     const diff = JSON.stringify(input.diff, null, 2)
     const lang = input.options?.lang || "en"
 

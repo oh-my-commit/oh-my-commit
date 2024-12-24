@@ -70,7 +70,7 @@ export class CommitManager {
         lang: this.config.get("lang"),
       }
 
-      this.logger.info(`Generating commit using model: ${modelId}`)
+      this.logger.debug(`Generating commit using model: ${modelId}`)
       const result = await provider.generateCommit({
         model: modelId,
         diff,
