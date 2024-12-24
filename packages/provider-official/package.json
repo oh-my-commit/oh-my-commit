@@ -14,6 +14,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@oh-my-commit/shared": "workspace:*",
+    "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",
     "neverthrow": "^8.1.1",
     "reflect-metadata": "^0.2.1",

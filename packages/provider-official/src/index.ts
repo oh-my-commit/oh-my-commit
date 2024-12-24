@@ -12,13 +12,25 @@ import {
   type IProvider,
   type ProviderContext,
 } from "@shared/common"
+import { readFileSync } from "fs"
+import Handlebars, { type TemplateDelegate } from "handlebars"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
+import { join } from "path"
 
-const loadPrompt = (_lang: string, diff: string) => {
-  // todo: parse from `commit-prompt.hbs`
-  return `作为一个经验丰富的开发者，请分析以下代码变更并生成提交信息：\n${diff}`
+const TEMPLATE_PATH = join(__dirname, "../templates/commit-prompt.hbs")
+
+// 编译模板（只需编译一次）
+let compiledTemplate: TemplateDelegate | null = null
+
+const loadPrompt = async (input: { lang: string; diff: string }) => {
+  if (!compiledTemplate) {
+    const template = readFileSync(TEMPLATE_PATH, "utf-8")
+    compiledTemplate = Handlebars.compile(template)
+  }
+
+  return compiledTemplate(input)
 }
 
 const StandardModelId = `${APP_ID_DASH}.standard`
@@ -65,44 +77,51 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
 
   generateCommit(input: GenerateCommitInput) {
     this.logger.info("Generating commit message using OMC Provider...")
+    const diff = JSON.stringify(input.diff, null, 2)
+    const lang = input.options?.lang || "en"
+
     return (
-      // 1. call api
+      // 1. load prompt
       ResultAsync.fromPromise(
-        this.callApi(input),
+        loadPrompt({ diff, lang }),
         error =>
-          new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
+          new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
       )
-        // 2. handle api result
-        .andThen(response =>
+        // 2. call api
+        .andThen(prompt =>
           ResultAsync.fromPromise(
-            this.handleApiResult(response),
+            this.callApi(prompt),
             error =>
-              new GenerateCommitError(
-                -10087,
-                `failed to handle api result, reason: ${formatError(error)}`,
+              new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
+          )
+            // 3. handle api result
+            .andThen(response =>
+              ResultAsync.fromPromise(
+                this.handleApiResult(response),
+                error =>
+                  new GenerateCommitError(
+                    -10087,
+                    `failed to handle api result, reason: ${formatError(error)}`,
+                  ),
               ),
-          ),
+            )
+            // 4. add metadata
+            .map(result => {
+              merge(result.meta, {
+                generatedAt: new Date().toISOString(),
+                modelId: input.model,
+                providerId: this.id,
+              })
+              return result
+            }),
         )
-        // 3. add metadata
-        .map(result => {
-          merge(result.meta, {
-            generatedAt: new Date().toISOString(),
-            modelId: input.model,
-            providerId: this.id,
-          })
-          return result
-        })
     )
   }
 
-  private callApi(input: GenerateCommitInput) {
+  private callApi(prompt: string) {
     this.logger.info("Generating commit message using Anthropic...")
-    const lang = input.options?.lang || "en"
     const modelName = "claude-3-sonnet-20240229"
     if (!this.anthropic) throw new Error("Anthropic API key not configured")
-
-    const diff = JSON.stringify(input.diff, null, 2)
-    const prompt = loadPrompt(lang, diff)
 
     return this.anthropic.messages.create({
       model: modelName,
