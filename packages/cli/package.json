@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.2.8",
+  "version": "0.1.0",
   "bin": {
     "omc": "./dist/index.js"
   },
@@ -25,7 +25,7 @@
     "eslint": "^8.0.0",
     "pkg-info": "^1.0.1",
     "tsconfig": "*",
-    "tsup": "^8.0.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.0.0"
   },
   "dependencies": {
