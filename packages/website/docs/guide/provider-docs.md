@@ -4,36 +4,87 @@
 
 > 如果你需要自定义 prompt 模板，请参考 [自定义 Prompt 模板指南](./custom-prompt-template.md)
 
-## 快速开始
 
-创建一个新的 Provider 类并继承基类：
+## 基本示例
+
 
 ```typescript
-import { Provider, GenerateCommitInput, GenerateCommitResult, Model } from "./types"
+import { ResultAsync } from "neverthrow"
 
-export class MyProvider extends Provider {
+import {
+  BaseProvider,
+  formatError,
+  GenerateCommitError,
+  type GenerateCommitInput,
+  type GenerateCommitResult,
+  type IModel,
+  type IProvider,
+  type ProviderContext,
+} from "@shared/common"
+
+export class MyProvider extends BaseProvider implements IProvider {
   id = "my-provider"
-  displayName = "My Provider"
-  description = "A custom commit message provider"
+  displayName = "My Commit Provider"
+  description = "AI-powered commit message generator"
 
-  models: Model[] = [
+  // you should declare your models, so can be found in our system
+  models: IModel[] = [
     {
       providerId: this.id,
-      id: "default",
-      name: "Default Model",
-      description: "Standard commit generation model",
+      id: "fast",
+      name: "Fast Mode",
+      description: "Quick commit generation with good accuracy",
       metrics: {
-        accuracy: 0.9,
-        speed: 0.8,
-        cost: 0.5,
+        accuracy: 0.85,
+        speed: 0.95,
+        cost: 0.3,
       },
     },
   ]
 
-  generateCommit(input: GenerateCommitInput): GenerateCommitResult {
-    // 实现生成逻辑
+    // you can access the environment-specific logger and config ...
+    constructor(context: ProviderContext) {
+      super(context)
+      // logger is inherited
+      this.logger.info("Initializing MyProvider...")
+  }
+
+  // you should implement the generateCommit method
+  // and consider about the api_key, proxy, timeout ... by yourself
+  // we use ResultAsync to handle errors better
+  // it's recommended but not required
+  generateCommit(input: GenerateCommitInput): 
+    ResultAsync<GenerateCommitResult, GenerateCommitError> {
+    try {
+      this.logger.info("Generating commit", {
+        model: input.model.id,
+        lang: input.options?.lang,
+      })
+
+      const { diff } = input
+
+      // 实现生成逻辑
+      const commit = {
+        title: `feat: implement new feature`,
+        body: `Detailed changes:\n${diff.files.join("\n")}`,
+      }
+
+      return { ok: true, data: commit }
+    } catch (error) {
+      const message = "Failed to generate commit, reason: "
+        + formatError(error)
+      this.logger.error(message)
+      return {
+        ok: false,
+        code: 500,
+        message,
+      }
+    }
   }
 }
+
+// you should export **default** your provider
+export default MyProvider
 ```
 
 ## 接口详解
@@ -114,30 +165,7 @@ export class MyProvider extends Provider {
 
 ## 最佳实践
 
-1. **错误处理**
-
-```typescript
-generateCommit(input: GenerateCommitInput): GenerateCommitResult {
-  try {
-    // 生成逻辑
-    return {
-      ok: true,
-      data: {
-        title: 'feat: add new feature',
-        body: 'Detailed description'
-      }
-    }
-  } catch (error) {
-    return {
-      ok: false,
-      code: 500,
-      msg: error instanceof Error ? error.message : 'Unknown error'
-    }
-  }
-}
-```
-
-2. **模型切换**
+1. **模型切换**
 
 ```typescript
 generateCommit(input: GenerateCommitInput): GenerateCommitResult {
@@ -156,13 +184,66 @@ generateCommit(input: GenerateCommitInput): GenerateCommitResult {
 }
 ```
 
-3. **日志使用**
+2. **日志使用**
 
 ```typescript
-generateCommit(input: GenerateCommitInput): GenerateCommitResult {
-  this.logger.info('Generating commit', { model: input.model.id })
-  // 生成逻辑
-}
+  // directly use the inherited logger
+  // supporting structured logging in the vscode outputChannel
+  this.logger.info('Generating commit', {
+    model: input.model.id,
+    lang: input.options?.lang,
+  })
+```
+
+3. **错误处理**
+
+```typescript
+// from official example
+  generateCommit(
+    input: GenerateCommitInput,
+  ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
+    this.logger.info("Generating commit message using OMC Provider...")
+    const diff = JSON.stringify(input.diff, null, 2)
+    const lang = input.options?.lang || "en"
+
+    return ResultAsync.fromPromise(
+      // async action 1
+      Promise.resolve().then(() => this.templateProcessor.fill({ diff, lang })),
+      // error 1
+      error =>
+        new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
+    )
+      .andThen(prompt =>
+        ResultAsync.fromPromise(
+          // async action 2
+          this.callApi(prompt),
+          // error 2
+          error =>
+            new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
+        ),
+      )
+      .andThen(response =>
+        ResultAsync.fromPromise(
+          // async action 3
+          this.handleApiResult(response),
+          // error 3
+          error =>
+            new GenerateCommitError(
+              -10087,
+              `failed to handle api result, reason: ${formatError(error)}`,
+            ),
+        ),
+      )
+      .map(result => {
+        // metadata
+        merge(result.meta, {
+          generatedAt: new Date().toISOString(),
+          modelId: input.model,
+          providerId: this.id,
+        })
+        return result
+      })
+  }
 ```
 
 ## 注意事项
@@ -172,54 +253,3 @@ generateCommit(input: GenerateCommitInput): GenerateCommitResult {
 3. 适当使用 logger 记录关键信息
 4. 合理设置模型的 metrics 指标，帮助用户选择
 5. 正确处理并返回错误信息
-
-## 完整示例
-
-> 实战示例： packages/shared/src/server/providers/index.ts
-
-```typescript
-export class MyProvider extends Provider {
-  id = "my-provider"
-  displayName = "My Commit Provider"
-  description = "AI-powered commit message generator"
-
-  models: Model[] = [
-    {
-      providerId: this.id,
-      id: "fast",
-      name: "Fast Mode",
-      description: "Quick commit generation with good accuracy",
-      metrics: {
-        accuracy: 0.85,
-        speed: 0.95,
-        cost: 0.3,
-      },
-    },
-  ]
-
-  generateCommit(input: GenerateCommitInput): GenerateCommitResult {
-    try {
-      this.logger.info("Generating commit", {
-        model: input.model.id,
-        lang: input.options?.lang,
-      })
-
-      const { diff } = input
-
-      // 实现生成逻辑
-      const commit = {
-        title: `feat: implement new feature`,
-        body: `Detailed changes:\n${diff.files.join("\n")}`,
-      }
-
-      return { ok: true, data: commit }
-    } catch (error) {
-      this.logger.error("Failed to generate commit", { error })
-      return {
-        ok: false,
-        code: 500,
-        msg: error instanceof Error ? error.message : "Failed to generate commit",
-      }
-    }
-  }
-}

@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { Container, Inject, Service } from "typedi"
-import type { BaseGenerateCommitProvider, IConfig, IProviderManager } from "../common"
+import type { BaseProvider, IConfig, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
@@ -14,7 +14,7 @@ const jiti = createJiti(__filename)
 @Service()
 export class ProviderRegistry implements IProviderManager {
   initialized = false
-  providers: BaseGenerateCommitProvider[] = []
+  providers: BaseProvider[] = []
   private providersDir = PROVIDERS_DIR
 
   constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
@@ -56,7 +56,7 @@ export class ProviderRegistry implements IProviderManager {
   }
 
   /** Register a new provider */
-  registerProvider(provider: BaseGenerateCommitProvider) {
+  registerProvider(provider: BaseProvider) {
     this.logger.debug(`Registering provider: ${provider.id}`)
     if (this.providers.some(p => p.id === provider.id)) {
       this.logger.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
@@ -66,7 +66,7 @@ export class ProviderRegistry implements IProviderManager {
     this.logger.debug(`Successfully registered provider: ${provider.id}`)
   }
 
-  private async loadProviderFromFile(filePath: string): Promise<BaseGenerateCommitProvider | null> {
+  private async loadProviderFromFile(filePath: string): Promise<BaseProvider | null> {
     try {
       const module = await jiti.import(filePath, { default: true })
       const Provider =
@@ -75,7 +75,7 @@ export class ProviderRegistry implements IProviderManager {
         (module as new (context: {
           logger: BaseLogger
           config: IConfig
-        }) => BaseGenerateCommitProvider)
+        }) => BaseProvider)
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)

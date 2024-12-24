@@ -1,7 +1,7 @@
 import { Token } from "typedi"
 import type { CommitManager } from "./CommitManager"
 import type { BaseLogger } from "./log"
-import type { BaseGenerateCommitProvider } from "./provider.interface"
+import type { BaseProvider } from "./provider.interface"
 
 export interface ILogger {
   info(message: string, ...args: any[]): void
@@ -16,7 +16,7 @@ export interface IConfig {
 }
 
 export interface IProviderManager {
-  providers: BaseGenerateCommitProvider[]
+  providers: BaseProvider[]
   initialized?: boolean
   initialize(): Promise<void>
 }
