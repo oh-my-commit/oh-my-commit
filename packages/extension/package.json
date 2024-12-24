@@ -5,6 +5,170 @@
   "engines": {
     "vscode": "^1.80.0"
   },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:.git"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "ohMyCommit.quickCommit",
+        "title": "Oh My Commit: Quick Commit"
+      },
+      {
+        "command": "ohMyCommit.selectModel",
+        "title": "Oh My Commit: Select Model"
+      },
+      {
+        "command": "ohMyCommit.openPreference",
+        "title": "Oh My Commit: Open Preference"
+      }
+    ],
+    "configuration": {
+      "title": "Oh My Commit",
+      "properties": {
+        "ohMyCommit.basic.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否启用 Oh My Commit",
+          "order": 1
+        },
+        "ohMyCommit.basic.uiLanguage": {
+          "type": "string",
+          "enum": [
+            "system",
+            "zh_CN",
+            "en_US"
+          ],
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文",
+            "English"
+          ],
+          "default": "system",
+          "markdownDescription": "界面显示语言",
+          "order": 2
+        },
+        "ohMyCommit.model.id": {
+          "type": "string",
+          "enum": [
+            "ohMyCommit.standard"
+          ],
+          "default": "ohMyCommit.standard",
+          "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
+          "order": 3
+        },
+        "ohMyCommit.git.emptyChangeBehavior": {
+          "type": "string",
+          "enum": [
+            "skip",
+            "amend"
+          ],
+          "enumDescriptions": [
+            "跳过空更改，不执行任何操作",
+            "修改最近一次提交（git commit --amend）"
+          ],
+          "default": "skip",
+          "markdownDescription": "当工作区没有文件变更时的行为",
+          "order": 20
+        },
+        "ohMyCommit.git.autoStage": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否自动暂存所有更改",
+          "order": 21
+        },
+        "ohMyCommit.git.commitLanguage": {
+          "type": "string",
+          "enum": [
+            "system",
+            "zh_CN",
+            "en_US"
+          ],
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文提交信息",
+            "English commit messages"
+          ],
+          "default": "system",
+          "markdownDescription": "Git 提交信息的语言",
+          "order": 22
+        },
+        "ohMyCommit.ui.mode": {
+          "type": "string",
+          "enum": [
+            "silent",
+            "notification",
+            "window",
+            "panel"
+          ],
+          "enumDescriptions": [
+            "仅在状态栏显示提交信息和状态",
+            "弹出通知，支持修改按钮",
+            "以浮动窗口显示提交界面",
+            "在面板中显示完整提交界面"
+          ],
+          "default": "window",
+          "markdownDescription": "提交界面显示模式",
+          "order": 23
+        },
+        "ohMyCommit.ai.apiKeys": {
+          "type": "object",
+          "markdownDescription": "AI 服务提供商的 API 密钥配置",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "properties": {
+            "openai": {
+              "type": "string",
+              "default": "",
+              "markdownDescription": "OpenAI API 密钥",
+              "order": 301
+            },
+            "anthropic": {
+              "type": "string",
+              "default": "",
+              "markdownDescription": "Anthropic API 密钥",
+              "order": 302
+            }
+          },
+          "order": 30
+        },
+        "ohMyCommit.telemetry.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否启用使用数据收集（匿名）",
+          "order": 50
+        },
+        "ohMyCommit.telemetry.shareLevel": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "basic",
+            "full"
+          ],
+          "enumDescriptions": [
+            "仅收集基本错误信息",
+            "包含功能使用统计和性能数据",
+            "额外包含 AI 生成结果的质量反馈"
+          ],
+          "default": "basic",
+          "markdownDescription": "数据收集级别",
+          "order": 51
+        },
+        "ohMyCommit.feedback.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",
+          "order": 60
+        }
+      }
+    }
+  },
+  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
