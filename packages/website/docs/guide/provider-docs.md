@@ -2,6 +2,8 @@
 
 本文档将指导你如何实现一个 AI Commit Provider。Provider 是一个抽象类，用于生成 AI 辅助的提交信息。
 
+> 如果你需要自定义 prompt 模板，请参考 [自定义 Prompt 模板指南](./custom-prompt-template.md)
+
 ## 快速开始
 
 创建一个新的 Provider 类并继承基类：
@@ -221,4 +223,3 @@ export class MyProvider extends Provider {
     }
   }
 }
-```

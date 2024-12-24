@@ -93,9 +93,6 @@ export default (env, argv) => {
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        template: "./index.html",
-      }),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     optimization: {

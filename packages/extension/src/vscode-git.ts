@@ -1,6 +1,8 @@
+import { TOKENS, formatError } from "@shared/common"
 import { GitCore } from "@shared/server"
-import { Service } from "typedi"
+import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+import { VscodeLogger } from "./vscode-commit-adapter"
 
 @Service()
 export class VscodeGit extends GitCore {
@@ -8,7 +10,7 @@ export class VscodeGit extends GitCore {
   readonly onGitStatusChanged: vscode.Event<boolean>
   private fsWatcher: vscode.FileSystemWatcher | undefined
 
-  constructor() {
+  constructor(@Inject(TOKENS.Logger) private readonly logger: VscodeLogger) {
     const workspaceFolders = vscode.workspace.workspaceFolders
     const workspaceRoot = workspaceFolders ? workspaceFolders[0]!.uri.fsPath : ""
 
@@ -43,11 +45,11 @@ export class VscodeGit extends GitCore {
   public async getRecentCommits(count: number = 5) {
     try {
       const logs = await this.git.log({ maxCount: count })
-      console.log({ logs })
+      this.logger.info("recent commits: ", logs)
 
       return logs.all
     } catch (error) {
-      console.error("Failed to get recent commits:", error)
+      this.logger.error("Failed to get recent commits:", formatError(error))
       return []
     }
   }
