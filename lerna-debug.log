@@ -7,17 +7,17 @@
 1 notice cli v8.1.9
 2 verbose packageConfigs Package manager "pnpm" detected. Resolving packages using `pnpm-workspace.yaml`.
 3 verbose rootPath /Users/mark/coding/apps/oh-my-commit_v2
-4 info current version 0.0.0
+4 info current version 0.1.0
 5 silly isAnythingCommitted
 6 verbose isAnythingCommitted 1
 7 silly getCurrentBranch
 8 verbose currentBranch main
 9 silly remoteBranchExists
 10 silly isBehindUpstream
-11 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 8
+11 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 9
 12 silly hasTags
 13 verbose hasTags true
-14 silly git-describe.sync "v0.4.0-80-g1f6b3b2" => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"80","sha":"1f6b3b2","isDirty":false}
+14 silly git-describe.sync "v0.4.0-81-g64be489" => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"81","sha":"64be489","isDirty":false}
 15 info Looking for changed packages since v0.4.0
 16 silly checking diff packages/cli
 17 silly found diff in packages/cli/README.md
@@ -361,30 +361,30 @@
 41 verbose updated @oh-my-commit/docs
 42 verbose updated @oh-my-commit/webview
 43 verbose updated tsup
-44 verbose git-describe undefined => "v0.4.0-80-g1f6b3b2"
-45 silly git-describe parsed => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"80","sha":"1f6b3b2","isDirty":false}
+44 verbose git-describe undefined => "v0.4.0-81-g64be489"
+45 silly git-describe parsed => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"81","sha":"64be489","isDirty":false}
 46 info execute Skipping releases
 47 silly lifecycle No script for "preversion" in "@cs-magic/oh-my-commit", continuing
-48 silly lifecycle No script for "preversion" in "@oh-my-commit/docs", continuing
-49 silly lifecycle No script for "preversion" in "@oh-my-commit/webview", continuing
-50 silly lifecycle No script for "preversion" in "tsup", continuing
-51 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
+48 silly lifecycle No script for "preversion" in "@oh-my-commit/shared", continuing
+49 silly lifecycle No script for "preversion" in "@oh-my-commit/docs", continuing
+50 silly lifecycle No script for "preversion" in "@oh-my-commit/webview", continuing
+51 silly lifecycle No script for "preversion" in "tsup", continuing
 52 verbose version @oh-my-commit/docs has no lockfile. Skipping lockfile update.
-53 verbose version tsup has no lockfile. Skipping lockfile update.
-54 silly lifecycle No script for "version" in "@oh-my-commit/docs", continuing
-55 silly lifecycle No script for "version" in "tsup", continuing
-56 silly lifecycle No script for "preversion" in "@oh-my-commit/cli", continuing
-57 silly lifecycle No script for "preversion" in "@oh-my-commit/official-provider", continuing
-58 silly lifecycle No script for "preversion" in "@oh-my-commit/shared", continuing
-59 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
+53 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
+54 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
+55 verbose version tsup has no lockfile. Skipping lockfile update.
+56 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
+57 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
+58 silly lifecycle No script for "version" in "tsup", continuing
+59 silly lifecycle No script for "preversion" in "@oh-my-commit/cli", continuing
 60 silly lifecycle No script for "preversion" in "@oh-my-commit/extension", continuing
-61 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
-62 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
+61 silly lifecycle No script for "preversion" in "@oh-my-commit/official-provider", continuing
+62 silly lifecycle No script for "version" in "@oh-my-commit/docs", continuing
 63 verbose version @oh-my-commit/cli has no lockfile. Skipping lockfile update.
-64 verbose version @oh-my-commit/extension has no lockfile. Skipping lockfile update.
-65 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
+64 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
+65 verbose version @oh-my-commit/extension has no lockfile. Skipping lockfile update.
 66 silly lifecycle No script for "version" in "@oh-my-commit/cli", continuing
-67 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
+67 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
 68 silly lifecycle No script for "version" in "@oh-my-commit/extension", continuing
 69 silly lifecycle No script for "version" in "@cs-magic/oh-my-commit", continuing
 70 verbose version Updating root pnpm-lock.yaml
@@ -396,7 +396,7 @@
 71 error packages/extension                       |  WARN  deprecated vsce@2.15.0
 71 error packages/extension                       |  WARN  deprecated vscode@1.1.37
 71 error /Users/mark/coding/apps/oh-my-commit_v2/packages/cli:
-71 error  ERR_PNPM_NO_MATCHING_VERSION  No matching version found for tsup@^0.1.0
+71 error  ERR_PNPM_NO_MATCHING_VERSION  No matching version found for tsup@^0.2.0
 71 error
 71 error This error happened while installing a direct dependency of /Users/mark/coding/apps/oh-my-commit_v2/packages/cli
 71 error

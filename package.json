@@ -19,7 +19,7 @@
   ],
   "packageManager": "pnpm@8.10.0",
   "workspaces": [
-    "packages/*"
+    "packages"
   ],
   "scripts": {
     "prepare": "husky install",
