@@ -6,7 +6,7 @@ import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message"
-import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-toolkit/react"
 import { useAtom } from "jotai"
 import { useEffect, useRef, useState } from "react"
 

@@ -21,7 +21,7 @@
   },
   "overrides": [
     {
-      "files": ["packages/webview-ui/**"],
+      "files": ["packages/webview/**"],
       "globals": {
         "acquireVsCodeApi": "readonly"
       }

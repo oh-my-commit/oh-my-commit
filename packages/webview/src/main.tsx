@@ -1,4 +1,4 @@
-import { provideVSCodeDesignSystem, vsCodeProgressRing } from "@vscode/webview-ui-toolkit"
+import { provideVSCodeDesignSystem, vsCodeProgressRing } from "@vscode/webview-toolkit"
 import { Provider } from "jotai"
 import { createRoot } from "react-dom/client"
 import { CommitPage } from "./pages/commit.page"

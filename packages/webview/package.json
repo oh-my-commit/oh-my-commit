@@ -20,7 +20,7 @@
   "dependencies": {
     "@oh-my-commit/shared": "workspace:*",
     "@vscode/codicons": "^0.0.36",
-    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "@vscode/webview-toolkit": "^1.4.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "jotai": "^2.10.4",

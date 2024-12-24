@@ -5,7 +5,7 @@
   // 我们希望这里只是一个入口，具体编译哪些文件由各个子包决定
   "references": [
     { "path": "./packages/shared" },
-    { "path": "./packages/webview-ui" },
+    { "path": "./packages/webview" },
     { "path": "./packages/extension" },
     { "path": "./packages/cli" },
 

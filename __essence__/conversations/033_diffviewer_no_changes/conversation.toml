@@ -12,7 +12,7 @@ time = "2024-12-14T04:03:02+0800"
 query_essence = "Investigation of DiffViewer showing 'No changes' for all files"
 key_points = """
 - User reported DiffViewer component showing 'No changes' for all files
-- Component located at packages/webview-ui/src/components/commit/DiffViewer.tsx
+- Component located at packages/webview/src/components/commit/DiffViewer.tsx
 - Need to investigate the component's logic for displaying changes
 """
 

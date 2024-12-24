@@ -1,4 +1,4 @@
-import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-toolkit/react"
 import cn from "classnames"
 import * as React from "react"
 

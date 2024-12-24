@@ -340,7 +340,7 @@ importers:
       '@vscode/codicons':
         specifier: ^0.0.36
         version: 0.0.36
-      '@vscode/webview-ui-toolkit':
+      '@vscode/webview-toolkit':
         specifier: ^1.4.0
         version: 1.4.0(react@18.3.1)
       classnames:
@@ -2172,7 +2172,7 @@ packages:
   '@vscode/codicons@0.0.36':
     resolution: {integrity: sha512-wsNOvNMMJ2BY8rC2N2MNBG7yOowV3ov8KlvUE/AiVUlHKTfWsw3OgAOQduX7h0Un6GssKD3aoTVH+TF3DSQwKQ==}
 
-  '@vscode/webview-ui-toolkit@1.4.0':
+  '@vscode/webview-toolkit@1.4.0':
     resolution: {integrity: sha512-modXVHQkZLsxgmd5yoP3ptRC/G8NBDD+ob+ngPiWNQdlrH6H1xR/qgOBD85bfU3BhOB5sZzFWBwwhp9/SfoHww==}
     peerDependencies:
       react: '>=16.9.0'
@@ -8091,7 +8091,7 @@ snapshots:
 
   '@vscode/codicons@0.0.36': {}
 
-  '@vscode/webview-ui-toolkit@1.4.0(react@18.3.1)':
+  '@vscode/webview-toolkit@1.4.0(react@18.3.1)':
     dependencies:
       '@microsoft/fast-element': 1.14.0
       '@microsoft/fast-foundation': 2.50.0

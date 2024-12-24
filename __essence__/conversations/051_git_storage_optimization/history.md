@@ -45,7 +45,7 @@ $ git gc
 ```bash
 $ find . -type f -size +1M -exec ls -lh {} \;
 -rw-r--r--@ 1 mark  staff   1.7M Dec 15 10:49 ./dist/extension.js.map
--rw-r--r--@ 1 mark  staff   2.5M Dec 15 05:23 ./dist/webview-ui/main.js
+-rw-r--r--@ 1 mark  staff   2.5M Dec 15 05:23 ./dist/webview/main.js
 -rwxr-xr-x@ 1 mark  staff   9.9M Dec 11 12:38 ./node_modules/.pnpm/@esbuild+darwin-x64@0.24.0/node_modules/@esbuild/darwin-x64/bin/esbuild
 -rwxr-xr-x@ 1 mark  staff    10M Dec 11 12:38 ./node_modules/.pnpm/@esbuild+linux-s390x@0.24.0/node_modules/@esbuild/linux-s390x/bin/esbuild
 -rwxr-xr-x@ 1 mark  staff    25M Dec  8 15:49 ./node_modules/.pnpm/turbo-darwin-arm64@2.3.3/node_modules/turbo-darwin-arm64/bin/turbo
@@ -107,7 +107,7 @@ Date:   Sun Dec 15 04:53:00 2024 +0800
     fix: build
 
 packages/extension/.turbo/turbo-build.log
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 
 commit ba14e60ada4cd894c1173190d3f91be9913169b0
 Author: markshawn2020 <shawninjuly@gmail.com>
@@ -116,7 +116,7 @@ Date:   Sun Dec 15 01:45:24 2024 +0800
     fix: build
 
 packages/extension/.turbo/turbo-build.log
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 
 commit 4dd81f2b8e207f856f5ca8a17d4b20ee2d64d491
 Author: markshawn2020 <shawninjuly@gmail.com>
@@ -124,7 +124,7 @@ Date:   Sat Dec 14 14:31:12 2024 +0800
 
     fix: build
 
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 
 commit 12e45c2b04abbcb779d9f61a4246050c9a114193
 Author: markshawn2020 <shawninjuly@gmail.com>
@@ -133,7 +133,7 @@ Date:   Sat Dec 14 02:37:31 2024 +0800
     refactor: share package with types
 
 packages/extension/.turbo/turbo-build.log
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 
 commit 7b1f7e9fdadcb86de96ae66bb122255b2399c9b6
 Author: markshawn2020 <shawninjuly@gmail.com>
@@ -142,7 +142,7 @@ Date:   Sun Dec 8 17:08:11 2024 +0800
     :rocket: refactor: using workspace
 
 packages/extension/.turbo/turbo-build.log
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 ```
 
 ## Understanding Git's Behavior
@@ -169,7 +169,7 @@ Date:   Sun Dec 15 04:53:00 2024 +0800
     fix: build
 
 packages/extension/.turbo/turbo-build.log
-packages/webview-ui/.turbo/turbo-build.log
+packages/webview/.turbo/turbo-build.log
 ```
 
 3. 现在运行 git gc 和 prune：
@@ -207,9 +207,9 @@ $ find . -name ".turbo" -type d
 ./.turbo
 ./packages/extension/.turbo
 ./packages/shared/.turbo
-./packages/webview-ui/node_modules/.pnpm/motion-dom@11.13.0/node_modules/motion-dom/.turbo
-./packages/webview-ui/node_modules/.pnpm/motion-utils@11.13.0/node_modules/motion-utils/.turbo
-./packages/webview-ui/.turbo
+./packages/webview/node_modules/.pnpm/motion-dom@11.13.0/node_modules/motion-dom/.turbo
+./packages/webview/node_modules/.pnpm/motion-utils@11.13.0/node_modules/motion-utils/.turbo
+./packages/webview/.turbo
 ```
 
 让我们看看这些目录的大小：

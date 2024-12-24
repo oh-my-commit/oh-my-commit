@@ -23,7 +23,7 @@
 
 **Files Changed:**
 
-- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+- `packages/webview/src/components/commit/FileChanges.tsx`
   - Replaced `STATUS_ICONS` with `STATUS_LETTERS`
   - Updated status display in all view modes (flat, grouped, tree)
   - Added tooltips using original status labels
@@ -56,7 +56,7 @@
 
 **Files Changed:**
 
-- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+- `packages/webview/src/components/commit/FileChanges.tsx`
   - Restructured file item layout
   - Optimized padding and spacing
   - Enhanced click handlers and event propagation
@@ -93,7 +93,7 @@
 
 **Files Changed:**
 
-- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+- `packages/webview/src/components/commit/FileChanges.tsx`
   - Simplified event handling logic
   - Unified interaction model
   - Improved code organization
@@ -131,7 +131,7 @@
 
 **Files Changed:**
 
-- `packages/webview-ui/src/components/commit/FileChanges.tsx`
+- `packages/webview/src/components/commit/FileChanges.tsx`
   - Refactored `handleFileClick` and `handleFileSelect`
   - Added state synchronization
   - Improved code organization
