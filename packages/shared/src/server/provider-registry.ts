@@ -1,3 +1,4 @@
+import { createJiti } from "jiti"
 import fs from "node:fs"
 import path from "node:path"
 import { Container, Inject, Service } from "typedi"
@@ -5,8 +6,11 @@ import type { BaseProvider, IConfig, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
 import { PROVIDERS_DIR } from "./config"
 
-import { createJiti } from "jiti"
-const jiti = createJiti(__filename)
+const jiti = createJiti(__filename, {
+  requireCache: false,
+  interopDefault: true,
+  extensions: [".ts", ".js", ".mjs", ".cjs", ".json"],
+})
 
 /**
  * Provider Registry manages all available commit message providers
@@ -68,14 +72,10 @@ export class ProviderRegistry implements IProviderManager {
 
   private async loadProviderFromFile(filePath: string): Promise<BaseProvider | null> {
     try {
-      const module = await jiti.import(filePath, { default: true })
+      const module = await jiti(filePath)
       const Provider =
-        // @ts-ignore
         module.default ||
-        (module as new (context: {
-          logger: BaseLogger
-          config: IConfig
-        }) => BaseProvider)
+        (module as new (context: { logger: BaseLogger; config: IConfig }) => BaseProvider)
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)
