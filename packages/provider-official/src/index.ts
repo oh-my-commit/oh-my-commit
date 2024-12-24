@@ -5,9 +5,9 @@ import {
   APP_ID_CAMEL,
   APP_ID_DASH,
   APP_NAME,
-  BaseGenerateCommitProvider,
-  GenerateCommitError,
+  BaseProvider,
   formatError,
+  GenerateCommitError,
   type GenerateCommitInput,
   type GenerateCommitResult,
   type IModel,
@@ -32,7 +32,7 @@ class StandardModel implements IModel {
   }
 }
 
-class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
+class OfficialProvider extends BaseProvider implements IProvider {
   id = APP_ID_CAMEL
   displayName = `${APP_NAME} Provider`
   description = `Commit message generation powered by ${APP_NAME} models`

@@ -86,7 +86,7 @@ export interface ProviderContext {
   config: IConfig
 }
 
-export abstract class BaseGenerateCommitProvider implements IProvider {
+export abstract class BaseProvider implements IProvider {
   protected context: ProviderContext
 
   constructor(context: ProviderContext) {

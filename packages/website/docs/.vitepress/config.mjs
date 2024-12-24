@@ -46,6 +46,13 @@ export default defineConfig({
           ],
         },
         {
+          text: "高级指南",
+          items: [
+            { text: "Provider 开发", link: "/guide/provider-docs" },
+            { text: "自定义 Prompt 模板", link: "/guide/custom-prompt-template" },
+          ],
+        },
+        {
           text: "未来特性",
           items: [{ text: "即将推出", link: "/guide/coming-soon" }],
         },
