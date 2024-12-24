@@ -5,18 +5,18 @@
       "name": "Run Extension",
       "type": "extensionHost",
       "request": "launch",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/packages/extension"],
+      "outFiles": ["${workspaceFolder}/packages/extension/dist/**/*.js"],
       "sourceMaps": true,
       "trace": true,
       "internalConsoleOptions": "openOnSessionStart",
       "sourceMapRenames": true,
       "sourceMapPathOverrides": {
-        "webpack:///*": "${workspaceFolder}/*",
-        "webpack:///./*": "${workspaceFolder}/*",
-        "webpack:///src/*": "${workspaceFolder}/src/*"
+        "webpack:///*": "${workspaceFolder}/packages/extension/*",
+        "webpack:///./*": "${workspaceFolder}/packages/extension/*",
+        "webpack:///src/*": "${workspaceFolder}/packages/extension/src/*"
       },
-      "preLaunchTask": "pnpm: dev",
+      "preLaunchTask": "pnpm: extension:dev",
       "env": {
         "NODE_ENV": "development",
         "VSCODE_DEBUG": "true"
