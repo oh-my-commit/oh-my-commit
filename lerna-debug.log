@@ -1,0 +1,410 @@
+0 silly argv {
+0 silly argv   _: [ 'version' ],
+0 silly argv   lernaVersion: '8.1.9',
+0 silly argv   '$0': 'node_modules/lerna/dist/cli.js',
+0 silly argv   bump: 'minor'
+0 silly argv }
+1 notice cli v8.1.9
+2 verbose packageConfigs Package manager "pnpm" detected. Resolving packages using `pnpm-workspace.yaml`.
+3 verbose rootPath /Users/mark/coding/apps/oh-my-commit_v2
+4 info current version 0.0.0
+5 silly isAnythingCommitted
+6 verbose isAnythingCommitted 1
+7 silly getCurrentBranch
+8 verbose currentBranch main
+9 silly remoteBranchExists
+10 silly isBehindUpstream
+11 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 8
+12 silly hasTags
+13 verbose hasTags true
+14 silly git-describe.sync "v0.4.0-80-g1f6b3b2" => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"80","sha":"1f6b3b2","isDirty":false}
+15 info Looking for changed packages since v0.4.0
+16 silly checking diff packages/cli
+17 silly found diff in packages/cli/README.md
+17 silly found diff in packages/cli/package.json
+17 silly found diff in packages/cli/src/cli-commit-manager-adapter.ts
+17 silly found diff in packages/cli/src/index.ts
+17 silly found diff in packages/cli/tsconfig.json
+17 silly found diff in packages/cli/tsup.config.ts
+18 verbose filtered diff [
+18 verbose filtered diff   'packages/cli/README.md',
+18 verbose filtered diff   'packages/cli/package.json',
+18 verbose filtered diff   'packages/cli/src/cli-commit-manager-adapter.ts',
+18 verbose filtered diff   'packages/cli/src/index.ts',
+18 verbose filtered diff   'packages/cli/tsconfig.json',
+18 verbose filtered diff   'packages/cli/tsup.config.ts'
+18 verbose filtered diff ]
+19 silly checking diff packages/extension
+20 silly found diff in packages/extension/assets/webview.template.html
+20 silly found diff in packages/extension/package.json
+20 silly found diff in packages/extension/scripts/build.js
+20 silly found diff in packages/extension/src/app.manager.ts
+20 silly found diff in packages/extension/src/commands/command-manager.ts
+20 silly found diff in packages/extension/src/commands/open-preferences.ts
+20 silly found diff in packages/extension/src/commands/quick-commit.ts
+20 silly found diff in packages/extension/src/commands/select-model.ts
+20 silly found diff in packages/extension/src/extension.ts
+20 silly found diff in packages/extension/src/features/mixins.ts
+20 silly found diff in packages/extension/src/features/vibrate-window.ts
+20 silly found diff in packages/extension/src/libs/git.ts
+20 silly found diff in packages/extension/src/libs/vscode-command.ts
+20 silly found diff in packages/extension/src/libs/vscode-extension-logger.ts
+20 silly found diff in packages/extension/src/services/index.ts
+20 silly found diff in packages/extension/src/services/model.service.ts
+20 silly found diff in packages/extension/src/status-bar.ts
+20 silly found diff in packages/extension/src/types/mixins.ts
+20 silly found diff in packages/extension/src/types/model.ts
+20 silly found diff in packages/extension/src/utils/open-preference.ts
+20 silly found diff in packages/extension/src/utils/validate-openai-api-key.ts
+20 silly found diff in packages/extension/src/vscode-command.ts
+20 silly found diff in packages/extension/src/vscode-commit-adapter.ts
+20 silly found diff in packages/extension/src/vscode-git.ts
+20 silly found diff in packages/extension/src/vscode-statusbar.ts
+20 silly found diff in packages/extension/src/vscode-token.ts
+20 silly found diff in packages/extension/src/vscode-webview.ts
+20 silly found diff in packages/extension/tsconfig.json
+20 silly found diff in packages/extension/tsup.config.ts
+21 verbose filtered diff [
+21 verbose filtered diff   'packages/extension/assets/webview.template.html',
+21 verbose filtered diff   'packages/extension/package.json',
+21 verbose filtered diff   'packages/extension/scripts/build.js',
+21 verbose filtered diff   'packages/extension/src/app.manager.ts',
+21 verbose filtered diff   'packages/extension/src/commands/command-manager.ts',
+21 verbose filtered diff   'packages/extension/src/commands/open-preferences.ts',
+21 verbose filtered diff   'packages/extension/src/commands/quick-commit.ts',
+21 verbose filtered diff   'packages/extension/src/commands/select-model.ts',
+21 verbose filtered diff   'packages/extension/src/extension.ts',
+21 verbose filtered diff   'packages/extension/src/features/mixins.ts',
+21 verbose filtered diff   'packages/extension/src/features/vibrate-window.ts',
+21 verbose filtered diff   'packages/extension/src/libs/git.ts',
+21 verbose filtered diff   'packages/extension/src/libs/vscode-command.ts',
+21 verbose filtered diff   'packages/extension/src/libs/vscode-extension-logger.ts',
+21 verbose filtered diff   'packages/extension/src/services/index.ts',
+21 verbose filtered diff   'packages/extension/src/services/model.service.ts',
+21 verbose filtered diff   'packages/extension/src/status-bar.ts',
+21 verbose filtered diff   'packages/extension/src/types/mixins.ts',
+21 verbose filtered diff   'packages/extension/src/types/model.ts',
+21 verbose filtered diff   'packages/extension/src/utils/open-preference.ts',
+21 verbose filtered diff   'packages/extension/src/utils/validate-openai-api-key.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-command.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-commit-adapter.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-git.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-statusbar.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-token.ts',
+21 verbose filtered diff   'packages/extension/src/vscode-webview.ts',
+21 verbose filtered diff   'packages/extension/tsconfig.json',
+21 verbose filtered diff   'packages/extension/tsup.config.ts'
+21 verbose filtered diff ]
+22 silly checking diff packages/provider-official
+23 silly found diff in packages/provider-official/package.json
+23 silly found diff in packages/provider-official/src/index.ts
+23 silly found diff in packages/provider-official/tsconfig.json
+23 silly found diff in packages/provider-official/tsup.config.ts
+24 verbose filtered diff [
+24 verbose filtered diff   'packages/provider-official/package.json',
+24 verbose filtered diff   'packages/provider-official/src/index.ts',
+24 verbose filtered diff   'packages/provider-official/tsconfig.json',
+24 verbose filtered diff   'packages/provider-official/tsup.config.ts'
+24 verbose filtered diff ]
+25 silly checking diff packages/shared
+26 silly found diff in packages/shared/package.json
+26 silly found diff in packages/shared/src/common/CommitManager.ts
+26 silly found diff in packages/shared/src/common/app.ts
+26 silly found diff in packages/shared/src/common/config.ts
+26 silly found diff in packages/shared/src/common/core.ts
+26 silly found diff in packages/shared/src/common/generate-commit.ts
+26 silly found diff in packages/shared/src/common/git.ts
+26 silly found diff in packages/shared/src/common/index.ts
+26 silly found diff in packages/shared/src/common/log.ts
+26 silly found diff in packages/shared/src/common/provider.interface.ts
+26 silly found diff in packages/shared/src/common/transport.ts
+26 silly found diff in packages/shared/src/common/utils.ts
+26 silly found diff in packages/shared/src/common/validators.ts
+26 silly found diff in packages/shared/src/index.ts
+26 silly found diff in packages/shared/src/server/commit-manager.ts
+26 silly found diff in packages/shared/src/server/config.ts
+26 silly found diff in packages/shared/src/server/git.ts
+26 silly found diff in packages/shared/src/server/index.ts
+26 silly found diff in packages/shared/src/server/prompt-template.ts
+26 silly found diff in packages/shared/src/server/provider-registry.ts
+26 silly found diff in packages/shared/tsconfig.json
+26 silly found diff in packages/shared/tsup.config.ts
+27 verbose filtered diff [
+27 verbose filtered diff   'packages/shared/package.json',
+27 verbose filtered diff   'packages/shared/src/common/CommitManager.ts',
+27 verbose filtered diff   'packages/shared/src/common/app.ts',
+27 verbose filtered diff   'packages/shared/src/common/config.ts',
+27 verbose filtered diff   'packages/shared/src/common/core.ts',
+27 verbose filtered diff   'packages/shared/src/common/generate-commit.ts',
+27 verbose filtered diff   'packages/shared/src/common/git.ts',
+27 verbose filtered diff   'packages/shared/src/common/index.ts',
+27 verbose filtered diff   'packages/shared/src/common/log.ts',
+27 verbose filtered diff   'packages/shared/src/common/provider.interface.ts',
+27 verbose filtered diff   'packages/shared/src/common/transport.ts',
+27 verbose filtered diff   'packages/shared/src/common/utils.ts',
+27 verbose filtered diff   'packages/shared/src/common/validators.ts',
+27 verbose filtered diff   'packages/shared/src/index.ts',
+27 verbose filtered diff   'packages/shared/src/server/commit-manager.ts',
+27 verbose filtered diff   'packages/shared/src/server/config.ts',
+27 verbose filtered diff   'packages/shared/src/server/git.ts',
+27 verbose filtered diff   'packages/shared/src/server/index.ts',
+27 verbose filtered diff   'packages/shared/src/server/prompt-template.ts',
+27 verbose filtered diff   'packages/shared/src/server/provider-registry.ts',
+27 verbose filtered diff   'packages/shared/tsconfig.json',
+27 verbose filtered diff   'packages/shared/tsup.config.ts'
+27 verbose filtered diff ]
+28 silly checking diff packages/website
+29 silly found diff in packages/website/.gitignore
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/@theme_index.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/@theme_index.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/_metadata.json
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/chunk-DY3EKTDC.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/chunk-DY3EKTDC.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/chunk-JR7NHJT5.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/chunk-JR7NHJT5.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/package.json
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vitepress___@vue_devtools-api.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vitepress___@vue_devtools-api.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vitepress___@vueuse_core.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vitepress___@vueuse_core.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vue.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps/vue.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/chunk-DY3EKTDC.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/chunk-DY3EKTDC.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/package.json
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vue_devtools-api.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vue_devtools-api.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vueuse_core.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vueuse_core.js.map
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vue.js
+29 silly found diff in packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vue.js.map
+29 silly found diff in packages/website/docs/.vitepress/config.mjs
+29 silly found diff in packages/website/docs/api-spec.md
+29 silly found diff in packages/website/docs/api/hooks.md
+29 silly found diff in packages/website/docs/api/index.md
+29 silly found diff in packages/website/docs/guide/custom-prompt-template.md
+29 silly found diff in packages/website/docs/guide/provider-docs.md
+29 silly found diff in packages/website/docs/guide/team-collaboration.md
+29 silly found diff in packages/website/docs/yet-another-best-practice/css-management.md
+29 silly found diff in packages/website/docs/yet-another-best-practice/error-handler.md
+29 silly found diff in packages/website/docs/yet-another-best-practice/error-handling-advanced.md
+29 silly found diff in packages/website/docs/yet-another-best-practice/provider-docs.md
+29 silly found diff in packages/website/docs/yet-another-best-practice/state-management.md
+29 silly found diff in packages/website/package.json
+30 verbose filtered diff [
+30 verbose filtered diff   'packages/website/.gitignore',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/@theme_index.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/@theme_index.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/_metadata.json',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/chunk-DY3EKTDC.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/chunk-DY3EKTDC.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/chunk-JR7NHJT5.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/chunk-JR7NHJT5.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/package.json',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vitepress___@vue_devtools-api.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vitepress___@vue_devtools-api.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vitepress___@vueuse_core.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vitepress___@vueuse_core.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vue.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps/vue.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/chunk-DY3EKTDC.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/chunk-DY3EKTDC.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/package.json',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vue_devtools-api.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vue_devtools-api.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vueuse_core.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vitepress___@vueuse_core.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vue.js',
+30 verbose filtered diff   'packages/website/docs/.vitepress/cache/deps_temp_ecb0cb03/vue.js.map',
+30 verbose filtered diff   'packages/website/docs/.vitepress/config.mjs',
+30 verbose filtered diff   'packages/website/docs/api-spec.md',
+30 verbose filtered diff   'packages/website/docs/api/hooks.md',
+30 verbose filtered diff   'packages/website/docs/api/index.md',
+30 verbose filtered diff   'packages/website/docs/guide/custom-prompt-template.md',
+30 verbose filtered diff   'packages/website/docs/guide/provider-docs.md',
+30 verbose filtered diff   'packages/website/docs/guide/team-collaboration.md',
+30 verbose filtered diff   'packages/website/docs/yet-another-best-practice/css-management.md',
+30 verbose filtered diff   'packages/website/docs/yet-another-best-practice/error-handler.md',
+30 verbose filtered diff   'packages/website/docs/yet-another-best-practice/error-handling-advanced.md',
+30 verbose filtered diff   'packages/website/docs/yet-another-best-practice/provider-docs.md',
+30 verbose filtered diff   'packages/website/docs/yet-another-best-practice/state-management.md',
+30 verbose filtered diff   'packages/website/package.json'
+30 verbose filtered diff ]
+31 silly checking diff packages/webview
+32 silly found diff in packages/webview/index.html
+32 silly found diff in packages/webview/package.json
+32 silly found diff in packages/webview/pnpm-lock.yaml
+32 silly found diff in packages/webview/postcss.config.js
+32 silly found diff in packages/webview/src/clientPush.ts
+32 silly found diff in packages/webview/src/components/commit/CommitMessage.tsx
+32 silly found diff in packages/webview/src/components/commit/commit-format-tooltip.tsx
+32 silly found diff in packages/webview/src/components/commit/feedback-button.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/DiffViewer.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/EmptyState.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/FileChanges.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/FileItem.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/FileStats.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/FlatView.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/SearchBar.tsx
+32 silly found diff in packages/webview/src/components/commit/file-changes/constants.ts
+32 silly found diff in packages/webview/src/components/commit/info-icon.tsx
+32 silly found diff in packages/webview/src/components/commit/message-input.tsx
+32 silly found diff in packages/webview/src/components/common/Checkbox.tsx
+32 silly found diff in packages/webview/src/components/common/HighlightText.tsx
+32 silly found diff in packages/webview/src/components/common/InitAnimation.css
+32 silly found diff in packages/webview/src/components/common/InitAnimation.tsx
+32 silly found diff in packages/webview/src/components/common/Spinner.tsx
+32 silly found diff in packages/webview/src/components/footer.tsx
+32 silly found diff in packages/webview/src/components/layout/Section.tsx
+32 silly found diff in packages/webview/src/constants/commitTypes.ts
+32 silly found diff in packages/webview/src/data/mock-changed-files.ts
+32 silly found diff in packages/webview/src/data/mock-recent-commits.ts
+32 silly found diff in packages/webview/src/hooks/use-close-window.tsx
+32 silly found diff in packages/webview/src/lib/getVSCodeAPI.ts
+32 silly found diff in packages/webview/src/lib/storage.ts
+32 silly found diff in packages/webview/src/lib/tailwind-theme-plugin.ts
+32 silly found diff in packages/webview/src/lib/utils.ts
+32 silly found diff in packages/webview/src/lib/vscode-client-logger.ts
+32 silly found diff in packages/webview/src/lib/vscode-theme-plugin.ts
+32 silly found diff in packages/webview/src/lib/vscode.ts
+32 silly found diff in packages/webview/src/main.tsx
+32 silly found diff in packages/webview/src/pages/commit.page.tsx
+32 silly found diff in packages/webview/src/state/atoms/commit.changed-files.ts
+32 silly found diff in packages/webview/src/state/atoms/commit.message.ts
+32 silly found diff in packages/webview/src/state/atoms/search.ts
+32 silly found diff in packages/webview/src/state/atoms/ui.ts
+32 silly found diff in packages/webview/src/state/types.ts
+32 silly found diff in packages/webview/src/styles/global.css
+32 silly found diff in packages/webview/src/styles/markdown.css
+32 silly found diff in packages/webview/src/types/commit-state.ts
+32 silly found diff in packages/webview/src/types/global.d.ts
+32 silly found diff in packages/webview/src/types/markdown.d.ts
+32 silly found diff in packages/webview/src/utils/build-file-tree.ts
+32 silly found diff in packages/webview/src/utils/get-all-directory-paths.ts
+32 silly found diff in packages/webview/src/utils/get-all-files.ts
+32 silly found diff in packages/webview/src/utils/get-directory-stats.ts
+32 silly found diff in packages/webview/src/utils/get-sub-directories.ts
+32 silly found diff in packages/webview/src/utils/handle-input.ts
+32 silly found diff in packages/webview/src/utils/loadMarkdown.ts
+32 silly found diff in packages/webview/src/utils/path.ts
+32 silly found diff in packages/webview/tailwind.config.js
+32 silly found diff in packages/webview/tsconfig.json
+32 silly found diff in packages/webview/webpack.config.js
+33 verbose filtered diff [
+33 verbose filtered diff   'packages/webview/index.html',
+33 verbose filtered diff   'packages/webview/package.json',
+33 verbose filtered diff   'packages/webview/pnpm-lock.yaml',
+33 verbose filtered diff   'packages/webview/postcss.config.js',
+33 verbose filtered diff   'packages/webview/src/clientPush.ts',
+33 verbose filtered diff   'packages/webview/src/components/commit/CommitMessage.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/commit-format-tooltip.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/feedback-button.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/DiffViewer.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/EmptyState.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/FileChanges.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/FileItem.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/FileStats.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/FlatView.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/SearchBar.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/file-changes/constants.ts',
+33 verbose filtered diff   'packages/webview/src/components/commit/info-icon.tsx',
+33 verbose filtered diff   'packages/webview/src/components/commit/message-input.tsx',
+33 verbose filtered diff   'packages/webview/src/components/common/Checkbox.tsx',
+33 verbose filtered diff   'packages/webview/src/components/common/HighlightText.tsx',
+33 verbose filtered diff   'packages/webview/src/components/common/InitAnimation.css',
+33 verbose filtered diff   'packages/webview/src/components/common/InitAnimation.tsx',
+33 verbose filtered diff   'packages/webview/src/components/common/Spinner.tsx',
+33 verbose filtered diff   'packages/webview/src/components/footer.tsx',
+33 verbose filtered diff   'packages/webview/src/components/layout/Section.tsx',
+33 verbose filtered diff   'packages/webview/src/constants/commitTypes.ts',
+33 verbose filtered diff   'packages/webview/src/data/mock-changed-files.ts',
+33 verbose filtered diff   'packages/webview/src/data/mock-recent-commits.ts',
+33 verbose filtered diff   'packages/webview/src/hooks/use-close-window.tsx',
+33 verbose filtered diff   'packages/webview/src/lib/getVSCodeAPI.ts',
+33 verbose filtered diff   'packages/webview/src/lib/storage.ts',
+33 verbose filtered diff   'packages/webview/src/lib/tailwind-theme-plugin.ts',
+33 verbose filtered diff   'packages/webview/src/lib/utils.ts',
+33 verbose filtered diff   'packages/webview/src/lib/vscode-client-logger.ts',
+33 verbose filtered diff   'packages/webview/src/lib/vscode-theme-plugin.ts',
+33 verbose filtered diff   'packages/webview/src/lib/vscode.ts',
+33 verbose filtered diff   'packages/webview/src/main.tsx',
+33 verbose filtered diff   'packages/webview/src/pages/commit.page.tsx',
+33 verbose filtered diff   'packages/webview/src/state/atoms/commit.changed-files.ts',
+33 verbose filtered diff   'packages/webview/src/state/atoms/commit.message.ts',
+33 verbose filtered diff   'packages/webview/src/state/atoms/search.ts',
+33 verbose filtered diff   'packages/webview/src/state/atoms/ui.ts',
+33 verbose filtered diff   'packages/webview/src/state/types.ts',
+33 verbose filtered diff   'packages/webview/src/styles/global.css',
+33 verbose filtered diff   'packages/webview/src/styles/markdown.css',
+33 verbose filtered diff   'packages/webview/src/types/commit-state.ts',
+33 verbose filtered diff   'packages/webview/src/types/global.d.ts',
+33 verbose filtered diff   'packages/webview/src/types/markdown.d.ts',
+33 verbose filtered diff   'packages/webview/src/utils/build-file-tree.ts',
+33 verbose filtered diff   'packages/webview/src/utils/get-all-directory-paths.ts',
+33 verbose filtered diff   'packages/webview/src/utils/get-all-files.ts',
+33 verbose filtered diff   'packages/webview/src/utils/get-directory-stats.ts',
+33 verbose filtered diff   'packages/webview/src/utils/get-sub-directories.ts',
+33 verbose filtered diff   'packages/webview/src/utils/handle-input.ts',
+33 verbose filtered diff   'packages/webview/src/utils/loadMarkdown.ts',
+33 verbose filtered diff   'packages/webview/src/utils/path.ts',
+33 verbose filtered diff   'packages/webview/tailwind.config.js',
+33 verbose filtered diff   'packages/webview/tsconfig.json',
+33 verbose filtered diff   'packages/webview/webpack.config.js'
+33 verbose filtered diff ]
+34 silly checking diff third-parties/tsup
+35 silly found diff in third-parties/tsup
+36 verbose filtered diff [ 'third-parties/tsup' ]
+37 verbose updated @oh-my-commit/cli
+38 verbose updated @oh-my-commit/extension
+39 verbose updated @oh-my-commit/official-provider
+40 verbose updated @oh-my-commit/shared
+41 verbose updated @oh-my-commit/docs
+42 verbose updated @oh-my-commit/webview
+43 verbose updated tsup
+44 verbose git-describe undefined => "v0.4.0-80-g1f6b3b2"
+45 silly git-describe parsed => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"80","sha":"1f6b3b2","isDirty":false}
+46 info execute Skipping releases
+47 silly lifecycle No script for "preversion" in "@cs-magic/oh-my-commit", continuing
+48 silly lifecycle No script for "preversion" in "@oh-my-commit/docs", continuing
+49 silly lifecycle No script for "preversion" in "@oh-my-commit/webview", continuing
+50 silly lifecycle No script for "preversion" in "tsup", continuing
+51 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
+52 verbose version @oh-my-commit/docs has no lockfile. Skipping lockfile update.
+53 verbose version tsup has no lockfile. Skipping lockfile update.
+54 silly lifecycle No script for "version" in "@oh-my-commit/docs", continuing
+55 silly lifecycle No script for "version" in "tsup", continuing
+56 silly lifecycle No script for "preversion" in "@oh-my-commit/cli", continuing
+57 silly lifecycle No script for "preversion" in "@oh-my-commit/official-provider", continuing
+58 silly lifecycle No script for "preversion" in "@oh-my-commit/shared", continuing
+59 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
+60 silly lifecycle No script for "preversion" in "@oh-my-commit/extension", continuing
+61 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
+62 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
+63 verbose version @oh-my-commit/cli has no lockfile. Skipping lockfile update.
+64 verbose version @oh-my-commit/extension has no lockfile. Skipping lockfile update.
+65 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
+66 silly lifecycle No script for "version" in "@oh-my-commit/cli", continuing
+67 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
+68 silly lifecycle No script for "version" in "@oh-my-commit/extension", continuing
+69 silly lifecycle No script for "version" in "@cs-magic/oh-my-commit", continuing
+70 verbose version Updating root pnpm-lock.yaml
+71 error Error: Command failed with exit code 1: pnpm install --lockfile-only --ignore-scripts
+71 error Scope: all 8 workspace projects
+71 error  WARN  `node_modules` is present. Lockfile only installation will make it out-of-date
+71 error Progress: resolved 1, reused 0, downloaded 0, added 0
+71 error  WARN  deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+71 error packages/extension                       |  WARN  deprecated vsce@2.15.0
+71 error packages/extension                       |  WARN  deprecated vscode@1.1.37
+71 error /Users/mark/coding/apps/oh-my-commit_v2/packages/cli:
+71 error  ERR_PNPM_NO_MATCHING_VERSION  No matching version found for tsup@^0.1.0
+71 error
+71 error This error happened while installing a direct dependency of /Users/mark/coding/apps/oh-my-commit_v2/packages/cli
+71 error
+71 error The latest release of tsup is "8.3.5".
+71 error
+71 error If you need the full list of all 200 published versions run "$ pnpm view tsup versions".
+71 error     at makeError (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/lib/error.js:59:11)
+71 error     at handlePromise (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/index.js:114:26)
+71 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+71 error     at async VersionCommand.updatePackageVersions (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/lerna@8.1.9_@swc+core@1.10.1_encoding@0.1.13/node_modules/lerna/dist/index.js:9866:11)
+71 error     at async Promise.all (index 0)
