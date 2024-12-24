@@ -1,6 +1,6 @@
 import type { DiffResult } from "simple-git"
 import type { LogLevel } from "./log"
-import type { GenerateCommitResult } from "./provider.interface"
+import type { IResult } from "./provider.interface"
 import type { ResultDTO } from "./utils"
 
 export type BaseClientMessageEvent =
@@ -49,7 +49,7 @@ export type ServerMessageEvent =
   // 2. 异步生成的 commits，无论是初次，还是等用户挑选文件后的结果
   | {
       type: "commit-message"
-      data: ResultDTO<GenerateCommitResult>
+      data: ResultDTO<IResult>
     }
 
   // 5. 提交结果

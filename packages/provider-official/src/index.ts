@@ -6,18 +6,17 @@ import {
   APP_ID_DASH,
   APP_NAME,
   BaseProvider,
+  IError,
   formatError,
-  GenerateCommitError,
-  type GenerateCommitInput,
-  type GenerateCommitResult,
+  type IInput,
   type IModel,
   type IProvider,
+  type IResultDTO,
   type ProviderContext,
 } from "@shared/common"
 import { PromptTemplate } from "@shared/server/prompt-template"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
-import { ResultAsync } from "neverthrow"
 
 class StandardModel implements IModel {
   id = `${APP_ID_DASH}.standard`
@@ -60,43 +59,41 @@ class OfficialProvider extends BaseProvider implements IProvider {
     this.anthropic = new Anthropic(config)
   }
 
-  generateCommit(
-    input: GenerateCommitInput,
-  ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
+  async generateCommit(input: IInput): Promise<IResultDTO> {
     this.logger.info("Generating commit message using OMC Provider...")
     const diff = JSON.stringify(input.diff, null, 2)
     const lang = input.options?.lang || "en"
 
-    return ResultAsync.fromPromise(
-      Promise.resolve().then(() => this.templateProcessor.fill({ diff, lang })),
-      error =>
-        new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
-    )
-      .andThen(prompt =>
-        ResultAsync.fromPromise(
-          this.callApi(prompt),
-          error =>
-            new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
-        ),
-      )
-      .andThen(response =>
-        ResultAsync.fromPromise(
-          this.handleApiResult(response),
-          error =>
-            new GenerateCommitError(
-              -10087,
-              `failed to handle api result, reason: ${formatError(error)}`,
-            ),
-        ),
-      )
-      .map(result => {
-        merge(result.meta, {
-          generatedAt: new Date().toISOString(),
-          modelId: input.model,
-          providerId: this.id,
-        })
-        return result
+    try {
+      const prompt = await this.templateProcessor.fill({ diff, lang })
+      const response = await this.callApi(prompt)
+      const result = await this.handleApiResult(response)
+
+      merge(result.meta, {
+        generatedAt: new Date().toISOString(),
+        modelId: input.model,
+        providerId: this.id,
       })
+
+      return {
+        ok: true,
+        data: result,
+      }
+    } catch (error: unknown) {
+      if (error instanceof IError) {
+        return {
+          ok: false,
+          code: error.code,
+          message: error.message,
+        }
+      }
+      this.logger.error("Failed to generate commit:", error)
+      return {
+        ok: false,
+        code: -999,
+        message: `Failed to generate commit: ${formatError(error)}`,
+      }
+    }
   }
 
   private callApi(prompt: string) {
@@ -181,9 +178,9 @@ class OfficialProvider extends BaseProvider implements IProvider {
     this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
 
     const item = response.content[0]
-    if (!item) throw new Error("Invalid tool response from AI model")
+    if (!item) throw new IError(-101, "Invalid tool response from AI model")
 
-    if (item.type !== "tool_use") throw new Error("Invalid tool response from AI model")
+    if (item.type !== "tool_use") throw new IError(-102, "Invalid tool response from AI model")
 
     const result = item.input as {
       title: string
@@ -196,7 +193,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
       }
     }
 
-    if (!result) throw new Error("Invalid tool response from AI model")
+    if (!result) throw new IError(-103, "Invalid tool response from AI model")
 
     return {
       title: result.title,

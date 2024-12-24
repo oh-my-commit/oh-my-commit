@@ -1,14 +1,31 @@
 import type { IConfig } from "@shared/common"
+import { Config, configSchema, defaultConfig } from "@shared/common"
 import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
+import { merge } from "lodash-es"
 import fs from "node:fs"
 import { Service } from "typedi"
 
 @Service()
 export class CliConfig implements IConfig {
-  private config: Record<string, any> = {}
+  private config: Config = defaultConfig
 
   constructor() {
     this.loadConfig()
+  }
+
+  get<T>(key: string): T | undefined {
+    return key.split(".").reduce((obj: any, k) => obj && obj[k], this.config) as T
+  }
+
+  async update(key: string, value: any, global = false): Promise<void> {
+    const keys = key.split(".")
+    const lastKey = keys.pop()!
+    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this.config)
+    target[lastKey] = value
+
+    if (global) {
+      this.saveConfig()
+    }
   }
 
   private loadConfig() {
@@ -18,15 +35,14 @@ export class CliConfig implements IConfig {
       }
 
       if (fs.existsSync(USER_CONFIG_PATH)) {
-        const content = fs.readFileSync(USER_CONFIG_PATH, "utf-8")
-        this.config = JSON.parse(content)
-      } else {
-        // 创建默认配置
-        this.config = {}
-        this.saveConfig()
+        const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
+        this.config = configSchema.parse(merge({}, defaultConfig, userConfig))
       }
     } catch (error) {
       console.error("Failed to load config:", error)
+      this.config = defaultConfig
+    } finally {
+      this.saveConfig()
     }
   }
 
@@ -36,14 +52,5 @@ export class CliConfig implements IConfig {
     } catch (error) {
       console.error("Failed to save config:", error)
     }
-  }
-
-  get<T>(key: string): T | undefined {
-    return this.config[key] as T
-  }
-
-  async update(key: string, value: any, _global?: boolean): Promise<void> {
-    this.config[key] = value
-    this.saveConfig()
   }
 }
