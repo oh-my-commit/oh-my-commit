@@ -7,17 +7,17 @@
 1 notice cli v8.1.9
 2 verbose packageConfigs Explicit "packages" configuration found in lerna.json. Resolving packages using the configured glob(s): ["packages/*"]
 3 verbose rootPath /Users/mark/coding/apps/oh-my-commit_v2
-4 info current version 0.2.0
+4 info current version 0.3.0
 5 silly isAnythingCommitted
 6 verbose isAnythingCommitted 1
 7 silly getCurrentBranch
 8 verbose currentBranch main
 9 silly remoteBranchExists
 10 silly isBehindUpstream
-11 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 11
+11 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 12
 12 silly hasTags
 13 verbose hasTags true
-14 silly git-describe.sync "v0.4.0-83-g6699da3" => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"83","sha":"6699da3","isDirty":false}
+14 silly git-describe.sync "v0.4.0-84-g47ccc86" => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"84","sha":"47ccc86","isDirty":false}
 15 info Looking for changed packages since v0.4.0
 16 silly checking diff packages/cli
 17 silly found diff in packages/cli/README.md
@@ -357,8 +357,8 @@
 37 verbose updated @oh-my-commit/shared
 38 verbose updated @oh-my-commit/docs
 39 verbose updated @oh-my-commit/webview
-40 verbose git-describe undefined => "v0.4.0-83-g6699da3"
-41 silly git-describe parsed => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"83","sha":"6699da3","isDirty":false}
+40 verbose git-describe undefined => "v0.4.0-84-g47ccc86"
+41 silly git-describe parsed => {"lastTagName":"v0.4.0","lastVersion":"v0.4.0","refCount":"84","sha":"47ccc86","isDirty":false}
 42 info execute Skipping releases
 43 silly lifecycle No script for "preversion" in "@cs-magic/oh-my-commit", continuing
 44 silly lifecycle No script for "preversion" in "@oh-my-commit/cli", continuing
@@ -367,37 +367,47 @@
 47 silly lifecycle No script for "preversion" in "@oh-my-commit/docs", continuing
 48 silly lifecycle No script for "preversion" in "@oh-my-commit/webview", continuing
 49 verbose version @oh-my-commit/cli has no lockfile. Skipping lockfile update.
-50 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
-51 verbose version @oh-my-commit/docs has no lockfile. Skipping lockfile update.
-52 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
-53 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
-54 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
-55 silly lifecycle No script for "preversion" in "@oh-my-commit/extension", continuing
-56 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
-57 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
-58 silly lifecycle No script for "version" in "@oh-my-commit/cli", continuing
-59 verbose version @oh-my-commit/extension has no lockfile. Skipping lockfile update.
-60 silly lifecycle No script for "version" in "@oh-my-commit/docs", continuing
+50 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
+51 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
+52 verbose version @oh-my-commit/docs has no lockfile. Skipping lockfile update.
+53 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
+54 silly lifecycle No script for "version" in "@oh-my-commit/cli", continuing
+55 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
+56 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
+57 silly lifecycle No script for "preversion" in "@oh-my-commit/extension", continuing
+58 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
+59 silly lifecycle No script for "version" in "@oh-my-commit/docs", continuing
+60 verbose version @oh-my-commit/extension has no lockfile. Skipping lockfile update.
 61 silly lifecycle No script for "version" in "@oh-my-commit/extension", continuing
 62 silly lifecycle No script for "version" in "@cs-magic/oh-my-commit", continuing
 63 verbose version Updating root pnpm-lock.yaml
-64 error Error: Command failed with exit code 1: pnpm install --lockfile-only --ignore-scripts
-64 error Scope: all 8 workspace projects
-64 error  WARN  `node_modules` is present. Lockfile only installation will make it out-of-date
-64 error Progress: resolved 1, reused 0, downloaded 0, added 0
-64 error packages/cli                             |  WARN  deprecated eslint@8.57.1
-64 error packages/extension                       |  WARN  deprecated vsce@2.15.0
-64 error packages/extension                       |  WARN  deprecated vscode@1.1.37
-64 error /Users/mark/coding/apps/oh-my-commit_v2/packages/shared:
-64 error  ERR_PNPM_NO_MATCHING_VERSION  No matching version found for tsup@^0.1.0
-64 error
-64 error This error happened while installing a direct dependency of /Users/mark/coding/apps/oh-my-commit_v2/packages/shared
-64 error
-64 error The latest release of tsup is "8.3.5".
-64 error
-64 error If you need the full list of all 200 published versions run "$ pnpm view tsup versions".
-64 error     at makeError (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/lib/error.js:59:11)
-64 error     at handlePromise (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/index.js:114:26)
-64 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-64 error     at async VersionCommand.updatePackageVersions (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/lerna@8.1.9_@swc+core@1.10.1_encoding@0.1.13/node_modules/lerna/dist/index.js:9866:11)
-64 error     at async Promise.all (index 0)
+64 silly version Successfully applied prettier to updated file: packages/cli/package.json
+65 silly version Successfully applied prettier to updated file: packages/provider-official/package.json
+66 silly version Successfully applied prettier to updated file: packages/webview/package.json
+67 silly version Successfully applied prettier to updated file: packages/shared/package.json
+68 silly version Successfully applied prettier to updated file: packages/website/package.json
+69 silly version Successfully applied prettier to updated file: packages/extension/package.json
+70 silly version Successfully applied prettier to updated file: lerna.json
+71 silly version Successfully applied prettier to updated file: pnpm-lock.yaml
+72 silly gitAdd [
+72 silly gitAdd   'packages/cli/package.json',
+72 silly gitAdd   'packages/provider-official/package.json',
+72 silly gitAdd   'packages/webview/package.json',
+72 silly gitAdd   'packages/shared/package.json',
+72 silly gitAdd   'packages/website/package.json',
+72 silly gitAdd   'packages/extension/package.json',
+72 silly gitAdd   'lerna.json',
+72 silly gitAdd   'pnpm-lock.yaml'
+72 silly gitAdd ]
+73 silly gitCommit v0.4.0
+74 verbose git [ 'commit', '-m', 'v0.4.0' ]
+75 silly gitTag v0.4.0 git tag %s -m %s
+76 verbose git [ 'tag', 'v0.4.0', '-m', 'v0.4.0' ]
+77 error Error: Command failed with exit code 128: git tag v0.4.0 -m v0.4.0
+77 error fatal: tag 'v0.4.0' already exists
+77 error     at makeError (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/lib/error.js:59:11)
+77 error     at handlePromise (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/execa@5.0.0/node_modules/execa/index.js:114:26)
+77 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+77 error     at async VersionCommand.gitCommitAndTagVersion (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/lerna@8.1.9_@swc+core@1.10.1_encoding@0.1.13/node_modules/lerna/dist/index.js:9970:9)
+77 error     at async VersionCommand.commitAndTagUpdates (/Users/mark/coding/apps/oh-my-commit_v2/node_modules/.pnpm/lerna@8.1.9_@swc+core@1.10.1_encoding@0.1.13/node_modules/lerna/dist/index.js:9935:18)
+77 error     at async Promise.all (index 0)
