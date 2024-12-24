@@ -1,5 +1,5 @@
-import type { IConfig } from "@shared/common"
-import { Config, configSchema, defaultConfig } from "@shared/common"
+import type { Config, IConfig } from "@shared/common"
+import { configSchema, defaultConfig } from "@shared/common"
 import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 import { merge } from "lodash-es"
 import fs from "node:fs"
