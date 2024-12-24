@@ -1,36 +1,28 @@
 import "reflect-metadata"
 
-// 确保 reflect-metadata 最先导入
 import {
   APP_NAME,
   CommitManager,
   ConsoleLogger,
   SETTING_MODEL_ID,
   TOKENS,
-  type GenerateCommitError,
-  type GenerateCommitResult,
   type IModel,
+  type IResult,
 } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
 import { simpleGit } from "simple-git"
 import { Container } from "typedi"
+
 import { CliConfig } from "./cli-commit-manager-adapter"
 
-// Initialize git and commit manager
 const git = simpleGit()
 
-// 1. 注册 config
 Container.set(TOKENS.Config, Container.get(CliConfig))
-
-// 2. 注册 logger 服务
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
-
-// 3. 注册 provider registry (depends logger)
 Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
 
-// 4. 获取 CommitManager 实例
 const commitManager: CommitManager = Container.get(CommitManager)
 
 commitManager.logger.info(chalk.blue("our coooooooool commit manager initialized"))
@@ -116,12 +108,13 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
       deletions: 0, // TODO: Parse from git diff
     })
 
-    const commitData = result.match(
-      (success: GenerateCommitResult) => success,
-      (error: GenerateCommitError) => {
-        throw new Error(`Error(code=${error.code}), message=${error.message}`)
-      },
-    )
+    if (!result.ok) {
+      commitManager.logger.error(chalk.red("Failed to generate commit message:"))
+      commitManager.logger.error(result.message)
+      process.exit(1)
+    }
+
+    const commitData: IResult = result.data
 
     commitManager.logger.info(chalk.green("Generated commit message:"))
     commitManager.logger.info(commitData.title)
@@ -148,7 +141,7 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
-  .version("1.0.0")
+  .version("0.2.0")
 
 // Init command
 program.command("init").description("Initialize Oh My Commit configuration").action(initConfig)

@@ -1,17 +1,16 @@
-import { ResultAsync } from "neverthrow"
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type IProviderManager } from "./core"
 import { BaseLogger } from "./log"
 import {
-  GenerateCommitError,
-  type GenerateCommitOptions,
-  type GenerateCommitResult,
+  ResultDTOSchema,
+  type IInputOptions,
   type IModel,
+  type IResult,
   type Status,
 } from "./provider.interface"
-import { formatError } from "./utils"
+import { formatError, type ResultDTO } from "./utils"
 
 @Service()
 export class CommitManager {
@@ -47,39 +46,55 @@ export class CommitManager {
     this.config.update(SETTING_MODEL_ID, modelId)
   }
 
-  generateCommit(
-    diff: DiffResult,
-    options?: GenerateCommitOptions,
-  ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
-    return ResultAsync.fromPromise(
-      (async () => {
-        const modelId =
-          this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
-        if (!modelId) {
-          throw new GenerateCommitError(-1, "No model available")
+  async generateCommit(diff: DiffResult, options?: IInputOptions): Promise<ResultDTO<IResult>> {
+    try {
+      const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
+      if (!modelId) {
+        return {
+          ok: false,
+          code: -1,
+          message: "No model available",
         }
+      }
 
-        const provider = this.providers.find(p => p.models.some(model => model.id === modelId))
-        if (!provider) {
-          throw new GenerateCommitError(-2, `No provider found for model ${modelId}`)
+      const provider = this.providers.find(p => p.models.some(model => model.id === modelId))
+      if (!provider) {
+        return {
+          ok: false,
+          code: -2,
+          message: `No provider found for model ${modelId}`,
         }
+      }
 
-        const generateOptions = options || {
-          lang: this.config.get("lang"),
+      const generateOptions = options || {
+        lang: this.config.get("lang"),
+      }
+
+      this.logger.info(`Generating commit using model: ${modelId}`)
+      const result = await provider.generateCommit({
+        model: modelId,
+        diff,
+        options: generateOptions,
+      })
+
+      const parsed = ResultDTOSchema.safeParse(result)
+      if (!parsed.success) {
+        this.logger.error("Invalid provider response:", parsed.error)
+        return {
+          ok: false,
+          code: -3,
+          message: `Provider returned invalid data: ${parsed.error.message}`,
         }
+      }
 
-        this.logger.info(`Generating commit using model: ${modelId}`)
-        return provider.generateCommit({ model: modelId, diff, options: generateOptions })
-      })(),
-      error => {
-        this.logger.error("Failed to generate commit:", error)
-        return error instanceof GenerateCommitError
-          ? error
-          : new GenerateCommitError(
-              -999,
-              `[UNKNOWN ERRROR] Failed to generate commit: ${formatError(error)}`,
-            )
-      },
-    ).andThen(result => result)
+      return parsed.data
+    } catch (error: unknown) {
+      this.logger.error("Failed to generate commit:", error)
+      return {
+        ok: false,
+        code: -999,
+        message: `[UNKNOWN ERROR] Failed to generate commit: ${formatError(error)}`,
+      }
+    }
   }
 }

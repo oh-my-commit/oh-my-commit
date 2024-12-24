@@ -95,16 +95,7 @@ export class QuickCommitCommand implements BaseCommand {
 
     const data: ServerMessageEvent = {
       type: "commit-message",
-      data: commit.isOk()
-        ? {
-            ok: true,
-            data: commit.value,
-          }
-        : {
-            ok: false,
-            code: commit.error.code,
-            message: commit.error.message,
-          },
+      data: commit,
     }
     this.logger.info("[QuickCommit] Generated commit via acManager:", data)
 
