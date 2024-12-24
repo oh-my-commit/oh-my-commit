@@ -1,5 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
+
 import {
   APP_ID_CAMEL,
   APP_ID_DASH,
@@ -13,10 +14,10 @@ import {
   type IProvider,
   type ProviderContext,
 } from "@shared/common"
+import { PromptTemplate } from "@shared/server/prompt-template"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import { ResultAsync } from "neverthrow"
-import { TemplateProcessor } from "./TemplateProcessor"
 
 class StandardModel implements IModel {
   id = `${APP_ID_DASH}.standard`
@@ -44,7 +45,7 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
   }
 
   private anthropic: Anthropic | null = null
-  private templateProcessor = new TemplateProcessor()
+  private templateProcessor = new PromptTemplate("provider-official/standard")
 
   constructor(context: ProviderContext) {
     super(context)
@@ -67,7 +68,7 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
     const lang = input.options?.lang || "en"
 
     return ResultAsync.fromPromise(
-      Promise.resolve().then(() => this.templateProcessor.loadPrompt({ diff, lang })),
+      Promise.resolve().then(() => this.templateProcessor.fill({ diff, lang })),
       error =>
         new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
     )

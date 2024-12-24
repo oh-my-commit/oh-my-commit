@@ -38,8 +38,8 @@ export class VscodeWebview implements vscode.Disposable {
     @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
     {
       title = `${APP_NAME} Webview`,
-      templatePath = "assets/webview.template.html",
-      scriptPath = "dist/webview-ui/main.js",
+      templatePath = "dist/webview/index.html",
+      scriptPath = "dist/webview/main.js",
     }: {
       title?: string
       templatePath?: string

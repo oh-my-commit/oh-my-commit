@@ -1,6 +1,6 @@
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
-import { COMMAND_SELECT_MODEL, TOKENS, type CommitManager } from "@shared/common"
+import { COMMAND_SELECT_MODEL, TOKENS, formatError, type CommitManager } from "@shared/common"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
@@ -44,9 +44,7 @@ export class SelectModelCommand implements BaseCommand {
         await this.commitManager.selectModel(selected.id)
       }
     } catch (error: unknown) {
-      console.error("Error in manage models command:", error)
-      const message = error instanceof Error ? error.message : "Unknown error occurred"
-      vscode.window.showErrorMessage(`Failed to manage models: ${message}`)
+      vscode.window.showErrorMessage(`Failed to manage models: ${formatError(error)}`)
     }
   }
 
