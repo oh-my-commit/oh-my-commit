@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/shared",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "publishConfig": {
     "access": "public",
@@ -34,7 +34,7 @@
     "eslint": "^8.0.0",
     "prettier": "^3.1.0",
     "tsconfig": "^0.0.1",
-    "tsup": "^0.1.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.0.0"
   },
   "dependencies": {
