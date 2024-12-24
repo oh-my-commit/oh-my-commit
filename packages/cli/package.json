@@ -29,7 +29,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@oh-my-commit/shared": "^0.2.1",
+    "@oh-my-commit/shared": "workspace:*",
     "chalk": "^4.x",
     "commander": "^12.0.0",
     "inquirer": "^9.2.12",
