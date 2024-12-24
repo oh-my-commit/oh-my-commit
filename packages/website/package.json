@@ -1,7 +1,7 @@
 {
-  "name": "@oh-my-commit/docs",
+  "name": "@oh-my-commit/website",
   "version": "0.5.1",
-  "description": "Oh My Commit Documentation Website",
+  "description": "Documentation and landing page for Oh My Commit - AI-powered commit message generator",
   "type": "module",
   "publishConfig": {
     "access": "public",
