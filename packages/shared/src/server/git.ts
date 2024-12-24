@@ -1,12 +1,18 @@
 import * as fs from "fs"
 import * as path from "path"
-import simpleGit, { type DiffResult, type SimpleGit } from "simple-git"
+import { simpleGit, type DiffResult, type SimpleGit } from "simple-git"
+import { Inject, Service } from "typedi"
+import { BaseLogger, TOKENS, formatError } from "../common"
 
+@Service()
 export class GitCore {
   protected git: SimpleGit
   protected workspaceRoot: string
 
-  constructor(workspaceRoot: string) {
+  constructor(
+    workspaceRoot: string,
+    @Inject(TOKENS.Logger) protected readonly logger: BaseLogger,
+  ) {
     this.workspaceRoot = workspaceRoot
     this.git = simpleGit(workspaceRoot)
   }
@@ -46,13 +52,12 @@ export class GitCore {
   }
 
   public async commit(message: string): Promise<void> {
-    console.log("[GitCore] Committing changes")
+    this.logger.debug("[GitCore] Committing changes")
     try {
       await this.git.commit(message)
-      console.log("[GitCore] Changes committed successfully")
+      this.logger.debug("[GitCore] Changes committed successfully")
     } catch (error) {
-      console.error("[GitCore] Failed to commit changes:", error)
-      throw error
+      throw new Error(`Failed to commit changes: ${formatError(error)}`)
     }
   }
 
@@ -61,30 +66,28 @@ export class GitCore {
       const status = await this.git.status()
       return !status.isClean()
     } catch (error) {
-      throw new Error(`Failed to check changes: ${error}`)
+      throw new Error(`Failed to check changes: ${formatError(error)}`)
     }
   }
 
   public async getLastCommitMessage(): Promise<string> {
-    console.log("[GitCore] Getting last commit message")
+    this.logger.debug("[GitCore] Getting last commit message")
     try {
       const result = await this.git.log(["-1"])
-      console.log("[GitCore] Last commit message:", result.latest?.hash)
+      this.logger.debug("[GitCore] Last commit message:", result.latest?.hash)
       return result.latest?.message || ""
     } catch (error) {
-      console.error("[GitCore] Failed to get last commit message:", error)
-      return ""
+      throw new Error(`Failed to get last commit message: ${formatError(error)}`)
     }
   }
 
   public async amendCommit(message: string): Promise<void> {
-    console.log("[GitCore] Amending last commit")
+    this.logger.debug("[GitCore] Amending last commit")
     try {
       await this.git.commit(message, ["--amend"])
-      console.log("[GitCore] Last commit amended successfully")
+      this.logger.debug("[GitCore] Last commit amended successfully")
     } catch (error) {
-      console.error("[GitCore] Failed to amend last commit:", error)
-      throw error
+      throw new Error(`Failed to amend last commit: ${formatError(error)}`)
     }
   }
 }

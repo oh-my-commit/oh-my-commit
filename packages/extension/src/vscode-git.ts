@@ -10,11 +10,11 @@ export class VscodeGit extends GitCore {
   readonly onGitStatusChanged: vscode.Event<boolean>
   private fsWatcher: vscode.FileSystemWatcher | undefined
 
-  constructor(@Inject(TOKENS.Logger) private readonly logger: VscodeLogger) {
+  constructor(@Inject(TOKENS.Logger) protected override logger: VscodeLogger) {
     const workspaceFolders = vscode.workspace.workspaceFolders
     const workspaceRoot = workspaceFolders ? workspaceFolders[0]!.uri.fsPath : ""
 
-    super(workspaceRoot)
+    super(workspaceRoot, logger)
 
     this._onGitStatusChanged = new vscode.EventEmitter<boolean>()
     this.onGitStatusChanged = this._onGitStatusChanged.event

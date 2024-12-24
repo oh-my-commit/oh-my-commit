@@ -23,6 +23,7 @@
     "@types/node": "^20.0.0",
     "chokidar": "^4.0.3",
     "eslint": "^8.0.0",
+    "pkg-info": "^1.0.1",
     "tsconfig": "*",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"
