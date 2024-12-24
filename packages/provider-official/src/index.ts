@@ -8,6 +8,7 @@ import {
   GenerateCommitError,
   formatError,
   type GenerateCommitInput,
+  type GenerateCommitResult,
   type IModel,
   type IProvider,
   type ProviderContext,
@@ -58,47 +59,43 @@ class OfficialProvider extends BaseGenerateCommitProvider implements IProvider {
     this.anthropic = new Anthropic(config)
   }
 
-  generateCommit(input: GenerateCommitInput) {
+  generateCommit(
+    input: GenerateCommitInput,
+  ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
     this.logger.info("Generating commit message using OMC Provider...")
     const diff = JSON.stringify(input.diff, null, 2)
     const lang = input.options?.lang || "en"
 
-    return (
-      // 1. load prompt
-      ResultAsync.fromPromise(
-        Promise.resolve(this.templateProcessor.loadPrompt({ diff, lang })),
-        error =>
-          new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
-      )
-        // 2. call api
-        .andThen(prompt =>
-          ResultAsync.fromPromise(
-            this.callApi(prompt),
-            error =>
-              new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
-          )
-            // 3. handle api result
-            .andThen(response =>
-              ResultAsync.fromPromise(
-                this.handleApiResult(response),
-                error =>
-                  new GenerateCommitError(
-                    -10087,
-                    `failed to handle api result, reason: ${formatError(error)}`,
-                  ),
-              ),
-            )
-            // 4. add metadata
-            .map(result => {
-              merge(result.meta, {
-                generatedAt: new Date().toISOString(),
-                modelId: input.model,
-                providerId: this.id,
-              })
-              return result
-            }),
-        )
+    return ResultAsync.fromPromise(
+      Promise.resolve().then(() => this.templateProcessor.loadPrompt({ diff, lang })),
+      error =>
+        new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
     )
+      .andThen(prompt =>
+        ResultAsync.fromPromise(
+          this.callApi(prompt),
+          error =>
+            new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
+        ),
+      )
+      .andThen(response =>
+        ResultAsync.fromPromise(
+          this.handleApiResult(response),
+          error =>
+            new GenerateCommitError(
+              -10087,
+              `failed to handle api result, reason: ${formatError(error)}`,
+            ),
+        ),
+      )
+      .map(result => {
+        merge(result.meta, {
+          generatedAt: new Date().toISOString(),
+          modelId: input.model,
+          providerId: this.id,
+        })
+        return result
+      })
   }
 
   private callApi(prompt: string) {

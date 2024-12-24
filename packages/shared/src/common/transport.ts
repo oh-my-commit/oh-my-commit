@@ -1,6 +1,6 @@
 import type { DiffResult } from "simple-git"
-import type { GenerateCommitResult } from "./provider.interface"
 import type { LogLevel } from "./log"
+import type { GenerateCommitResult } from "./provider.interface"
 import type { ResultDTO } from "./utils"
 
 export type BaseClientMessageEvent =

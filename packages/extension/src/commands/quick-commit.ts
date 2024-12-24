@@ -90,14 +90,23 @@ export class QuickCommitCommand implements BaseCommand {
       })
     }
 
-    // this.logger.info("[QuickCommit] Generating commit via acManager...")
+    this.logger.info("[QuickCommit] Generating commit via acManager...")
     const commit = await this.commitManager.generateCommit(diff)
-    this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
 
     const data: ServerMessageEvent = {
       type: "commit-message",
-      data: commit.isOk() ? { ok: true, data: commit.value } : { ok: false, ...commit.error },
+      data: commit.isOk()
+        ? {
+            ok: true,
+            data: commit.value,
+          }
+        : {
+            ok: false,
+            code: commit.error.code,
+            message: commit.error.message,
+          },
     }
+    this.logger.info("[QuickCommit] Generated commit via acManager:", data)
 
     await this.webviewManager?.postMessage(data)
   }
