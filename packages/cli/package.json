@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "bin": {
     "omc": "./dist/index.js"
   },
