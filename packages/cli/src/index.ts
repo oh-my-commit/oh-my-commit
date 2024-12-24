@@ -9,19 +9,18 @@ import {
   type IModel,
   type IResult,
 } from "@shared/common"
-import { ProviderRegistry } from "@shared/server"
+import { GitCore, ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
-import { simpleGit } from "simple-git"
+import { readPackageSync } from "pkg-info"
 import { Container } from "typedi"
 
 import { CliConfig } from "./cli-commit-manager-adapter"
 
-const git = simpleGit()
-
 Container.set(TOKENS.Config, Container.get(CliConfig))
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
 Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+const git = Container.get(GitCore)
 
 const commitManager: CommitManager = Container.get(CommitManager)
 
@@ -138,10 +137,11 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 }
 
 // Register commands
+const pkg = readPackageSync(__dirname)
 program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
-  .version("0.2.0")
+  .version(pkg.version)
 
 // Init command
 program.command("init").description("Initialize Oh My Commit configuration").action(initConfig)

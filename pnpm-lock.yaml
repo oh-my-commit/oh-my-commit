@@ -169,6 +169,9 @@ importers:
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
+      pkg-info:
+        specifier: ^1.0.1
+        version: 1.0.1
       tsconfig:
         specifier: '*'
         version: 7.0.0
@@ -4903,6 +4906,9 @@ packages:
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
+
+  pkg-info@1.0.1:
+    resolution: {integrity: sha512-3E3t5+HTCErObRZzEIr/nM/h87rsVyKnZb7KPmnsbk3ns+DMgVixrz956/qX5xH49RZ3ugyGy00RBVN0+NWxug==}
 
   pkg-types@1.2.1:
     resolution: {integrity: sha512-sQoqa8alT3nHjGuTjuKgOnvjo4cljkufdtLMnO2LBP/wRwuDlo1tkaEdMxCRhyGRPacv/ztlZgDPm2b7FAmEvw==}
@@ -11096,6 +11102,8 @@ snapshots:
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
+
+  pkg-info@1.0.1: {}
 
   pkg-types@1.2.1:
     dependencies:
