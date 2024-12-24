@@ -353,7 +353,7 @@
 33 verbose filtered diff ]
 34 verbose updated @oh-my-commit/cli
 35 verbose updated @oh-my-commit/extension
-36 verbose updated @oh-my-commit/official-provider
+36 verbose updated @oh-my-commit/provider-official
 37 verbose updated @oh-my-commit/shared
 38 verbose updated @oh-my-commit/docs
 39 verbose updated @oh-my-commit/webview
@@ -362,17 +362,17 @@
 42 info execute Skipping releases
 43 silly lifecycle No script for "preversion" in "@cs-magic/oh-my-commit", continuing
 44 silly lifecycle No script for "preversion" in "@oh-my-commit/cli", continuing
-45 silly lifecycle No script for "preversion" in "@oh-my-commit/official-provider", continuing
+45 silly lifecycle No script for "preversion" in "@oh-my-commit/provider-official", continuing
 46 silly lifecycle No script for "preversion" in "@oh-my-commit/shared", continuing
 47 silly lifecycle No script for "preversion" in "@oh-my-commit/docs", continuing
 48 silly lifecycle No script for "preversion" in "@oh-my-commit/webview", continuing
 49 verbose version @oh-my-commit/cli has no lockfile. Skipping lockfile update.
-50 verbose version @oh-my-commit/official-provider has no lockfile. Skipping lockfile update.
+50 verbose version @oh-my-commit/provider-official has no lockfile. Skipping lockfile update.
 51 verbose version @oh-my-commit/shared has no lockfile. Skipping lockfile update.
 52 verbose version @oh-my-commit/docs has no lockfile. Skipping lockfile update.
 53 verbose version @oh-my-commit/webview has no lockfile. Skipping lockfile update.
 54 silly lifecycle No script for "version" in "@oh-my-commit/cli", continuing
-55 silly lifecycle No script for "version" in "@oh-my-commit/official-provider", continuing
+55 silly lifecycle No script for "version" in "@oh-my-commit/provider-official", continuing
 56 silly lifecycle No script for "version" in "@oh-my-commit/webview", continuing
 57 silly lifecycle No script for "preversion" in "@oh-my-commit/extension", continuing
 58 silly lifecycle No script for "version" in "@oh-my-commit/shared", continuing
