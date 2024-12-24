@@ -24,6 +24,11 @@ export default defineConfig(options => {
     format: ["cjs"],
     // 不要将 shared 包视为外部依赖
     noExternal: ["@oh-my-commit/shared"],
+    banner: {
+      js: "#!/usr/bin/env node",
+    },
+    platform: "node",
+    target: "node18",
     onSuccess: async () => {
       console.log("Build succeeded! Watching for changes...")
     },
