@@ -1,7 +1,11 @@
 {
   "name": "@oh-my-commit/shared",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "exports": {
     "./common": {
       "types": "./dist/common/index.d.ts",
@@ -28,10 +32,10 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "eslint": "^8.0.0",
-    "eslint-config-custom": "*",
+    "eslint-config-custom": "^0.0.1",
     "prettier": "^3.1.0",
-    "tsconfig": "*",
-    "tsup": "*",
+    "tsconfig": "^0.0.1",
+    "tsup": "^8.0.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
