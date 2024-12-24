@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/docs",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Oh My Commit Documentation Website",
   "type": "module",
   "scripts": {
