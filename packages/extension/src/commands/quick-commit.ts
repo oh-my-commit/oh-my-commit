@@ -3,7 +3,12 @@ import { VscodeLogger } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
 import { VSCODE_TOKENS } from "@/vscode-token"
 import { VscodeWebview } from "@/vscode-webview"
-import { COMMAND_QUICK_COMMIT, TOKENS, type CommitManager } from "@shared/common"
+import {
+  COMMAND_QUICK_COMMIT,
+  TOKENS,
+  type CommitManager,
+  type ServerMessageEvent,
+} from "@shared/common"
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
@@ -89,11 +94,11 @@ export class QuickCommitCommand implements BaseCommand {
     const commit = await this.commitManager.generateCommit(diff)
     this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
 
-    if (commit.isOk()) {
-      await this.webviewManager?.postMessage({
-        type: "commit-message",
-        data: commit.value,
-      })
+    const data: ServerMessageEvent = {
+      type: "commit-message",
+      data: commit.isOk() ? { ok: true, data: commit.value } : { ok: false, ...commit.error },
     }
+
+    await this.webviewManager?.postMessage(data)
   }
 }

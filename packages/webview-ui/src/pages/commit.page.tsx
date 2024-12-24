@@ -27,6 +27,7 @@ export const CommitPage = () => {
 
     const handleMessage = (event: MessageEvent) => {
       const message = event.data as ServerMessageEvent
+      vscodeClientLogger.info("Received message:", message)
 
       if (!message || !("type" in message)) {
         vscodeClientLogger.info("Unknown event:", message)
