@@ -3,13 +3,16 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsserver.pluginPaths": [],
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
-    "debug.node.autoAttach": "on",
-    "debug.javascript.autoAttachFilter": "always",
-    "debug.javascript.terminalOptions": {
-        "skipFiles": [
-            "<node_internals>/**"
-        ]
-    },
-    "debug.javascript.usePreview": true,
-    "debug.javascript.codelens.npmScripts": "all"
+  "debug.node.autoAttach": "on",
+  "debug.javascript.autoAttachFilter": "always",
+  "debug.javascript.terminalOptions": {
+    "skipFiles": [
+      "<node_internals>/**"
+    ]
+  },
+  "debug.javascript.usePreview": true,
+  "debug.javascript.codelens.npmScripts": "all",
+  "terminal.integrated.env.osx": {
+    "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
+  }
 }
