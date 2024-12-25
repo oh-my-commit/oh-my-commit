@@ -1,37 +1,44 @@
-import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin"
-import path from "path"
-import { fileURLToPath } from "url"
-import ReactRefreshBabel from 'react-refresh/babel'
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const path = require("path");
+const ReactRefreshBabel = require('react-refresh/babel');
+const webpack = require("webpack");
 
+console.log("-- init webpack config --");
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-export default (env, argv) => {
-  const isProduction = argv.mode === "production"
-  const isDevelopment = !isProduction
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === "production";
+  const isDevelopment = !isProduction;
 
   return {
+    target: "web",
     mode: argv.mode || "development",
     devtool: isDevelopment ? "eval-source-map" : "source-map",
-    plugins: [isDevelopment && new ReactRefreshWebpackPlugin()].filter(Boolean),
+    plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+      // new webpack.ProvidePlugin({
+      //   React: "react",
+      // }),
+      isDevelopment && new ReactRefreshWebpackPlugin(),
+    ].filter(Boolean),
     devServer: {
-      hot: true,
-      devMiddleware: {
-        writeToDisk: true, // 仍然写入磁盘作为备份
+      static: {
+        directory: path.join(__dirname, "static"),
+        publicPath: "/static",
       },
-      liveReload: false,
-      host: "localhost",
-      port: 8081,
-      allowedHosts: "all", // 允许所有主机
-      client: {
-        webSocketURL: false, // 禁用 WebSocket，因为我们在 VSCode webview 中
-        overlay: true,
-        logging: "info",
-      },
+      allowedHosts: "all",
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, content-type, Authorization",
       },
+      hot: true,
+      client: {
+        overlay: true,
+      },
+      compress: true,
+      port: 18080,
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
@@ -89,5 +96,6 @@ export default (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
-  }
-}
+    entry: './src/index.tsx',
+  };
+};

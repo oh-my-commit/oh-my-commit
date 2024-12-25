@@ -14,7 +14,7 @@ provideVSCodeDesignSystem().register(vsCodeProgressRing())
 const container = document.getElementById("root") as HTMLElement
 if (!container) {
   console.error("Root element not found")
-  throw new Error("Root element not found ")
+  throw new Error("Root element not found  ")
 }
 
 const root = createRoot(container)
