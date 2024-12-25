@@ -20,17 +20,8 @@ import { VSCODE_TOKENS } from "./vscode-token"
 export class VscodeWebview implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
-  private title: string
-
-  /**
-   * 需要先初始化一个 template webview 页面，然后再动态加载新的内容（前端打包后的结果）
-   */
-  private readonly templatePath: string
-
-  /**
-   * 前端打包后的脚本文件路径
-   */
-  private readonly scriptPath: string
+  private _title: string
+  private readonly webviewPath: string
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
@@ -38,33 +29,16 @@ export class VscodeWebview implements vscode.Disposable {
     @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
     {
       title = `${APP_NAME} Webview`,
-      templatePath = "dist/webview/index.html",
-      scriptPath = "dist/webview/main.js",
     }: {
       title?: string
-      templatePath?: string
-      scriptPath?: string
     } = {},
   ) {
-    this.title = title
-    this.templatePath = templatePath
-    this.scriptPath = scriptPath
-
-    this.context.subscriptions.push(this)
+    this._title = title
+    this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
   }
 
   setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
     this.messageHandler = handler
-  }
-
-  get template() {
-    const templatePath = path.join(this.context.extensionPath, this.templatePath)
-    const templateContent = fs.readFileSync(templatePath, "utf8")
-    return Handlebars.compile(templateContent)
-  }
-
-  public get scriptUri() {
-    return vscode.Uri.file(path.join(this.context.extensionPath, this.scriptPath))
   }
 
   public get uiMode(): string {
@@ -148,7 +122,7 @@ export class VscodeWebview implements vscode.Disposable {
   }
 
   private setupFileWatcher(panel: vscode.WebviewPanel) {
-    const mainJsPath = path.join(this.context.extensionPath, this.scriptPath)
+    const mainJsPath = path.join(this.webviewPath, "main.js")
 
     // this.logger.info(`Main.js path: ${mainJsPath}`);
 
@@ -186,30 +160,31 @@ export class VscodeWebview implements vscode.Disposable {
     return { dispose: cleanup }
   }
 
-  private getWebviewOptions(): vscode.WebviewOptions & vscode.WebviewPanelOptions {
+  private getWebviewOptions(): vscode.WebviewOptions {
     const options = {
       enableScripts: true,
       retainContextWhenHidden: true,
-      localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, "dist"))],
+      localResourceRoots: [vscode.Uri.file(this.webviewPath)],
     }
-    // this.logger.info("Webview options:", options);
     return options
   }
 
-  private getCspSettings(): string {
-    const webview = this.webviewPanel!.webview
-    return `default-src 'none';
-            img-src ${webview.cspSource} https: data:;
-            script-src ${webview.cspSource} 'unsafe-inline';
-            style-src ${webview.cspSource} 'unsafe-inline';
-            font-src ${webview.cspSource};
-            connect-src ws://localhost:8081 ${webview.cspSource};`
-  }
+  private getWebviewContent() {
+    const indexPath = path.join(this.webviewPath, "index.html")
+    const scriptPath = path.join(this.webviewPath, "main.js")
 
-  private getScriptUri(): vscode.Uri {
-    const uri = this.webviewPanel!.webview.asWebviewUri(this.scriptUri)
-    const finalUri = uri.with({ query: `v=${Date.now()}` })
-    return finalUri
+    if (!fs.existsSync(indexPath)) {
+      throw new Error(`Template file not found: ${indexPath}`)
+    }
+
+    const template = fs.readFileSync(indexPath, "utf-8")
+    const scriptUri = this.webviewPanel?.webview.asWebviewUri(vscode.Uri.file(scriptPath))
+
+    const compiled = Handlebars.compile(template)
+    return compiled({
+      scriptUri,
+      cspSource: this.webviewPanel?.webview.cspSource,
+    })
   }
 
   private async updateWebview() {
@@ -218,14 +193,7 @@ export class VscodeWebview implements vscode.Disposable {
       return
     }
 
-    const templateData = {
-      scriptUri: this.getScriptUri().toString(),
-      cspSource: this.getCspSettings(),
-      windowMode: this.uiMode === "window",
-    }
-
-    this.logger.info("Updating webview with template data:", JSON.stringify(templateData, null, 2))
-    const html = this.template(templateData)
+    const html = this.getWebviewContent()
     this.webviewPanel.webview.html = html
     this.logger.info("Webview updated successfully")
   }

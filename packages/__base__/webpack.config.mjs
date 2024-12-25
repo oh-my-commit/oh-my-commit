@@ -15,7 +15,6 @@ export default (env, argv) => {
     mode: argv.mode || "development",
 
     devtool: isDevelopment ? "eval-source-map" : "source-map",
-    watch: isDevelopment,
     watchOptions: {
       ignored: /node_modules/,
       aggregateTimeout: 100,

@@ -36,6 +36,15 @@ export const configSchema = z.object({
     enabled: z.boolean().default(true),
   }),
 })
+
+// 安全地获取环境变量
+const getEnvVar = (key: string): string | undefined => {
+  if (typeof process !== "undefined" && process.env) {
+    return process.env[key]
+  }
+  return undefined
+}
+
 export const defaultConfig = {
   basic: {
     enabled: true,
@@ -52,17 +61,17 @@ export const defaultConfig = {
   ui: {
     mode: "window",
   },
-  proxy: process.env["HTTPS_PROXY"] ?? process.env["HTTP_PROXY"],
+  proxy: getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY"),
   apiKeys: {
-    anthropic: process.env["ANTHROPIC_API_KEY"],
-    openai: process.env["OPENAI_API_KEY"],
-    cohere: process.env["COHERE_API_KEY"],
-    huggingface: process.env["HUGGINGFACE_API_KEY"],
-    google: process.env["GOOGLE_API_KEY"],
-    zhipu: process.env["ZHIPU_API_KEY"],
-    deepseek: process.env["DEEPSEEK_API_KEY"],
-    groq: process.env["GROQ_API_KEY"],
-    baichuan: process.env["BAICHUAN_API_KEY"],
+    anthropic: getEnvVar("ANTHROPIC_API_KEY"),
+    openai: getEnvVar("OPENAI_API_KEY"),
+    cohere: getEnvVar("COHERE_API_KEY"),
+    huggingface: getEnvVar("HUGGINGFACE_API_KEY"),
+    google: getEnvVar("GOOGLE_API_KEY"),
+    zhipu: getEnvVar("ZHIPU_API_KEY"),
+    deepseek: getEnvVar("DEEPSEEK_API_KEY"),
+    groq: getEnvVar("GROQ_API_KEY"),
+    baichuan: getEnvVar("BAICHUAN_API_KEY"),
   },
   telemetry: {
     enabled: true,
@@ -72,4 +81,5 @@ export const defaultConfig = {
     enabled: true,
   },
 } as const
+
 export type Config = z.infer<typeof configSchema>

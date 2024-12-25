@@ -2,89 +2,109 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "pnpm: webview:dev",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@oh-my-commit/webview", "run", "dev"],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "webpack",
+        "pattern": [
+          {
+            "regexp": "ERROR in (.+)\\n(.+)",
+            "file": 1,
+            "message": 2,
+            "location": 1
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*webpack.*$",
+          "endsPattern": "webpack [0-9.]+ compiled .*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/packages/webview"
+      }
+    },
+    {
+      "label": "pnpm: extension:dev",
       "type": "shell",
       "command": "pnpm",
       "args": ["--filter", "@oh-my-commit/extension", "run", "dev"],
-      "label": "pnpm: extension:dev",
       "isBackground": true,
       "problemMatcher": {
+        "owner": "tsup",
+        "fileLocation": ["relative", "${workspaceFolder}/packages/extension"],
         "pattern": {
           "regexp": "^.*$"
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".*",
-          "endsPattern": ".*(built|compiled|finished).*"
+          "beginsPattern": ".",
+          "endsPattern": "."
         }
       },
       "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated"
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": true
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "options": {
+        "cwd": "${workspaceFolder}/packages/extension"
+      },
+      "dependsOn": ["pnpm: webview:dev"]
     },
     {
+      "label": "pnpm: extension:build",
       "type": "shell",
       "command": "pnpm",
-      "args": ["run", "dev"],
-      "label": "pnpm: dev",
-      "isBackground": true,
-      "problemMatcher": {
-        "pattern": {
-          "regexp": "^.*$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": ".*",
-          "endsPattern": ".*(built|compiled|finished).*"
-        }
-      },
+      "args": ["--filter", "@oh-my-commit/extension", "run", "build"],
       "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated"
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": true
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "type": "shell",
-      "command": "pnpm",
-      "args": ["run", "watch"],
-      "label": "pnpm: watch",
-      "isBackground": true,
-      "problemMatcher": {
-        "pattern": {
-          "regexp": "^.*$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": ".*",
-          "endsPattern": ".*(built|compiled|finished).*"
-        }
-      },
-      "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "type": "shell",
-      "command": "pnpm",
-      "args": ["run", "build"],
-      "label": "pnpm: build",
       "group": "build",
+      "problemMatcher": ["$tsc"],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/extension"
+      },
+      "dependsOn": ["pnpm: webview:build"]
+    },
+    {
+      "label": "pnpm: webview:build",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "@oh-my-commit/webview", "run", "build"],
       "presentation": {
-        "reveal": "silent",
-        "panel": "dedicated"
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": true
+      },
+      "group": "build",
+      "problemMatcher": {
+        "owner": "webpack",
+        "pattern": [
+          {
+            "regexp": "ERROR in (.+)\\n(.+)",
+            "file": 1,
+            "message": 2,
+            "location": 1
+          }
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/packages/webview"
       }
     }
   ]

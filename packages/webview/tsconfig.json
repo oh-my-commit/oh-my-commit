@@ -3,10 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "../extension/dist/webview",
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react-jsx",
-    "types": ["vscode"],
+    "types": ["vscode", "vscode-webview"],
     "moduleResolution": "bundler",
     "module": "ESNext"
   },
