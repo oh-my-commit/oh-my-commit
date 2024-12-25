@@ -1,6 +1,6 @@
 // @ts-ignore
 import { PROVIDERS_DIR } from "@shared/server/config"
-import baseConfig from "packages/base/tsup.config"
+import baseConfig from "../__base__/tsup.config"
 import { resolve } from "path"
 import { defineConfig } from "tsup"
 

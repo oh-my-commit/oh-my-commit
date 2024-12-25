@@ -1,6 +1,6 @@
 import { exec } from "child_process"
 import { promises } from "fs"
-import baseConfig from "packages/base/tsup.config"
+import baseConfig from "../__base__/tsup.config"
 import { resolve } from "path"
 import { defineConfig } from "tsup"
 import { TEMPLATES_DIR } from "./src/server/config"

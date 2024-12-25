@@ -1,4 +1,4 @@
-import basaeConfig from "packages/base/tsup.config"
+import basaeConfig from "../__base__/tsup.config"
 import { defineConfig } from "tsup"
 
 export default defineConfig({
