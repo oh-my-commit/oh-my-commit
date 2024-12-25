@@ -39,6 +39,10 @@ export const CommitPage = () => {
       }
 
       switch (message.type) {
+        case "pong":
+          break
+        case "webpackProgress":
+          break
         case "diff-result":
           setDiffResult(message.data)
           break
@@ -50,8 +54,6 @@ export const CommitPage = () => {
           setIsGenerating(false)
           break
         case "commit-result":
-          break
-        case "pong":
           break
         default:
           vscodeClientLogger.info("Unknown event:", message)

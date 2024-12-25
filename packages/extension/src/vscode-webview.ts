@@ -82,11 +82,6 @@ export class VscodeWebview implements vscode.Disposable {
     this.webviewPanel = panel
     await this.updateWebview()
 
-    // Add development mode watcher
-    if (process.env["NODE_ENV"] === "development") {
-      this.watchFileSystem()
-    }
-
     // Clean up
     panel.onDidDispose(() => {
       this.logger.info("Panel disposed, cleaning up...")
@@ -122,14 +117,41 @@ export class VscodeWebview implements vscode.Disposable {
   }
 
   private getWebviewContent() {
-    const indexPath = path.join(this.webviewPath, "index.html")
-    const scriptPath = path.join(this.webviewPath, "main.js")
+    const isDev = process.env["NODE_ENV"] === "development"
+    const devServerHost = "http://localhost:18080"
 
+    if (isDev) {
+      const nonce = require("crypto").randomBytes(16).toString("base64")
+      const csp = [
+        `form-action 'none'`,
+        `default-src ${this.webviewPanel?.webview.cspSource} ${devServerHost}`,
+        `style-src ${this.webviewPanel?.webview.cspSource} ${devServerHost} 'unsafe-inline'`,
+        `script-src ${devServerHost} 'unsafe-eval' 'nonce-${nonce}'`,
+        `connect-src ${devServerHost} ws://localhost:18080/ws`,
+      ].join("; ")
+
+      return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="Content-Security-Policy" content="${csp}">
+            <title>${this.title}</title>
+        </head>
+        <body>
+            <div id="root"></div>
+            <script type="module" nonce="${nonce}" src="${devServerHost}/main.js"></script>
+        </body>
+        </html>`
+    }
+
+    const indexPath = path.join(this.webviewPath, "index.html")
     if (!fs.existsSync(indexPath)) {
       throw new Error(`Template file not found: ${indexPath}`)
     }
 
     const template = fs.readFileSync(indexPath, "utf-8")
+    const scriptPath = path.join(this.webviewPath, "main.js")
     const scriptUri = this.webviewPanel?.webview.asWebviewUri(vscode.Uri.file(scriptPath))
 
     const compiled = Handlebars.compile(template)
@@ -169,17 +191,7 @@ export class VscodeWebview implements vscode.Disposable {
   }
 
   private watchFileSystem() {
-    if (process.env["NODE_ENV"] === "development") {
-      const watcher = vscode.workspace.createFileSystemWatcher(
-        new vscode.RelativePattern(this.webviewPath, "**/*"),
-      )
-
-      watcher.onDidChange(async () => {
-        await this.updateWebview()
-      })
-
-      this.context.subscriptions.push(watcher)
-    }
+    // 移除文件监听，因为我们现在使用 webpack dev server
   }
 
   dispose() {

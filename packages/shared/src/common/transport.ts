@@ -24,7 +24,16 @@ export type BaseClientMessageEvent =
         url: string
       }
     }
-export type BaseServerMessageEvent = { type: "pong" }
+export type BaseServerMessageEvent =
+  | { type: "pong" }
+  | {
+      type: "webpackProgress"
+      data: {
+        percent: number // 0-100
+        msg: string
+      }
+    }
+
 export type ClientMessageEvent_ =
   | BaseClientMessageEvent
   | {
