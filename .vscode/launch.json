@@ -5,11 +5,12 @@
       "name": "Run Extension",
       "type": "extensionHost",
       "request": "launch",
+      "autoAttachChildProcesses": true,
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/packages/extension"],
       "outFiles": ["${workspaceFolder}/packages/extension/dist/**/*.js"],
       "sourceMaps": true,
       "trace": true,
-      "internalConsoleOptions": "openOnSessionStart",
+      "internalConsoleOptions": "neverOpen",
       "sourceMapRenames": true,
       "sourceMapPathOverrides": {
         "webpack:///*": "${workspaceFolder}/packages/extension/*",

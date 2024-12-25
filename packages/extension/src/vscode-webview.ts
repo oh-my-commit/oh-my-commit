@@ -82,6 +82,11 @@ export class VscodeWebview implements vscode.Disposable {
     this.webviewPanel = panel
     await this.updateWebview()
 
+    // Add development mode watcher
+    if (process.env["NODE_ENV"] === "development") {
+      this.watchFileSystem()
+    }
+
     // Clean up
     panel.onDidDispose(() => {
       this.logger.info("Panel disposed, cleaning up...")
@@ -140,9 +145,13 @@ export class VscodeWebview implements vscode.Disposable {
       return
     }
 
-    const html = this.getWebviewContent()
-    this.webviewPanel.webview.html = html
-    this.logger.info("Webview updated successfully")
+    try {
+      const html = this.getWebviewContent()
+      this.webviewPanel.webview.html = html
+      this.logger.info("Webview updated successfully")
+    } catch (error) {
+      this.logger.error("Error updating webview:", error)
+    }
   }
 
   private async cleanup() {
@@ -156,6 +165,20 @@ export class VscodeWebview implements vscode.Disposable {
       this.webviewPanel = undefined
 
       this.logger.debug("Panel disposed and reference cleared")
+    }
+  }
+
+  private watchFileSystem() {
+    if (process.env["NODE_ENV"] === "development") {
+      const watcher = vscode.workspace.createFileSystemWatcher(
+        new vscode.RelativePattern(this.webviewPath, "**/*"),
+      )
+
+      watcher.onDidChange(async () => {
+        await this.updateWebview()
+      })
+
+      this.context.subscriptions.push(watcher)
     }
   }
 

@@ -11,7 +11,9 @@ const config = (env, argv) => {
 
   return {
     entry: {
-      main: "./src/main.tsx",
+      main: [
+        './src/main.tsx'
+      ].filter(Boolean),
     },
     output: {
       path: distDir,
@@ -23,7 +25,10 @@ const config = (env, argv) => {
     mode: argv.mode || "development",
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      isDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isDevelopment && new ReactRefreshWebpackPlugin({
+        overlay: false,
+      }),
       // new webpack.ProvidePlugin({
       //   React: "react",
       // }),
@@ -48,6 +53,7 @@ const config = (env, argv) => {
       },
       compress: true,
       port: 18080,
+      watchFiles: ['src/**/*'],
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
