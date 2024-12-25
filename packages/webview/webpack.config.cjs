@@ -42,7 +42,7 @@ const config = (env, argv) => {
         "Access-Control-Allow-Headers":
           "X-Requested-With, content-type, Authorization",
       },
-      host: "0.0.0.0",
+      host: "localhost",
       hot: true,
       liveReload: true,
       client: {

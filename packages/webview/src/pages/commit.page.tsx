@@ -11,7 +11,6 @@ import type { ServerMessageEvent } from "@shared/common"
 
 import { useSetAtom } from "jotai"
 import { useEffect } from "react"
-import React from "react"
 
 export const CommitPage = () => {
   const setTitle = useSetAtom(commitTitleAtom)
@@ -34,7 +33,7 @@ export const CommitPage = () => {
       const message = event.data as ServerMessageEvent
       vscodeClientLogger.info("Received message:", message)
 
-      if (!message || !("type" in message)) {
+      if (!message || typeof message !== "object" || !("type" in message)) {
         vscodeClientLogger.info("Unknown event:", message)
         return
       }
