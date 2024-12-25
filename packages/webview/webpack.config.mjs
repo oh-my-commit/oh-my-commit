@@ -23,6 +23,10 @@ const config = (env, argv) => {
       filename: "[name].js",
       clean: isProduction,
     },
+    externals: {
+      react: "React",
+      "react-dom": "ReactDOM"
+    },
     plugins: [
       ...(baseConfig(env, argv).plugins || []),
       new CopyWebpackPlugin({

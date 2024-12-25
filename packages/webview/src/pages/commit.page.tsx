@@ -11,6 +11,7 @@ import type { ServerMessageEvent } from "@shared/common"
 
 import { useSetAtom } from "jotai"
 import { useEffect } from "react"
+import React from "react"
 
 export const CommitPage = () => {
   const setTitle = useSetAtom(commitTitleAtom)
