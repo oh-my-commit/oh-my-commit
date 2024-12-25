@@ -3,9 +3,10 @@ import { CommitMessage } from "@/components/commit/CommitMessage"
 import { FileChanges } from "@/components/commit/file-changes/FileChanges"
 import { Footer } from "@/components/footer"
 import { useCloseWindow } from "@/hooks/use-close-window"
+import { getVSCodeAPI } from "@/lib/getVSCodeAPI"
 import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
-import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message"
+import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 import type { ServerMessageEvent } from "@shared/common"
 
 import { useSetAtom } from "jotai"
@@ -15,6 +16,9 @@ export const CommitPage = () => {
   const setTitle = useSetAtom(commitTitleAtom)
   const setBody = useSetAtom(commitBodyAtom)
   const setDiffResult = useSetAtom(diffResultAtom)
+  const setIsGenerating = useSetAtom(isGeneratingAtom)
+
+  const vscode = getVSCodeAPI()
 
   useCloseWindow()
 
@@ -43,6 +47,7 @@ export const CommitPage = () => {
             setTitle(message.data.data.title)
             setBody(message.data.data.body ?? "")
           }
+          setIsGenerating(false)
           break
         case "commit-result":
           break

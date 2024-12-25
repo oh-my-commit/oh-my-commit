@@ -11,7 +11,10 @@
   },
   "settings": {
     "import/resolver": {
-      "typescript": true
+      "typescript": {
+        "project": ["packages/__base__/tsconfig.json", "packages/*/tsconfig.json"],
+        "alwaysTryTypes": true
+      }
     }
   },
   "overrides": [

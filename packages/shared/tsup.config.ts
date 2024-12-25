@@ -1,8 +1,8 @@
+import { exec } from "child_process"
+import { promises } from "fs"
+import baseConfig from "packages/base/tsup.config"
+import { resolve } from "path"
 import { defineConfig } from "tsup"
-import baseConfig from "../__base__/tsup.config"
-import { exec } from 'child_process';
-import { resolve } from 'path';
-import { promises } from 'fs';
 import { TEMPLATES_DIR } from "./src/server/config"
 
 export default defineConfig({
@@ -16,30 +16,30 @@ export default defineConfig({
       // --experimentalDecorators --emitDecoratorMetadata
     },
   },
-  
+
   entry: ["src/common/index.ts", "src/server/index.ts", "src/server/config.ts"],
-  
+
   loader: {
-    '.hbs': 'copy'
+    ".hbs": "copy",
   },
 
   onSuccess: async () => {
     // Generate TypeScript declaration files
     await new Promise((resolve, reject) => {
-      exec('tsc --emitDeclarationOnly --declaration', (error, stdout, stderr) => {
+      exec("tsc --emitDeclarationOnly --declaration", (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error generating declarations: ${error}`);
-          reject(error);
-          return;
+          console.error(`Error generating declarations: ${error}`)
+          reject(error)
+          return
         }
-        resolve(stdout);
-      });
-    });
+        resolve(stdout)
+      })
+    })
 
     // Copy prompts to output directory
-    const promptsDir = resolve(__dirname, '../../prompts');
+    const promptsDir = resolve(__dirname, "../../prompts")
     const outPromptsDir = TEMPLATES_DIR
-    await promises.mkdir(outPromptsDir, { recursive: true });
-    await promises.cp(promptsDir, outPromptsDir, { recursive: true });
-  }
+    await promises.mkdir(outPromptsDir, { recursive: true })
+    await promises.cp(promptsDir, outPromptsDir, { recursive: true })
+  },
 })

@@ -5,7 +5,7 @@ import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
-import { commitBodyAtom, commitTitleAtom } from "@/state/atoms/commit.message"
+import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import { useAtom } from "jotai"
 import { useEffect, useRef, useState } from "react"
@@ -17,7 +17,7 @@ export function CommitMessage() {
   const [title, setTitle] = useAtom(commitTitleAtom)
   const [body, setBody] = useAtom(commitBodyAtom)
   const [showTooltip, setShowTooltip] = useState(false)
-  const [isRegenerating, setIsRegenerating] = useState(false)
+  const [isGenerating, setIsGenerating] = useAtom(isGeneratingAtom)
   const [selectedFiles, _setSelectedFiles] = useAtom(selectedFilesAtom)
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
@@ -40,7 +40,7 @@ export function CommitMessage() {
 
   // 处理重新生成
   const handleRegenerate = () => {
-    setIsRegenerating(true)
+    setIsGenerating(true)
     clientPush({
       channel: "commitMesage",
       type: "selected-files",
@@ -104,15 +104,15 @@ export function CommitMessage() {
           <VSCodeButton
             appearance="secondary"
             className="w-32 shrink-0 overflow-hidden"
-            disabled={isRegenerating}
+            disabled={isGenerating}
             onClick={handleRegenerate}
           >
-            {isRegenerating ? (
+            {isGenerating ? (
               <span className="w-full flex items-center gap-2">
                 <VSCodeProgressRing className="w-4 h-4 " />
               </span>
             ) : (
-              "Regenerate3"
+              "Regenerate2"
             )}
           </VSCodeButton>
 

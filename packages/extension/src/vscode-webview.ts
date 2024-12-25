@@ -22,6 +22,8 @@ export class VscodeWebview implements vscode.Disposable {
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private _title: string
   private readonly webviewPath: string
+  private readonly isDevelopment: boolean
+  private fileWatcher?: vscode.FileSystemWatcher
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
@@ -35,6 +37,11 @@ export class VscodeWebview implements vscode.Disposable {
   ) {
     this._title = title
     this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
+    this.isDevelopment = process.env.NODE_ENV === "development"
+
+    if (this.isDevelopment) {
+      this.setupHotReload()
+    }
   }
 
   setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
@@ -69,7 +76,7 @@ export class VscodeWebview implements vscode.Disposable {
           break
 
         case "close-window":
-          await this.cleanupPanel()
+          await this.cleanup()
           break
 
         case "open-external":
@@ -101,10 +108,6 @@ export class VscodeWebview implements vscode.Disposable {
     })
 
     return panel
-  }
-
-  public async dispose() {
-    await this.cleanupPanel()
   }
 
   public async postMessage(message: any) {
@@ -160,6 +163,34 @@ export class VscodeWebview implements vscode.Disposable {
     return { dispose: cleanup }
   }
 
+  private setupHotReload() {
+    this.logger.info("Setting up hot reload for development mode")
+
+    // Watch for changes in the webview dist directory
+    this.fileWatcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(this.webviewPath, "**/*"),
+      false, // Don't ignore creates
+      false, // Don't ignore changes
+      false, // Don't ignore deletes
+    )
+
+    // Handle file changes
+    this.fileWatcher.onDidChange(() => this.handleFileChange())
+    this.fileWatcher.onDidCreate(() => this.handleFileChange())
+    this.fileWatcher.onDidDelete(() => this.handleFileChange())
+
+    // Add to disposables
+    this.context.subscriptions.push(this.fileWatcher)
+  }
+
+  private async handleFileChange() {
+    this.logger.info("Detected file change in webview, reloading...")
+    if (this.webviewPanel) {
+      await this.updateWebview()
+      this.logger.info("Webview reloaded successfully")
+    }
+  }
+
   private getWebviewOptions(): vscode.WebviewOptions {
     const options = {
       enableScripts: true,
@@ -198,7 +229,8 @@ export class VscodeWebview implements vscode.Disposable {
     this.logger.info("Webview updated successfully")
   }
 
-  private async cleanupPanel() {
+  private async cleanup() {
+    this.fileWatcher?.dispose()
     if (this.webviewPanel) {
       this.logger.info("Disposing webview panel")
 
@@ -210,5 +242,9 @@ export class VscodeWebview implements vscode.Disposable {
 
       this.logger.debug("Panel disposed and reference cleared")
     }
+  }
+
+  dispose() {
+    this.cleanup()
   }
 }

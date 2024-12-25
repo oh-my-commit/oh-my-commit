@@ -10,12 +10,12 @@ import {
   type IResult,
 } from "@shared/common"
 import { GitCore, ProviderRegistry } from "@shared/server"
-import chalk from "chalk"
+import * as chalk from "chalk"
 import { program } from "commander"
-import { readPackageSync } from "pkg-info"
+import { readPackageUpSync } from "read-package-up"
 import { Container } from "typedi"
 
-import { CliConfig } from "./cli-commit-manager-adapter"
+import { CliConfig } from "./config"
 
 Container.set(TOKENS.Config, Container.get(CliConfig))
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
@@ -123,7 +123,7 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 
     if (options.yes) {
       // Automatically commit if -y flag is provided
-      await git.commit([commitData.title, ...(commitData.body ? [commitData.body] : [])])
+      await git.commit([commitData.title, ...(commitData.body ? [commitData.body] : [])].join("\n"))
       commitManager.logger.info(chalk.green("Changes committed successfully!"))
     } else {
       // Ask for confirmation
@@ -137,11 +137,11 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 }
 
 // Register commands
-const pkg = readPackageSync(__dirname)
+const pkg = readPackageUpSync()?.packageJson
 program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
-  .version(pkg.version)
+  .version(pkg?.version ?? "0.0.0")
 
 // Init command
 program.command("init").description("Initialize Oh My Commit configuration").action(initConfig)
