@@ -1,6 +1,5 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const path = require("path");
-const ReactRefreshBabel = require('react-refresh/babel');
 const webpack = require("webpack");
 const distDir = path.resolve(__dirname, "dist")
 
@@ -9,35 +8,35 @@ const config = (env, argv) => {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
+  console.log("-- init webpack config -- ", {isDevelopment});
+
   return {
+    target: "web",
+    mode: argv.mode || "development",
     entry: {
-      main: [
-        './src/main.tsx'
-      ].filter(Boolean),
+      main: './src/main.tsx'
     },
     output: {
       path: distDir,
       filename: "[name].js",
+      libraryTarget: "module",
       clean: isProduction,
     },
-
-    target: "web",
-    mode: argv.mode || "development",
+    experiments: {
+      outputModule: true,
+    },
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     plugins: [
-      isDevelopment && new webpack.HotModuleReplacementPlugin(),
-      isDevelopment && new ReactRefreshWebpackPlugin({
-        overlay: false,
+      new webpack.ProvidePlugin({
+        React: "react",
       }),
-      // new webpack.ProvidePlugin({
-      //   React: "react",
-      // }),
+      isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     devServer: {
       static: {
-        directory: path.join(__dirname, "static"),
-        publicPath: "/static",
+        directory: path.join(__dirname, "dist"),
+        publicPath: "/",
       },
       allowedHosts: "all",
       headers: {
@@ -47,13 +46,15 @@ const config = (env, argv) => {
         "Access-Control-Allow-Headers":
           "X-Requested-With, content-type, Authorization",
       },
+      host: "0.0.0.0",
       hot: true,
+      liveReload: true,
       client: {
         overlay: true,
+        progress: true,
       },
       compress: true,
       port: 18080,
-      watchFiles: ['src/**/*'],
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
@@ -67,22 +68,27 @@ const config = (env, argv) => {
         {
           test: /\.[jt]sx?$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  '@babel/preset-env',
-                  '@babel/preset-react',
-                  '@babel/preset-typescript'
-                ],
-                plugins: [
-                  isDevelopment && ReactRefreshBabel,
-                  ["@babel/plugin-proposal-decorators", { "legacy": true }],
-                ].filter(Boolean),
+          use: {
+            loader: 'swc-loader',
+            options: {
+              jsc: {
+                parser: {
+                  syntax: "typescript",
+                  tsx: true,
+                  decorators: true,
+                },
+                transform: {
+                  react: {
+                    runtime: 'automatic',
+                    development: isDevelopment,
+                    refresh: isDevelopment,
+                  },
+                  decoratorMetadata: true,
+                  legacyDecorator: true,
+                },
               },
             },
-          ],
+          },
         },
         {
           test: /\.md$/,
@@ -109,7 +115,7 @@ const config = (env, argv) => {
       ],
     },
     optimization: {
-      minimize: isProduction,
+      minimize: !isDevelopment,
     },
   };
 };
