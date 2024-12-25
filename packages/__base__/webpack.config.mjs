@@ -1,8 +1,8 @@
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin"
-import HtmlWebpackPlugin from "html-webpack-plugin"
 import path from "path"
-import reactRefreshTypeScript from "react-refresh-typescript"
 import { fileURLToPath } from "url"
+import ReactRefreshBabel from 'react-refresh/babel'
+
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -13,25 +13,21 @@ export default (env, argv) => {
 
   return {
     mode: argv.mode || "development",
-
     devtool: isDevelopment ? "eval-source-map" : "source-map",
-    watchOptions: {
-      ignored: /node_modules/,
-      aggregateTimeout: 100,
-      poll: 1000,
-    },
+    plugins: [isDevelopment && new ReactRefreshWebpackPlugin()].filter(Boolean),
     devServer: {
+      hot: true,
       devMiddleware: {
         writeToDisk: true, // 仍然写入磁盘作为备份
       },
-      hot: true,
+      liveReload: false,
       host: "localhost",
       port: 8081,
       allowedHosts: "all", // 允许所有主机
       client: {
-        webSocketURL: "ws://localhost:8081/ws",
-        // 允许所有源
-        webSocketTransport: "ws",
+        webSocketURL: false, // 禁用 WebSocket，因为我们在 VSCode webview 中
+        overlay: true,
+        logging: "info",
       },
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -47,25 +43,24 @@ export default (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.[jt]sx?$/,
+          exclude: /node_modules/,
           use: [
             {
-              loader: "ts-loader",
+              loader: 'babel-loader',
               options: {
-                transpileOnly: true,
-                compilerOptions: {
-                  sourceMap: true,
-                  noEmit: false,
-                },
-                ...(isDevelopment && {
-                  getCustomTransformers: () => ({
-                    before: [reactRefreshTypeScript()],
-                  }),
-                }),
+                presets: [
+                  '@babel/preset-env',
+                  ["@babel/preset-react", {"runtime": "automatic"}],
+                  '@babel/preset-typescript'
+                ],
+                plugins: [
+                  isDevelopment && ReactRefreshBabel,
+                  ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                ].filter(Boolean),
               },
             },
           ],
-          exclude: /node_modules/,
         },
         {
           test: /\.md$/,
@@ -91,9 +86,6 @@ export default (env, argv) => {
         },
       ],
     },
-    plugins: [
-      isDevelopment && new ReactRefreshWebpackPlugin(),
-    ].filter(Boolean),
     optimization: {
       minimize: isProduction,
     },

@@ -112,7 +112,7 @@ export function CommitMessage() {
                 <VSCodeProgressRing className="w-4 h-4 " />
               </span>
             ) : (
-              "Regenerate2"
+              "Regenerate"
             )}
           </VSCodeButton>
 
@@ -122,7 +122,7 @@ export function CommitMessage() {
               // todo: commit
             }}
           >
-            Commit Changes
+            Commit Changes2
           </VSCodeButton>
         </div>
       </Section.Footer>

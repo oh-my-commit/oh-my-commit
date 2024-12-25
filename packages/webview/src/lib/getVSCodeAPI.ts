@@ -1,10 +1,15 @@
 import type { WebviewApi } from "vscode-webview"
 
-let vscodeApi: WebviewApi<unknown> | undefined
+// 在全局保存 vscode api 实例
+declare global {
+  interface Window {
+    _vscodeApi: WebviewApi<unknown> | undefined
+  }
+}
 
 export function getVSCodeAPI(): WebviewApi<unknown> {
-  if (!vscodeApi) {
-    vscodeApi = acquireVsCodeApi()
+  if (!window._vscodeApi) {
+    window._vscodeApi = acquireVsCodeApi()
   }
-  return vscodeApi
+  return window._vscodeApi
 }

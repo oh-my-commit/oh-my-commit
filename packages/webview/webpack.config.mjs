@@ -1,10 +1,8 @@
 import CopyWebpackPlugin from "copy-webpack-plugin"
 import path from "path"
 import { fileURLToPath } from "url"
-import webpack from "webpack"
 import baseConfig from "../__base__/webpack.config.mjs"
 
-const { DefinePlugin } = webpack
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -27,12 +25,6 @@ const config = (env, argv) => {
     },
     plugins: [
       ...(baseConfig(env, argv).plugins || []),
-      new DefinePlugin({
-        "process.env": JSON.stringify({
-          NODE_ENV: argv.mode,
-        }),
-        "process.env.NODE_ENV": JSON.stringify(argv.mode),
-      }),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -42,20 +34,6 @@ const config = (env, argv) => {
         ],
       }),
     ],
-    devServer: isDevelopment
-      ? {
-          hot: true,
-          devMiddleware: {
-            writeToDisk: true,
-          },
-          watchFiles: {
-            paths: ["src/**/*"],
-            options: {
-              usePolling: true,
-            },
-          },
-        }
-      : undefined,
   }
 }
 

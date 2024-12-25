@@ -20,28 +20,15 @@ import { VSCODE_TOKENS } from "./vscode-token"
 export class VscodeWebview implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
-  private _title: string
+  private title: string = `${APP_NAME} Webview`
   private readonly webviewPath: string
-  private readonly isDevelopment: boolean
-  private fileWatcher?: vscode.FileSystemWatcher
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.Config) private readonly config: VscodeConfig,
     @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
-    {
-      title = `${APP_NAME} Webview`,
-    }: {
-      title?: string
-    } = {},
   ) {
-    this._title = title
     this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
-    this.isDevelopment = process.env.NODE_ENV === "development"
-
-    if (this.isDevelopment) {
-      this.setupHotReload()
-    }
   }
 
   setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
@@ -92,16 +79,12 @@ export class VscodeWebview implements vscode.Disposable {
       this.logger[level](message)
     })
 
-    // Set up file watcher
-    const watcher = this.setupFileWatcher(panel)
-
     this.webviewPanel = panel
     await this.updateWebview()
 
     // Clean up
     panel.onDidDispose(() => {
       this.logger.info("Panel disposed, cleaning up...")
-      watcher.dispose()
       if (this.webviewPanel === panel) {
         this.webviewPanel = undefined
       }
@@ -121,73 +104,6 @@ export class VscodeWebview implements vscode.Disposable {
       }
     } else {
       this.logger.error("Cannot post message: webview panel not available")
-    }
-  }
-
-  private setupFileWatcher(panel: vscode.WebviewPanel) {
-    const mainJsPath = path.join(this.webviewPath, "main.js")
-
-    // this.logger.info(`Main.js path: ${mainJsPath}`);
-
-    // Verify paths exist
-    if (!fs.existsSync(mainJsPath)) {
-      this.logger.error(`Main.js not found at: ${mainJsPath}`)
-    }
-
-    // Watch the compiled main.js file
-    fs.watchFile(mainJsPath, { interval: 300 }, async (curr, prev) => {
-      const currTime = curr.mtime.getTime()
-      const prevTime = prev.mtime.getTime()
-
-      this.logger.info("File change detected in main.js:")
-      this.logger.info(`Path: ${mainJsPath}`)
-      this.logger.info(`Previous: ${prev.mtime.toISOString()} (${prevTime})`)
-      this.logger.info(`Current: ${curr.mtime.toISOString()} (${currTime})`)
-
-      if (currTime !== prevTime) {
-        this.logger.info("Timestamps differ, reloading webview...")
-        await this.updateWebview()
-      } else {
-        this.logger.info("Timestamps match, skipping reload")
-      }
-    })
-
-    // Cleanup
-    const cleanup = () => {
-      this.logger.info("Cleaning up file watchers...")
-      fs.unwatchFile(mainJsPath)
-    }
-
-    panel.onDidDispose(cleanup)
-
-    return { dispose: cleanup }
-  }
-
-  private setupHotReload() {
-    this.logger.info("Setting up hot reload for development mode")
-
-    // Watch for changes in the webview dist directory
-    this.fileWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(this.webviewPath, "**/*"),
-      false, // Don't ignore creates
-      false, // Don't ignore changes
-      false, // Don't ignore deletes
-    )
-
-    // Handle file changes
-    this.fileWatcher.onDidChange(() => this.handleFileChange())
-    this.fileWatcher.onDidCreate(() => this.handleFileChange())
-    this.fileWatcher.onDidDelete(() => this.handleFileChange())
-
-    // Add to disposables
-    this.context.subscriptions.push(this.fileWatcher)
-  }
-
-  private async handleFileChange() {
-    this.logger.info("Detected file change in webview, reloading...")
-    if (this.webviewPanel) {
-      await this.updateWebview()
-      this.logger.info("Webview reloaded successfully")
     }
   }
 
@@ -230,7 +146,6 @@ export class VscodeWebview implements vscode.Disposable {
   }
 
   private async cleanup() {
-    this.fileWatcher?.dispose()
     if (this.webviewPanel) {
       this.logger.info("Disposing webview panel")
 
