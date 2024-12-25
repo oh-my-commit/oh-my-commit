@@ -108,8 +108,9 @@ export function CommitMessage() {
             onClick={handleRegenerate}
           >
             {isGenerating ? (
-              <span className="w-full flex items-center gap-2">
-                <VSCodeProgressRing className="w-4 h-4 " />
+              <span className="w-full flex items-center justify-center gap-2">
+                <VSCodeProgressRing className="w-4 h-4" />
+                Generating...
               </span>
             ) : (
               "Regenerate"
@@ -117,12 +118,21 @@ export function CommitMessage() {
           </VSCodeButton>
 
           <VSCodeButton
-            disabled={!isSubjectValid || disabled}
+            appearance="primary"
+            className="w-32 shrink-0 overflow-hidden"
+            disabled={isGenerating || !isSubjectValid || disabled}
             onClick={() => {
               // todo: commit
             }}
           >
-            Commit Changes
+            {true ? (
+              <span className="w-full flex items-center justify-center gap-2">
+                <VSCodeProgressRing className="w-4 h-4 [--progress-background:white]" />
+                Generating...
+              </span>
+            ) : (
+              "Commit"
+            )}
           </VSCodeButton>
         </div>
       </Section.Footer>

@@ -11,4 +11,9 @@ export const commitBodyAtom = atomWithStorage({
   defaultValue: "",
 })
 
-export const isGeneratingAtom = atom(false)
+export const isGeneratingAtom = atom(
+  // 为了提高用户体验，目前的机制是一旦 webview 初始化成功，
+  // exntension 就会向 webview 发送初始 commit message
+  // 所以默认为 true
+  true,
+)
