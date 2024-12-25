@@ -10,7 +10,7 @@ import {
   type IResult,
 } from "@shared/common"
 import { GitCore, ProviderRegistry } from "@shared/server"
-import * as chalk from "chalk"
+import chalk from "chalk"
 import { program } from "commander"
 import { readPackageUpSync } from "read-package-up"
 import { Container } from "typedi"

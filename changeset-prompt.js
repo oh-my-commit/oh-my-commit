@@ -1,25 +1,33 @@
-const getAddMessage = async (changeset, type = "patch") => {
-  const [firstLine, ...futureLines] = changeset.summary.split("\n").map(l => l.trim())
+const { getPackages } = require("@manypkg/get-packages")
+const { read } = require("@changesets/config")
+const { getChangedPackages } = require("@changesets/git")
+// const {
+//   promptPackagesWithOptions,
+// } = require("@changesets/cli/dist/declarations/src/commands/add/createChangeset")
+const { blue } = require("chalk")
 
-  // 你可以自定义 commit message 的格式
-  const commitMessage = `feat: ${firstLine}
+async function run() {
+  const cwd = process.cwd()
+  const config = await read(cwd)
+  const packages = await getPackages(cwd)
+  const changedPackages = await getChangedPackages(packages, config)
 
-${futureLines.join("\n")}
-`
+  const selectedPackages = await promptPackagesWithOptions(changedPackages, config)
 
-  return commitMessage
+  // 使用你的 commit 生成逻辑替代原有的 summary 输入
+  const summary = "todo: integration"
+
+  // 创建 changeset
+  await write({
+    summary,
+    releases: selectedPackages,
+    dir: cwd,
+  })
+
+  console.log(blue("Summary:"), summary)
 }
 
-const config = {
-  $schema: "https://unpkg.com/@changesets/config@2.3.0/schema.json",
-  changelog: "@changesets/cli/changelog",
-  commit: true,
-  fixed: [],
-  linked: [],
-  access: "restricted",
-  baseBranch: "main",
-  // 这里使用我们的自定义 commit message 生成器
-  getCommitMessage: getAddMessage,
-}
-
-module.exports = config
+run().catch(err => {
+  console.error(err)
+  process.exit(1)
+})
