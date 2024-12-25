@@ -122,7 +122,7 @@ export function CommitMessage() {
               // todo: commit
             }}
           >
-            Commit Changes234
+            Commit Changes
           </VSCodeButton>
         </div>
       </Section.Footer>
