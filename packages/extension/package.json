@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/extension",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
   "engines": {
     "vscode": "^1.80.0"
@@ -193,9 +193,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.80.0",
-    "@types/lodash": "^4.14.202",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",
     "tsup": "workspace:^",
