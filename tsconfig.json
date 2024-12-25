@@ -8,7 +8,6 @@
     { "path": "./packages/webview" },
     { "path": "./packages/extension" },
     { "path": "./packages/cli" },
-    { "path": "./packages/changeset-commit" },
 
     // providers
     { "path": "./packages/provider-official" },
