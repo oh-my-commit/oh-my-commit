@@ -141,3 +141,8 @@ if (isDev) {
 - [VSCode Webview API](https://code.visualstudio.com/api/extension-guides/webview)
 - [Webpack Dev Server](https://webpack.js.org/configuration/dev-server/)
 - [React Fast Refresh](https://github.com/pmmmwh/react-refresh-webpack-plugin)
+- [VSCode React Webviews Demo](https://github.com/sfc-gh-tkojima/vscode-react-webviews) - 一个优秀的示例项目，展示了如何在 VSCode 扩展中正确配置 React Webview 和热更新
+
+## 致谢
+
+本文的实现方案受到了 [sfc-gh-tkojima/vscode-react-webviews](https://github.com/sfc-gh-tkojima/vscode-react-webviews) 项目的启发。该项目提供了一个完整的示例，展示了如何在 VSCode 扩展中正确集成 React Webview 和热更新功能。强烈建议参考该项目来了解更多实现细节。

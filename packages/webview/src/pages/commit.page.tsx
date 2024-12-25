@@ -2,75 +2,19 @@ import { clientPush } from "@/clientPush"
 import { CommitMessage } from "@/components/commit/CommitMessage"
 import { FileChanges } from "@/components/commit/file-changes/FileChanges"
 import { Footer } from "@/components/footer"
+import { useBasicMessage } from "@/hooks/use-basic-message"
 import { useCloseWindow } from "@/hooks/use-close-window"
-import { getVSCodeAPI } from "@/lib/getVSCodeAPI"
-import { vscodeClientLogger } from "@/lib/vscode-client-logger"
-import { diffResultAtom } from "@/state/atoms/commit.changed-files"
-import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
-import type { ServerMessageEvent } from "@shared/common"
-
-import { useSetAtom } from "jotai"
+import { useCommitMessage } from "@/hooks/use-commit-message"
 import { useEffect } from "react"
 
 export const CommitPage = () => {
-  const setTitle = useSetAtom(commitTitleAtom)
-  const setBody = useSetAtom(commitBodyAtom)
-  const setDiffResult = useSetAtom(diffResultAtom)
-  const setIsGenerating = useSetAtom(isGeneratingAtom)
-
-  const vscode = getVSCodeAPI()
-
+  useBasicMessage()
+  useCommitMessage()
   useCloseWindow()
 
   useEffect(() => {
     clientPush({ type: "init", channel: "CommitPage" })
   }, [])
-
-  useEffect(() => {
-    vscodeClientLogger.info("[useEffect] Setting up message event listener")
-
-    const handleMessage = (event: MessageEvent) => {
-      const message = event.data as ServerMessageEvent
-      vscodeClientLogger.info("Received message:", message)
-
-      if (!message || typeof message !== "object" || !("type" in message)) {
-        vscodeClientLogger.info("Unknown event:", message)
-        return
-      }
-
-      switch (message.type) {
-        case "pong":
-          break
-        case "webpackProgress":
-          break
-        case "diff-result":
-          setDiffResult(message.data)
-          break
-        case "commit-message":
-          if (message.data.ok) {
-            setTitle(message.data.data.title)
-            setBody(message.data.data.body ?? "")
-          }
-          setIsGenerating(false)
-          break
-        case "commit-result":
-          break
-        default:
-          vscodeClientLogger.info("Unknown event:", message)
-          return
-      }
-    }
-
-    window.addEventListener("message", handleMessage)
-
-    // 清理函数
-    return () => {
-      vscodeClientLogger.info("[useEffect] Removing message event listener")
-      window.removeEventListener("message", handleMessage)
-    }
-  }, [])
-
-  vscodeClientLogger.info("== rendered ==")
 
   return (
     <div className="flex flex-col h-screen">
