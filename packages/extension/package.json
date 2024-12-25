@@ -5,9 +5,17 @@
   "engines": {
     "vscode": "^1.80.0"
   },
+  "main": "./dist/extension.js",
   "categories": [
     "Other"
   ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
+    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo",
+    "type-check": "tsc --noEmit"
+  },
   "activationEvents": [
     "onStartupFinished",
     "workspaceContains:.git"
@@ -173,19 +181,12 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
-    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo",
-    "type-check": "tsc --noEmit"
-  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@oh-my-commit/shared": "workspace:*",
     "@oh-my-commit/webview": "workspace:^",
     "handlebars": "^4.7.8",
-    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.21",
     "simple-git": "^3.27.0",
     "vscode": "^1.1.37",
     "yaml": "^2.6.1",
@@ -194,6 +195,7 @@
   "devDependencies": {
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.80.0",
+    "@types/lodash": "^4.14.202",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",
     "tsup": "workspace:^",

@@ -6,4 +6,9 @@ export default defineConfig({
   entry: ["src/extension.ts"],
   outDir: "dist",
   format: ["cjs"],
+  platform: "node",
+  target: "node16",
+  splitting: false,
+  sourcemap: true,
+  clean: true,
 })
