@@ -19,11 +19,7 @@ const config = (env, argv) => {
     output: {
       path: distDir,
       filename: "[name].js",
-      libraryTarget: "module",
       clean: isProduction,
-    },
-    experiments: {
-      outputModule: true,
     },
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     plugins: [
