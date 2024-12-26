@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
@@ -59,6 +59,10 @@ export function CommitMessage() {
       type: "selected-files",
       data: selectedFiles,
     })
+  }
+
+  const handleCommit = () => {
+    // todo: commit
   }
 
   return (
@@ -116,7 +120,7 @@ export function CommitMessage() {
           <button
             className={`px-3 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
               isGenerating
-                ? "opacity-50 cursor-not-allowed"
+                ? "opacity-50 cursor-not-allowed animate-spin"
                 : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
             }`}
             disabled={isGenerating}
@@ -128,20 +132,14 @@ export function CommitMessage() {
 
           <VSCodeButton
             appearance="primary"
-            className="w-40 shrink-0 overflow-hidden"
-            disabled={isGenerating || !isSubjectValid || disabled}
-            onClick={() => {
-              // todo: commit
-            }}
+            className="shrink-0 w-40 inline-flex items-center justify-center gap-2 relative"
+            disabled={!isSubjectValid || disabled || isGenerating}
+            onClick={handleCommit}
           >
-            {isGenerating ? (
-              <span className="w-full flex items-center justify-center gap-2">
-                <VSCodeProgressRing className="w-4 h-4 [--progress-background:white]" />
-                Generating...
-              </span>
-            ) : (
-              "Commit Changes"
-            )}
+            <span className="w-full hidden xs:block text-center">Commit Changes</span>
+            <span className="grow block xs:hidden">
+              <i className="codicon codicon-git-commit" />
+            </span>
           </VSCodeButton>
         </div>
       </Section.Footer>
