@@ -9,18 +9,11 @@
 
 import * as fs from "fs"
 import * as Handlebars from "handlebars"
-import _ from "lodash"
 import * as path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import {
-  APP_ID_CAMEL,
-  APP_NAME,
-  TOKENS,
-  type ClientMessageEvent,
-  type LogLevel,
-} from "@shared/common"
+import { APP_ID_CAMEL, APP_NAME, TOKENS, type ClientMessageEvent } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
@@ -28,9 +21,12 @@ import { VSCODE_TOKENS } from "./vscode-token"
 @Service()
 export class VscodeWebview implements vscode.Disposable {
   private webviewPanel?: vscode.WebviewPanel
+  private webviewView?: vscode.WebviewView
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private title: string = `${APP_NAME} Webview`
   private readonly webviewPath: string
+  private viewProvider?: vscode.WebviewViewProvider
+  private currentViewType?: string
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
@@ -38,6 +34,31 @@ export class VscodeWebview implements vscode.Disposable {
     @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
+
+    // 注册 webview provider
+    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", {
+      resolveWebviewView: async webviewView => {
+        this.webviewView = webviewView
+
+        try {
+          webviewView.webview.options = this.getWebviewOptions()
+          webviewView.webview.html = this.getWebviewContent()
+
+          // 设置消息处理器
+          if (this.messageHandler) {
+            webviewView.webview.onDidReceiveMessage(this.messageHandler)
+          }
+
+          webviewView.title = this.title
+          webviewView.description = "Ready"
+        } catch (error) {
+          this.logger.error("Error initializing webview:", error)
+          webviewView.description = "Error"
+        }
+      },
+    })
+
+    this.context.subscriptions.push(registration)
   }
 
   setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
@@ -48,58 +69,74 @@ export class VscodeWebview implements vscode.Disposable {
     return this.config.get<string>("ohMyCommit.ui.mode")!
   }
 
-  public async createWebviewPanel(): Promise<vscode.WebviewPanel> {
-    this.logger.info("Creating webview panel...")
+  private getViewOptions(): { viewColumn: vscode.ViewColumn } {
+    const location = this.config.get<string>("ohMyCommit.ui.viewLocation") || "editor"
+
+    switch (location) {
+      case "beside":
+        return { viewColumn: vscode.ViewColumn.Beside }
+      case "editor":
+      default:
+        return { viewColumn: vscode.ViewColumn.Active }
+    }
+  }
+
+  public async createWebviewPanel(): Promise<vscode.WebviewPanel | undefined> {
+    const location = this.config.get<string>("ohMyCommit.ui.viewLocation") || "editor"
+
+    // 如果是活动栏视图，使用已注册的 webview provider
+    if (location === "activitybar") {
+      // 如果视图已经存在，直接显示
+      if (this.webviewView) {
+        this.webviewView.show(true)
+        return undefined
+      }
+
+      // 否则，显示视图容器
+      await vscode.commands.executeCommand("workbench.view.extension.ohMyCommit")
+      return undefined
+    }
+
+    // 如果之前是活动栏视图，先清理
+    if (this.webviewView) {
+      // 不需要主动关闭视图，让用户自己控制
+      this.webviewView = undefined
+    }
+
+    // 对于编辑器视图，保持原有逻辑
+    if (this.webviewPanel) {
+      this.webviewPanel.reveal()
+      return this.webviewPanel
+    }
+
+    const viewOptions = this.getViewOptions()
+    this.logger.info("Creating webview panel...", { viewOptions })
     const panel = vscode.window.createWebviewPanel(
       APP_ID_CAMEL,
-      APP_NAME,
-      {
-        viewColumn: vscode.ViewColumn.One,
-        preserveFocus: true,
-      },
+      this.title,
+      viewOptions.viewColumn,
       this.getWebviewOptions(),
     )
 
-    // Set up message handler
-    panel.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
-      let level: LogLevel = "info"
-      const webviewChannel: string = _.camelCase(message.channel ?? "default")
-      delete message.channel
-      switch (message.type) {
-        case "log":
-          level = message.data.level
-          message = message.data.rawMessage
-          break
+    try {
+      panel.webview.html = this.getWebviewContent()
 
-        case "close-window":
-          await this.cleanup()
-          break
-
-        case "open-external":
-          await vscode.env.openExternal(vscode.Uri.parse(message.data.url))
-          break
-        default:
-          if (this.messageHandler) {
-            await this.messageHandler(message)
-          }
-          break
+      // 设置消息处理器
+      if (this.messageHandler) {
+        panel.webview.onDidReceiveMessage(this.messageHandler)
       }
-      this.logger.setName(`webview.${webviewChannel}`)
-      this.logger[level](message)
-    })
 
-    this.webviewPanel = panel
-    await this.updateWebview()
-
-    // Clean up
-    panel.onDidDispose(() => {
-      this.logger.info("Panel disposed, cleaning up...")
-      if (this.webviewPanel === panel) {
+      panel.onDidDispose(() => {
         this.webviewPanel = undefined
-      }
-    })
+      })
 
-    return panel
+      this.webviewPanel = panel
+      return panel
+    } catch (error) {
+      this.logger.error("Error initializing webview panel:", error)
+      panel.dispose()
+      throw error
+    }
   }
 
   public async postMessage(message: any) {
@@ -185,22 +222,13 @@ export class VscodeWebview implements vscode.Disposable {
     }
   }
 
-  private async cleanup() {
+  private cleanup() {
     if (this.webviewPanel) {
-      this.logger.info("Disposing webview panel")
-
-      // await this.restoreWindowState();
-
-      // Dispose the panel
       this.webviewPanel.dispose()
       this.webviewPanel = undefined
-
-      this.logger.debug("Panel disposed and reference cleared")
     }
-  }
-
-  private watchFileSystem() {
-    // 移除文件监听，因为我们现在使用 webpack dev server
+    this.webviewView = undefined
+    this.viewProvider = undefined
   }
 
   dispose() {

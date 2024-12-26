@@ -21,6 +21,24 @@
     "workspaceContains:.git"
   ],
   "contributes": {
+    "views": {
+      "ohMyCommit": [
+        {
+          "type": "webview",
+          "id": "ohMyCommit.view",
+          "name": "Oh My Commit"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ohMyCommit",
+          "title": "Oh My Commit",
+          "icon": "$(git-commit)"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "ohMyCommit.quickCommit",
@@ -68,6 +86,22 @@
           "default": "ohMyCommit.standard",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 3
+        },
+        "ohMyCommit.ui.viewLocation": {
+          "type": "string",
+          "enum": [
+            "editor",
+            "beside",
+            "activitybar"
+          ],
+          "enumDescriptions": [
+            "在当前编辑器中打开",
+            "在编辑器旁边打开",
+            "在活动栏中打开（可拖动到侧边栏）"
+          ],
+          "default": "editor",
+          "markdownDescription": "Webview 打开位置（注：如需在右侧边栏显示，请先在活动栏打开后手动拖动）",
+          "order": 11
         },
         "ohMyCommit.git.emptyChangeBehavior": {
           "type": "string",

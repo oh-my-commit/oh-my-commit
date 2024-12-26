@@ -131,7 +131,12 @@ export const FeedbackButton = ({
         }
         onClick={() => !disabled && !hasFeedback && setShowMenu(!showMenu)}
       >
-        <span>{hasFeedback ? "Thanks for your feedback" : "Improve"}</span>
+        <span className="sm:hidden">{/* todo: use icon */}</span>
+
+        <span className="hidden sm:block">
+          {hasFeedback ? "Thanks for your feedback" : "Improve"}
+        </span>
+
         {hasFeedback && (
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
             <path
