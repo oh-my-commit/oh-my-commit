@@ -1,8 +1,9 @@
-import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
 import { APP_ID_CAMEL, COMMAND_OPEN_PREFERENCE, TOKENS } from "@shared/common"
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
+
+import type { BaseCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
 
 @Service()
 export class OpenPreferencesCommand implements BaseCommand {

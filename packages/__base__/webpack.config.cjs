@@ -1,13 +1,13 @@
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const path = require("path");
-const ReactRefreshBabel = require('react-refresh/babel');
-const webpack = require("webpack");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const path = require("path")
+const ReactRefreshBabel = require("react-refresh/babel")
+const webpack = require("webpack")
 
-console.log("-- init webpack config --");
+console.log("-- init webpack config --")
 
 module.exports = (env, argv) => {
-  const isProduction = argv.mode === "production";
-  const isDevelopment = !isProduction;
+  const isProduction = argv.mode === "production"
+  const isDevelopment = !isProduction
 
   return {
     target: "web",
@@ -28,10 +28,8 @@ module.exports = (env, argv) => {
       allowedHosts: "all",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, content-type, Authorization",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
       },
       hot: true,
       client: {
@@ -54,16 +52,12 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
           use: [
             {
-              loader: 'babel-loader',
+              loader: "babel-loader",
               options: {
-                presets: [
-                  '@babel/preset-env',
-                  '@babel/preset-react',
-                  '@babel/preset-typescript'
-                ],
+                presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
                 plugins: [
                   isDevelopment && ReactRefreshBabel,
-                  ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                  ["@babel/plugin-proposal-decorators", { legacy: true }],
                 ].filter(Boolean),
               },
             },
@@ -96,6 +90,6 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
     },
-    entry: './src/index.tsx',
-  };
-};
+    entry: "./src/index.tsx",
+  }
+}

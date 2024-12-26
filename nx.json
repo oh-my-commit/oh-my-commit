@@ -7,69 +7,43 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "{projectRoot}/packages/*/dist"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/packages/*/dist"]
     },
     "dev": {
       "cache": true,
-      "dependsOn": [
-        "^dev"
-      ],
-      "outputs": [
-        "{projectRoot}/packages/*/dist"
-      ]
+      "dependsOn": ["^dev"],
+      "outputs": ["{projectRoot}/packages/*/dist"]
     },
     "clean": {
       "cache": true,
-      "dependsOn": [
-        "^clean"
-      ],
-      "outputs": [
-        "{projectRoot}/packages/*/dist"
-      ]
+      "dependsOn": ["^clean"],
+      "outputs": ["{projectRoot}/packages/*/dist"]
     },
     "type-check": {
       "cache": true,
-      "dependsOn": [
-        "^type-check"
-      ]
+      "dependsOn": ["^type-check"]
     },
     "lint": {
       "cache": true,
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "lint:fix": {
       "cache": true,
-      "dependsOn": [
-        "^lint:fix"
-      ]
+      "dependsOn": ["^lint:fix"]
     },
     "format": {
       "cache": true,
-      "dependsOn": [
-        "^format"
-      ]
+      "dependsOn": ["^format"]
     },
     "build:extension": {
       "cache": true,
-      "dependsOn": [
-        "^build:extension"
-      ],
-      "outputs": [
-        "{projectRoot}/packages/extension/dist"
-      ]
+      "dependsOn": ["^build:extension"],
+      "outputs": ["{projectRoot}/packages/extension/dist"]
     },
     "preview": {
       "cache": true,
-      "dependsOn": [
-        "^preview"
-      ]
+      "dependsOn": ["^preview"]
     }
   }
 }

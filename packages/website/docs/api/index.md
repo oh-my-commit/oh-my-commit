@@ -91,13 +91,13 @@ const message =
 // 监听事件
 oh -
   my -
-  commits.on("commit", data => {
+  commits.on("commit", (data) => {
     console.log("提交完成:", data)
   })
 
 oh -
   my -
-  commits.on("error", error => {
+  commits.on("error", (error) => {
     console.error("发生错误:", error)
   })
 ```
@@ -138,7 +138,7 @@ await updateConfig({
 const { registerHook } = require("oh-my-commit")
 
 // 注册提交前钩子
-registerHook("pre-commit", async context => {
+registerHook("pre-commit", async (context) => {
   const { files, message } = context
   // 执行检查
   return { pass: true }
@@ -218,7 +218,7 @@ const plugin = createPlugin({
   name: "my-plugin",
   version: "1.0.0",
   hooks: {
-    "pre-commit": async context => {
+    "pre-commit": async (context) => {
       // 插件逻辑
       return { pass: true }
     },

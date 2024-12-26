@@ -4,7 +4,6 @@
  * This module provides a flexible way to create Tailwind plugins that can transform
  * any CSS variables into Tailwind-compatible theme values with support for opacity.
  */
-
 import plugin from "tailwindcss/plugin"
 
 export type ThemePluginConfig = {

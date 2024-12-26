@@ -1,1 +1,17 @@
-module.exports = { ...require("@cs-magic/prettier-config"), semi: false }
+module.exports = {
+  printWidth: 100,
+  tabWidth: 2,
+  useTabs: false,
+  semi: false,
+  singleQuote: false,
+  trailingComma: "es5",
+  bracketSpacing: true,
+  bracketSameLine: false,
+  arrowParens: "always",
+  endOfLine: "lf",
+  plugins: ["@trivago/prettier-plugin-sort-imports"],
+  importOrder: ["^react(/.*)?$", "<THIRD_PARTY_MODULES>", "^@/(.*)$", "^[./]"],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
+}

@@ -8,14 +8,14 @@
 
 ```javascript
 module.exports = (env, argv) => {
-  const isProduction = argv.mode === "production";
-  const isDevelopment = !isProduction;
+  const isProduction = argv.mode === "production"
+  const isDevelopment = !isProduction
 
   return {
     target: "web",
     mode: argv.mode || "development",
     entry: {
-      main: './src/main.tsx'
+      main: "./src/main.tsx",
     },
     output: {
       path: distDir,
@@ -51,8 +51,8 @@ module.exports = (env, argv) => {
       compress: true,
       port: 18080,
     },
-  };
-};
+  }
+}
 ```
 
 ### 2. VSCode Webview CSP 配置
@@ -101,11 +101,13 @@ if (isDev) {
 ## 注意事项
 
 1. **CSP 配置**：
+
    - 必须允许 `unsafe-eval` 以支持 React Refresh
    - WebSocket 连接地址必须明确指定
    - 主机名要保持一致（使用 localhost）
 
 2. **Webpack 配置**：
+
    - 不要使用 `libraryTarget: "module"` 和 `experiments.outputModule`，它们与当前版本的 HMR 不兼容
    - 使用 `webpack serve` 而不是 `webpack --watch`
    - 确保配置了正确的 `host` 和 `port`
@@ -118,10 +120,12 @@ if (isDev) {
 ## 常见问题
 
 1. **WebSocket 连接被拒绝**：
+
    - 检查 CSP 配置中的 `connect-src` 是否正确
    - 确保 webpack dev server 的 host 配置与 CSP 中的一致
 
 2. **热更新不工作**：
+
    - 确保启用了 `HotModuleReplacementPlugin`
    - 检查是否正确配置了 `ReactRefreshWebpackPlugin`
    - 避免使用模块输出格式（module chunk format）

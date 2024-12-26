@@ -1,8 +1,3 @@
-import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
-import { VscodeGit } from "@/vscode-git"
-import { VSCODE_TOKENS } from "@/vscode-token"
-import { VscodeWebview } from "@/vscode-webview"
 import {
   COMMAND_QUICK_COMMIT,
   TOKENS,
@@ -12,6 +7,12 @@ import {
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
+import type { BaseCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VscodeGit } from "@/vscode-git"
+import { VSCODE_TOKENS } from "@/vscode-token"
+import { VscodeWebview } from "@/vscode-webview"
 
 @Service()
 export class QuickCommitCommand implements BaseCommand {

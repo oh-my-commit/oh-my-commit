@@ -1,4 +1,5 @@
 import type { DiffResult } from "simple-git"
+
 import type { LogLevel } from "./log"
 import type { IResult } from "./provider.interface"
 import type { ResultDTO } from "./utils"

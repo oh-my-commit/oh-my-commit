@@ -1,17 +1,17 @@
-import { Section } from "@/components/layout/Section"
-
-import { cn } from "@/lib/utils"
-import { searchQueryAtom } from "@/state/atoms/search"
-import { viewModeAtom } from "@/state/atoms/ui"
-
-import { useAtom } from "jotai"
 import { useCallback, type FC } from "react"
 
+import { useAtom } from "jotai"
+
+import { Section } from "@/components/layout/Section"
+import { cn } from "@/lib/utils"
 import {
   diffResultAtom,
   lastOpenedFilePathAtom,
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files"
+import { searchQueryAtom } from "@/state/atoms/search"
+import { viewModeAtom } from "@/state/atoms/ui"
+
 import { DiffViewer } from "./DiffViewer"
 import { EmptyState } from "./EmptyState"
 import { FlatView } from "./FlatView"

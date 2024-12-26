@@ -1,4 +1,5 @@
 import { Token } from "typedi"
+
 import type { CommitManager } from "./CommitManager"
 import type { BaseLogger } from "./log"
 import type { BaseProvider } from "./provider.interface"

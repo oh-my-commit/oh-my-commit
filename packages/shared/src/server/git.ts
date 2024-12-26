@@ -2,6 +2,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { simpleGit, type DiffResult, type SimpleGit } from "simple-git"
 import { Inject, Service } from "typedi"
+
 import { BaseLogger, TOKENS, formatError } from "../common"
 
 @Service()

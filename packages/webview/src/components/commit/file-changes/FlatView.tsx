@@ -1,6 +1,9 @@
-import { diffResultAtom } from "@/state/atoms/commit.changed-files"
+import React from "react"
+
 import { useAtom } from "jotai"
-import * as React from "react"
+
+import { diffResultAtom } from "@/state/atoms/commit.changed-files"
+
 import { FileItem } from "./FileItem"
 
 export interface FlatViewProps {

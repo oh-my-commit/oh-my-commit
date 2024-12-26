@@ -1,9 +1,11 @@
-import type { VscodeCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
-import { VSCODE_TOKENS } from "@/vscode-token"
 import { COMMAND_OPEN_PREFERENCE, COMMAND_QUICK_COMMIT, COMMAND_SELECT_MODEL } from "@shared/common"
 import { Container, Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
+import type { VscodeCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VSCODE_TOKENS } from "@/vscode-token"
+
 import { OpenPreferencesCommand } from "./open-preferences"
 import { QuickCommitCommand } from "./quick-commit"
 import { SelectModelCommand } from "./select-model"

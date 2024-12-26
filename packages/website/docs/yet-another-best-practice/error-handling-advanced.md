@@ -15,14 +15,14 @@ function logError() {
 
       if (result instanceof ResultAsync) {
         return result.map(
-          data => {
+          (data) => {
             logger.debug(`${propertyKey} completed successfully`, { data })
             return data
           },
-          error => {
+          (error) => {
             logger.error(`${propertyKey} failed`, { error, args })
             return error
-          },
+          }
         )
       }
 
@@ -82,7 +82,7 @@ interface ErrorTracker {
 class Span {
   constructor(
     private operation: string,
-    private startTime: number,
+    private startTime: number
   ) {}
 
   finish(result: Result<unknown, AppError>) {
@@ -99,15 +99,15 @@ function complexOperation(): ResultAsync<Data, AppError> {
   const span = errorTracker.startSpan("complexOperation")
 
   return ResultAsync.fromPromise(/* ... */).map(
-    data => {
+    (data) => {
       span.finish(ok(data))
       return data
     },
-    error => {
+    (error) => {
       span.finish(err(error))
       errorTracker.capture(error)
       return error
-    },
+    }
   )
 }
 ```
@@ -178,7 +178,7 @@ class LocalizedError implements AppError {
   constructor(
     public type: AppError["type"],
     private messageKey: string,
-    private params: Record<string, string>,
+    private params: Record<string, string>
   ) {}
 
   getLocalizedMessage(locale: string): string {
@@ -209,19 +209,19 @@ class OrderService {
     const span = errorTracker.startSpan("createOrder")
 
     return this.validateOrder(orderData)
-      .andThen(validOrder => this.checkInventory(validOrder))
-      .andThen(checkedOrder => this.processPayment(checkedOrder))
-      .andThen(paidOrder => this.finalizeOrder(paidOrder))
+      .andThen((validOrder) => this.checkInventory(validOrder))
+      .andThen((checkedOrder) => this.processPayment(checkedOrder))
+      .andThen((paidOrder) => this.finalizeOrder(paidOrder))
       .map(
-        order => {
+        (order) => {
           span.finish(ok(order))
           return order
         },
-        error => {
+        (error) => {
           span.finish(err(error))
           errorTracker.capture(error)
           return error
-        },
+        }
       )
   }
 }
@@ -238,27 +238,27 @@ type FileError =
 class FileProcessor {
   @logError()
   processFile(file: File): ResultAsync<ProcessedFile, FileError> {
-    return ResultAsync.fromPromise(this.uploadFile(file), e => ({
+    return ResultAsync.fromPromise(this.uploadFile(file), (e) => ({
       type: "UPLOAD_ERROR",
       message: formatError(e),
     }))
-      .andThen(uploadedFile => this.validateFile(uploadedFile))
-      .andThen(validFile => this.processContent(validFile))
+      .andThen((uploadedFile) => this.validateFile(uploadedFile))
+      .andThen((validFile) => this.processContent(validFile))
       .map(
-        processedFile => {
+        (processedFile) => {
           metrics.recordOperation("fileProcess", {
             success: true,
             fileType: file.type,
           })
           return processedFile
         },
-        error => {
+        (error) => {
           metrics.recordOperation("fileProcess", {
             success: false,
             errorType: error.type,
           })
           return error
-        },
+        }
       )
   }
 }
@@ -301,7 +301,7 @@ class ErrorHandlerChain {
   handle(error: AppError): ResultAsync<unknown, AppError> {
     return this.handlers.reduce(
       (result, handler) => result.orElse(() => handler(error)),
-      err(error) as ResultAsync<unknown, AppError>,
+      err(error) as ResultAsync<unknown, AppError>
     )
   }
 }
@@ -342,8 +342,8 @@ jest
   .spyOn(inventoryService, "check")
   .mockImplementation(() =>
     ResultAsync.fromPromise(Promise.reject(new Error("Inventory check failed")), () =>
-      createMockError("INVENTORY_ERROR"),
-    ),
+      createMockError("INVENTORY_ERROR")
+    )
   )
 ```
 

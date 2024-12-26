@@ -1,9 +1,9 @@
 ---
 name: Provider Dependency Injection Enhancement
 about: Improve the dynamic loading and dependency injection mechanism for custom providers
-title: 'feat: Enhance Provider DI System with Automatic Injection Support'
-labels: 'enhancement, provider, dependency-injection'
-assignees: 'markshawn2020'
+title: "feat: Enhance Provider DI System with Automatic Injection Support"
+labels: "enhancement, provider, dependency-injection"
+assignees: "markshawn2020"
 ---
 
 ## Issue Description
@@ -14,8 +14,8 @@ Currently, the system cannot automatically apply decorators and dependency injec
 
 ```typescript
 // In ProviderRegistry.loadProviderFromFile
-const provider = new Provider() as BaseGenerateCommitProvider;
-provider.logger = Container.get(TOKENS.Logger); // Manual injection
+const provider = new Provider() as BaseGenerateCommitProvider
+provider.logger = Container.get(TOKENS.Logger) // Manual injection
 ```
 
 ## Technical Challenges
@@ -34,13 +34,13 @@ provider.logger = Container.get(TOKENS.Logger); // Manual injection
 
 ```typescript
 // Example implementation
-import 'reflect-metadata';
+import "reflect-metadata"
 
 @Provider()
 class CustomProvider extends BaseGenerateCommitProvider {
   @Inject()
-  private logger: Logger;
-  
+  private logger: Logger
+
   // ... rest of the implementation
 }
 ```

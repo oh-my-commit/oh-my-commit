@@ -4,7 +4,6 @@
  * Converts VSCode theme variables into Tailwind-compatible color values
  * with support for opacity modifiers.
  */
-
 import { createTailwindThemePlugin, type ThemePluginConfig } from "./tailwind-theme-plugin"
 
 // Helper function to create VSCode color value

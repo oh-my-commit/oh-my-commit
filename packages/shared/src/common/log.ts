@@ -1,5 +1,6 @@
 import chalk from "chalk"
 import { Service } from "typedi"
+
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 

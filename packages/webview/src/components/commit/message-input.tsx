@@ -1,6 +1,7 @@
+import * as React from "react"
+
 import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import cn from "classnames"
-import * as React from "react"
 
 export const MessageInput = ({
   value,
@@ -63,28 +64,28 @@ export const MessageInput = ({
       {multiline ? (
         <VSCodeTextArea
           className={cn("w-full message-textarea", className)}
-          value={value}
           placeholder={placeholder}
-          onKeyDown={handleKeyDown}
+          value={value}
           onChange={e => {
             const newValue = (e.target as HTMLTextAreaElement).value
             if (newValue.length <= maxLength) {
               onChange(newValue)
             }
           }}
+          onKeyDown={handleKeyDown}
         />
       ) : (
         <VSCodeTextField
           className={cn("w-full", className)}
-          value={value}
           placeholder={placeholder}
-          onKeyDown={handleKeyDown}
+          value={value}
           onChange={e => {
             const newValue = (e.target as HTMLInputElement).value
             if (newValue.length <= maxLength) {
               onChange(newValue)
             }
           }}
+          onKeyDown={handleKeyDown}
         />
       )}
       <div className="absolute right-2 bottom-2 text-[10px] text-[var(--vscode-descriptionForeground)] opacity-0 group-hover:opacity-100 transition-opacity duration-150 px-1 bg-[var(--vscode-editor-background)]">

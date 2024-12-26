@@ -2,6 +2,7 @@ import { TOKENS, formatError } from "@shared/common"
 import { GitCore } from "@shared/server"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
 import { VscodeLogger } from "./vscode-commit-adapter"
 
 @Service()

@@ -1,6 +1,8 @@
-import { vscodeClientLogger } from "@/lib/vscode-client-logger"
-import type { ServerMessageEvent } from "@shared/common"
 import { useEffect } from "react"
+
+import type { ServerMessageEvent } from "@shared/common"
+
+import { vscodeClientLogger } from "@/lib/vscode-client-logger"
 
 type MessageHandler = (message: ServerMessageEvent) => void
 

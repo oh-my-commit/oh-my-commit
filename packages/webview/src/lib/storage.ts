@@ -1,4 +1,5 @@
 import { atom } from "jotai"
+
 import { getVSCodeAPI } from "./getVSCodeAPI"
 
 // VSCode存储选项

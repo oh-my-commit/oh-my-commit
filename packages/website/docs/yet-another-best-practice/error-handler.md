@@ -53,7 +53,7 @@ function processData(): ResultAsync<Data, AppError> {
         })
       }
       return ok(rawData)
-    },
+    }
   )
 }
 ```
@@ -63,8 +63,8 @@ function processData(): ResultAsync<Data, AppError> {
 ```typescript
 function complexOperation(): ResultAsync<FinalData, AppError> {
   return ResultAsync.fromPromise(step1(), handleApiError)
-    .andThen(data1 => ResultAsync.fromPromise(step2(data1), handleApiError))
-    .andThen(data2 => {
+    .andThen((data1) => ResultAsync.fromPromise(step2(data1), handleApiError))
+    .andThen((data2) => {
       if (!isValid(data2)) {
         return err({
           type: "VALIDATION_ERROR",
@@ -143,15 +143,15 @@ type UserError =
 
 class UserService {
   createUser(data: Partial<User>): ResultAsync<User, UserError> {
-    return ResultAsync.fromPromise(this.validateUser(data), e => ({
+    return ResultAsync.fromPromise(this.validateUser(data), (e) => ({
       type: "VALIDATION_ERROR",
       field: "unknown",
       message: formatError(e),
-    })).andThen(validData =>
-      ResultAsync.fromPromise(this.saveUser(validData), e => ({
+    })).andThen((validData) =>
+      ResultAsync.fromPromise(this.saveUser(validData), (e) => ({
         type: "API_ERROR",
         message: `Failed to save user: ${formatError(e)}`,
-      })),
+      }))
     )
   }
 

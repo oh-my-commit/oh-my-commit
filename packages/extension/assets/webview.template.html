@@ -16,7 +16,7 @@
       window.vscode = acquireVsCodeApi()
 
       // 添加热更新支持
-      window.addEventListener("message", event => {
+      window.addEventListener("message", (event) => {
         const message = event.data
         if (message.command === "reload") {
           // 保存当前状态

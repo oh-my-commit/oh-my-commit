@@ -1,6 +1,5 @@
 // 核心业务类型
-
-import { GitChangeType } from "@shared/common"
+import type { GitChangeType } from "@shared/common"
 
 export interface FileChange {
   path: string
@@ -28,7 +27,6 @@ export interface FileUIState {
   path: string
   isExpanded: boolean
 }
-
 // 文件选择状态（用于生成 commit message）
 export interface FileSelectionState {
   selectedPaths: Set<string>

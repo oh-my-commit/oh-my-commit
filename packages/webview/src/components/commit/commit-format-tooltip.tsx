@@ -1,6 +1,8 @@
-import { loadMarkdown } from "@/utils/loadMarkdown"
-import Markdown from "marked-react"
 import { useEffect, useState } from "react"
+
+import Markdown from "marked-react"
+
+import { loadMarkdown } from "@/utils/loadMarkdown"
 
 export const CommitFormatTooltip = () => {
   const [markdown, setMarkdown] = useState("")

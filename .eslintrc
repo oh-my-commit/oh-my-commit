@@ -2,8 +2,8 @@
   "root": true,
   "extends": [
     "@cs-magic/eslint-config/typescript",
-    "@cs-magic/eslint-config/prettier",
     "@cs-magic/eslint-config/react",
+    "@cs-magic/eslint-config/prettier"
   ],
   "parserOptions":  {
     "projectService": true,
@@ -36,6 +36,16 @@
     "JSX": true
   },
   "rules": {
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "inline-type-imports"
+      }
+    ],
+    "import/no-default-export": "off",
+    "import/default": "off",
+    "import/order": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-call": "off",
@@ -44,16 +54,11 @@
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "warn",
-
-    // "@typescript-eslint/no-empty-object-type": "warn",
     "no-console": "warn",
     "no-unused-vars": "warn",
-    "no-extra-semi": "off",  // 让 Prettier 接管分号相关的规则
-
+    "no-extra-semi": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "empty-import-meta": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "off"
-
-  },
-
+  }
 }

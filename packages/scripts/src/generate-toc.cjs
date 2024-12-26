@@ -55,7 +55,7 @@ function hasTocMarkers(content) {
 // 在指定位置插入 toc 标记
 function insertTocMarkers(content) {
   const lines = content.split("\n")
-  const h1Index = lines.findIndex(line => /^#\s/.test(line))
+  const h1Index = lines.findIndex((line) => /^#\s/.test(line))
 
   // 找到插入位置：第一个一级标题后，或文件开头
   const insertIndex = h1Index !== -1 ? h1Index + 1 : 0
@@ -89,16 +89,16 @@ function loadConfig() {
   "patterns": ["docs/*.md"],
   "autoInsert": true
 }
-`),
+`)
     )
   }
 
   // 合并命令行参数
   if (argv.files) {
-    config.files = argv.files.split(",").map(f => f.trim())
+    config.files = argv.files.split(",").map((f) => f.trim())
   }
   if (argv.patterns) {
-    config.patterns = argv.patterns.split(",").map(p => p.trim())
+    config.patterns = argv.patterns.split(",").map((p) => p.trim())
   }
   if (argv.autoInsert !== undefined) {
     config.autoInsert = argv.autoInsert
@@ -114,8 +114,8 @@ function getFilesToProcess() {
 
   // 处理 glob patterns
   if (config.patterns) {
-    config.patterns.forEach(pattern => {
-      glob.sync(pattern).forEach(file => files.add(file))
+    config.patterns.forEach((pattern) => {
+      glob.sync(pattern).forEach((file) => files.add(file))
     })
   }
 
@@ -163,8 +163,8 @@ async function generateToc(filePath) {
 
     // 生成横向目录内容
     const tocContent = toc(content)
-      .json.filter(heading => heading.lvl === 2)
-      .map(heading => `[${heading.content}](#${toc.slugify(heading.content)})`)
+      .json.filter((heading) => heading.lvl === 2)
+      .map((heading) => `[${heading.content}](#${toc.slugify(heading.content)})`)
       .join(" • ")
 
     // 包装成完整的 toc 块

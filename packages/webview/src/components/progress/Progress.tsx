@@ -1,5 +1,6 @@
-import { progressAtom } from "@/state/atoms/progress"
 import { useAtomValue } from "jotai"
+
+import { progressAtom } from "@/state/atoms/progress"
 
 export const Progress = () => {
   const { isVisible, message, percentage } = useAtomValue(progressAtom)
@@ -18,9 +19,7 @@ export const Progress = () => {
         />
       </div>
       {message && (
-        <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">
-          {message}
-        </div>
+        <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">{message}</div>
       )}
     </div>
   )

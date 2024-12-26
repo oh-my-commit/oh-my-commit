@@ -8,7 +8,7 @@
     "types": ["vscode"],
 
     "sourceMap": true,
-    "inlineSources": true,
+    "inlineSources": true
   },
   "include": ["src/**/*"],
   "references": [

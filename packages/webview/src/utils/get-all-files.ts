@@ -1,4 +1,4 @@
-import { TreeNode } from "@shared/common"
+import type { TreeNode } from "@shared/common"
 
 export const getAllFiles = (node: TreeNode): string[] => {
   if (!node) return []

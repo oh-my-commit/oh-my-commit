@@ -1,7 +1,9 @@
-import { searchQueryAtom } from "@/state/atoms/search"
+import * as React from "react"
+
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import { useAtom } from "jotai"
-import * as React from "react"
+
+import { searchQueryAtom } from "@/state/atoms/search"
 
 interface SearchBarProps {
   className?: string

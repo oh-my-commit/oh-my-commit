@@ -1,10 +1,12 @@
-import { HighlightText } from "@/components/common/HighlightText"
-import { cn } from "@/lib/utils"
-
-import { basename } from "@/utils/path"
 import * as React from "react"
 import { useEffect } from "react"
+
 import type { DiffResult } from "simple-git"
+
+import { HighlightText } from "@/components/common/HighlightText"
+import { cn } from "@/lib/utils"
+import { basename } from "@/utils/path"
+
 import { Checkbox } from "../../common/Checkbox"
 
 interface FileItemProps {

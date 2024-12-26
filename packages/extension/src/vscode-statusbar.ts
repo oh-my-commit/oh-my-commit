@@ -8,6 +8,7 @@ import {
 } from "@shared/common"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
 import { VscodeGit } from "./vscode-git"
 import { VSCODE_TOKENS } from "./vscode-token"
 

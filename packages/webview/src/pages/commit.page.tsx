@@ -1,3 +1,5 @@
+import { useEffect } from "react"
+
 import { clientPush } from "@/clientPush"
 import { CommitMessage } from "@/components/commit/CommitMessage"
 import { FileChanges } from "@/components/commit/file-changes/FileChanges"
@@ -6,7 +8,6 @@ import { Progress } from "@/components/progress/Progress"
 import { useBasicMessage } from "@/hooks/use-basic-message"
 import { useCloseWindow } from "@/hooks/use-close-window"
 import { useCommitMessage } from "@/hooks/use-commit-message"
-import { useEffect } from "react"
 
 export const CommitPage = () => {
   useBasicMessage()

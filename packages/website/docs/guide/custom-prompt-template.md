@@ -21,9 +21,11 @@ templates/
 模板使用 Handlebars 语法，支持以下变量：
 
 ```handlebars
-{{!-- 输入变量 --}}
-{{lang}}  # 语言选项 (en/zh 等)
-{{diff}}  # Git diff 内容
+{{! 输入变量 }}
+{{lang}}
+# 语言选项 (en/zh 等)
+{{diff}}
+# Git diff 内容
 ```
 
 ### 3. 使用示例
@@ -37,18 +39,18 @@ class YourProvider extends Provider {
   async generateCommit(input: GenerateCommitInput) {
     const prompt = this.template.fill({
       lang: input.options?.lang || "en",
-      diff: input.diff
+      diff: input.diff,
     })
-    
+
     // 使用生成的 prompt 调用 AI API
     const response = await this.callAI(prompt)
-    
+
     return {
       ok: true,
       data: {
         title: response.title,
-        body: response.body
-      }
+        body: response.body,
+      },
     }
   }
 }
@@ -57,16 +59,19 @@ class YourProvider extends Provider {
 ## 最佳实践
 
 1. **模板组织**
+
    - 为你的提供商创建独立的模板目录
    - 使用有意义的模板名称
    - 将模板文件与代码一起版本控制
 
 2. **性能优化**
+
    - `PromptTemplate` 类内部已实现模板缓存
    - 在提供商类中将 template 实例声明为私有成员变量
    - 避免重复创建 template 实例
 
 3. **错误处理**
+
    - 确保模板文件存在
    - 处理模板语法错误
    - 提供有意义的错误信息
@@ -78,27 +83,17 @@ class YourProvider extends Provider {
 ## 示例模板
 
 ```handlebars
-{{!-- your-provider/custom.hbs --}}
+{{! your-provider/custom.hbs }}
 {{#if (eq lang "zh")}}
-请根据以下 Git 差异生成一个符合约定式提交规范的提交信息：
+  请根据以下 Git 差异生成一个符合约定式提交规范的提交信息： 差异内容：
+  {{diff}}
 
-差异内容：
-{{diff}}
-
-要求：
-1. 使用中文
-2. 简洁明了
-3. 符合约定式提交规范
+  要求： 1. 使用中文 2. 简洁明了 3. 符合约定式提交规范
 {{else}}
-Please generate a conventional commit message based on the following Git diff:
+  Please generate a conventional commit message based on the following Git diff: Diff content:
+  {{diff}}
 
-Diff content:
-{{diff}}
-
-Requirements:
-1. Use English
-2. Be concise
-3. Follow conventional commit format
+  Requirements: 1. Use English 2. Be concise 3. Follow conventional commit format
 {{/if}}
 ```
 

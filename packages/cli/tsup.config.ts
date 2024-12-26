@@ -1,4 +1,5 @@
 import { defineConfig } from "tsup"
+
 import baseConfig from "../__base__/tsup.config"
 
 /**
@@ -15,7 +16,7 @@ import baseConfig from "../__base__/tsup.config"
  * - tsup issue: https://github.com/egoist/tsup/issues/647
  * - turbo issue: https://github.com/vercel/turbo/issues/986
  */
-export default defineConfig(options => {
+export default defineConfig((options) => {
   console.log("tsup options:", options)
 
   return {

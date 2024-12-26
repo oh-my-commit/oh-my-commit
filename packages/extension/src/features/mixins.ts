@@ -1,5 +1,8 @@
+import vscode from "vscode"
+
 import { VscodeLogger } from "@/vscode-commit-adapter"
-import vscode from "vscode" // Constructor type with static members
+
+// Constructor type with static members
 
 // Constructor type with static members
 export type Constructor<T = object> = abstract new (...args: any[]) => T

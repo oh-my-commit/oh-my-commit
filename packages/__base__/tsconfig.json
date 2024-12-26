@@ -8,6 +8,5 @@
       "@shared/*": ["../shared/src/*"],
       "@cli/*": ["../cli/src/*"]
     }
-  },
-
+  }
 }

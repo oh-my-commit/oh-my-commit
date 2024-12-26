@@ -1,8 +1,9 @@
-import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
 import { COMMAND_SELECT_MODEL, TOKENS, formatError, type CommitManager } from "@shared/common"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
+import type { BaseCommand } from "@/vscode-command"
+import { VscodeLogger } from "@/vscode-commit-adapter"
 
 @Service()
 export class SelectModelCommand implements BaseCommand {

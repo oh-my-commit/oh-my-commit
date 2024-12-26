@@ -1,7 +1,9 @@
+import { useEffect } from "react"
+
+import { useAtom } from "jotai/index"
+
 import { getVSCodeAPI } from "@/lib/getVSCodeAPI"
 import { uiModeAtom } from "@/state/atoms/ui"
-import { useAtom } from "jotai/index"
-import { useEffect } from "react"
 
 export const useCloseWindow = () => {
   const [uiMode] = useAtom(uiModeAtom)

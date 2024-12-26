@@ -1,5 +1,3 @@
-import "reflect-metadata"
-
 import {
   APP_NAME,
   CommitManager,
@@ -13,6 +11,7 @@ import { GitCore, ProviderRegistry } from "@shared/server"
 import chalk from "chalk"
 import { program } from "commander"
 import { readPackageUpSync } from "read-package-up"
+import "reflect-metadata"
 import { Container } from "typedi"
 
 import { CliConfig } from "./config"

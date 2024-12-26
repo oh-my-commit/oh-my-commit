@@ -24,11 +24,11 @@ const baseAtoms = {
 
 // 2. 派生状态层 - 计算和转换数据
 const derivedAtoms = {
-  fileStats: atom(get => ({
-    added: get(baseAtoms.files).filter(f => f.status === "added").length,
+  fileStats: atom((get) => ({
+    added: get(baseAtoms.files).filter((f) => f.status === "added").length,
     // ...
   })),
-  isValid: atom(get => get(baseAtoms.message).length > 0),
+  isValid: atom((get) => get(baseAtoms.message).length > 0),
 }
 
 // 3. 操作层 - 处理状态变更
@@ -37,7 +37,7 @@ const actionAtoms = {
     set(baseAtoms.files, [...get(baseAtoms.files), file])
   }),
   reset: atom(null, (get, set) => {
-    Object.values(baseAtoms).forEach(a => set(a, null))
+    Object.values(baseAtoms).forEach((a) => set(a, null))
   }),
 }
 
@@ -76,7 +76,7 @@ const bigStateAtom = atom({
 // ✅ 推荐：拆分成小的原子
 const messageAtom = atom("")
 const filesAtom = atom([])
-const isValidAtom = atom(get => get(messageAtom).length > 0)
+const isValidAtom = atom((get) => get(messageAtom).length > 0)
 ```
 
 ### 3. 更新策略
@@ -85,7 +85,7 @@ const isValidAtom = atom(get => get(messageAtom).length > 0)
 
 ```typescript
 // ❌ 避免：直接修改复杂状态
-setCommit(prev => ({
+setCommit((prev) => ({
   ...prev,
   files: [...prev.files, newFile],
   message: `更新了${prev.files.length + 1}个文件`,
@@ -168,7 +168,7 @@ const statsAtom = atom(get => {
 ```typescript
 const addFileAtom = atom(null, (get, set, file) => {
   try {
-    if (get(filesAtom).some(f => f.path === file.path)) {
+    if (get(filesAtom).some((f) => f.path === file.path)) {
       throw new Error("文件已存在")
     }
     set(filesAtom, [...get(filesAtom), file])

@@ -18,7 +18,7 @@ interface BeforeCommitEvent {
 
 oh -
   my -
-  commits.hooks.onBeforeCommit(event => {
+  commits.hooks.onBeforeCommit((event) => {
     // 例：添加 JIRA 任务编号
     const taskId = "PROJ-123"
     event.setMessage(`[${taskId}] ${event.message}`)
@@ -38,7 +38,7 @@ interface AfterCommitEvent {
 
 oh -
   my -
-  commits.hooks.onAfterCommit(event => {
+  commits.hooks.onAfterCommit((event) => {
     // 例：在提交后通知团队
     notifyTeam(`New commit: ${event.hash}`)
   })
@@ -60,9 +60,9 @@ interface BeforeGenerateEvent {
 
 oh -
   my -
-  commits.hooks.onBeforeGenerate(event => {
+  commits.hooks.onBeforeGenerate((event) => {
     // 例：根据文件类型调整提示
-    if (event.files.some(f => f.endsWith(".test.ts"))) {
+    if (event.files.some((f) => f.endsWith(".test.ts"))) {
       event.setPrompt("This commit includes test files...")
     }
   })
@@ -80,7 +80,7 @@ interface AfterGenerateEvent {
 
 oh -
   my -
-  commits.hooks.onAfterGenerate(event => {
+  commits.hooks.onAfterGenerate((event) => {
     // 例：添加自定义前缀
     event.setMessage(`[AUTO] ${event.message}`)
   })
@@ -101,7 +101,7 @@ interface ConfigChangeEvent {
 
 oh -
   my -
-  commits.hooks.onConfigChange(event => {
+  commits.hooks.onConfigChange((event) => {
     // 例：在切换语言时刷新界面
     if (event.key === "oh-my-commit.language") {
       refreshUI()
@@ -145,7 +145,7 @@ interface TeamActivityEvent {
    ```typescript
    oh -
      my -
-     commits.hooks.onBeforeCommit(event => {
+     commits.hooks.onBeforeCommit((event) => {
        try {
          // 你的逻辑
        } catch (error) {
@@ -160,7 +160,7 @@ interface TeamActivityEvent {
    ```typescript
    oh -
      my -
-     commits.hooks.onAfterCommit(async event => {
+     commits.hooks.onAfterCommit(async (event) => {
        await updateExternalSystem(event.hash)
      })
    ```
@@ -216,7 +216,7 @@ interface TeamActivityEvent {
 
 ```javascript
 // .oh-my-commit/hooks/lint.js
-module.exports = async context => {
+module.exports = async (context) => {
   const { files } = context
 
   // ESLint 检查
@@ -237,7 +237,7 @@ module.exports = async context => {
 
 ```javascript
 // .oh-my-commit/hooks/test.js
-module.exports = async context => {
+module.exports = async (context) => {
   const { files } = context
 
   // 运行测试
@@ -260,7 +260,7 @@ module.exports = async context => {
 
 ```javascript
 // .oh-my-commit/hooks/jira.js
-module.exports = async context => {
+module.exports = async (context) => {
   const { message } = context
   const config = await getConfig("jira")
 
@@ -283,7 +283,7 @@ module.exports = async context => {
 
 ```javascript
 // .oh-my-commit/hooks/deploy.js
-module.exports = async context => {
+module.exports = async (context) => {
   const { branch, message } = context
 
   // 仅在主分支上部署
@@ -305,7 +305,7 @@ module.exports = async context => {
 ### 1. 错误处理
 
 ```javascript
-module.exports = async context => {
+module.exports = async (context) => {
   try {
     // 执行钩子逻辑
     const result = await someOperation()
@@ -322,7 +322,7 @@ module.exports = async context => {
 ### 2. 异步操作
 
 ```javascript
-module.exports = async context => {
+module.exports = async (context) => {
   // 并行执行多个检查
   const [lintResult, testResult] = await Promise.all([lint(context.files), test(context.files)])
 
@@ -340,7 +340,7 @@ module.exports = async context => {
 ### 3. 配置管理
 
 ```javascript
-module.exports = async context => {
+module.exports = async (context) => {
   // 读取配置
   const config = await getConfig("hooks")
 

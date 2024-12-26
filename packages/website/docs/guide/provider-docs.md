@@ -4,23 +4,20 @@
 
 > 如果你需要自定义 prompt 模板，请参考 [自定义 Prompt 模板指南](./custom-prompt-template.md)
 
-
 ## 基本示例
 
-
 ```typescript
-import { ResultAsync } from "neverthrow"
-
 import {
   BaseProvider,
-  formatError,
   GenerateCommitError,
   type GenerateCommitInput,
   type GenerateCommitResult,
   type IModel,
   type IProvider,
   type ProviderContext,
+  formatError,
 } from "@shared/common"
+import { ResultAsync } from "neverthrow"
 
 export class MyProvider extends BaseProvider implements IProvider {
   id = "my-provider"
@@ -42,19 +39,20 @@ export class MyProvider extends BaseProvider implements IProvider {
     },
   ]
 
-    // you can access the environment-specific logger and config ...
-    constructor(context: ProviderContext) {
-      super(context)
-      // logger is inherited
-      this.logger.info("Initializing MyProvider...")
+  // you can access the environment-specific logger and config ...
+  constructor(context: ProviderContext) {
+    super(context)
+    // logger is inherited
+    this.logger.info("Initializing MyProvider...")
   }
 
   // you should implement the generateCommit method
   // and consider about the api_key, proxy, timeout ... by yourself
   // we use ResultAsync to handle errors better
   // it's recommended but not required
-  generateCommit(input: GenerateCommitInput): 
-    ResultAsync<GenerateCommitResult, GenerateCommitError> {
+  generateCommit(
+    input: GenerateCommitInput
+  ): ResultAsync<GenerateCommitResult, GenerateCommitError> {
     try {
       this.logger.info("Generating commit", {
         model: input.model.id,
@@ -71,8 +69,7 @@ export class MyProvider extends BaseProvider implements IProvider {
 
       return { ok: true, data: commit }
     } catch (error) {
-      const message = "Failed to generate commit, reason: "
-        + formatError(error)
+      const message = "Failed to generate commit, reason: " + formatError(error)
       this.logger.error(message)
       return {
         ok: false,
@@ -187,12 +184,12 @@ generateCommit(input: GenerateCommitInput): GenerateCommitResult {
 2. **日志使用**
 
 ```typescript
-  // directly use the inherited logger
-  // supporting structured logging in the vscode outputChannel
-  this.logger.info('Generating commit', {
-    model: input.model.id,
-    lang: input.options?.lang,
-  })
+// directly use the inherited logger
+// supporting structured logging in the vscode outputChannel
+this.logger.info("Generating commit", {
+  model: input.model.id,
+  lang: input.options?.lang,
+})
 ```
 
 3. **错误处理**

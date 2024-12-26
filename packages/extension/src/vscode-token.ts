@@ -1,5 +1,6 @@
 import { Token } from "typedi"
 import type * as vscode from "vscode"
+
 import type { CommandManager } from "./commands/command-manager"
 import type { OpenPreferencesCommand } from "./commands/open-preferences"
 import type { QuickCommitCommand } from "./commands/quick-commit"

@@ -1,5 +1,6 @@
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
+
 import { SETTING_MODEL_ID } from "./app"
 import { TOKENS, type IConfig, type IProviderManager } from "./core"
 import { BaseLogger } from "./log"

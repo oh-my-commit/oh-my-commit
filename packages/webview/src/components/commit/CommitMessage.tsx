@@ -1,3 +1,8 @@
+import { useEffect, useRef, useState } from "react"
+
+import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
+import { useAtom } from "jotai"
+
 import { clientPush } from "@/clientPush"
 import { CommitFormatTooltip } from "@/components/commit/commit-format-tooltip"
 import { FeedbackButton } from "@/components/commit/feedback-button"
@@ -6,9 +11,6 @@ import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
-import { VSCodeButton, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
-import { useAtom } from "jotai"
-import { useEffect, useRef, useState } from "react"
 
 const MAX_SUBJECT_LENGTH = 72
 const MAX_DETAIL_LENGTH = 1000

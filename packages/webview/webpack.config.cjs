@@ -1,20 +1,20 @@
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const path = require("path");
-const webpack = require("webpack");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const path = require("path")
+const webpack = require("webpack")
 const distDir = path.resolve(__dirname, "dist")
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
-  const isProduction = argv.mode === "production";
-  const isDevelopment = !isProduction;
+  const isProduction = argv.mode === "production"
+  const isDevelopment = !isProduction
 
-  console.log("-- init webpack config -- ", {isDevelopment});
+  console.log("-- init webpack config -- ", { isDevelopment })
 
   return {
     target: "web",
     mode: argv.mode || "development",
     entry: {
-      main: './src/main.tsx'
+      main: "./src/main.tsx",
     },
     output: {
       path: distDir,
@@ -37,10 +37,8 @@ const config = (env, argv) => {
       allowedHosts: "all",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, content-type, Authorization",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
       },
       host: "localhost",
       hot: true,
@@ -65,7 +63,7 @@ const config = (env, argv) => {
           test: /\.[jt]sx?$/,
           exclude: /node_modules/,
           use: {
-            loader: 'swc-loader',
+            loader: "swc-loader",
             options: {
               jsc: {
                 parser: {
@@ -75,7 +73,7 @@ const config = (env, argv) => {
                 },
                 transform: {
                   react: {
-                    runtime: 'automatic',
+                    runtime: "automatic",
                     development: isDevelopment,
                     refresh: isDevelopment,
                   },
@@ -113,7 +111,7 @@ const config = (env, argv) => {
     optimization: {
       minimize: !isDevelopment,
     },
-  };
-};
+  }
+}
 
-module.exports = config;
+module.exports = config

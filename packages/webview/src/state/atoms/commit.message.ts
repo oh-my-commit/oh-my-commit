@@ -1,5 +1,6 @@
-import { atomWithStorage } from "@/lib/storage"
 import { atom } from "jotai"
+
+import { atomWithStorage } from "@/lib/storage"
 
 // 核心状态原子
 export const commitTitleAtom = atomWithStorage({

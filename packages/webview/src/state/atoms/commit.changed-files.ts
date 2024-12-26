@@ -1,5 +1,6 @@
-import { atomWithStorage } from "@/lib/storage"
 import type { DiffResult } from "simple-git"
+
+import { atomWithStorage } from "@/lib/storage"
 
 // 文件变更状态
 export const diffResultAtom = atomWithStorage<DiffResult | null>({

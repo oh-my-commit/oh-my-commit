@@ -1,11 +1,13 @@
+import { useCallback, useEffect, useMemo, useRef, type FC } from "react"
+
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import cn from "classnames"
+import { useAtom } from "jotai"
+
 import { HighlightText } from "@/components/common/HighlightText"
 import { diffResultAtom, lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { diffWrapLineAtom } from "@/state/atoms/ui"
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-import cn from "classnames"
-import { useAtom } from "jotai"
-import { useCallback, useEffect, useMemo, useRef, type FC } from "react"
 
 export const DiffViewer: FC = () => {
   const [wrapLine, setWrapLine] = useAtom(diffWrapLineAtom)

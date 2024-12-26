@@ -1,4 +1,5 @@
 import { z } from "zod"
+
 import type { IConfig } from "./core"
 import type { BaseLogger } from "./log"
 import { formatMessage } from "./utils"

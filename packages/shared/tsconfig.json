@@ -7,7 +7,7 @@
     "composite": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["reflect-metadata", "node"],
+    "types": ["reflect-metadata", "node"]
   },
   "include": ["src/**/*", "src/server/provider-registry.ts", "../provider-official/helper.ts"]
 }

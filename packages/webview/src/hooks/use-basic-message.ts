@@ -1,7 +1,10 @@
-import { progressAtom } from "@/state/atoms/progress"
+import { useCallback } from "react"
+
 import type { ServerMessageEvent } from "@shared/common"
 import { useSetAtom } from "jotai"
-import { useCallback } from "react"
+
+import { progressAtom } from "@/state/atoms/progress"
+
 import { useMessage } from "./use-message"
 
 export const useBasicMessage = () => {

@@ -1,9 +1,9 @@
-import "reflect-metadata"
-
 import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
+import "reflect-metadata"
 import { Container } from "typedi"
 import * as vscode from "vscode"
+
 import { CommandManager } from "./commands/command-manager"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git"

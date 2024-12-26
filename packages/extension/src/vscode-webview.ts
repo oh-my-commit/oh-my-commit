@@ -1,8 +1,3 @@
-import * as fs from "fs"
-import * as Handlebars from "handlebars"
-import * as path from "path"
-import * as vscode from "vscode"
-
 import {
   APP_ID_CAMEL,
   APP_NAME,
@@ -10,9 +5,13 @@ import {
   type ClientMessageEvent,
   type LogLevel,
 } from "@shared/common"
-
+import * as fs from "fs"
+import * as Handlebars from "handlebars"
 import _ from "lodash"
+import * as path from "path"
 import { Inject, Service } from "typedi"
+import * as vscode from "vscode"
+
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
 
