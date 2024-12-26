@@ -15,7 +15,11 @@ import cn from "classnames"
 import { useAtom } from "jotai"
 
 import { HighlightText } from "@/components/common/HighlightText"
-import { diffResultAtom, lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files"
+import {
+  diffDetailAtom,
+  diffResultAtom,
+  lastOpenedFilePathAtom,
+} from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { diffWrapLineAtom } from "@/state/atoms/ui"
 
@@ -26,6 +30,7 @@ export const DiffViewer: FC = () => {
   const [files] = useAtom(diffResultAtom)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<{ [key: string]: number }>({})
+  const [diffDetail] = useAtom(diffDetailAtom)
 
   const selectedFile = files?.files?.find(f => f.file === lastOpenedFilePath)
   const ext = selectedFile?.file.split(".").pop()?.toLowerCase() || "text"
@@ -56,12 +61,14 @@ export const DiffViewer: FC = () => {
     return <div className="flex items-center justify-center h-full">No diff available</div>
   }
 
-  const lines: string[] = ["todo: fetch diff"]
+  const lines: string[] = diffDetail && diffDetail.ok ? diffDetail.data.diff.split(/\n/g) : []
 
   const handleClose = () => {
     saveScrollPosition()
     setLastOpenedFilePath("")
   }
+
+  console.log({ diffDetail, lines })
 
   return (
     <div className="flex flex-col overflow-hidden">

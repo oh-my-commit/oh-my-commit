@@ -10,6 +10,7 @@
 import type { DiffResult } from "simple-git"
 
 import { atomWithStorage } from "@/lib/storage"
+import type { DiffFileResult } from "@shared/common"
 
 // 文件变更状态
 export const diffResultAtom = atomWithStorage<DiffResult | null>({
@@ -33,4 +34,9 @@ export const expandedDirsAtom = atomWithStorage<string[]>({
 export const lastOpenedFilePathAtom = atomWithStorage<string | null>({
   defaultValue: null,
   key: "oh-my-commit.commit.changed-files.last-opened",
+})
+
+export const diffDetailAtom = atomWithStorage<DiffFileResult | null>({
+  defaultValue: null,
+  key: "oh-my-commit.commit.changed-files.diff-detail",
 })

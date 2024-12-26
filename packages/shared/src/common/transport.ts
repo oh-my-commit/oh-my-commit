@@ -58,6 +58,17 @@ export type ClientMessageEvent_ =
   | {
       type: "commit"
     }
+  | {
+      type: "diff-file"
+      data: {
+        filePath: string
+      }
+    }
+
+export type DiffFileResult = ResultDTO<{
+  diff: string
+}>
+
 export type ServerMessageEvent =
   | BaseServerMessageEvent
   // 1. 用户打开 commit 界面， server --> client
@@ -76,6 +87,11 @@ export type ServerMessageEvent =
       type: "commit-result"
       data: ResultDTO<any>
     }
+  | {
+      type: "diff-file-result"
+      data: DiffFileResult
+    }
+
 export type ClientMessageEvent = ClientMessageEvent_ & {
   channel?: string
 }

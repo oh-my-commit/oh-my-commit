@@ -12,7 +12,9 @@ import type { ClientMessageEvent } from "@shared/common"
 import { getVSCodeAPI } from "./lib/getVSCodeAPI"
 
 export const clientPush = (message: ClientMessageEvent & { channel?: string }) => {
-  // vscodeClientLogger.info(message);
+  console.debug("clientPush: ", message)
+  // 不能开这个
+  // vscodeClientLogger.info(message)
   const vscode = getVSCodeAPI()
   vscode.postMessage(message)
 }

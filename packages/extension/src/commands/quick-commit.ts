@@ -14,6 +14,7 @@ import * as vscode from "vscode"
 import {
   COMMAND_QUICK_COMMIT,
   TOKENS,
+  formatError,
   type CommitManager,
   type ServerMessageEvent,
 } from "@shared/common"
@@ -49,6 +50,30 @@ export class QuickCommitCommand implements BaseCommand {
 
         case "commit":
           // todo
+          break
+
+        case "diff-file":
+          this.logger.info("[VscodeWebview] Getting file diff for:", message.data.filePath)
+          try {
+            const diff = await this.gitService.getFileDiffDetail(message.data.filePath)
+            await this.webviewManager.postMessage({
+              type: "diff-file-result",
+              data: {
+                ok: true,
+                data: { diff },
+              },
+            })
+          } catch (error) {
+            this.logger.error("[VscodeWebview] Failed to get file diff:", error)
+            await this.webviewManager.postMessage({
+              type: "diff-file-result",
+              data: {
+                ok: false,
+                message: `Failed to get file diff: ${formatError(error)}`,
+                code: -25343,
+              },
+            })
+          }
           break
       }
     })

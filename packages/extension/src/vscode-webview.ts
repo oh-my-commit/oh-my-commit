@@ -13,7 +13,8 @@ import * as path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_ID_CAMEL, APP_NAME, TOKENS, type ClientMessageEvent } from "@shared/common"
+import type { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
+import { APP_ID_CAMEL, APP_NAME, TOKENS } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
@@ -127,7 +128,7 @@ export class VscodeWebview implements vscode.Disposable {
     return this.webviewPanel?.webview || this.webviewView?.webview
   }
 
-  public async postMessage(message: any) {
+  public async postMessage(message: ServerMessageEvent) {
     const webview = this.getActiveWebview()
     if (webview) {
       this.logger.debug("Posting message to webview:", message)

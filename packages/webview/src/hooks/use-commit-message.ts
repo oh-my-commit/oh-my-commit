@@ -13,7 +13,7 @@ import { useSetAtom } from "jotai"
 
 import type { ServerMessageEvent } from "@shared/common"
 
-import { diffResultAtom } from "@/state/atoms/commit.changed-files"
+import { diffDetailAtom, diffResultAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 
 import { useMessage } from "./use-message"
@@ -23,6 +23,7 @@ export const useCommitMessage = () => {
   const setBody = useSetAtom(commitBodyAtom)
   const setDiffResult = useSetAtom(diffResultAtom)
   const setIsGenerating = useSetAtom(isGeneratingAtom)
+  const setDiffDetail = useSetAtom(diffDetailAtom)
 
   const handleCommitMessage = useCallback(
     (message: ServerMessageEvent) => {
@@ -37,12 +38,15 @@ export const useCommitMessage = () => {
           }
           setIsGenerating(false)
           break
+        case "diff-file-result":
+          setDiffDetail(message.data)
+          break
         case "commit-result":
           // 处理提交结果
           break
       }
     },
-    [setTitle, setBody, setDiffResult, setIsGenerating],
+    [setTitle, setBody, setDiffResult, setIsGenerating, setDiffDetail],
   )
 
   useMessage(handleCommitMessage)

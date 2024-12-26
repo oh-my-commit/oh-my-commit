@@ -100,4 +100,20 @@ export class GitCore {
       throw new Error(`Failed to amend last commit: ${formatError(error)}`)
     }
   }
+
+  /**
+   * 获取指定文件的详细 diff 信息
+   * @param filePath 相对于仓库根目录的文件路径
+   * @returns 文件的 diff 信息，包括修改的行号和内容
+   */
+  public async getFileDiffDetail(filePath: string): Promise<string> {
+    this.logger.debug("[GitCore] Getting file diff detail for:", filePath)
+    try {
+      // 使用 --unified=0 显示所有上下文，--color 添加颜色标记
+      const diff = await this.git.diff(["--staged", "--unified=0", "--color", "--", filePath])
+      return diff
+    } catch (error) {
+      throw new Error(`Failed to get file diff detail: ${formatError(error)}`)
+    }
+  }
 }
