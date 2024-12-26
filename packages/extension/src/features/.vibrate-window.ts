@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import vscode from "vscode"
 
 import type { BaseLogger } from "@shared/common"
@@ -19,7 +18,7 @@ export class VibrateWindow {
 
   constructor(
     logger: BaseLogger,
-    private readonly uiMode: "window" | "panel",
+    private readonly uiMode: "window" | "panel"
   ) {
     this.logger = logger
   }
@@ -59,7 +58,7 @@ export class VibrateWindow {
         await this.updateWorkspaceConfig(
           key,
           this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
-          vscode.ConfigurationTarget.Workspace,
+          vscode.ConfigurationTarget.Workspace
         )
       }
 
@@ -72,7 +71,7 @@ export class VibrateWindow {
         await this.updateWorkspaceConfig(
           key,
           this.getUserConfig(key as keyof typeof this.windowModeConfigs.user),
-          vscode.ConfigurationTarget.Global,
+          vscode.ConfigurationTarget.Global
         )
       }
 
@@ -111,7 +110,7 @@ export class VibrateWindow {
   private async updateWorkspaceConfig(
     key: string,
     value: unknown,
-    target: vscode.ConfigurationTarget,
+    target: vscode.ConfigurationTarget
   ) {
     this.logger.debug(`Setting ${key} to ${value} (target: ${target})`)
     await vscode.workspace.getConfiguration().update(key, value, target)

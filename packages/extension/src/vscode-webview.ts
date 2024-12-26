@@ -14,17 +14,16 @@ import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
 import type { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
-import { APP_ID_CAMEL, APP_NAME, TOKENS } from "@shared/common"
+import { APP_NAME, TOKENS } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
 
 @Service()
-export class VscodeWebview implements vscode.Disposable {
-  private webviewPanel?: vscode.WebviewPanel
-  private webviewView?: vscode.WebviewView
+export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposable {
+  private webview?: vscode.Webview
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
-  private title: string = `${APP_NAME} Webview`
+  private readonly title: string = `${APP_NAME} Webview`
   private readonly webviewPath: string
 
   constructor(
@@ -34,211 +33,59 @@ export class VscodeWebview implements vscode.Disposable {
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
 
-    // 注册 webview provider
-    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", {
-      resolveWebviewView: async webviewView => {
-        this.webviewView = webviewView
-
-        try {
-          webviewView.webview.options = this.getWebviewOptions()
-          webviewView.webview.html = this.getWebviewContent()
-
-          // 设置消息处理器
-          if (this.messageHandler) {
-            webviewView.webview.onDidReceiveMessage(this.messageHandler)
-          }
-
-          webviewView.title = this.title
-          webviewView.description = "Ready"
-
-          // 处理视图关闭
-          webviewView.onDidDispose(() => {
-            if (this.webviewView === webviewView) {
-              this.webviewView = undefined
-            }
-          })
-        } catch (error) {
-          this.logger.error("Error initializing webview:", error)
-          webviewView.description = "Error"
-        }
+    // 只注册 WebviewViewProvider
+    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", this, {
+      webviewOptions: {
+        retainContextWhenHidden: true,
       },
     })
 
     this.context.subscriptions.push(registration)
-
-    // 监听配置变化
-    this.context.subscriptions.push(
-      vscode.workspace.onDidChangeConfiguration(async e => {
-        if (e.affectsConfiguration("ohMyCommit.ui.viewLocation")) {
-          const location = this.getLocation()
-          this.logger.info("View location changed:", { location })
-
-          // 如果切换到编辑器模式，且当前在侧边栏中
-          if (location === "beside" && this.webviewView) {
-            this.logger.info("Switching to editor mode")
-            // 保存当前内容和状态
-            const content = this.webviewView.webview.html
-            const messageHandler = this.messageHandler
-
-            // 创建编辑器面板
-            const panel = vscode.window.createWebviewPanel(
-              APP_ID_CAMEL,
-              this.title,
-              this.getViewOptions().viewColumn,
-              this.getWebviewOptions(),
-            )
-
-            // 恢复内容和处理器
-            panel.webview.html = content
-            if (messageHandler) {
-              panel.webview.onDidReceiveMessage(messageHandler)
-            }
-
-            panel.onDidDispose(() => {
-              if (this.webviewPanel === panel) {
-                this.webviewPanel = undefined
-              }
-            })
-
-            this.webviewPanel = panel
-          }
-          // 如果切换到侧边栏模式，且当前在编辑器中
-          else if (location === "activitybar" && this.webviewPanel) {
-            this.logger.info("Switching to activitybar mode")
-            // 关闭编辑器面板，让它自动通过 provider 重新创建
-            this.webviewPanel.dispose()
-            this.webviewPanel = undefined
-
-            // 打开侧边栏视图
-            await vscode.commands.executeCommand("workbench.view.extension.ohMyCommit")
-          }
-        }
-      }),
-    )
   }
 
-  private getLocation(): string {
-    return vscode.workspace.getConfiguration("ohMyCommit").get("ui.viewLocation") || "activitybar"
+  // WebviewViewProvider 接口实现
+  async resolveWebviewView(
+    webviewView: vscode.WebviewView,
+    _context: vscode.WebviewViewResolveContext,
+    _token: vscode.CancellationToken,
+  ): Promise<void> {
+    this.webview = webviewView.webview
+
+    // 配置 webview
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [vscode.Uri.file(this.webviewPath)],
+    }
+
+    // 设置内容
+    webviewView.webview.html = this.getWebviewContent()
+
+    // 设置消息处理器
+    if (this.messageHandler) {
+      webviewView.webview.onDidReceiveMessage(this.messageHandler)
+    }
+
+    webviewView.title = this.title
   }
 
-  /**
-   * 获取当前活跃的 webview
-   */
-  private getActiveWebview(): vscode.Webview | undefined {
-    return this.webviewPanel?.webview || this.webviewView?.webview
+  public setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
+    this.messageHandler = handler
+    if (this.webview) {
+      this.webview.onDidReceiveMessage(handler)
+    }
   }
 
   public async postMessage(message: ServerMessageEvent) {
-    const webview = this.getActiveWebview()
-    if (webview) {
-      this.logger.debug("Posting message to webview:", message)
+    if (this.webview) {
       try {
-        await webview.postMessage(message)
-        this.logger.debug("Message posted successfully")
+        await this.webview.postMessage(message)
       } catch (error) {
         this.logger.error("Error posting message:", error)
       }
-    } else {
-      // 如果没有活跃的 webview，创建一个
-      this.logger.info("No active webview, creating one...")
-      await this.createWebviewPanel()
-
-      // 重试发送消息
-      const retryWebview = this.getActiveWebview()
-      if (retryWebview) {
-        try {
-          await retryWebview.postMessage(message)
-          this.logger.debug("Message posted successfully after retry")
-        } catch (error) {
-          this.logger.error("Error posting message after retry:", error)
-        }
-      } else {
-        this.logger.error("Cannot post message: no webview available after retry")
-      }
     }
   }
 
-  public async createWebviewPanel(): Promise<vscode.WebviewPanel | undefined> {
-    const location = this.getLocation()
-
-    // 如果已经有活跃的 webview，直接使用
-    if (this.webviewPanel || this.webviewView) {
-      if (this.webviewPanel) {
-        this.webviewPanel.reveal()
-      } else if (this.webviewView) {
-        this.webviewView.show(true)
-      }
-      return this.webviewPanel
-    }
-
-    // 如果是活动栏视图，使用 registerWebviewViewProvider
-    if (location === "activitybar") {
-      await vscode.commands.executeCommand("workbench.view.extension.ohMyCommit")
-      return undefined
-    }
-
-    // 创建编辑器面板
-    const viewOptions = this.getViewOptions()
-    this.logger.info("Creating webview panel...", { viewOptions })
-    const panel = vscode.window.createWebviewPanel(
-      APP_ID_CAMEL,
-      this.title,
-      viewOptions.viewColumn,
-      this.getWebviewOptions(),
-    )
-
-    try {
-      panel.webview.html = this.getWebviewContent()
-
-      // 设置消息处理器
-      if (this.messageHandler) {
-        panel.webview.onDidReceiveMessage(this.messageHandler)
-      }
-
-      panel.onDidDispose(() => {
-        if (this.webviewPanel === panel) {
-          this.webviewPanel = undefined
-        }
-      })
-
-      this.webviewPanel = panel
-      return panel
-    } catch (error) {
-      this.logger.error("Error initializing webview panel:", error)
-      panel.dispose()
-      throw error
-    }
-  }
-
-  private getViewOptions(): { viewColumn: vscode.ViewColumn } {
-    const location = this.getLocation()
-
-    switch (location) {
-      case "beside":
-        return { viewColumn: vscode.ViewColumn.Beside }
-      default:
-        return { viewColumn: vscode.ViewColumn.Active }
-    }
-  }
-
-  setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
-    this.messageHandler = handler
-  }
-
-  public get uiMode(): string {
-    return this.config.get<string>("ohMyCommit.ui.mode")!
-  }
-
-  private getWebviewOptions(): vscode.WebviewOptions {
-    const options = {
-      enableScripts: true,
-      retainContextWhenHidden: true,
-      localResourceRoots: [vscode.Uri.file(this.webviewPath)],
-    }
-    return options
-  }
-
-  private getWebviewContent() {
+  private getWebviewContent(): string {
     const isDev = process.env["NODE_ENV"] === "development"
     const devServerHost = "http://localhost:18080"
 
@@ -246,8 +93,8 @@ export class VscodeWebview implements vscode.Disposable {
       const nonce = require("crypto").randomBytes(16).toString("base64")
       const csp = [
         `form-action 'none'`,
-        `default-src ${this.webviewPanel?.webview.cspSource} ${devServerHost}`,
-        `style-src ${this.webviewPanel?.webview.cspSource} ${devServerHost} 'unsafe-inline'`,
+        `default-src ${this.webview?.cspSource} ${devServerHost}`,
+        `style-src ${this.webview?.cspSource} ${devServerHost} 'unsafe-inline'`,
         `script-src ${devServerHost} 'unsafe-eval' 'nonce-${nonce}'`,
         `connect-src ${devServerHost} ws://localhost:18080/ws`,
       ].join("; ")
@@ -274,24 +121,16 @@ export class VscodeWebview implements vscode.Disposable {
 
     const template = fs.readFileSync(indexPath, "utf-8")
     const scriptPath = path.join(this.webviewPath, "main.js")
-    const scriptUri = this.webviewPanel?.webview.asWebviewUri(vscode.Uri.file(scriptPath))
+    const scriptUri = this.webview?.asWebviewUri(vscode.Uri.file(scriptPath))
 
     const compiled = Handlebars.compile(template)
     return compiled({
       scriptUri,
-      cspSource: this.webviewPanel?.webview.cspSource,
+      cspSource: this.webview?.cspSource,
     })
   }
 
-  private cleanup() {
-    if (this.webviewPanel) {
-      this.webviewPanel.dispose()
-      this.webviewPanel = undefined
-    }
-    this.webviewView = undefined
-  }
-
   dispose() {
-    this.cleanup()
+    // Nothing to dispose
   }
 }

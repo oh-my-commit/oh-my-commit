@@ -10,10 +10,10 @@
     "sourceMap": true,
     "inlineSources": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/features/.vibrate-window.ts"],
   "exclude": [
-    // todo 
-    "src/features/vibrate-window.ts",
+    // todo
+    "src/features/.vibrate-window.ts"
   ],
   "references": [
     {
