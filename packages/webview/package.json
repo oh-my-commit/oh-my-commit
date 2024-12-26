@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/webview",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Interactive web interface for Oh My Commit VSCode extension",
   "publishConfig": {
     "access": "public",

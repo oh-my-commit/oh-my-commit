@@ -1,5 +1,11 @@
 # @oh-my-commit/website
 
+## 0.12.0
+
+### Minor Changes
+
+- 5d63744: fix: wield package lint
+
 ## 0.11.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @oh-my-commit/extension
 
+## 0.12.0
+
+### Minor Changes
+
+- 5d63744: fix: wield package lint
+
+### Patch Changes
+
+- Updated dependencies [5d63744]
+  - @oh-my-commit/shared@0.12.0
+  - @oh-my-commit/webview@0.12.0
+
 ## 0.11.0
 
 ### Minor Changes
