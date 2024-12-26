@@ -1,5 +1,18 @@
 # @oh-my-commit/cli
 
+## 0.10.0
+
+### Minor Changes
+
+- 6dacf10: feat: vscode native diff viewer
+
+### Patch Changes
+
+- 59f9275: feat: diff view with correct git lines
+- Updated dependencies [6dacf10]
+- Updated dependencies [59f9275]
+  - @oh-my-commit/shared@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes
