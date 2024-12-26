@@ -1,5 +1,15 @@
 # @oh-my-commit/shared
 
+## 0.9.0
+
+### Minor Changes
+
+- efe9eea: feat: support panel
+
+### Patch Changes
+
+- cb09515: fix some UIUX on webview
+
 ## 0.8.0
 
 ### Minor Changes

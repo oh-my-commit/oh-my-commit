@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/extension",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
   "engines": {
     "vscode": "^1.80.0"
