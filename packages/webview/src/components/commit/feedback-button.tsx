@@ -120,7 +120,7 @@ export const FeedbackButton = ({
   return (
     <div ref={menuRef} className="relative">
       <button
-        className={`px-3 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
+        className={`w-8 h-8 flex items-center justify-center px-3 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
           disabled || hasFeedback
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
@@ -131,9 +131,11 @@ export const FeedbackButton = ({
         }
         onClick={() => !disabled && !hasFeedback && setShowMenu(!showMenu)}
       >
-        <span className="sm:hidden">{/* todo: use icon */}</span>
+        <span className="block sm:hidden">
+          <i className="codicon codicon-feedback" />
+        </span>
 
-        <span className="hidden sm:block">
+        <span className="hidden sm:block text-sm">
           {hasFeedback ? "Thanks for your feedback" : "Improve"}
         </span>
 
