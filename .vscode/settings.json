@@ -12,5 +12,9 @@
   "debug.javascript.codelens.npmScripts": "all",
   "terminal.integrated.env.osx": {
     "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
-  }
+  },
+  "debug.openDebug": "neverOpen",
+  "debug.internalConsoleOptions": "neverOpen",
+  "debug.showInStatusBar": "never",
+  "explorer.autoReveal": false
 }
