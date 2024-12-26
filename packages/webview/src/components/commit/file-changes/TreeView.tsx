@@ -52,20 +52,27 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   return (
     <div className="select-none">
       <div
-        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer"
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
         style={{ paddingLeft: `${level * 16}px` }}
+        onClick={handleFolderSelect}
       >
-        <button className="p-1" onClick={handleToggle}>
+        <button
+          className="p-1"
+          onClick={e => {
+            e.stopPropagation()
+            handleToggle()
+          }}
+        >
           {isExpanded ? (
             <ChevronDownIcon className="h-4 w-4" />
           ) : (
             <ChevronRightIcon className="h-4 w-4" />
           )}
         </button>
-        <button className="flex items-center gap-1" onClick={handleFolderSelect}>
+        <div className="flex items-center gap-1 flex-1">
           <FolderIcon className="h-4 w-4" />
           <span>{path.split("/").pop()}</span>
-        </button>
+        </div>
       </div>
       {isExpanded && (
         <div>
