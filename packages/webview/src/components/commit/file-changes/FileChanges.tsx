@@ -55,7 +55,6 @@ export const FileChanges: FC = () => {
       case "flat":
         return (
           <FlatView
-            hasOpenedFile={!!lastOpenedFilePath}
             searchQuery={searchQuery || ""}
             selectedFiles={selectedFiles}
             selectedPath={lastOpenedFilePath || undefined}
