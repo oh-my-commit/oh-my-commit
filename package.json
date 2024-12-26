@@ -28,7 +28,7 @@
     "dev": "turbo run dev",
     "watch": "turbo run watch",
     "gen-docs": "ts-node -P packages/scripts/tsconfig.json scripts/generate-config-docs.ts",
-    "type-check": "tsc --build",
+    "lint:ts": "tsc -b",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

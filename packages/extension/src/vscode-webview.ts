@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-26
+ * @CreatedAt 2024-12-27
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -83,6 +83,27 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
         this.logger.error("Error posting message:", error)
       }
     }
+  }
+
+  public async createWebviewPanel() {
+    const panel = vscode.window.createWebviewPanel(
+      "ohMyCommit.panel",
+      this.title,
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true,
+        localResourceRoots: [vscode.Uri.file(this.webviewPath)],
+      },
+    )
+
+    this.webview = panel.webview
+    panel.webview.html = this.getWebviewContent()
+
+    if (this.messageHandler) {
+      panel.webview.onDidReceiveMessage(this.messageHandler)
+    }
+
+    return panel
   }
 
   private getWebviewContent(): string {

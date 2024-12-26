@@ -20,7 +20,7 @@ interface FileChangesViewProps {
   selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (path: string) => void
+  onSelect: (paths: string | string[]) => void
   onClick: (path: string) => void
   className?: string
 }

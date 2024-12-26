@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-26
+ * @CreatedAt 2024-12-27
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,7 +19,7 @@ export interface FlatViewProps {
   selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (path: string) => void
+  onSelect: (paths: string | string[]) => void
   onClick: (path: string) => void
   className?: string
 }
@@ -33,20 +33,26 @@ export const FlatView: React.FC<FlatViewProps> = ({
   className,
 }) => {
   const [diffResult] = useAtom(diffResultAtom)
-  const diff = "todo: diff" // todo
+  const files = diffResult?.files || []
+
+  const handleSelect = (path: string) => {
+    onSelect([path])
+  }
+
   return (
     <div className={className}>
-      {diffResult?.files.map((file, index) => (
+      {files.map((file, index) => (
         <FileItem
           key={index}
-          diff={diff}
+          diff="todo: diff"
           file={file}
           isOpen={selectedPath === file.file}
+          level={0}
           searchQuery={searchQuery}
           selected={selectedFiles.includes(file.file)}
           viewMode="flat"
           onClick={onClick}
-          onSelect={onSelect}
+          onSelect={handleSelect}
         />
       ))}
     </div>

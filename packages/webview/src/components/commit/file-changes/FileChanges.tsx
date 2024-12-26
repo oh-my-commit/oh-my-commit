@@ -20,8 +20,8 @@ import {
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
-
 import { viewModeAtom } from "@/state/atoms/ui"
+
 import { ErrorMessage } from "../../ui/error-message"
 import { FileChangesView } from "./FileChangesView"
 import { ViewToggle } from "./ViewToggle"
@@ -39,27 +39,27 @@ export const FileChanges: FC = () => {
 
   const handleSelect = useCallback(
     (paths: string | string[]) => {
+      const newSelection = [...selectedFiles]
+
       if (Array.isArray(paths)) {
         // 批量选择/取消选择
         const pathsSet = new Set(paths)
         const isSelectAll = paths.every(path => selectedFiles.includes(path))
 
-        setSelectedFiles(prev => {
-          if (isSelectAll) {
-            // 如果所有文件都已选中，则取消选择
-            return prev.filter(p => !pathsSet.has(p))
-          } else {
-            // 否则选择所有未选中的文件
-            const newPaths = paths.filter(p => !prev.includes(p))
-            return [...prev, ...newPaths]
-          }
-        })
-      } else {
-        // 单文件选择/取消选择
-        setSelectedFiles(prev =>
-          prev.includes(paths) ? prev.filter(p => p !== paths) : [...prev, paths],
-        )
+        if (isSelectAll) {
+          // 如果所有文件都已选中，则取消选择
+          return setSelectedFiles(selectedFiles.filter(p => !pathsSet.has(p)))
+        }
+        // 否则选择所有未选中的文件
+        const newPaths = paths.filter(p => !selectedFiles.includes(p))
+        return setSelectedFiles([...selectedFiles, ...newPaths])
       }
+
+      // 单文件选择/取消选择
+      if (selectedFiles.includes(paths)) {
+        return setSelectedFiles(selectedFiles.filter(p => p !== paths))
+      }
+      return setSelectedFiles([...selectedFiles, paths])
     },
     [selectedFiles],
   )

@@ -7,11 +7,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useAtom } from "jotai"
-import { ChevronDownIcon, ChevronRightIcon, FolderIcon } from "lucide-react"
 import * as React from "react"
 
+import { useAtom } from "jotai"
+import { ChevronDownIcon, ChevronRightIcon, FolderIcon } from "lucide-react"
+
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
+
 import { FileItem } from "./FileItem"
 
 interface TreeNodeProps {
@@ -49,18 +51,34 @@ const TreeNode: React.FC<TreeNodeProps> = ({
     onSelect(filePaths)
   }
 
+  const handleItemSelect = (path: string) => {
+    onSelect([path])
+  }
+
   return (
     <div className="select-none">
       <div
         className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
+        role="button"
         style={{ paddingLeft: `${level * 16}px` }}
+        tabIndex={0}
         onClick={handleFolderSelect}
+        onKeyDown={e => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleFolderSelect()
+          }
+        }}
       >
         <button
           className="p-1"
           onClick={e => {
             e.stopPropagation()
             handleToggle()
+          }}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleToggle()
+            }
           }}
         >
           {isExpanded ? (
@@ -97,7 +115,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               selected={selectedFiles.includes(file.file)}
               viewMode="tree"
               onClick={onClick}
-              onSelect={onSelect}
+              onSelect={handleItemSelect}
             />
           ))}
         </div>
@@ -145,14 +163,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
     return Array.from(uniqueFolders)
   }, [files])
 
-  const handleRootSelect = () => {
-    const allPaths = files.map(file => file.file)
-    onSelect(allPaths)
+  const handleRootToggle = () => {
+    setIsRootExpanded(!isRootExpanded)
   }
 
-  const handleRootToggle = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsRootExpanded(!isRootExpanded)
+  const handleFileSelect = (path: string) => {
+    onSelect([path])
+  }
+
+  const handleTreeNodeSelect = (paths: string[]) => {
+    onSelect(paths)
   }
 
   const isAllSelected = files.length > 0 && files.every(file => selectedFiles.includes(file.file))
@@ -164,9 +184,24 @@ export const TreeView: React.FC<TreeViewProps> = ({
       {/* 根节点 */}
       <div
         className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
-        onClick={handleRootSelect}
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelect(files.map(file => file.file))}
+        onKeyDown={e => {
+          if (e.key === "Enter" || e.key === " ") {
+            onSelect(files.map(file => file.file))
+          }
+        }}
       >
-        <button className="p-1" onClick={handleRootToggle}>
+        <button
+          className="p-1"
+          onClick={handleRootToggle}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleRootToggle()
+            }
+          }}
+        >
           {isRootExpanded ? (
             <ChevronDownIcon className="h-4 w-4" />
           ) : (
@@ -203,7 +238,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
             selectedFiles={selectedFiles}
             selectedPath={selectedPath}
             onClick={onClick}
-            onSelect={onSelect}
+            onSelect={handleTreeNodeSelect}
           />
         ))}
     </div>
