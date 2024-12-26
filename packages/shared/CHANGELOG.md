@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.7.1
+
+### Patch Changes
+
+- 4eeb9e6: better UIUX in webview; better formats with eslint, prettier...
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @oh-my-commit/provider-official
 
+## 0.7.1
+
+### Patch Changes
+
+- 4eeb9e6: better UIUX in webview; better formats with eslint, prettier...
+- Updated dependencies [4eeb9e6]
+  - @oh-my-commit/shared@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes
