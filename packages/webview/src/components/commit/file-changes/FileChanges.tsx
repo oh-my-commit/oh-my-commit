@@ -13,7 +13,6 @@ import { useAtom } from "jotai"
 
 import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
-import { cn } from "@/lib/utils"
 import {
   diffDetailAtom,
   diffResultAtom,
@@ -23,7 +22,6 @@ import {
 import { searchQueryAtom } from "@/state/atoms/search"
 
 import { ErrorMessage } from "../../ui/error-message"
-import { DiffViewer } from "./DiffViewer"
 import { EmptyState } from "./EmptyState"
 import { FlatView } from "./FlatView"
 import { SearchBar } from "./SearchBar"
@@ -98,19 +96,6 @@ export const FileChanges: FC = () => {
             <SearchBar />
           </div>
           <div className="overflow-y-auto vscode-scrollbar">{renderFileView()}</div>
-        </div>
-
-        <div
-          className={cn(
-            "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out overflow-auto",
-            !lastOpenedFilePath && "opacity-0",
-          )}
-        >
-          {lastOpenedFilePath && (
-            <div className="h-full">
-              <DiffViewer />
-            </div>
-          )}
         </div>
       </div>
     </Section>
