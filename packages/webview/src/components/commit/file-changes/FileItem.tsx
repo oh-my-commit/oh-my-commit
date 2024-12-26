@@ -46,7 +46,7 @@ export const FileItem: React.FC<FileItemProps> = ({
     onSelect(file.file)
   }
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation()
     onClick(file.file)
   }

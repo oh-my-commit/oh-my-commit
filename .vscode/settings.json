@@ -2,7 +2,11 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsserver.pluginPaths": [],
-  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  // 将特定的 TypeScript 警告提升为错误
+  "typescript.reportStyleChecks": "error",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
   "debug.node.autoAttach": "on",
   "debug.javascript.autoAttachFilter": "always",
   "debug.javascript.terminalOptions": {

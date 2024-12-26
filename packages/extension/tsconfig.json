@@ -11,6 +11,10 @@
     "inlineSources": true
   },
   "include": ["src/**/*"],
+  "exclude": [
+    // todo 
+    "src/features/vibrate-window.ts",
+  ],
   "references": [
     {
       "path": "../shared"

@@ -283,21 +283,6 @@ export class VscodeWebview implements vscode.Disposable {
     })
   }
 
-  private async updateWebview() {
-    if (!this.webviewPanel?.webview) {
-      this.logger.warn("No webview panel available for update")
-      return
-    }
-
-    try {
-      const html = this.getWebviewContent()
-      this.webviewPanel.webview.html = html
-      this.logger.info("Webview updated successfully")
-    } catch (error) {
-      this.logger.error("Error updating webview:", error)
-    }
-  }
-
   private cleanup() {
     if (this.webviewPanel) {
       this.webviewPanel.dispose()

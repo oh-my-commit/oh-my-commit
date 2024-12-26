@@ -7,14 +7,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useCallback, useEffect, useMemo, useRef, type FC } from "react"
-
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
-
 import cn from "classnames"
 import { useAtom } from "jotai"
+import { useCallback, useEffect, useMemo, useRef, type FC } from "react"
+import ReactDiffViewer from "react-diff-viewer-continued"
 
-import { HighlightText } from "@/components/common/HighlightText"
 import {
   diffDetailAtom,
   diffResultAtom,
@@ -61,14 +59,35 @@ export const DiffViewer: FC = () => {
     return <div className="flex items-center justify-center h-full">No diff available</div>
   }
 
-  const lines: string[] = diffDetail && diffDetail.ok ? diffDetail.data.diff.split(/\n/g) : []
-
   const handleClose = () => {
     saveScrollPosition()
     setLastOpenedFilePath("")
   }
 
-  console.log({ diffDetail, lines })
+  // 解析 diff 内容为新旧文本
+  const { oldText, newText } = useMemo(() => {
+    if (!diffDetail?.ok) return { oldText: "", newText: "" }
+
+    const lines = diffDetail.data.diff.split("\n")
+    const oldLines: string[] = []
+    const newLines: string[] = []
+
+    lines.forEach(line => {
+      if (line.startsWith("-")) {
+        oldLines.push(line.slice(1))
+      } else if (line.startsWith("+")) {
+        newLines.push(line.slice(1))
+      } else {
+        oldLines.push(line)
+        newLines.push(line)
+      }
+    })
+
+    return {
+      oldText: oldLines.join("\n"),
+      newText: newLines.join("\n"),
+    }
+  }, [diffDetail])
 
   return (
     <div className="flex flex-col overflow-hidden">
@@ -86,7 +105,6 @@ export const DiffViewer: FC = () => {
                 <span className="text-red-600 dark:text-red-400">-{selectedFile.deletions}</span>
               </>
             )}
-
             <VSCodeButton
               appearance="icon"
               className={cn(
@@ -96,50 +114,29 @@ export const DiffViewer: FC = () => {
               title={wrapLine ? "Disable Line Wrap" : "Enable Line Wrap"}
               onClick={() => setWrapLine(!wrapLine)}
             >
-              <i
-                className={cn(
-                  "codicon codicon-word-wrap transition-transform",
-                  wrapLine && "opacity-100",
-                  !wrapLine && "opacity-60 hover:opacity-100",
-                )}
-              />
-            </VSCodeButton>
-            <VSCodeButton appearance="icon" title="Close diff view" onClick={handleClose}>
-              <span className="codicon codicon-close" />
+              <i className={cn("codicon codicon-word-wrap transition-transform")} />
             </VSCodeButton>
           </div>
         </div>
       </div>
-      <div
-        ref={scrollContainerRef}
-        className="min-w-0 overflow-auto max-h-[500px]"
-        onScroll={() => saveScrollPosition()}
-      >
-        <table className="w-full border-collapse">
-          <tbody
-            className={cn(
-              "font-mono text-sm",
-              wrapLine && "whitespace-pre-wrap",
-              !wrapLine && "whitespace-pre",
-            )}
-          >
-            {lines.map((line, index) => {
-              const bgColor = line.startsWith("+")
-                ? "bg-opacity-20 bg-[var(--vscode-diffEditor-insertedTextBackground)]"
-                : line.startsWith("-")
-                  ? "bg-opacity-20 bg-[var(--vscode-diffEditor-removedTextBackground)]"
-                  : ""
 
-              return (
-                <tr key={index}>
-                  <td className={cn("pl-2 py-[1px]", bgColor)}>
-                    <HighlightText highlight={searchQuery || ""} text={line} />
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+      <div ref={scrollContainerRef} className="flex-1 overflow-auto">
+        <ReactDiffViewer
+          codeFoldMessageRenderer={() => null}
+          extraLinesSurroundingDiff={3}
+          hideLineNumbers={false}
+          newValue={newText}
+          oldValue={oldText}
+          showDiffOnly={false}
+          splitView={false}
+          styles={{
+            contentText: {
+              whiteSpace: wrapLine ? "pre-wrap" : "pre",
+              wordBreak: wrapLine ? "break-word" : "normal",
+            },
+          }}
+          useDarkTheme={true}
+        />
       </div>
     </div>
   )
