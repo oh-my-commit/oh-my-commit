@@ -11,6 +11,7 @@ import { useCallback, type FC } from "react"
 
 import { useAtom } from "jotai"
 
+import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
 import { cn } from "@/lib/utils"
 import {
@@ -20,9 +21,8 @@ import {
   selectedFilesAtom,
 } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
-import { ErrorMessage } from "../../ui/error-message"
 
-import { clientPush } from "@/clientPush"
+import { ErrorMessage } from "../../ui/error-message"
 import { DiffViewer } from "./DiffViewer"
 import { EmptyState } from "./EmptyState"
 import { FlatView } from "./FlatView"

@@ -1,0 +1,75 @@
+/* 基础样式 */
+.diff-container {
+  --diff-font-family: var(--vscode-editor-font-family);
+  --diff-background-color: transparent;
+  --diff-text-color: var(--vscode-editor-foreground);
+  
+  /* 行号样式 */
+  --diff-gutter-insert-background-color: var(--vscode-diffEditor-insertedLineBackground);
+  --diff-gutter-insert-text-color: var(--vscode-editorLineNumber-foreground);
+  --diff-gutter-delete-background-color: var(--vscode-diffEditor-removedLineBackground);
+  --diff-gutter-delete-text-color: var(--vscode-editorLineNumber-foreground);
+  --diff-gutter-selected-background-color: var(--vscode-editor-selectionBackground);
+  --diff-gutter-selected-text-color: var(--vscode-editorLineNumber-foreground);
+  
+  /* 代码区域样式 */
+  --diff-code-insert-background-color: var(--vscode-diffEditor-insertedTextBackground);
+  --diff-code-insert-text-color: var(--vscode-diffEditor-insertedTextColor);
+  --diff-code-delete-background-color: var(--vscode-diffEditor-removedTextBackground);
+  --diff-code-delete-text-color: var(--vscode-diffEditor-removedTextColor);
+  --diff-code-insert-edit-background-color: var(--vscode-diffEditor-insertedTextBackground);
+  --diff-code-delete-edit-background-color: var(--vscode-diffEditor-removedTextBackground);
+  --diff-code-selected-background-color: var(--vscode-editor-selectionBackground);
+  --diff-code-selected-text-color: var(--vscode-editor-selectionForeground);
+  
+  /* 省略行样式 */
+  --diff-omit-gutter-line-color: var(--vscode-editorLineNumber-foreground);
+}
+
+/* 表格样式 */
+.diff-container .diff {
+  width: 100%;
+  border-spacing: 0;
+  font-family: var(--diff-font-family);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* 行号列宽 */
+.diff-container .diff-gutter-col {
+  width: 4.5ch;
+}
+
+/* 行号样式 */
+.diff-container .diff-gutter {
+  padding: 0 8px;
+  text-align: right;
+  user-select: none;
+  opacity: 0.4;
+}
+
+/* 代码区域样式 */
+.diff-container .diff-code {
+  padding: 0 16px 0 24px;
+  white-space: pre;
+}
+
+/* 分隔行样式 */
+.diff-container .diff-hunk-header {
+  background-color: var(--vscode-editor-lineHighlightBackground);
+  color: var(--vscode-editorLineNumber-foreground);
+  opacity: 0.4;
+  padding: 0 16px;
+}
+
+/* 折叠指示器 */
+.diff-container .diff-decoration {
+  color: var(--vscode-editorLineNumber-foreground);
+  opacity: 0.4;
+}
+
+/* 换行控制 */
+.diff-container.wrap .diff-code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

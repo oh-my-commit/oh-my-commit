@@ -11,7 +11,9 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import cn from "classnames"
 import { useAtom } from "jotai"
 import { useCallback, useEffect, useMemo, useRef, type FC } from "react"
-import ReactDiffViewer from "react-diff-viewer-continued"
+import { Diff, parseDiff } from "react-diff-view"
+import "react-diff-view/style/index.css"
+import "./DiffViewer.css"
 
 import {
   diffDetailAtom,
@@ -33,6 +35,11 @@ export const DiffViewer: FC = () => {
   const selectedFile = files?.files?.find(f => f.file === lastOpenedFilePath)
   const ext = selectedFile?.file.split(".").pop()?.toLowerCase() || "text"
   const language = useMemo(() => getLanguageFromExtension(ext), [ext])
+
+  const diffFiles = useMemo(() => {
+    if (!diffDetail?.ok || !selectedFile) return []
+    return parseDiff(diffDetail.data.diff)
+  }, [diffDetail, selectedFile])
 
   const saveScrollPosition = useCallback(() => {
     if (scrollContainerRef.current && lastOpenedFilePath) {
@@ -64,30 +71,25 @@ export const DiffViewer: FC = () => {
     setLastOpenedFilePath("")
   }
 
-  // 解析 diff 内容为新旧文本
-  const { oldText, newText } = useMemo(() => {
-    if (!diffDetail?.ok) return { oldText: "", newText: "" }
+  const file = diffFiles[0]
+  if (!file) return null
 
-    const lines = diffDetail.data.diff.split("\n")
-    const oldLines: string[] = []
-    const newLines: string[] = []
+  const renderToken = (token: string, defaultRender: (token: string) => JSX.Element) => {
+    if (!searchQuery) return defaultRender(token)
 
-    lines.forEach(line => {
-      if (line.startsWith("-")) {
-        oldLines.push(line.slice(1))
-      } else if (line.startsWith("+")) {
-        newLines.push(line.slice(1))
-      } else {
-        oldLines.push(line)
-        newLines.push(line)
-      }
-    })
+    const index = token.toLowerCase().indexOf(searchQuery.toLowerCase())
+    if (index === -1) return defaultRender(token)
 
-    return {
-      oldText: oldLines.join("\n"),
-      newText: newLines.join("\n"),
-    }
-  }, [diffDetail])
+    return (
+      <>
+        {token.slice(0, index)}
+        <span className="bg-yellow-500 bg-opacity-50">
+          {token.slice(index, index + searchQuery.length)}
+        </span>
+        {token.slice(index + searchQuery.length)}
+      </>
+    )
+  }
 
   return (
     <div className="flex flex-col overflow-hidden">
@@ -120,22 +122,16 @@ export const DiffViewer: FC = () => {
         </div>
       </div>
 
-      <div ref={scrollContainerRef} className="flex-1 overflow-auto">
-        <ReactDiffViewer
-          codeFoldMessageRenderer={() => null}
-          extraLinesSurroundingDiff={3}
-          hideLineNumbers={false}
-          newValue={newText}
-          oldValue={oldText}
-          showDiffOnly={false}
-          splitView={false}
-          styles={{
-            contentText: {
-              whiteSpace: wrapLine ? "pre-wrap" : "pre",
-              wordBreak: wrapLine ? "break-word" : "normal",
-            },
-          }}
-          useDarkTheme={true}
+      <div
+        ref={scrollContainerRef}
+        className={cn("flex-1 overflow-auto diff-container", wrapLine && "wrap")}
+      >
+        <Diff
+          diffType={file.type}
+          hunks={file.hunks}
+          renderToken={renderToken}
+          tokens={file.tokens}
+          viewType="unified"
         />
       </div>
     </div>

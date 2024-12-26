@@ -9,7 +9,7 @@
       "args": [
         // prevent auto open of annoying windsurf cascade, see [Disabling Specific Plugins During VS Code Debugging - Claude](https://claude.ai/chat/7d10dc68-9be8-4955-9739-cee066da07c0)
         "--disable-extension=codeium.windsurf",
-        "--extensionDevelopmentPath=${workspaceFolder}/packages/extension",
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/extension"
       ],
       "outFiles": ["${workspaceFolder}/packages/extension/dist/**/*.js"],
       "sourceMaps": true,

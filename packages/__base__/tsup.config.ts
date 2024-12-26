@@ -12,7 +12,7 @@ export default defineConfig({
   treeshake: !isDev,
   format: ["cjs", "esm"],
 
-  // 启用装饰器和元数据支持  
+  // 启用装饰器和元数据支持
   esbuildOptions(options) {
     options.alias = {
       "@": resolve("src"),
