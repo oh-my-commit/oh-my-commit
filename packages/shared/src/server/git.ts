@@ -110,7 +110,14 @@ export class GitCore {
     this.logger.debug("[GitCore] Getting file diff detail for:", filePath)
     try {
       // 使用 --unified=0 显示所有上下文，--color 添加颜色标记
-      const diff = await this.git.diff(["--staged", "--unified=0", "--color", "--", filePath])
+      const diff = await this.git.diff([
+        "--staged",
+        "--unified=0",
+        // 颜色相关的在 DiffViewer 中处理，这里不需要，否则会把很多 ascii 字符串送过去
+        "--no-color",
+        "--",
+        filePath,
+      ])
       return diff
     } catch (error) {
       throw new Error(`Failed to get file diff detail: ${formatError(error)}`)
