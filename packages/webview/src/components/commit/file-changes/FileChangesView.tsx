@@ -37,27 +37,25 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-auto">
-        {viewMode === "flat" ? (
-          <FlatView
-            className={className}
-            searchQuery={searchQuery}
-            selectedFiles={selectedFiles}
-            selectedPath={selectedPath}
-            onClick={onClick}
-            onSelect={onSelect}
-          />
-        ) : (
-          <TreeView
-            className={className}
-            searchQuery={searchQuery}
-            selectedFiles={selectedFiles}
-            selectedPath={selectedPath}
-            onClick={onClick}
-            onSelect={onSelect}
-          />
-        )}
-      </div>
+      {viewMode === "flat" ? (
+        <FlatView
+          className={className}
+          searchQuery={searchQuery}
+          selectedFiles={selectedFiles}
+          selectedPath={selectedPath}
+          onClick={onClick}
+          onSelect={onSelect}
+        />
+      ) : (
+        <TreeView
+          className={className}
+          searchQuery={searchQuery}
+          selectedFiles={selectedFiles}
+          selectedPath={selectedPath}
+          onClick={onClick}
+          onSelect={onSelect}
+        />
+      )}
     </div>
   )
 }

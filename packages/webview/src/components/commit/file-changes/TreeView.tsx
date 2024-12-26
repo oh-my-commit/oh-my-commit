@@ -72,6 +72,16 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         <div className="flex items-center gap-1 flex-1">
           <FolderIcon className="h-4 w-4" />
           <span>{path.split("/").pop()}</span>
+          <span className="text-xs text-gray-500">({filesInPath.length})</span>
+        </div>
+        <div className="flex items-center">
+          <input
+            readOnly
+            checked={isAllSelected}
+            className="h-3 w-3"
+            style={{ opacity: isPartiallySelected ? "0.5" : "1" }}
+            type="checkbox"
+          />
         </div>
       </div>
       {isExpanded && (
@@ -114,38 +124,88 @@ export const TreeView: React.FC<TreeViewProps> = ({
   className,
 }) => {
   const [diffResult] = useAtom(diffResultAtom)
+  const files = diffResult?.files || []
+  const [isRootExpanded, setIsRootExpanded] = React.useState(true)
 
-  const getDirectoryStructure = (files: any[]) => {
-    const directories = new Set<string>()
-    files.forEach(file => {
-      const parts = file.file.split("/")
-      parts.pop() // remove filename
-      let path = ""
+  // 构建文件树结构
+  const fileTree = React.useMemo(() => {
+    const paths = files.map(file => file.file)
+    const uniqueFolders = new Set<string>()
+
+    paths.forEach(path => {
+      const parts = path.split("/")
+      parts.pop() // 移除文件名
+      let currentPath = ""
       parts.forEach(part => {
-        path = path ? `${path}/${part}` : part
-        directories.add(path)
+        currentPath = currentPath ? `${currentPath}/${part}` : part
+        uniqueFolders.add(currentPath)
       })
     })
-    return Array.from(directories).sort()
+
+    return Array.from(uniqueFolders)
+  }, [files])
+
+  const handleRootSelect = () => {
+    const allPaths = files.map(file => file.file)
+    onSelect(allPaths)
   }
 
-  const directories = getDirectoryStructure(diffResult?.files || [])
+  const handleRootToggle = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsRootExpanded(!isRootExpanded)
+  }
+
+  const isAllSelected = files.length > 0 && files.every(file => selectedFiles.includes(file.file))
+  const isPartiallySelected =
+    !isAllSelected && files.some(file => selectedFiles.includes(file.file))
 
   return (
     <div className={className}>
-      {directories.map(dir => (
-        <TreeNode
-          key={dir}
-          files={diffResult?.files || []}
-          level={0}
-          path={dir}
-          searchQuery={searchQuery}
-          selectedFiles={selectedFiles}
-          selectedPath={selectedPath}
-          onClick={onClick}
-          onSelect={onSelect}
-        />
-      ))}
+      {/* 根节点 */}
+      <div
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
+        onClick={handleRootSelect}
+      >
+        <button className="p-1" onClick={handleRootToggle}>
+          {isRootExpanded ? (
+            <ChevronDownIcon className="h-4 w-4" />
+          ) : (
+            <ChevronRightIcon className="h-4 w-4" />
+          )}
+        </button>
+        <div className="flex items-center gap-1 flex-1">
+          <FolderIcon className="h-4 w-4" />
+          <span className="font-semibold">Staged Changes</span>
+          {files.length > 0 && <span className="text-xs text-gray-500">({files.length})</span>}
+        </div>
+        {files.length > 0 && (
+          <div className="flex items-center">
+            <input
+              readOnly
+              checked={isAllSelected}
+              className="h-3 w-3"
+              style={{ opacity: isPartiallySelected ? "0.5" : "1" }}
+              type="checkbox"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* 文件树 */}
+      {isRootExpanded &&
+        fileTree.map(path => (
+          <TreeNode
+            key={path}
+            files={files}
+            level={1}
+            path={path}
+            searchQuery={searchQuery}
+            selectedFiles={selectedFiles}
+            selectedPath={selectedPath}
+            onClick={onClick}
+            onSelect={onSelect}
+          />
+        ))}
     </div>
   )
 }

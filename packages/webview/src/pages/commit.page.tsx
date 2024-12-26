@@ -29,11 +29,9 @@ export const CommitPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Progress />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1">
         <CommitMessage />
-        <div className="overflow-auto">
-          <FileChanges />
-        </div>
+        <FileChanges />
       </div>
       <Footer />
     </div>

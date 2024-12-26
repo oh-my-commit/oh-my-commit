@@ -91,7 +91,7 @@ export const FileChanges: FC = () => {
       )}
 
       <div className="flex flex-col sm:flex-row relative gap-2 h-full">
-        <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
+        <div className="w-full sm:max-w-[300px] flex flex-col shrink-0 overflow-auto scrollbar-custom">
           <FileChangesView
             searchQuery={searchQuery || ""}
             selectedFiles={selectedFiles}

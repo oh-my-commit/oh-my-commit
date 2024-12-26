@@ -10,6 +10,7 @@
   font-size: 14px;
   line-height: 1.5;
   font-weight: 400;
+  color-scheme: light dark;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -30,13 +31,43 @@ body {
   margin: 0;
 }
 
-/* Global styles */
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
 body {
   color: var(--vscode-foreground);
   font-size: var(--vscode-font-size);
   font-weight: var(--vscode-font-weight);
   font-family: var(--vscode-font-family);
   background-color: var(--vscode-editor-background);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+body:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.5);
 }
 
 /* VSCode-style scrollbar */
