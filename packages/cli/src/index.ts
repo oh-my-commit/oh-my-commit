@@ -1,3 +1,18 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import chalk from "chalk"
+import { program } from "commander"
+import { readPackageUpSync } from "read-package-up"
+import "reflect-metadata"
+import { Container } from "typedi"
+
 import {
   APP_NAME,
   CommitManager,
@@ -8,11 +23,6 @@ import {
   type IResult,
 } from "@shared/common"
 import { GitCore, ProviderRegistry } from "@shared/server"
-import chalk from "chalk"
-import { program } from "commander"
-import { readPackageUpSync } from "read-package-up"
-import "reflect-metadata"
-import { Container } from "typedi"
 
 import { CliConfig } from "./config"
 

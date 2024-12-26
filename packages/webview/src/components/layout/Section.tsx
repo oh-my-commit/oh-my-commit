@@ -1,3 +1,12 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import type { PropsWithChildren, ReactNode } from "react"
 
 interface SectionProps extends PropsWithChildren {
@@ -51,7 +60,7 @@ export const Section = ({ children, className = "", title, actions }: SectionPro
     <section
       className={`m-4 flex flex-col gap-4 ${className} bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]`}
     >
-      <SectionHeader title={title} actions={actions} />
+      <SectionHeader actions={actions} title={title} />
       {children}
     </section>
   )

@@ -1,8 +1,18 @@
-import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
-import { ProviderRegistry } from "@shared/server"
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import "reflect-metadata"
 import { Container } from "typedi"
 import * as vscode from "vscode"
+
+import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
+import { ProviderRegistry } from "@shared/server"
 
 import { CommandManager } from "./commands/command-manager"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"

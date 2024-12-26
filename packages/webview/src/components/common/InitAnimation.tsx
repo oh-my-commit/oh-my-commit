@@ -1,3 +1,12 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as React from "react"
 
 import "./InitAnimation.css"
@@ -11,7 +20,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
     <div className="init-animation-container">
       <div className="init-animation">
         <div className="logo-container">
-          <svg className="oh-my-commit-logo" viewBox="0 0 200 100" width="128" height="64">
+          <svg className="oh-my-commit-logo" height="64" viewBox="0 0 200 100" width="128">
             {/* 背景线条 */}
             {/* <path
               className="bg-line"
@@ -27,10 +36,10 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
               <path
                 d="M-10,-15 L0,5 L10,-15
                    M0,5 L0,20"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
                 fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="4"
               />
             </g>
 
@@ -39,10 +48,10 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
               <path
                 d="M-10,20 L0,-15 L10,20
                    M-6,8 L6,8"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
                 fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="4"
               />
             </g>
 
@@ -51,10 +60,10 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
               <path
                 d="M-10,20 L0,-15 L10,20
                    M-6,8 L6,8"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
                 fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="4"
               />
             </g>
 
@@ -65,10 +74,10 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
                    A18 18 0 0 0 -8,-15
                    A22 22 0 0 0 -8,15
                    A18 18 0 0 0 12,15"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
                 fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="4"
               />
             </g>
           </svg>

@@ -1,9 +1,19 @@
-import type { Config, IConfig } from "@shared/common"
-import { configSchema, defaultConfig } from "@shared/common"
-import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { merge } from "lodash-es"
 import fs from "node:fs"
 import { Service } from "typedi"
+
+import type { Config, IConfig } from "@shared/common"
+import { configSchema, defaultConfig } from "@shared/common"
+import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 
 @Service()
 export class CliConfig implements IConfig {

@@ -1,3 +1,12 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { useEffect, useState } from "react"
 
 import Markdown from "marked-react"
@@ -27,7 +36,7 @@ export const CommitFormatTooltip = () => {
   const renderer = {
     code(code: string, language: string) {
       return (
-        <div className="code-block" key={`${language}-${code.slice(0, 20)}`}>
+        <div key={`${language}-${code.slice(0, 20)}`} className="code-block">
           <div className="code-block-header">{language || "text"}</div>
           <pre>
             <code>{code}</code>
@@ -50,13 +59,13 @@ export const CommitFormatTooltip = () => {
       style={{ pointerEvents: "auto" }}
     >
       <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3 markdown-content">
-        {loading ? <div>Loading...</div> : <Markdown value={markdown} renderer={renderer} />}
+        {loading ? <div>Loading...</div> : <Markdown renderer={renderer} value={markdown} />}
         <div className="pt-2 border-t border-[var(--vscode-widget-border)]">
           <a
-            href="https://www.conventionalcommits.org"
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)] hover:underline"
+            href="https://www.conventionalcommits.org"
+            rel="noopener noreferrer"
+            target="_blank"
             onClick={e => {
               e.preventDefault()
               const vscode = acquireVsCodeApi()

@@ -1,9 +1,12 @@
 /**
- * Generic Tailwind CSS Theme Plugin Generator
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
  *
- * This module provides a flexible way to create Tailwind plugins that can transform
- * any CSS variables into Tailwind-compatible theme values with support for opacity.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 import plugin from "tailwindcss/plugin"
 
 export type ThemePluginConfig = {

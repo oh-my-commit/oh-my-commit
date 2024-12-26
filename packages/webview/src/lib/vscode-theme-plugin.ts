@@ -1,9 +1,12 @@
 /**
- * VSCode Theme Integration for Tailwind CSS
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
  *
- * Converts VSCode theme variables into Tailwind-compatible color values
- * with support for opacity modifiers.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 import { createTailwindThemePlugin, type ThemePluginConfig } from "./tailwind-theme-plugin"
 
 // Helper function to create VSCode color value

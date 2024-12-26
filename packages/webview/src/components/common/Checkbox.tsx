@@ -1,3 +1,12 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -12,31 +21,31 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className
   return (
     <label className={cn("w-3 h-3 relative block", className)}>
       <input
-        type="checkbox"
-        className="absolute inset-0 cursor-pointer opacity-0 w-full h-full z-10"
+        aria-checked={checked}
         checked={checked}
+        className="absolute inset-0 cursor-pointer opacity-0 w-full h-full z-10"
+        type="checkbox"
         onChange={e => onChange(e.target.checked)}
         onClick={e => e.stopPropagation()}
-        aria-checked={checked}
       />
       <div
+        aria-hidden="true"
         className={cn(
           "absolute inset-0 border rounded",
           "border-[var(--vscode-checkbox-border)]",
           checked &&
             "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]",
         )}
-        aria-hidden="true"
       />
       {checked && (
         <div
-          className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]"
           aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center text-[var(--vscode-checkbox-foreground)]"
         >
           <svg
             className="w-2 h-2"
-            viewBox="0 0 16 16"
             fill="none"
+            viewBox="0 0 16 16"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path

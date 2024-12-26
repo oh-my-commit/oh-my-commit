@@ -1,0 +1,11 @@
+
+> @cs-magic/oh-my-commit@0.4.1 lint /Users/mark/coding/apps/oh-my-commit_v2
+> eslint . "--quiet" "--fix" "packages/shared/src/server/prompt.template.ts"
+
+
+/Users/mark/coding/apps/oh-my-commit_v2/packages/provider-official/src/index.ts
+  25:32  error  Unable to resolve path to module '@shared/server/prompt-template'  import/no-unresolved
+
+✖ 1 problem (1 error, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

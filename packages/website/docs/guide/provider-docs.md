@@ -7,6 +7,8 @@
 ## 基本示例
 
 ```typescript
+import { ResultAsync } from "neverthrow"
+
 import {
   BaseProvider,
   GenerateCommitError,
@@ -17,7 +19,6 @@ import {
   type ProviderContext,
   formatError,
 } from "@shared/common"
-import { ResultAsync } from "neverthrow"
 
 export class MyProvider extends BaseProvider implements IProvider {
   id = "my-provider"

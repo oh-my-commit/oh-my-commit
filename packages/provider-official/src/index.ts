@@ -1,5 +1,17 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
+import { HttpsProxyAgent } from "https-proxy-agent"
+import { merge } from "lodash-es"
+
 import {
   APP_ID_CAMEL,
   APP_ID_DASH,
@@ -13,9 +25,7 @@ import {
   type IResultDTO,
   type ProviderContext,
 } from "@shared/common"
-import { PromptTemplate } from "@shared/server/prompt-template"
-import { HttpsProxyAgent } from "https-proxy-agent"
-import { merge } from "lodash-es"
+import { PromptTemplate } from "@shared/server"
 
 class StandardModel implements IModel {
   id = `${APP_ID_DASH}.standard`

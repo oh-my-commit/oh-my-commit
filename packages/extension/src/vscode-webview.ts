@@ -1,3 +1,19 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import * as fs from "fs"
+import * as Handlebars from "handlebars"
+import _ from "lodash"
+import * as path from "path"
+import { Inject, Service } from "typedi"
+import * as vscode from "vscode"
+
 import {
   APP_ID_CAMEL,
   APP_NAME,
@@ -5,12 +21,6 @@ import {
   type ClientMessageEvent,
   type LogLevel,
 } from "@shared/common"
-import * as fs from "fs"
-import * as Handlebars from "handlebars"
-import _ from "lodash"
-import * as path from "path"
-import { Inject, Service } from "typedi"
-import * as vscode from "vscode"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"

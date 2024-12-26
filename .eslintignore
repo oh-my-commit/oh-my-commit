@@ -1,8 +1,5 @@
-webpack.config.*
-tsup.config.*
-
+__essence__
 third-parties
-
 
 # .eslintignore
 # dependencies
@@ -15,15 +12,10 @@ build
 # generated types
 *.d.ts
 
-__essence__
-
 __fixtures__
 __mocks__
-dist
-node_modules
 .yarn
 .history
-build
 coverage
 jest.config.js
 jest.transform.js

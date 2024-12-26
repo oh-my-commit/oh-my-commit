@@ -1,7 +1,17 @@
-import { TOKENS, formatError } from "@shared/common"
-import { GitCore } from "@shared/server"
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-26
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
+
+import { TOKENS, formatError } from "@shared/common"
+import { GitCore } from "@shared/server"
 
 import { VscodeLogger } from "./vscode-commit-adapter"
 
