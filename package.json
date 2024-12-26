@@ -38,11 +38,13 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
+    "@radix-ui/react-icons": "^1.3.2",
     "@types/lodash": "^4.17.13",
     "handlebars": "^4.7.8",
     "https-proxy-agent": "^7.0.6",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.469.0",
     "neverthrow": "^8.1.1",
     "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0"

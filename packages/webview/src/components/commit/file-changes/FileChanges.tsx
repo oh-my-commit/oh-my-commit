@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-26
+ * @CreatedAt 2024-12-27
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -21,10 +21,10 @@ import {
 } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 
+import { viewModeAtom } from "@/state/atoms/ui"
 import { ErrorMessage } from "../../ui/error-message"
-import { EmptyState } from "./EmptyState"
-import { FlatView } from "./FlatView"
-import { SearchBar } from "./SearchBar"
+import { FileChangesView } from "./FileChangesView"
+import { ViewToggle } from "./ViewToggle"
 
 export const FileChanges: FC = () => {
   const [diffResult] = useAtom(diffResultAtom)
@@ -64,26 +64,10 @@ export const FileChanges: FC = () => {
     (initialSelection.length !== selectedFiles.length ||
       !initialSelection.every(file => selectedFiles.includes(file)))
 
-  const renderFileView = () => {
-    if (!diffResult?.files?.length) {
-      return <EmptyState />
-    }
-
-    return (
-      <div className="flex flex-col gap-4">
-        <FlatView
-          searchQuery={searchQuery || ""}
-          selectedFiles={selectedFiles}
-          selectedPath={lastOpenedFilePath || undefined}
-          onClick={handleFileClick}
-          onSelect={handleSelect}
-        />
-      </div>
-    )
-  }
+  const [viewMode, setViewMode] = useAtom(viewModeAtom)
 
   return (
-    <Section title="Changed Files">
+    <Section actions={<ViewToggle view={viewMode} onChange={setViewMode} />} title="Changed Files">
       {hasSelectionChanged && (
         <ErrorMessage icon={false}>
           File selection changed. You can regenerate the commit message.
@@ -92,10 +76,13 @@ export const FileChanges: FC = () => {
 
       <div className="flex flex-col sm:flex-row relative gap-2 h-full">
         <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
-          <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
-            <SearchBar />
-          </div>
-          <div className="overflow-y-auto vscode-scrollbar">{renderFileView()}</div>
+          <FileChangesView
+            searchQuery={searchQuery || ""}
+            selectedFiles={selectedFiles}
+            selectedPath={lastOpenedFilePath || undefined}
+            onClick={handleFileClick}
+            onSelect={handleSelect}
+          />
         </div>
       </div>
     </Section>

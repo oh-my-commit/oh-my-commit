@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { DiffResult } from "simple-git"
 
 import type { DiffFileResult } from "@shared/common"
@@ -40,4 +39,8 @@ export const lastOpenedFilePathAtom = atomWithStorage<string | null>({
 export const diffDetailAtom = atomWithStorage<DiffFileResult | null>({
   defaultValue: null,
   key: "oh-my-commit.commit.changed-files.diff-detail",
+})
+export const viewModeAtom = atomWithStorage<"flat" | "tree">({
+  defaultValue: "flat",
+  key: "oh-my-commit.commit.changed-files.view-mode",
 })

@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-26
+ * @CreatedAt 2024-12-27
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -24,7 +24,8 @@ interface FileItemProps {
   diff?: string
   selected: boolean
   isOpen: boolean
-  viewMode: string
+  viewMode: "flat" | "tree"
+  level?: number
   searchQuery?: string
   onSelect: (path: string) => void
   onClick: (path: string) => void
@@ -36,6 +37,7 @@ export const FileItem: React.FC<FileItemProps> = ({
   selected,
   isOpen,
   viewMode,
+  level,
   searchQuery = "",
   onSelect,
   onClick,
@@ -101,13 +103,10 @@ export const FileItem: React.FC<FileItemProps> = ({
             : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50",
       )}
       role="button"
+      style={viewMode === "tree" ? { paddingLeft: `${(level || 0) * 16 + 16}px` } : {}}
       tabIndex={0}
       onClick={handleClick}
-      onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") {
-          handleClick(e)
-        }
-      }}
+      onKeyDown={e => e.key === "Enter" && handleClick(e)}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
         <button
