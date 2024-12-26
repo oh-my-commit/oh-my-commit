@@ -33,7 +33,7 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
   onClick,
   className,
 }) => {
-  const [viewMode, setViewMode] = useAtom(viewModeAtom)
+  const [viewMode] = useAtom(viewModeAtom)
 
   return (
     <div className="flex flex-col h-full">

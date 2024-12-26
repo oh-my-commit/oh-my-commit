@@ -22,16 +22,27 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
   className,
   onMatchCount,
 }) => {
+  React.useEffect(() => {
+    if (!highlight?.trim()) {
+      onMatchCount?.(0)
+      return
+    }
+    try {
+      const parts = text.split(new RegExp(`(${highlight})`, "gi"))
+      const matchCount = (parts.length - 1) / 2
+      onMatchCount?.(matchCount)
+    } catch (error) {
+      console.warn("Error calculating highlight matches:", error)
+      onMatchCount?.(0)
+    }
+  }, [text, highlight, onMatchCount])
+
   if (!highlight?.trim()) {
-    onMatchCount?.(0)
     return <span className={className}>{text}</span>
   }
 
   try {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"))
-    const matchCount = (parts.length - 1) / 2
-    onMatchCount?.(matchCount)
-
     return (
       <span className={className}>
         {parts.map((part, i) =>
@@ -50,7 +61,7 @@ export const HighlightText: React.FC<HighlightTextProps> = ({
       </span>
     )
   } catch (error) {
-    // 如果发生错误（比如无效的正则表达式），直接返回原文本
+    console.warn("Error rendering highlighted text:", error)
     return <span className={className}>{text}</span>
   }
 }

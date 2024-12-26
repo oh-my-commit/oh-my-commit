@@ -21,7 +21,7 @@ interface TreeNodeProps {
   selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (path: string) => void
+  onSelect: (paths: string[]) => void
   onClick: (path: string) => void
 }
 
@@ -46,11 +46,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
 
   const handleFolderSelect = () => {
     const filePaths = filesInPath.map(file => file.file)
-    if (isAllSelected) {
-      filePaths.forEach(path => onSelect(path))
-    } else {
-      filePaths.forEach(path => !selectedFiles.includes(path) && onSelect(path))
-    }
+    onSelect(filePaths)
   }
 
   return (
@@ -97,7 +93,7 @@ export interface TreeViewProps {
   selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (path: string) => void
+  onSelect: (paths: string[]) => void
   onClick: (path: string) => void
   className?: string
 }

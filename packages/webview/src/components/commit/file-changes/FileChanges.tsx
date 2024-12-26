@@ -38,12 +38,28 @@ export const FileChanges: FC = () => {
   console.log({ diffFile, lastOpenedFilePath })
 
   const handleSelect = useCallback(
-    (path: string) => {
-      setSelectedFiles(
-        selectedFiles.includes(path)
-          ? selectedFiles.filter(p => p !== path)
-          : [...selectedFiles, path],
-      )
+    (paths: string | string[]) => {
+      if (Array.isArray(paths)) {
+        // 批量选择/取消选择
+        const pathsSet = new Set(paths)
+        const isSelectAll = paths.every(path => selectedFiles.includes(path))
+
+        setSelectedFiles(prev => {
+          if (isSelectAll) {
+            // 如果所有文件都已选中，则取消选择
+            return prev.filter(p => !pathsSet.has(p))
+          } else {
+            // 否则选择所有未选中的文件
+            const newPaths = paths.filter(p => !prev.includes(p))
+            return [...prev, ...newPaths]
+          }
+        })
+      } else {
+        // 单文件选择/取消选择
+        setSelectedFiles(prev =>
+          prev.includes(paths) ? prev.filter(p => p !== paths) : [...prev, paths],
+        )
+      }
     },
     [selectedFiles],
   )
