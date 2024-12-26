@@ -11,7 +11,7 @@ import * as React from "react"
 
 import { useAtom } from "jotai"
 
-import { viewModeAtom } from "@/state/atoms/commit.changed-files"
+import { viewModeAtom } from "@/state/atoms/ui"
 
 import { FlatView } from "./FlatView"
 import { TreeView } from "./TreeView"

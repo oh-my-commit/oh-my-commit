@@ -10,10 +10,11 @@
 import { cn } from "@/lib/utils"
 import { FoldersIcon, ListIcon } from "lucide-react"
 import * as React from "react"
+import type { ViewMode } from "./constants"
 
 interface ViewToggleProps {
-  view: "flat" | "tree"
-  onChange: (view: "flat" | "tree") => void
+  view: ViewMode
+  onChange: (view: ViewMode) => void
   className?: string
 }
 
