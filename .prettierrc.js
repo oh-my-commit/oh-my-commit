@@ -1,5 +1,5 @@
 module.exports = {
-  printWidth: 100,
+  printWidth: 80,
   tabWidth: 2,
   useTabs: false,
   semi: false,
@@ -7,7 +7,7 @@ module.exports = {
   trailingComma: "es5",
   bracketSpacing: true,
   bracketSameLine: false,
-  arrowParens: "always",
+  arrowParens: "always", // 确保箭头函数使用括号
   endOfLine: "lf",
   plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [

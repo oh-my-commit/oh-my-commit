@@ -30,7 +30,9 @@
             if (state) {
               window.vscode.setState(state)
               // 触发状态恢复事件
-              window.dispatchEvent(new CustomEvent("stateRestored", { detail: state }))
+              window.dispatchEvent(
+                new CustomEvent("stateRestored", { detail: state })
+              )
             }
           })
         }

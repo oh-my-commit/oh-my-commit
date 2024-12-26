@@ -6,10 +6,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as fs from "fs"
 import * as path from "path"
-import { simpleGit, type DiffResult, type SimpleGit } from "simple-git"
+import { type DiffResult, type SimpleGit, simpleGit } from "simple-git"
 import { Inject, Service } from "typedi"
 
 import { BaseLogger, TOKENS, formatError } from "../common"
@@ -21,7 +20,7 @@ export class GitCore {
 
   constructor(
     workspaceRoot: string,
-    @Inject(TOKENS.Logger) protected readonly logger: BaseLogger,
+    @Inject(TOKENS.Logger) protected readonly logger: BaseLogger
   ) {
     this.workspaceRoot = workspaceRoot
     this.git = simpleGit(workspaceRoot)
@@ -87,7 +86,9 @@ export class GitCore {
       this.logger.debug("[GitCore] Last commit message:", result.latest?.hash)
       return result.latest?.message || ""
     } catch (error) {
-      throw new Error(`Failed to get last commit message: ${formatError(error)}`)
+      throw new Error(
+        `Failed to get last commit message: ${formatError(error)}`
+      )
     }
   }
 

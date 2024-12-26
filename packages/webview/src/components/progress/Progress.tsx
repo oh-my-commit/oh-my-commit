@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { useAtomValue } from "jotai"
 
 import { progressAtom } from "@/state/atoms/progress"
@@ -28,7 +27,9 @@ export const Progress = () => {
         />
       </div>
       {message && (
-        <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">{message}</div>
+        <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">
+          {message}
+        </div>
       )}
     </div>
   )

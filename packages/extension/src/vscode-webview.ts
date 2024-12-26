@@ -6,21 +6,26 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as fs from "fs"
 import * as Handlebars from "handlebars"
-import * as path from "path"
+import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import type { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
-import { APP_NAME, TOKENS } from "@shared/common"
+import {
+  APP_NAME,
+  ClientMessageEvent,
+  ServerMessageEvent,
+  TOKENS,
+} from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
 
 @Service()
-export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposable {
+export class VscodeWebview
+  implements vscode.WebviewViewProvider, vscode.Disposable
+{
   private webview?: vscode.Webview
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private readonly title: string = `${APP_NAME} Webview`
@@ -29,16 +34,26 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.Config) private readonly config: VscodeConfig,
-    @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    @Inject(VSCODE_TOKENS.Context)
+    private readonly context: vscode.ExtensionContext
   ) {
-    this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
+    this.webviewPath = path.join(
+      this.context.extensionPath,
+      "..",
+      "webview",
+      "dist"
+    )
 
     // 只注册 WebviewViewProvider
-    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", this, {
-      webviewOptions: {
-        retainContextWhenHidden: true,
-      },
-    })
+    const registration = vscode.window.registerWebviewViewProvider(
+      "ohMyCommit.view",
+      this,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      }
+    )
 
     this.context.subscriptions.push(registration)
   }
@@ -47,7 +62,7 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
   async resolveWebviewView(
     webviewView: vscode.WebviewView,
     _context: vscode.WebviewViewResolveContext,
-    _token: vscode.CancellationToken,
+    _token: vscode.CancellationToken
   ): Promise<void> {
     this.webview = webviewView.webview
 
@@ -68,7 +83,9 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
     webviewView.title = this.title
   }
 
-  public setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
+  public setMessageHandler(
+    handler: (message: ClientMessageEvent) => Promise<void>
+  ) {
     this.messageHandler = handler
     if (this.webview) {
       this.webview.onDidReceiveMessage(handler)
@@ -93,7 +110,7 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
       {
         enableScripts: true,
         localResourceRoots: [vscode.Uri.file(this.webviewPath)],
-      },
+      }
     )
 
     this.webview = panel.webview

@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
@@ -23,7 +22,9 @@ export class VscodeGit extends GitCore {
 
   constructor(@Inject(TOKENS.Logger) protected override logger: VscodeLogger) {
     const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders ? workspaceFolders[0]!.uri.fsPath : ""
+    const workspaceRoot = workspaceFolders
+      ? workspaceFolders[0]!.uri.fsPath
+      : ""
 
     super(workspaceRoot, logger)
 
@@ -36,7 +37,7 @@ export class VscodeGit extends GitCore {
   private setupFileSystemWatcher(workspaceRoot: string) {
     this.fsWatcher?.dispose()
     this.fsWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, "**/.git/**"),
+      new vscode.RelativePattern(workspaceRoot, "**/.git/**")
     )
 
     const handleGitChange = () => {

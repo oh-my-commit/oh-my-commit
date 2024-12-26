@@ -6,10 +6,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
-import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import {
+  VSCodeTextArea,
+  VSCodeTextField,
+} from "@vscode/webview-ui-toolkit/react"
 
 import cn from "classnames"
 
@@ -76,7 +78,7 @@ export const MessageInput = ({
           className={cn("w-full message-textarea", className)}
           placeholder={placeholder}
           value={value}
-          onChange={e => {
+          onChange={(e) => {
             const newValue = (e.target as HTMLTextAreaElement).value
             if (newValue.length <= maxLength) {
               onChange(newValue)
@@ -89,7 +91,7 @@ export const MessageInput = ({
           className={cn("w-full", className)}
           placeholder={placeholder}
           value={value}
-          onChange={e => {
+          onChange={(e) => {
             const newValue = (e.target as HTMLInputElement).value
             if (newValue.length <= maxLength) {
               onChange(newValue)

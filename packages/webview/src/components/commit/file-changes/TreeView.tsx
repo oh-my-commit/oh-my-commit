@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
 import { useAtom } from "jotai"
@@ -38,16 +37,19 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onClick,
 }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
-  const filesInPath = files.filter(file => file.file.startsWith(path))
+  const filesInPath = files.filter((file) => file.file.startsWith(path))
 
   const handleToggle = () => setIsExpanded(!isExpanded)
 
-  const isAllSelected = filesInPath.every(file => selectedFiles.includes(file.file))
+  const isAllSelected = filesInPath.every((file) =>
+    selectedFiles.includes(file.file)
+  )
   const isPartiallySelected =
-    !isAllSelected && filesInPath.some(file => selectedFiles.includes(file.file))
+    !isAllSelected &&
+    filesInPath.some((file) => selectedFiles.includes(file.file))
 
   const handleFolderSelect = () => {
-    const filePaths = filesInPath.map(file => file.file)
+    const filePaths = filesInPath.map((file) => file.file)
     onSelect(filePaths)
   }
 
@@ -63,7 +65,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         style={{ paddingLeft: `${level * 16}px` }}
         tabIndex={0}
         onClick={handleFolderSelect}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             handleFolderSelect()
           }
@@ -71,11 +73,11 @@ const TreeNode: React.FC<TreeNodeProps> = ({
       >
         <button
           className="p-1"
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation()
             handleToggle()
           }}
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               handleToggle()
             }
@@ -147,14 +149,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
   // 构建文件树结构
   const fileTree = React.useMemo(() => {
-    const paths = files.map(file => file.file)
+    const paths = files.map((file) => file.file)
     const uniqueFolders = new Set<string>()
 
-    paths.forEach(path => {
+    paths.forEach((path) => {
       const parts = path.split("/")
       parts.pop() // 移除文件名
       let currentPath = ""
-      parts.forEach(part => {
+      parts.forEach((part) => {
         currentPath = currentPath ? `${currentPath}/${part}` : part
         uniqueFolders.add(currentPath)
       })
@@ -175,9 +177,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
     onSelect(paths)
   }
 
-  const isAllSelected = files.length > 0 && files.every(file => selectedFiles.includes(file.file))
+  const isAllSelected =
+    files.length > 0 && files.every((file) => selectedFiles.includes(file.file))
   const isPartiallySelected =
-    !isAllSelected && files.some(file => selectedFiles.includes(file.file))
+    !isAllSelected && files.some((file) => selectedFiles.includes(file.file))
 
   return (
     <div className={className}>
@@ -186,17 +189,17 @@ export const TreeView: React.FC<TreeViewProps> = ({
         className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
         role="button"
         tabIndex={0}
-        onClick={() => onSelect(files.map(file => file.file))}
-        onKeyDown={e => {
+        onClick={() => onSelect(files.map((file) => file.file))}
+        onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            onSelect(files.map(file => file.file))
+            onSelect(files.map((file) => file.file))
           }
         }}
       >
         <button
           className="p-1"
           onClick={handleRootToggle}
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               handleRootToggle()
             }
@@ -211,7 +214,9 @@ export const TreeView: React.FC<TreeViewProps> = ({
         <div className="flex items-center gap-1 flex-1">
           <FolderIcon className="h-4 w-4" />
           <span className="font-semibold">Staged Changes</span>
-          {files.length > 0 && <span className="text-xs text-gray-500">({files.length})</span>}
+          {files.length > 0 && (
+            <span className="text-xs text-gray-500">({files.length})</span>
+          )}
         </div>
         {files.length > 0 && (
           <div className="flex items-center">
@@ -228,7 +233,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
       {/* 文件树 */}
       {isRootExpanded &&
-        fileTree.map(path => (
+        fileTree.map((path) => (
           <TreeNode
             key={path}
             files={files}

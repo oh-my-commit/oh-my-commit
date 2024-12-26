@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { z } from "zod"
 
 import type { IConfig } from "./core"
@@ -35,13 +34,25 @@ export const ModelSchema = z.object({
   metrics: z
     .object({
       /** 准确度评分 (0-1)，越高表示生成的提交信息越准确 */
-      accuracy: z.number().min(0).max(1).describe("准确度评分 (0-1)，越高表示生成的提交信息越准确"),
+      accuracy: z
+        .number()
+        .min(0)
+        .max(1)
+        .describe("准确度评分 (0-1)，越高表示生成的提交信息越准确"),
 
       /** 速度评分 (0-1)，越高表示生成速度越快 */
-      speed: z.number().min(0).max(1).describe("速度评分 (0-1)，越高表示生成速度越快"),
+      speed: z
+        .number()
+        .min(0)
+        .max(1)
+        .describe("速度评分 (0-1)，越高表示生成速度越快"),
 
       /** 成本评分 (0-1)，越高表示使用成本越高 */
-      cost: z.number().min(0).max(1).describe("成本评分 (0-1)，越高表示使用成本越高"),
+      cost: z
+        .number()
+        .min(0)
+        .max(1)
+        .describe("成本评分 (0-1)，越高表示使用成本越高"),
     })
     .describe("模型性能指标，用于评估模型的各项能力")
     .optional(),
@@ -58,7 +69,10 @@ export const InputSchema = z.object({
   options: z
     .object({
       /** 期望生成的提交信息语言，例如 'en' 或 'zh' */
-      lang: z.string().optional().describe("期望生成的提交信息语言，例如 'en' 或 'zh'"),
+      lang: z
+        .string()
+        .optional()
+        .describe("期望生成的提交信息语言，例如 'en' 或 'zh'"),
     })
     .describe("生成选项配置")
     .optional(),
@@ -184,7 +198,7 @@ export abstract class BaseProvider implements IProvider {
       id: this.id,
       displayName: this.displayName,
       description: this.description,
-      models: this.models.map(m => m.id),
+      models: this.models.map((m) => m.id),
     }
   }
 

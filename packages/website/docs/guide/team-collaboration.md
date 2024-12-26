@@ -30,7 +30,18 @@ Oh My Commit 计划提供强大的团队协作功能，帮助团队统一提交�
 {
   "oh-my-commit.team.commit": {
     "convention": "conventional",
-    "scopes": ["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore"],
+    "scopes": [
+      "feat",
+      "fix",
+      "docs",
+      "style",
+      "refactor",
+      "perf",
+      "test",
+      "build",
+      "ci",
+      "chore"
+    ],
     "template": "<type>(<scope>): <subject>",
     "subjectLimit": 72,
     "bodyLimit": 500

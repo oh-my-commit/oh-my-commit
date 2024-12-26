@@ -196,7 +196,8 @@ const errorHandlers = {
 
 ```typescript
 // 使用类型守卫确保类型安全
-const isApiError = (error: AppError): error is ApiError => error.type === "API_ERROR"
+const isApiError = (error: AppError): error is ApiError =>
+  error.type === "API_ERROR"
 ```
 
 ## 9. 结论

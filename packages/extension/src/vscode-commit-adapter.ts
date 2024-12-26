@@ -6,17 +6,16 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Service } from "typedi"
 import vscode from "vscode"
 
 import {
   APP_NAME,
   BaseLogger,
-  formatMessage,
-  normalizeLogLevel,
   type IConfig,
   type LogLevel,
+  formatMessage,
+  normalizeLogLevel,
 } from "@shared/common"
 
 @Service()

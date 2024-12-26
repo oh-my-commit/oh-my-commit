@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { TreeNode } from "@shared/common"
 
 export function getDirectoryStats(node: TreeNode): TreeNode["stats"] {
@@ -17,7 +16,7 @@ export function getDirectoryStats(node: TreeNode): TreeNode["stats"] {
   }
 
   if (node.type === "directory" && node.children) {
-    node.children.forEach(child => {
+    node.children.forEach((child) => {
       if (child.type === "directory") {
         stats.totalDirectories++
         const childStats = getDirectoryStats(child)

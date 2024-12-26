@@ -1,3 +1,11 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-27
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const ReactRefreshBabel = require("react-refresh/babel")
@@ -28,8 +36,10 @@ module.exports = (env, argv) => {
       allowedHosts: "all",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, content-type, Authorization",
       },
       hot: true,
       client: {
@@ -54,7 +64,11 @@ module.exports = (env, argv) => {
             {
               loader: "babel-loader",
               options: {
-                presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+                presets: [
+                  "@babel/preset-env",
+                  "@babel/preset-react",
+                  "@babel/preset-typescript",
+                ],
                 plugins: [
                   isDevelopment && ReactRefreshBabel,
                   ["@babel/plugin-proposal-decorators", { legacy: true }],

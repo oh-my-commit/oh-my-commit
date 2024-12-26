@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
 import { HttpsProxyAgent } from "https-proxy-agent"
@@ -18,12 +17,12 @@ import {
   APP_NAME,
   BaseProvider,
   IError,
-  formatError,
   type IInput,
   type IModel,
   type IProvider,
   type IResultDTO,
   type ProviderContext,
+  formatError,
 } from "@shared/common"
 import { PromptTemplate } from "@shared/server"
 
@@ -134,7 +133,8 @@ class OfficialProvider extends BaseProvider implements IProvider {
               },
               body: {
                 type: "string",
-                description: "Detailed explanation of what changes were made and why",
+                description:
+                  "Detailed explanation of what changes were made and why",
               },
               extra: {
                 type: "object",
@@ -184,12 +184,16 @@ class OfficialProvider extends BaseProvider implements IProvider {
   }
 
   private async handleApiResult(response: Message) {
-    this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
+    this.logger.debug(
+      "Commit message generated (response): ",
+      JSON.stringify(response)
+    )
 
     const item = response.content[0]
     if (!item) throw new IError(-101, "Invalid tool response from AI model")
 
-    if (item.type !== "tool_use") throw new IError(-102, "Invalid tool response from AI model")
+    if (item.type !== "tool_use")
+      throw new IError(-102, "Invalid tool response from AI model")
 
     const result = item.input as {
       title: string

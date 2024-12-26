@@ -5,7 +5,7 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["./src/**/*", "../shared/src/server/prompt.template.ts"],
+  "include": ["./src/**/*", "../shared/src/server/prompt-loader.ts"],
   "references": [
     {
       "path": "../shared"

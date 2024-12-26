@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import chalk from "chalk"
 import { program } from "commander"
 import { readPackageUpSync } from "read-package-up"
@@ -17,10 +16,10 @@ import {
   APP_NAME,
   CommitManager,
   ConsoleLogger,
-  SETTING_MODEL_ID,
-  TOKENS,
   type IModel,
   type IResult,
+  SETTING_MODEL_ID,
+  TOKENS,
 } from "@shared/common"
 import { GitCore, ProviderRegistry } from "@shared/server"
 
@@ -33,7 +32,9 @@ const git = Container.get(GitCore)
 
 const commitManager: CommitManager = Container.get(CommitManager)
 
-commitManager.logger.info(chalk.blue("our coooooooool commit manager initialized"))
+commitManager.logger.info(
+  chalk.blue("our coooooooool commit manager initialized")
+)
 
 // Command handlers
 const listModels = async () => {
@@ -43,7 +44,9 @@ const listModels = async () => {
     const models = commitManager.models
     commitManager.logger.info(chalk.blue("Available models:"))
     for (const model of models) {
-      commitManager.logger.info(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
+      commitManager.logger.info(
+        chalk.green(`  ✓ ${model.id} - ${model.name} (default)`)
+      )
     }
   } catch (error) {
     console.error(chalk.red("Failed to list models:"), error)
@@ -72,22 +75,31 @@ const selectModel = async (modelId: string) => {
     await commitManager.providersManager.initialize()
 
     const availableModels: IModel[] = commitManager.models
-    const selectedModel = availableModels.find(m => m.id === modelId)
+    const selectedModel = availableModels.find((m) => m.id === modelId)
     if (!selectedModel) {
-      console.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
+      console.error(
+        chalk.red(
+          `Model "${modelId}" not found. Use 'list' to see available models.`
+        )
+      )
       process.exit(1)
     }
 
     // Set the selected model in config
     await commitManager.config.update(SETTING_MODEL_ID, modelId)
-    commitManager.logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
+    commitManager.logger.info(
+      chalk.green(`Successfully set default model to: ${modelId}`)
+    )
   } catch (error) {
     console.error(chalk.red("Failed to select model:"), error)
     process.exit(1)
   }
 }
 
-const generateAndCommit = async (options: { yes?: boolean; model?: string }) => {
+const generateAndCommit = async (options: {
+  yes?: boolean
+  model?: string
+}) => {
   commitManager.logger.info(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
@@ -98,10 +110,12 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
     // If model is specified, validate and set it
     if (options.model) {
       const availableModels: IModel[] = commitManager.models
-      const selectedModel = availableModels.find(m => m.id === options.model)
+      const selectedModel = availableModels.find((m) => m.id === options.model)
       if (!selectedModel) {
         console.error(
-          chalk.red(`Model "${options.model}" not found. Use 'list' to see available models.`),
+          chalk.red(
+            `Model "${options.model}" not found. Use 'list' to see available models.`
+          )
         )
         process.exit(1)
       }
@@ -117,7 +131,9 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
     })
 
     if (!result.ok) {
-      commitManager.logger.error(chalk.red("Failed to generate commit message:"))
+      commitManager.logger.error(
+        chalk.red("Failed to generate commit message:")
+      )
       commitManager.logger.error(result.message)
       process.exit(1)
     }
@@ -126,18 +142,31 @@ const generateAndCommit = async (options: { yes?: boolean; model?: string }) => 
 
     commitManager.logger.info(
       chalk.green(
-        [`Generated commit message:`, commitData.title, `---`, commitData.body].join("\n"),
-      ),
+        [
+          `Generated commit message:`,
+          commitData.title,
+          `---`,
+          commitData.body,
+        ].join("\n")
+      )
     )
 
     if (options.yes) {
       // Automatically commit if -y flag is provided
-      await git.commit([commitData.title, ...(commitData.body ? [commitData.body] : [])].join("\n"))
+      await git.commit(
+        [commitData.title, ...(commitData.body ? [commitData.body] : [])].join(
+          "\n"
+        )
+      )
       commitManager.logger.info(chalk.green("Changes committed successfully!"))
     } else {
       // Ask for confirmation
-      commitManager.logger.info(chalk.yellow("\nUse -y flag to commit automatically"))
-      commitManager.logger.info(chalk.yellow("Or run git commit manually with the message above"))
+      commitManager.logger.info(
+        chalk.yellow("\nUse -y flag to commit automatically")
+      )
+      commitManager.logger.info(
+        chalk.yellow("Or run git commit manually with the message above")
+      )
     }
   } catch (error) {
     console.error(chalk.red("Failed to generate commit message:"), error)
@@ -153,10 +182,16 @@ program
   .version(pkg?.version ?? "0.0.0")
 
 // Init command
-program.command("init").description("Initialize Oh My Commit configuration").action(initConfig)
+program
+  .command("init")
+  .description("Initialize Oh My Commit configuration")
+  .action(initConfig)
 
 // List models command
-program.command("list-models").description("List all available AI Commit models").action(listModels)
+program
+  .command("list-models")
+  .description("List all available AI Commit models")
+  .action(listModels)
 
 // Select model command
 program
@@ -171,7 +206,7 @@ program
   .option("-y, --yes", "Automatically commit changes")
   .option(
     "-m, --model <model>",
-    `Specify the AI model to use (\`omc list\` to see all available models)`,
+    `Specify the AI model to use (\`omc list\` to see all available models)`
   )
   .action(generateAndCommit)
 

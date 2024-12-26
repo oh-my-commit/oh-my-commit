@@ -6,11 +6,14 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import { createTailwindThemePlugin, type ThemePluginConfig } from "./tailwind-theme-plugin"
+import {
+  type ThemePluginConfig,
+  createTailwindThemePlugin,
+} from "./tailwind-theme-plugin"
 
 // Helper function to create VSCode color value
-const createVSCodeColor = (name: string) => `rgb(from var(--vscode-${name}) r g b / <alpha-value>)`
+const createVSCodeColor = (name: string) =>
+  `rgb(from var(--vscode-${name}) r g b / <alpha-value>)`
 
 /**
  * VSCode theme variable mapping
@@ -80,7 +83,7 @@ const vscodeThemeConfig: ThemePluginConfig = {
       acc[key] = createVSCodeColor(value)
       return acc
     },
-    {} as Record<string, string>,
+    {} as Record<string, string>
   ),
 }
 

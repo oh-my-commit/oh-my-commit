@@ -39,7 +39,9 @@ export class VibrateWindow {
     },
   }
 
-  private getWorkspaceConfig(key: keyof typeof this.windowModeConfigs.workspace) {
+  private getWorkspaceConfig(
+    key: keyof typeof this.windowModeConfigs.workspace
+  ) {
     return this.windowModeConfigs.workspace[key]
   }
 
@@ -57,7 +59,9 @@ export class VibrateWindow {
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
+          this.getWorkspaceConfig(
+            key as keyof typeof this.windowModeConfigs.workspace
+          ),
           vscode.ConfigurationTarget.Workspace
         )
       }
@@ -90,7 +94,11 @@ export class VibrateWindow {
       >) {
         await vscode.workspace
           .getConfiguration()
-          .update(key, this.getWorkspaceConfig(key), vscode.ConfigurationTarget.Workspace)
+          .update(
+            key,
+            this.getWorkspaceConfig(key),
+            vscode.ConfigurationTarget.Workspace
+          )
       }
 
       for (const key of Object.keys(this.windowModeConfigs.user) as Array<
@@ -98,7 +106,11 @@ export class VibrateWindow {
       >) {
         await vscode.workspace
           .getConfiguration()
-          .update(key, this.getUserConfig(key), vscode.ConfigurationTarget.Global)
+          .update(
+            key,
+            this.getUserConfig(key),
+            vscode.ConfigurationTarget.Global
+          )
       }
 
       // 清空保存的状态

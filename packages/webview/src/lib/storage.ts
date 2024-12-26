@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { atom } from "jotai"
 
 import { getVSCodeAPI } from "./getVSCodeAPI"
@@ -70,7 +69,7 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
   const baseAtom = atom<T>(initialValue)
 
   return atom<T, [T], void>(
-    get => get(baseAtom),
+    (get) => get(baseAtom),
     (get, set, update) => {
       set(baseAtom, update)
 
@@ -81,21 +80,24 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
       if (storageType === "vscode" || storageType === "both") {
         setToVSCode(key, update)
       }
-    },
+    }
   )
 }
 
 // Read-only atom for derived state
 export function atomWithStorageReadOnly<T>(options: VSCodeStorageOptions<T>) {
   const baseAtom = atomWithStorage(options)
-  return atom(get => get(baseAtom))
+  return atom((get) => get(baseAtom))
 }
 
-export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<T>) {
+export function createVSCodeAtom<T>({
+  key,
+  defaultValue,
+}: VSCodeStorageOptions<T>) {
   const baseAtom = atom<T>(defaultValue)
 
   const derivedAtom = atom(
-    get => {
+    (get) => {
       const vscode = getVSCodeAPI()
       const state = (vscode.getState() || {}) as Record<string, unknown>
       return state[key] ?? defaultValue
@@ -108,7 +110,7 @@ export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<
         [key]: update,
       })
       set(baseAtom, update)
-    },
+    }
   )
 
   return derivedAtom

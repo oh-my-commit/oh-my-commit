@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { GitFileChange, TreeNode } from "@shared/common"
 
 function createFileNode(file: GitFileChange): TreeNode {
@@ -49,7 +48,7 @@ export function buildFileTree(files: GitFileChange[]): TreeNode {
     for (let i = 0; i < pathParts.length - 1; i++) {
       const pathSoFar = pathParts.slice(0, i + 1).join("/")
       let childNode = currentNode.children?.find(
-        child => child.type === "directory" && child.path === pathSoFar,
+        (child) => child.type === "directory" && child.path === pathSoFar
       )
 
       if (!childNode) {

@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
 import { APP_NAME } from "@shared/common"
@@ -40,7 +39,9 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
       `}
     >
       <button
-        onClick={() => handleLinkClick("https://github.com/cs-magic-open/oh-my-commit")}
+        onClick={() =>
+          handleLinkClick("https://github.com/cs-magic-open/oh-my-commit")
+        }
         // className="text-xs font-normal text-editor-fg opacity-75 tracking-wider hover:text-vscode-textLink-foreground hover:opacity-90 transition-all duration-200"
       >
         <span className="mt-1 text-[9px] text-vscode-descriptionForeground opacity-40 font-light tracking-[0.15em] uppercase">

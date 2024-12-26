@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { PropsWithChildren, ReactNode } from "react"
 
 interface SectionProps extends PropsWithChildren {
@@ -43,19 +42,30 @@ const SectionHeader = ({ title, actions }: SectionHeaderProps) => {
 }
 
 const SectionContent = ({ children, className = "" }: SectionContentProps) => {
-  return <div className={`section-content flex flex-col gap-2 ${className}`}>{children}</div>
-}
-
-const SectionFooter = ({ children, className = "" }: SectionFooterProps) => {
-  if (!children) return null
   return (
-    <div className={`section-footer flex items-center justify-between ${className}`}>
+    <div className={`section-content flex flex-col gap-2 ${className}`}>
       {children}
     </div>
   )
 }
 
-export const Section = ({ children, className = "", title, actions }: SectionProps) => {
+const SectionFooter = ({ children, className = "" }: SectionFooterProps) => {
+  if (!children) return null
+  return (
+    <div
+      className={`section-footer flex items-center justify-between ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+export const Section = ({
+  children,
+  className = "",
+  title,
+  actions,
+}: SectionProps) => {
   return (
     <section
       className={`m-4 flex flex-col gap-4 ${className} bg-[var(--vscode-input-background)] p-3 rounded-sm border border-[var(--vscode-input-border)]`}

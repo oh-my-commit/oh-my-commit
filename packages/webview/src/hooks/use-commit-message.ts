@@ -6,15 +6,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { useCallback } from "react"
 
 import { useSetAtom } from "jotai"
 
 import type { ServerMessageEvent } from "@shared/common"
 
-import { diffDetailAtom, diffResultAtom } from "@/state/atoms/commit.changed-files"
-import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
+import {
+  diffDetailAtom,
+  diffResultAtom,
+} from "@/state/atoms/commit.changed-files"
+import {
+  commitBodyAtom,
+  commitTitleAtom,
+  isGeneratingAtom,
+} from "@/state/atoms/commit.message"
 
 import { useMessage } from "./use-message"
 
@@ -46,7 +52,7 @@ export const useCommitMessage = () => {
           break
       }
     },
-    [setTitle, setBody, setDiffResult, setIsGenerating, setDiffDetail],
+    [setTitle, setBody, setDiffResult, setIsGenerating, setDiffDetail]
   )
 
   useMessage(handleCommitMessage)

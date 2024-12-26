@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import chalk from "chalk"
 import { Service } from "typedi"
 
@@ -28,7 +27,8 @@ const DEFAULT_LOG_LEVEL: LogLevel = "debug"
 export const normalizeLogLevel = (s?: string): LogLevel => {
   if (s) {
     const level = s.toLowerCase()
-    if (Object.keys(LOG_LEVEL_PRIORITY).includes(level)) return level as LogLevel
+    if (Object.keys(LOG_LEVEL_PRIORITY).includes(level))
+      return level as LogLevel
   }
   return DEFAULT_LOG_LEVEL
 }
@@ -54,44 +54,48 @@ export abstract class BaseLogger implements ILogger {
     return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.minLevel]
   }
 
-  info(...args: any[]): void {
+  info(...args: unknown[]): void {
     this._log("info", ...args)
   }
 
-  error(...args: any[]): void {
+  error(...args: unknown[]): void {
     this._log("error", ...args)
   }
 
-  warn(...args: any[]): void {
+  warn(...args: unknown[]): void {
     this._log("warn", ...args)
   }
 
-  debug(...args: any[]): void {
+  debug(...args: unknown[]): void {
     this._log("debug", ...args)
   }
 
-  trace(...args: any[]): void {
+  trace(...args: unknown[]): void {
     this._log("trace", ...args)
   }
 
-  protected _log(level: LogLevel, ...args: any[]): void {
+  protected _log(level: LogLevel, ...args: unknown[]): void {
     if (!this.shouldLog(level)) return
     this.log(level, ...args)
   }
 
-  protected abstract log(level: LogLevel, ...args: any[]): void
+  protected abstract log(level: LogLevel, ...args: unknown[]): void
 }
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
   protected override name = "console"
 
-  protected log(level: LogLevel, ...args: any[]) {
+  protected log(level: LogLevel, ...args: unknown[]): void {
     const timestamp = `${new Date().toISOString()}`
     const levelStr = `${level.toUpperCase().padEnd(5)}`
     const loggerName = this.name || "unknown"
     const formattedMsg = formatMessage(...args)
 
-    console.log(chalk.green(`${timestamp} ${levelStr}`) + ` | [${loggerName}] ` + formattedMsg)
+    console.log(
+      chalk.green(`${timestamp} ${levelStr}`) +
+        ` | [${loggerName}] ` +
+        formattedMsg
+    )
   }
 }

@@ -6,8 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import { useCallback, type FC } from "react"
+import { type FC, useCallback } from "react"
 
 import { useAtom } from "jotai"
 
@@ -29,10 +28,12 @@ import { ViewToggle } from "./ViewToggle"
 export const FileChanges: FC = () => {
   const [diffResult] = useAtom(diffResultAtom)
   const [diffFile] = useAtom(diffDetailAtom)
-  const initialSelection = diffResult?.files?.map(file => file.file) || []
+  const initialSelection = diffResult?.files?.map((file) => file.file) || []
 
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  )
   const [searchQuery] = useAtom(searchQueryAtom)
 
   console.log({ diffFile, lastOpenedFilePath })
@@ -44,24 +45,24 @@ export const FileChanges: FC = () => {
       if (Array.isArray(paths)) {
         // 批量选择/取消选择
         const pathsSet = new Set(paths)
-        const isSelectAll = paths.every(path => selectedFiles.includes(path))
+        const isSelectAll = paths.every((path) => selectedFiles.includes(path))
 
         if (isSelectAll) {
           // 如果所有文件都已选中，则取消选择
-          return setSelectedFiles(selectedFiles.filter(p => !pathsSet.has(p)))
+          return setSelectedFiles(selectedFiles.filter((p) => !pathsSet.has(p)))
         }
         // 否则选择所有未选中的文件
-        const newPaths = paths.filter(p => !selectedFiles.includes(p))
+        const newPaths = paths.filter((p) => !selectedFiles.includes(p))
         return setSelectedFiles([...selectedFiles, ...newPaths])
       }
 
       // 单文件选择/取消选择
       if (selectedFiles.includes(paths)) {
-        return setSelectedFiles(selectedFiles.filter(p => p !== paths))
+        return setSelectedFiles(selectedFiles.filter((p) => p !== paths))
       }
       return setSelectedFiles([...selectedFiles, paths])
     },
-    [selectedFiles],
+    [selectedFiles]
   )
 
   const handleFileClick = useCallback(
@@ -72,18 +73,21 @@ export const FileChanges: FC = () => {
         data: { filePath: path },
       })
     },
-    [setLastOpenedFilePath],
+    [setLastOpenedFilePath]
   )
 
   const hasSelectionChanged =
     initialSelection.length > 0 &&
     (initialSelection.length !== selectedFiles.length ||
-      !initialSelection.every(file => selectedFiles.includes(file)))
+      !initialSelection.every((file) => selectedFiles.includes(file)))
 
   const [viewMode, setViewMode] = useAtom(viewModeAtom)
 
   return (
-    <Section actions={<ViewToggle view={viewMode} onChange={setViewMode} />} title="Changed Files">
+    <Section
+      actions={<ViewToggle view={viewMode} onChange={setViewMode} />}
+      title="Changed Files"
+    >
       {hasSelectionChanged && (
         <ErrorMessage icon={false}>
           File selection changed. You can regenerate the commit message.

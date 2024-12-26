@@ -6,21 +6,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 
 import { SETTING_MODEL_ID } from "./app"
-import { TOKENS, type IConfig, type IProviderManager } from "./core"
+import { type IConfig, type IProviderManager, TOKENS } from "./core"
 import { BaseLogger } from "./log"
 import {
-  ResultDTOSchema,
+  BaseProvider,
   type IInputOptions,
   type IModel,
   type IResult,
+  ResultDTOSchema,
   type Status,
 } from "./provider.interface"
-import { formatError, type ResultDTO } from "./utils"
+import { type ResultDTO, formatError } from "./utils"
 
 @Service()
 export class CommitManager {
@@ -30,35 +30,41 @@ export class CommitManager {
     loadingProviders: "pending",
   }
 
-  get providers() {
+  get providers(): BaseProvider[] {
     return this.providersManager.providers
   }
 
   constructor(
     @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
     @Inject(TOKENS.Config) public readonly config: IConfig,
-    @Inject(TOKENS.ProviderManager) public readonly providersManager: IProviderManager,
+    @Inject(TOKENS.ProviderManager)
+    public readonly providersManager: IProviderManager
   ) {}
 
   get models(): IModel[] {
-    return this.providers.flatMap(provider => provider.models)
+    return this.providers.flatMap((provider) => provider.models)
   }
 
-  get modelId() {
+  get modelId(): string | undefined {
     return this.config.get<string>(SETTING_MODEL_ID)
   }
 
-  get model() {
-    return this.models.find(model => model.id === this.modelId)
+  get model(): IModel | undefined {
+    return this.models.find((model) => model.id === this.modelId)
   }
 
-  selectModel(modelId: string) {
+  selectModel(modelId: string): void {
     this.config.update(SETTING_MODEL_ID, modelId)
   }
 
-  async generateCommit(diff: DiffResult, options?: IInputOptions): Promise<ResultDTO<IResult>> {
+  async generateCommit(
+    diff: DiffResult,
+    options?: IInputOptions
+  ): Promise<ResultDTO<IResult>> {
     try {
-      const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
+      const modelId =
+        this.config.get<string>(SETTING_MODEL_ID) ??
+        this.providers[0]?.models[0]?.id
       if (!modelId) {
         return {
           ok: false,
@@ -67,7 +73,9 @@ export class CommitManager {
         }
       }
 
-      const provider = this.providers.find(p => p.models.some(model => model.id === modelId))
+      const provider = this.providers.find((p) =>
+        p.models.some((model) => model.id === modelId)
+      )
       if (!provider) {
         return {
           ok: false,

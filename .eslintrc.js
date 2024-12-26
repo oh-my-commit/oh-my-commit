@@ -11,105 +11,40 @@ const moment = require("moment")
 
 module.exports = {
   root: true,
-  ignorePatterns: ["*.config.*", "dist", "node_modules"],
-  plugins: ["header"],
-
-  overrides: [
-    // TypeScript 文件配置
-    {
-      files: ["**/*.ts", "**/*.tsx"],
-      extends: [
-        "@cs-magic/eslint-config/typescript",
-        "@cs-magic/eslint-config/react",
-        "@cs-magic/eslint-config/prettier",
-      ],
-      parserOptions: {
-        project: ["./tsconfig.json", "./packages/*/tsconfig.json"],
-        tsconfigRootDir: __dirname,
-      },
-      settings: {
-        "import/resolver": {
-          typescript: {
-            project: ["packages/__base__/tsconfig.json", "packages/*/tsconfig.json"],
-            alwaysTryTypes: true,
-          },
-        },
-      },
-      rules: {
-        "@typescript-eslint/consistent-type-imports": [
-          "error",
-          {
-            prefer: "type-imports",
-          },
-        ],
-        "@typescript-eslint/no-misused-promises": [
-          "error",
-          {
-            checksVoidReturn: false,
-          },
-        ],
-        "@typescript-eslint/no-floating-promises": "off",
-        "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        // 放宽未使用变量的规则
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            argsIgnorePattern: "^_",
-            varsIgnorePattern: "^_",
-            ignoreRestSiblings: true,
-          },
-        ],
-        "no-unused-vars": "off", // 关闭基础规则，使用 @typescript-eslint 的规则
-        // 允许 any
-        "@typescript-eslint/no-explicit-any": "off",
-        // 允许不安全的操作
-        "@typescript-eslint/no-unsafe-assignment": "off",
-        "@typescript-eslint/no-unsafe-member-access": "off",
-        "@typescript-eslint/no-unsafe-call": "off",
-        "@typescript-eslint/no-unsafe-return": "off",
-        "@typescript-eslint/no-unsafe-argument": "off",
-      },
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 2021,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
     },
-    // JavaScript 文件配置
-    {
-      files: ["**/*.js", "**/*.jsx"],
-      extends: [
-        "eslint:recommended",
-        "@cs-magic/eslint-config/react",
-        "@cs-magic/eslint-config/prettier",
-      ],
-      rules: {
-        // 放宽未使用变量的规则
-        "no-unused-vars": [
-          "warn",
-          {
-            argsIgnorePattern: "^_",
-            varsIgnorePattern: "^_",
-            ignoreRestSiblings: true,
-          },
-        ],
-      },
-    },
-    // WebView 特殊配置
-    {
-      files: ["packages/webview/**"],
-      globals: {
-        acquireVsCodeApi: "readonly",
-      },
-    },
-  ],
-
-  // 通用配置
+    // 不要打开它，我们做了配置解析
+    // project: ["./packages/*/tsconfig.json"], // 支持从每个包中解析 tsconfig
+  },
   env: {
     browser: true,
-    commonjs: true,
     node: true,
-    jest: true,
+    es6: true,
   },
-  globals: {
-    JSX: true,
+  extends: [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "prettier", // 确保在最后
+  ],
+  plugins: ["import", "prettier", "header"],
+  settings: {
+    "import/resolver": {
+      typescript: {
+        project: ["./packages/*/tsconfig.json"],
+      },
+    },
   },
+  // 基础规则，适用于所有包
   rules: {
+    "no-console": ["warn", { allow: ["warn", "error"] }],
+    "prettier/prettier": "error",
+    "no-unused-vars": "warn",
+
     "header/header": [
       2,
       "block",
@@ -123,7 +58,137 @@ module.exports = {
         " * LICENSE file in the root directory of this source tree.",
         " ",
       ],
-      2,
+      1,
     ],
   },
+
+  overrides: [
+    // TypeScript 文件使用严格的 TS 规则
+    {
+      files: ["packages/*/src/**/*.{ts,tsx}"],
+      parserOptions: {
+        project: ["./packages/*/tsconfig.json"],
+        tsconfigRootDir: __dirname,
+      },
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      ],
+      rules: {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unsafe-call": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "warn",
+        "@typescript-eslint/no-unsafe-return": "warn",
+        "@typescript-eslint/no-unsafe-argument": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "@typescript-eslint/no-base-to-string": "warn",
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/await-thenable": "warn",
+      },
+    },
+
+    // shared 库特定规则
+    {
+      files: ["packages/shared/**/*.{ts,tsx}"],
+      rules: {
+        "@typescript-eslint/explicit-module-boundary-types": "warn",
+        "no-console": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+      },
+    },
+
+    // extension 包（VSCode 插件）特定规则
+    {
+      files: ["packages/extension/**/*.{ts,tsx}"],
+      env: {
+        node: true,
+        worker: true, // VSCode 扩展可能运行在 webworker 环境
+      },
+      globals: {
+        vscode: "readonly", // VSCode API 全局变量
+      },
+      rules: {
+        "no-restricted-globals": "off", // VSCode 扩展需要访问特定全局变量
+        "@typescript-eslint/no-namespace": "off", // 允许使用命名空间
+        "no-console": "off", // 允许使用控制台输出用于调试
+      },
+    },
+
+    // cli 包特定规则
+    {
+      files: ["packages/cli/**/*.{ts,js}"],
+      env: {
+        node: true,
+      },
+      rules: {
+        "no-console": "off", // CLI 工具需要控制台输出
+        "no-process-exit": "off", // 允许使用 process.exit()
+        "@typescript-eslint/no-var-requires": "off", // 允许使用 require
+        "global-require": "off", // 允许使用 require
+      },
+    },
+    // web 项目特定规则
+    {
+      files: ["packages/webview/**/*.{ts,tsx,js,jsx}"],
+      extends: [
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:jsx-a11y/recommended",
+      ],
+      plugins: ["react", "react-hooks", "jsx-a11y"],
+      rules: {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+      },
+      settings: {
+        react: {
+          version: "detect",
+        },
+      },
+    },
+
+    // 配置文件的规则
+    {
+      files: [
+        "**/*.config.{js,ts}",
+        "**/*.setup.{js,ts}",
+        ".eslintrc.js",
+        "jest.config.ts",
+        "vitest.config.ts",
+        "turbo.json",
+      ],
+      env: {
+        node: true,
+      },
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+      },
+    },
+  ],
+
+  ignorePatterns: [
+    "dist",
+    "build",
+    "node_modules",
+    "*.d.ts",
+    "*.config.js",
+    "*.tsbuildinfo",
+    "*.json",
+    ".eslintrc.js",
+    ".prettierc.js",
+  ],
 }

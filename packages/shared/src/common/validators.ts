@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { IConfig } from "./core"
 
 export interface ValidationResult {
@@ -20,7 +19,9 @@ export interface ValidationResult {
   }[]
 }
 
-export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationResult> {
+export async function validateOpenaiApiKey(
+  config: IConfig
+): Promise<ValidationResult> {
   const apiKey = config.get("apiKeys.openai")
 
   if (!apiKey) {
@@ -53,7 +54,9 @@ export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationR
       }
       return {
         valid: false,
-        error: errorData.error?.message || `API validation failed: ${response.statusText}`,
+        error:
+          errorData.error?.message ||
+          `API validation failed: ${response.statusText}`,
       }
     }
 
@@ -62,7 +65,9 @@ export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationR
       data: Array<{ id: string }>
     }
 
-    const hasGPT4Access = modelsData.data.some(model => model.id.startsWith("gpt-4"))
+    const hasGPT4Access = modelsData.data.some((model) =>
+      model.id.startsWith("gpt-4")
+    )
 
     if (!hasGPT4Access) {
       return {
@@ -75,7 +80,10 @@ export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationR
   } catch (error) {
     return {
       valid: false,
-      error: error instanceof Error ? error.message : "Unknown error during validation",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unknown error during validation",
     }
   }
 }

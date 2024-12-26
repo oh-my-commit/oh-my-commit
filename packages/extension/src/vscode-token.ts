@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Token } from "typedi"
 import type * as vscode from "vscode"
 
@@ -25,6 +24,8 @@ export const VSCODE_TOKENS = {
   QuickCommitCommand: new Token<QuickCommitCommand>("VscodeQuickCommitService"),
   StatusbarService: new Token<StatusBarManager>("VscodeStatusbarService"),
   CommandManager: new Token<CommandManager>("VscodeCommandService"),
-  OpenPreferencesCommand: new Token<OpenPreferencesCommand>("VscodeOpenPreferencesService"),
+  OpenPreferencesCommand: new Token<OpenPreferencesCommand>(
+    "VscodeOpenPreferencesService"
+  ),
   SelectModelService: new Token<SelectModelCommand>("VscodeSelectModelService"),
 } as const

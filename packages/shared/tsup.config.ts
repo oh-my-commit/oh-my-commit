@@ -1,3 +1,11 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-27
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import { exec } from "child_process"
 import { promises } from "fs"
 import { resolve } from "path"
@@ -27,14 +35,17 @@ export default defineConfig({
   onSuccess: async () => {
     // Generate TypeScript declaration files
     await new Promise((resolve, reject) => {
-      exec("tsc --emitDeclarationOnly --declaration", (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error generating declarations: ${error}`)
-          reject(error)
-          return
+      exec(
+        "tsc --emitDeclarationOnly --declaration",
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error generating declarations: ${error}`)
+            reject(error)
+            return
+          }
+          resolve(stdout)
         }
-        resolve(stdout)
-      })
+      )
     })
 
     // Copy prompts to output directory

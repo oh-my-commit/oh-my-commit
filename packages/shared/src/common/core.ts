@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Token } from "typedi"
 
 import type { CommitManager } from "./CommitManager"
@@ -14,15 +13,15 @@ import type { BaseLogger } from "./log"
 import type { BaseProvider } from "./provider.interface"
 
 export interface ILogger {
-  info(message: string, ...args: any[]): void
-  error(message: string, ...args: any[]): void
-  warn(message: string, ...args: any[]): void
-  debug(message: string, ...args: any[]): void
+  info(message: string, ...args: unknown[]): void
+  error(message: string, ...args: unknown[]): void
+  warn(message: string, ...args: unknown[]): void
+  debug(message: string, ...args: unknown[]): void
 }
 
 export interface IConfig {
   get<T>(key: string): T | undefined
-  update(key: string, value: any, global?: boolean): Promise<void>
+  update(key: string, value: unknown, global?: boolean): Promise<void>
 }
 
 export interface IProviderManager {

@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
@@ -37,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
         className="w-full search-input"
         placeholder="Filter"
         value={searchQuery}
-        onInput={e => {
+        onInput={(e) => {
           const target = e.target as HTMLInputElement
           setSearchQuery(target.value)
         }}

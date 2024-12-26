@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
@@ -30,9 +29,12 @@ export class StatusBarManager implements vscode.Disposable {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
+    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit
   ) {
-    this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
+    this.statusBarItem = vscode.window.createStatusBarItem(
+      vscode.StatusBarAlignment.Left,
+      100
+    )
     this.statusBarItem.name = APP_NAME
 
     // 设置初始状态
@@ -41,18 +43,18 @@ export class StatusBarManager implements vscode.Disposable {
 
     // 监听配置变化
     this.disposables.push(
-      vscode.workspace.onDidChangeConfiguration(e => {
+      vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration(APP_ID_CAMEL)) {
           this.update()
         }
-      }),
+      })
     )
 
     // 监听工作区变化（可能影响 git 状态）
     this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         this.update()
-      }),
+      })
     )
 
     void this.update()
@@ -92,7 +94,8 @@ export class StatusBarManager implements vscode.Disposable {
     } catch (error) {
       this.logger.error("Error updating status bar:", error)
       this.statusBarItem.text = `$(error) ${APP_NAME} (Error)`
-      this.statusBarItem.tooltip = "Error updating status. Check logs for details."
+      this.statusBarItem.tooltip =
+        "Error updating status. Check logs for details."
       this.statusBarItem.command = undefined
     }
   }
@@ -100,6 +103,6 @@ export class StatusBarManager implements vscode.Disposable {
   public dispose(): void {
     this.logger.info("Disposing status bar")
     this.statusBarItem.dispose()
-    this.disposables.forEach(d => d.dispose())
+    this.disposables.forEach((d) => d.dispose())
   }
 }

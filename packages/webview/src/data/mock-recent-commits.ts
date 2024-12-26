@@ -29,6 +29,7 @@ export const mockRecentCommits = [
     message: "refactor: improve code organization",
     author: "Mark",
     date: "1 day ago",
-    description: "Major refactoring to improve code organization and maintainability.",
+    description:
+      "Major refactoring to improve code organization and maintainability.",
   },
 ]

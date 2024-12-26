@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 import { useEffect } from "react"
 
@@ -72,7 +71,7 @@ export const FileItem: React.FC<FileItemProps> = ({
     let count = 0
     try {
       const regex = new RegExp(searchQuery, "gi")
-      lines.forEach(line => {
+      lines.forEach((line) => {
         const matches = line.match(regex)
         if (matches) {
           count += matches.length
@@ -100,20 +99,24 @@ export const FileItem: React.FC<FileItemProps> = ({
           ? "bg-list-active-bg text-list-active-fg shadow-sm"
           : selected
             ? "bg-list-inactive-bg text-list-inactive-fg"
-            : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50",
+            : "hover:bg-list-hover-bg active:bg-list-active-bg active:bg-opacity-50"
       )}
       role="button"
-      style={viewMode === "tree" ? { paddingLeft: `${(level || 0) * 16 + 16}px` } : {}}
+      style={
+        viewMode === "tree"
+          ? { paddingLeft: `${(level || 0) * 16 + 16}px` }
+          : {}
+      }
       tabIndex={0}
       onClick={handleClick}
-      onKeyDown={e => e.key === "Enter" && handleClick(e)}
+      onKeyDown={(e) => e.key === "Enter" && handleClick(e)}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
         <button
           aria-label={selected ? "Deselect file" : "Select file"}
           className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100"
           type="button"
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation()
             handleSelect()
           }}
@@ -128,7 +131,7 @@ export const FileItem: React.FC<FileItemProps> = ({
               className={cn(
                 "font-mono font-medium text-[12px]",
                 // STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
-                selected && "text-inherit",
+                selected && "text-inherit"
               )}
               // title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
@@ -149,19 +152,25 @@ export const FileItem: React.FC<FileItemProps> = ({
       <div
         className={cn(
           "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100",
-          !selected && "text-[var(--vscode-descriptionForeground)]",
+          !selected && "text-[var(--vscode-descriptionForeground)]"
         )}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
           <span
             className={cn(
               "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1",
-              selected && "opacity-80",
+              selected && "opacity-80"
             )}
           >
-            {pathMatchCount > 0 && <span title="Matches in filename">{pathMatchCount}</span>}
-            {pathMatchCount > 0 && contentMatchCount > 0 && <span className="opacity-40">·</span>}
-            {contentMatchCount > 0 && <span title="Matches in content">{contentMatchCount}</span>}
+            {pathMatchCount > 0 && (
+              <span title="Matches in filename">{pathMatchCount}</span>
+            )}
+            {pathMatchCount > 0 && contentMatchCount > 0 && (
+              <span className="opacity-40">·</span>
+            )}
+            {contentMatchCount > 0 && (
+              <span title="Matches in content">{contentMatchCount}</span>
+            )}
           </span>
         )}
         {!file.binary && file.insertions > 0 && (
@@ -170,7 +179,9 @@ export const FileItem: React.FC<FileItemProps> = ({
           </span>
         )}
         {!file.binary && file.deletions > 0 && (
-          <span className={cn("text-git-deleted-fg", selected && "text-inherit")}>
+          <span
+            className={cn("text-git-deleted-fg", selected && "text-inherit")}
+          >
             −{file.deletions}
           </span>
         )}

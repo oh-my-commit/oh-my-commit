@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { readFileSync } from "fs"
 import Handlebars, { type TemplateDelegate } from "handlebars"
 import { memoize } from "lodash-es"
@@ -41,4 +40,3 @@ export class PromptTemplate {
     return this.getTemplate()(input)
   }
 }
-

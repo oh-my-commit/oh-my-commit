@@ -12,7 +12,9 @@ const MARKDOWN_URLS = {
     "https://raw.githubusercontent.com/cs-magic-open/oh-my-commit/main/packages/website/docs/yet-another-best-practice/commit-specification.md",
 }
 
-export const loadMarkdown = async (name: "commit-specification"): Promise<string> => {
+export const loadMarkdown = async (
+  name: "commit-specification"
+): Promise<string> => {
   const url = MARKDOWN_URLS[name]
   try {
     const response = await fetch(url)

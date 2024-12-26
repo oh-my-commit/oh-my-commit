@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -17,7 +16,11 @@ interface CheckboxProps {
   className?: string
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className }) => {
+export const Checkbox: React.FC<CheckboxProps> = ({
+  checked,
+  onChange,
+  className,
+}) => {
   return (
     <label className={cn("w-3 h-3 relative block", className)}>
       <input
@@ -25,8 +28,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className
         checked={checked}
         className="absolute inset-0 cursor-pointer opacity-0 w-full h-full z-10"
         type="checkbox"
-        onChange={e => onChange(e.target.checked)}
-        onClick={e => e.stopPropagation()}
+        onChange={(e) => onChange(e.target.checked)}
+        onClick={(e) => e.stopPropagation()}
       />
       <div
         aria-hidden="true"
@@ -34,7 +37,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, className
           "absolute inset-0 border rounded",
           "border-[var(--vscode-checkbox-border)]",
           checked &&
-            "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]",
+            "bg-[var(--vscode-checkbox-background)] border-[var(--vscode-checkbox-foreground)]"
         )}
       />
       {checked && (

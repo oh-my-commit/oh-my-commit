@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { useEffect, useRef, useState } from "react"
 
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
@@ -21,7 +20,11 @@ import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { ErrorMessage } from "@/components/ui/error-message"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
-import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
+import {
+  commitBodyAtom,
+  commitTitleAtom,
+  isGeneratingAtom,
+} from "@/state/atoms/commit.message"
 
 const MAX_SUBJECT_LENGTH = 72
 const MAX_DETAIL_LENGTH = 1000
@@ -34,7 +37,8 @@ export function CommitMessage() {
   const [selectedFiles, _setSelectedFiles] = useAtom(selectedFilesAtom)
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
-  const isSubjectValid = subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH
+  const isSubjectValid =
+    subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH
   const disabled = !title.trim()
 
   useEffect(() => {
@@ -82,7 +86,9 @@ export function CommitMessage() {
     >
       <Section.Content>
         <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">Summary</div>
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+            Summary
+          </div>
           <MessageInput
             className="h-[32px]"
             maxLength={MAX_SUBJECT_LENGTH}
@@ -91,12 +97,16 @@ export function CommitMessage() {
             onChange={setTitle}
           />
           {!isSubjectValid && subjectLength > 0 && (
-            <ErrorMessage>Subject must be ≤ {MAX_SUBJECT_LENGTH} characters</ErrorMessage>
+            <ErrorMessage>
+              Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
+            </ErrorMessage>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">Details</div>
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
+            Details
+          </div>
           <MessageInput
             multiline
             className="min-h-[120px]"
@@ -136,7 +146,9 @@ export function CommitMessage() {
             disabled={!isSubjectValid || disabled || isGenerating}
             onClick={handleCommit}
           >
-            <span className="w-full hidden xs:block text-center">Commit Changes</span>
+            <span className="w-full hidden xs:block text-center">
+              Commit Changes
+            </span>
             <span className="grow block xs:hidden">
               <i className="codicon codicon-git-commit" />
             </span>

@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as React from "react"
 
 import "./InitAnimation.css"
@@ -20,7 +19,12 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
     <div className="init-animation-container">
       <div className="init-animation">
         <div className="logo-container">
-          <svg className="oh-my-commit-logo" height="64" viewBox="0 0 200 100" width="128">
+          <svg
+            className="oh-my-commit-logo"
+            height="64"
+            viewBox="0 0 200 100"
+            width="128"
+          >
             {/* 背景线条 */}
             {/* <path
               className="bg-line"

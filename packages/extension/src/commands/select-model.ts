@@ -6,11 +6,15 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { COMMAND_SELECT_MODEL, TOKENS, formatError, type CommitManager } from "@shared/common"
+import {
+  COMMAND_SELECT_MODEL,
+  type CommitManager,
+  TOKENS,
+  formatError,
+} from "@shared/common"
 
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
@@ -21,7 +25,7 @@ export class SelectModelCommand implements BaseCommand {
 
   constructor(
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
+    @Inject(TOKENS.Logger) private readonly logger: VscodeLogger
   ) {}
 
   async execute(): Promise<void> {
@@ -35,7 +39,7 @@ export class SelectModelCommand implements BaseCommand {
 
     try {
       const selected = await vscode.window.showQuickPick(
-        this.commitManager.models.map(s => ({
+        this.commitManager.models.map((s) => ({
           ...s,
           label: s.name,
           description: s.description,
@@ -48,14 +52,16 @@ export class SelectModelCommand implements BaseCommand {
           placeHolder: "Select AI Model to Use",
           matchOnDescription: true,
           matchOnDetail: true,
-        },
+        }
       )
 
       if (selected) {
         await this.commitManager.selectModel(selected.id)
       }
     } catch (error: unknown) {
-      vscode.window.showErrorMessage(`Failed to manage models: ${formatError(error)}`)
+      vscode.window.showErrorMessage(
+        `Failed to manage models: ${formatError(error)}`
+      )
     }
   }
 

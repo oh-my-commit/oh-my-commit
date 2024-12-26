@@ -1,3 +1,11 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @Author markshawn2020
+ * @CreatedAt 2024-12-27
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const toc = require("markdown-toc")
 const fs = require("fs")
 const path = require("path")
@@ -49,7 +57,9 @@ const STATUS = {
 
 // 检测是否包含 toc 标记
 function hasTocMarkers(content) {
-  return content.includes("<!-- toc -->") && content.includes("<!-- tocstop -->")
+  return (
+    content.includes("<!-- toc -->") && content.includes("<!-- tocstop -->")
+  )
 }
 
 // 在指定位置插入 toc 标记
@@ -121,7 +131,11 @@ function getFilesToProcess() {
 
   const result = Array.from(files)
   if (result.length === 0) {
-    console.log(chalk.yellow(`${STATUS.INFO} 警告：没有找到需要处理的文件，请检查配置文件。`))
+    console.log(
+      chalk.yellow(
+        `${STATUS.INFO} 警告：没有找到需要处理的文件，请检查配置文件。`
+      )
+    )
   }
 
   return result
@@ -129,7 +143,9 @@ function getFilesToProcess() {
 
 async function writeIfChanged(filePath, newContent) {
   try {
-    const currentContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, "utf8") : ""
+    const currentContent = fs.existsSync(filePath)
+      ? fs.readFileSync(filePath, "utf8")
+      : ""
     if (currentContent !== newContent) {
       fs.writeFileSync(filePath, newContent)
       return true
@@ -156,7 +172,9 @@ async function generateToc(filePath) {
         content = insertTocMarkers(content)
         console.log(chalk.blue(`${STATUS.INFO} ${filePath} 自动插入目录标记`))
       } else {
-        console.log(chalk.yellow(`${STATUS.SKIP} ${filePath} 缺少目录标记，已跳过`))
+        console.log(
+          chalk.yellow(`${STATUS.SKIP} ${filePath} 缺少目录标记，已跳过`)
+        )
         return
       }
     }
@@ -164,14 +182,19 @@ async function generateToc(filePath) {
     // 生成横向目录内容
     const tocContent = toc(content)
       .json.filter((heading) => heading.lvl === 2)
-      .map((heading) => `[${heading.content}](#${toc.slugify(heading.content)})`)
+      .map(
+        (heading) => `[${heading.content}](#${toc.slugify(heading.content)})`
+      )
       .join(" • ")
 
     // 包装成完整的 toc 块
     const tocBlock = `<!-- toc -->\n\n${tocContent}\n\n<!-- tocstop -->`
 
     // 替换已有的 toc 内容
-    const newContent = content.replace(/<!-- toc -->[\s\S]*?<!-- tocstop -->/, tocBlock)
+    const newContent = content.replace(
+      /<!-- toc -->[\s\S]*?<!-- tocstop -->/,
+      tocBlock
+    )
 
     const changed = await writeIfChanged(filePath, newContent)
     if (changed) {
@@ -180,7 +203,9 @@ async function generateToc(filePath) {
       console.log(chalk.blue(`${STATUS.INFO} ${filePath} 无需更新`))
     }
   } catch (error) {
-    console.error(chalk.red(`${STATUS.ERROR} ${filePath} 错误: ${error.message}`))
+    console.error(
+      chalk.red(`${STATUS.ERROR} ${filePath} 错误: ${error.message}`)
+    )
   }
 }
 

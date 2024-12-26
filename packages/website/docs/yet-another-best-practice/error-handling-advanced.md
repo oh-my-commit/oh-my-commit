@@ -7,7 +7,11 @@
 ```typescript
 // 日志装饰器
 function logError() {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
     const originalMethod = descriptor.value
 
     descriptor.value = function (...args: any[]) {
@@ -187,7 +191,9 @@ class LocalizedError implements AppError {
 }
 
 // 使用
-const error = new LocalizedError("VALIDATION_ERROR", "validation.required", { field: "email" })
+const error = new LocalizedError("VALIDATION_ERROR", "validation.required", {
+  field: "email",
+})
 
 console.log(error.getLocalizedMessage("en")) // "Email is required"
 console.log(error.getLocalizedMessage("zh")) // "邮箱是必填项"
@@ -341,8 +347,9 @@ const createMockError = (type: AppError["type"]): AppError => ({
 jest
   .spyOn(inventoryService, "check")
   .mockImplementation(() =>
-    ResultAsync.fromPromise(Promise.reject(new Error("Inventory check failed")), () =>
-      createMockError("INVENTORY_ERROR")
+    ResultAsync.fromPromise(
+      Promise.reject(new Error("Inventory check failed")),
+      () => createMockError("INVENTORY_ERROR")
     )
   )
 ```

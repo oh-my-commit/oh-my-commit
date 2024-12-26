@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { useEffect, useState } from "react"
 
 import Markdown from "marked-react"
@@ -24,7 +23,9 @@ export const CommitFormatTooltip = () => {
         setMarkdown(content)
       } catch (error) {
         console.error("Failed to load markdown:", error)
-        setMarkdown("Failed to load commit format guide. Please try again later.")
+        setMarkdown(
+          "Failed to load commit format guide. Please try again later."
+        )
       } finally {
         setLoading(false)
       }
@@ -59,14 +60,18 @@ export const CommitFormatTooltip = () => {
       style={{ pointerEvents: "auto" }}
     >
       <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3 markdown-content">
-        {loading ? <div>Loading...</div> : <Markdown renderer={renderer} value={markdown} />}
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Markdown renderer={renderer} value={markdown} />
+        )}
         <div className="pt-2 border-t border-[var(--vscode-widget-border)]">
           <a
             className="inline-flex items-center gap-1 text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)] hover:underline"
             href="https://www.conventionalcommits.org"
             rel="noopener noreferrer"
             target="_blank"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               const vscode = acquireVsCodeApi()
               vscode.postMessage({

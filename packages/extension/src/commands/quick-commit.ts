@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import * as path from "path"
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
@@ -14,9 +13,9 @@ import * as vscode from "vscode"
 
 import {
   COMMAND_QUICK_COMMIT,
-  TOKENS,
   type CommitManager,
   type ServerMessageEvent,
+  TOKENS,
 } from "@shared/common"
 
 import type { BaseCommand } from "@/vscode-command"
@@ -31,14 +30,16 @@ export class QuickCommitCommand implements BaseCommand {
   public name = "Quick Commit"
 
   constructor(
-    @Inject(VSCODE_TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    @Inject(VSCODE_TOKENS.Context)
+    private readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
     @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
-    @Inject(VSCODE_TOKENS.Webview) private readonly webviewManager: VscodeWebview,
+    @Inject(VSCODE_TOKENS.Webview)
+    private readonly webviewManager: VscodeWebview
   ) {
     // 设置 webview 的消息处理
-    this.webviewManager.setMessageHandler(async message => {
+    this.webviewManager.setMessageHandler(async (message) => {
       switch (message.type) {
         case "init":
           await this.syncFilesAndCommits()
@@ -53,7 +54,10 @@ export class QuickCommitCommand implements BaseCommand {
           break
 
         case "diff-file":
-          this.logger.info("[VscodeWebview] Getting file diff for:", message.data.filePath)
+          this.logger.info(
+            "[VscodeWebview] Getting file diff for:",
+            message.data.filePath
+          )
           try {
             const workspaceRoot = this.gitService.workspaceRoot
             if (!workspaceRoot) {
@@ -69,7 +73,8 @@ export class QuickCommitCommand implements BaseCommand {
             this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
 
             // 获取 git 扩展
-            const gitExtension = vscode.extensions.getExtension<any>("vscode.git")?.exports
+            const gitExtension =
+              vscode.extensions.getExtension<any>("vscode.git")?.exports
             if (!gitExtension) {
               throw new Error("Git extension not found")
             }
@@ -117,7 +122,7 @@ export class QuickCommitCommand implements BaseCommand {
       files: [],
     }
 
-    diffResult.files.forEach(file => {
+    diffResult.files.forEach((file) => {
       if (selectedFiles.includes(file.file)) {
         if (!file.binary) {
           newDiffSummary.insertions += file.insertions

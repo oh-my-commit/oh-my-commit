@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import type { TreeNode } from "@shared/common"
 
 export function getAllDirectoryPaths(node: TreeNode): string[] {
@@ -16,7 +15,7 @@ export function getAllDirectoryPaths(node: TreeNode): string[] {
     paths.push(node.path)
 
     if (node.children) {
-      node.children.forEach(child => {
+      node.children.forEach((child) => {
         if (child.type === "directory") {
           paths.push(...getAllDirectoryPaths(child))
         }

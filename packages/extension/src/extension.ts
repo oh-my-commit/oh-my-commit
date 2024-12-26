@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import "reflect-metadata"
 import { Container } from "typedi"
 import * as vscode from "vscode"
@@ -47,7 +46,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
-    void vscode.window.showErrorMessage(`Failed to initialize Oh My Commit: ${formatError(error)}`)
+    void vscode.window.showErrorMessage(
+      `Failed to initialize Oh My Commit: ${formatError(error)}`
+    )
   }
 }
 
