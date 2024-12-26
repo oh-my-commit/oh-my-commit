@@ -9,7 +9,7 @@
 import * as React from "react"
 
 import { useAtom } from "jotai"
-import { ChevronDownIcon, ChevronRightIcon, FolderIcon } from "lucide-react"
+import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
 
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 
@@ -24,6 +24,7 @@ interface TreeNodeProps {
   searchQuery?: string
   onSelect: (paths: string[]) => void
   onClick: (path: string) => void
+  getFolderFileCount: (path: string) => number
 }
 
 const TreeNode: React.FC<TreeNodeProps> = ({
@@ -35,6 +36,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   searchQuery,
   onSelect,
   onClick,
+  getFolderFileCount,
 }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
   const filesInPath = files.filter((file) => file.file.startsWith(path))
@@ -61,46 +63,61 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         role="button"
         style={{ paddingLeft: `${level * 16}px` }}
         tabIndex={0}
-        onClick={handleFolderSelect}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          handleToggle()
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            handleFolderSelect()
+            e.preventDefault()
+            handleToggle()
           }
         }}
       >
-        <button
-          className="p-1"
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            handleToggle()
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault()
-              handleToggle()
-            }
-          }}
-        >
-          {isExpanded ? (
-            <ChevronDownIcon className="h-4 w-4" />
-          ) : (
-            <ChevronRightIcon className="h-4 w-4" />
-          )}
-        </button>
-        <div className="flex items-center gap-1 flex-1">
-          <FolderIcon className="h-4 w-4" />
-          <span>{path.split("/").pop()}</span>
-          <span className="text-xs text-gray-500">({filesInPath.length})</span>
-        </div>
-        <div className="flex items-center">
-          <input
-            readOnly
-            checked={isAllSelected}
-            className="h-3 w-3"
-            style={{ opacity: isPartiallySelected ? "0.5" : "1" }}
-            type="checkbox"
-          />
+        <div className="flex-1 flex items-center min-w-0 h-full">
+          <button
+            aria-label={isAllSelected ? "Deselect folder" : "Select folder"}
+            className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleFolderSelect()
+            }}
+          >
+            <input
+              readOnly
+              checked={isAllSelected}
+              className="h-3 w-3"
+              style={{ opacity: isPartiallySelected ? "0.5" : "1" }}
+              type="checkbox"
+            />
+          </button>
+
+          <div className="flex items-center gap-1">
+            <button
+              className="p-1"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleToggle()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  handleToggle()
+                }
+              }}
+            >
+              {isExpanded ? (
+                <ChevronDownIcon className="h-4 w-4" />
+              ) : (
+                <ChevronRightIcon className="h-4 w-4" />
+              )}
+            </button>
+            <span>{path.split("/").pop()}</span>
+            <span className="text-xs text-gray-500">({getFolderFileCount(path)})</span>
+          </div>
         </div>
       </div>
       {isExpanded && (
@@ -146,11 +163,13 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const files = diffResult?.files || []
   const [isRootExpanded, setIsRootExpanded] = React.useState(true)
 
-  // 构建文件树结构
+  // 构建文件树结构和计算每个文件夹的文件数
   const fileTree = React.useMemo(() => {
     const paths = files.map((file) => file.file)
     const uniqueFolders = new Set<string>()
+    const folderFiles = new Map<string, Set<string>>()
 
+    // 首先收集所有文件夹路径
     paths.forEach((path) => {
       const parts = path.split("/")
       parts.pop() // 移除文件名
@@ -158,11 +177,57 @@ export const TreeView: React.FC<TreeViewProps> = ({
       parts.forEach((part) => {
         currentPath = currentPath ? `${currentPath}/${part}` : part
         uniqueFolders.add(currentPath)
+        if (!folderFiles.has(currentPath)) {
+          folderFiles.set(currentPath, new Set())
+        }
       })
     })
 
-    return Array.from(uniqueFolders)
+    // 然后将每个文件添加到其所有父文件夹中
+    paths.forEach((path) => {
+      const parts = path.split("/")
+      parts.pop() // 移除文件名
+      let currentPath = ""
+      parts.forEach((part) => {
+        currentPath = currentPath ? `${currentPath}/${part}` : part
+        folderFiles.get(currentPath)?.add(path)
+      })
+    })
+
+    return {
+      folders: Array.from(uniqueFolders),
+      files: folderFiles,
+    }
   }, [files])
+
+  const getFolderFileCount = (folderPath: string) => {
+    // 获取当前文件夹下的直接文件
+    const directFiles = fileTree.files.get(folderPath) || new Set()
+
+    // 获取子文件夹中的文件
+    const childFiles = files.filter((file) => {
+      const filePath = file.file
+      const fileParentPath = filePath.split("/").slice(0, -1).join("/")
+
+      // 如果是根目录文件（没有父路径）且当前是根文件夹
+      if (!fileParentPath && !folderPath) {
+        return true
+      }
+
+      // 常规文件夹的情况
+      return (
+        filePath.startsWith(folderPath + "/") &&
+        !Array.from(fileTree.folders).some(
+          (folder) =>
+            folder !== folderPath &&
+            folder.startsWith(folderPath + "/") &&
+            filePath.startsWith(folder + "/")
+        )
+      )
+    })
+
+    return childFiles.length + directFiles.size
+  }
 
   const handleRootToggle = () => {
     setIsRootExpanded(!isRootExpanded)
@@ -187,40 +252,28 @@ export const TreeView: React.FC<TreeViewProps> = ({
         className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
         role="button"
         tabIndex={0}
-        onClick={() => onSelect(files.map((file) => file.file))}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          handleRootToggle()
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            onSelect(files.map((file) => file.file))
+            e.preventDefault()
+            handleRootToggle()
           }
         }}
       >
-        <button
-          className="p-1"
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            handleRootToggle()
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault()
-              handleRootToggle()
-            }
-          }}
-        >
-          {isRootExpanded ? (
-            <ChevronDownIcon className="h-4 w-4" />
-          ) : (
-            <ChevronRightIcon className="h-4 w-4" />
-          )}
-        </button>
-        <div className="flex items-center gap-1 flex-1">
-          <FolderIcon className="h-4 w-4" />
-          <span className="font-semibold">Staged Changes</span>
-          {files.length > 0 && <span className="text-xs text-gray-500">({files.length})</span>}
-        </div>
-        {files.length > 0 && (
-          <div className="flex items-center">
+        <div className="flex-1 flex items-center min-w-0 h-full">
+          <button
+            aria-label={isAllSelected ? "Deselect all" : "Select all"}
+            className="checkbox-container flex items-center justify-center w-8 h-full transition-opacity duration-100"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onSelect(files.map((file) => file.file))
+            }}
+          >
             <input
               readOnly
               checked={isAllSelected}
@@ -228,25 +281,94 @@ export const TreeView: React.FC<TreeViewProps> = ({
               style={{ opacity: isPartiallySelected ? "0.5" : "1" }}
               type="checkbox"
             />
+          </button>
+
+          <div className="flex items-center gap-1">
+            <button
+              className="p-1"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleRootToggle()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  handleRootToggle()
+                }
+              }}
+            >
+              {isRootExpanded ? (
+                <ChevronDownIcon className="h-4 w-4" />
+              ) : (
+                <ChevronRightIcon className="h-4 w-4" />
+              )}
+            </button>
+            <span className="font-semibold">Staged Changes</span>
+            {files.length > 0 && <span className="text-xs text-gray-500">({files.length})</span>}
           </div>
-        )}
+        </div>
       </div>
 
       {/* 文件树 */}
-      {isRootExpanded &&
-        fileTree.map((path) => (
-          <TreeNode
-            key={path}
-            files={files}
-            level={1}
-            path={path}
-            searchQuery={searchQuery}
-            selectedFiles={selectedFiles}
-            selectedPath={selectedPath}
-            onClick={onClick}
-            onSelect={handleTreeNodeSelect}
-          />
-        ))}
+      {isRootExpanded && (
+        <div className="flex flex-col">
+          {/* 根目录文件和文件夹混合排序 */}
+          {[
+            // 根目录文件转换为类似文件夹的结构
+            ...files
+              .filter((file) => !file.file.includes("/"))
+              .map((file) => ({
+                type: "file" as const,
+                file,
+              })),
+            // 文件夹
+            ...fileTree.folders.map((path) => ({
+              type: "folder" as const,
+              path,
+            })),
+          ]
+            .sort((a, b) => {
+              // 文件夹优先
+              if (a.type !== b.type) {
+                return a.type === "folder" ? -1 : 1
+              }
+              // 同类型按名字排序
+              const aName = a.type === "folder" ? a.path : a.file.file
+              const bName = b.type === "folder" ? b.path : b.file.file
+              return aName.localeCompare(bName)
+            })
+            .map((item) =>
+              item.type === "folder" ? (
+                <TreeNode
+                  key={item.path}
+                  files={files}
+                  getFolderFileCount={getFolderFileCount}
+                  level={1}
+                  onClick={onClick}
+                  onSelect={handleTreeNodeSelect}
+                  path={item.path}
+                  searchQuery={searchQuery}
+                  selectedFiles={selectedFiles}
+                  selectedPath={selectedPath}
+                />
+              ) : (
+                <FileItem
+                  key={item.file.file}
+                  diff="todo: diff"
+                  file={item.file}
+                  isOpen={selectedPath === item.file.file}
+                  level={1}
+                  searchQuery={searchQuery}
+                  selected={selectedFiles.includes(item.file.file)}
+                  viewMode="tree"
+                  onClick={onClick}
+                  onSelect={handleFileSelect}
+                />
+              )
+            )}
+        </div>
+      )}
     </div>
   )
 }
