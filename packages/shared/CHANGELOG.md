@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.9.1
+
+### Patch Changes
+
+- d6f6ac3: fix diff transport
+
 ## 0.9.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.9.1
+
+### Patch Changes
+
+- d6f6ac3: fix diff transport
+- Updated dependencies [d6f6ac3]
+  - @oh-my-commit/shared@0.9.1
+  - @oh-my-commit/webview@0.9.1
+
 ## 0.9.0
 
 ### Minor Changes
