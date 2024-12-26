@@ -80,14 +80,14 @@ export const FileChanges: FC = () => {
 
   return (
     <Section title="Changed Files">
-      <div className="flex flex-col sm:flex-row h-full relative gap-2">
-        {hasSelectionChanged && (
-          <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
-            <i className="codicon codicon-info" />
-            <span>File selection changed. You can regenerate the commit message.</span>
-          </div>
-        )}
+      {hasSelectionChanged && (
+        <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
+          <i className="codicon codicon-info" />
+          <span>File selection changed. You can regenerate the commit message.</span>
+        </div>
+      )}
 
+      <div className="flex flex-col sm:flex-row h-full relative gap-2">
         <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
           <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
             <SearchBar />
