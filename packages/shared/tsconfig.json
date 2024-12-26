@@ -8,5 +8,8 @@
     "emitDecoratorMetadata": true,
     "types": ["reflect-metadata", "node"]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "src/server/**/*"
+  ]
 }
