@@ -20,6 +20,7 @@ import {
 } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
+import { ErrorMessage } from "../../ui/error-message"
 
 import { DiffViewer } from "./DiffViewer"
 import { EmptyState } from "./EmptyState"
@@ -81,10 +82,9 @@ export const FileChanges: FC = () => {
   return (
     <Section title="Changed Files">
       {hasSelectionChanged && (
-        <div className="shrink-0 text-xs text-[var(--vscode-notificationsInfoIcon-foreground)] flex items-center gap-1">
-          <i className="codicon codicon-info" />
-          <span>File selection changed. You can regenerate the commit message.</span>
-        </div>
+        <ErrorMessage icon={false}>
+          File selection changed. You can regenerate the commit message.
+        </ErrorMessage>
       )}
 
       <div className="flex flex-col sm:flex-row h-full relative gap-2">

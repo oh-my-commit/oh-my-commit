@@ -19,6 +19,7 @@ import { FeedbackButton } from "@/components/commit/feedback-button"
 import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
+import { ErrorMessage } from "@/components/ui/error-message"
 import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
 import { commitBodyAtom, commitTitleAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 
@@ -85,6 +86,9 @@ export function CommitMessage() {
             value={title}
             onChange={setTitle}
           />
+          {!isSubjectValid && subjectLength > 0 && (
+            <ErrorMessage>Subject must be ≤ {MAX_SUBJECT_LENGTH} characters</ErrorMessage>
+          )}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -101,12 +105,6 @@ export function CommitMessage() {
       </Section.Content>
 
       <Section.Footer>
-        {!isSubjectValid && subjectLength > 0 && (
-          <span className="text-[11px] text-[var(--vscode-errorForeground)]">
-            Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
-          </span>
-        )}
-
         <FeedbackButton
           disabled={disabled}
           onFeedback={() => {
