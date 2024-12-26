@@ -41,12 +41,9 @@ const TreeNode: React.FC<TreeNodeProps> = ({
 
   const handleToggle = () => setIsExpanded(!isExpanded)
 
-  const isAllSelected = filesInPath.every((file) =>
-    selectedFiles.includes(file.file)
-  )
+  const isAllSelected = filesInPath.every((file) => selectedFiles.includes(file.file))
   const isPartiallySelected =
-    !isAllSelected &&
-    filesInPath.some((file) => selectedFiles.includes(file.file))
+    !isAllSelected && filesInPath.some((file) => selectedFiles.includes(file.file))
 
   const handleFolderSelect = () => {
     const filePaths = filesInPath.map((file) => file.file)
@@ -74,11 +71,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         <button
           className="p-1"
           onClick={(e) => {
+            e.preventDefault()
             e.stopPropagation()
             handleToggle()
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault()
               handleToggle()
             }
           }}
@@ -177,8 +176,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
     onSelect(paths)
   }
 
-  const isAllSelected =
-    files.length > 0 && files.every((file) => selectedFiles.includes(file.file))
+  const isAllSelected = files.length > 0 && files.every((file) => selectedFiles.includes(file.file))
   const isPartiallySelected =
     !isAllSelected && files.some((file) => selectedFiles.includes(file.file))
 
@@ -198,9 +196,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <button
           className="p-1"
-          onClick={handleRootToggle}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            handleRootToggle()
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault()
               handleRootToggle()
             }
           }}
@@ -214,9 +217,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
         <div className="flex items-center gap-1 flex-1">
           <FolderIcon className="h-4 w-4" />
           <span className="font-semibold">Staged Changes</span>
-          {files.length > 0 && (
-            <span className="text-xs text-gray-500">({files.length})</span>
-          )}
+          {files.length > 0 && <span className="text-xs text-gray-500">({files.length})</span>}
         </div>
         {files.length > 0 && (
           <div className="flex items-center">
