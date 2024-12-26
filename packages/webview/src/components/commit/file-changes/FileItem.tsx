@@ -12,6 +12,7 @@ import { useEffect } from "react"
 
 import type { DiffResult } from "simple-git"
 
+import { clientPush } from "@/clientPush"
 import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
 import { basename } from "@/utils/path"
@@ -48,6 +49,13 @@ export const FileItem: React.FC<FileItemProps> = ({
 
   const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation()
+    // 通知扩展在编辑器中打开文件差异视图
+    clientPush({
+      type: "diff-file",
+      data: {
+        filePath: file.file,
+      },
+    })
     onClick(file.file)
   }
 

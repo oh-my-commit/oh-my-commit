@@ -16,8 +16,8 @@ import { BaseLogger, TOKENS, formatError } from "../common"
 
 @Service()
 export class GitCore {
-  protected git: SimpleGit
-  protected workspaceRoot: string
+  public git: SimpleGit
+  public workspaceRoot: string
 
   constructor(
     workspaceRoot: string,

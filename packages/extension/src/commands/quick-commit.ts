@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import * as path from "path"
 import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
@@ -14,7 +15,6 @@ import * as vscode from "vscode"
 import {
   COMMAND_QUICK_COMMIT,
   TOKENS,
-  formatError,
   type CommitManager,
   type ServerMessageEvent,
 } from "@shared/common"
@@ -55,24 +55,37 @@ export class QuickCommitCommand implements BaseCommand {
         case "diff-file":
           this.logger.info("[VscodeWebview] Getting file diff for:", message.data.filePath)
           try {
-            const diff = await this.gitService.getFileDiffDetail(message.data.filePath)
-            await this.webviewManager.postMessage({
-              type: "diff-file-result",
-              data: {
-                ok: true,
-                data: { diff },
-              },
-            })
+            const workspaceRoot = this.gitService.workspaceRoot
+            if (!workspaceRoot) {
+              throw new Error("No workspace root found")
+            }
+
+            const filePath = message.data.filePath
+            const absolutePath = path.isAbsolute(filePath)
+              ? filePath
+              : path.join(workspaceRoot, filePath)
+
+            const uri = vscode.Uri.file(absolutePath)
+            this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
+
+            // 获取 git 扩展
+            const gitExtension = vscode.extensions.getExtension<any>("vscode.git")?.exports
+            if (!gitExtension) {
+              throw new Error("Git extension not found")
+            }
+
+            const git = gitExtension.getAPI(1)
+            const repository = git.repositories[0]
+            if (!repository) {
+              throw new Error("No repository found")
+            }
+
+            // 打开差异视图
+            await vscode.commands.executeCommand("git.openChange", uri)
+
+            this.logger.info("[VscodeWebview] Opened file diff")
           } catch (error) {
             this.logger.error("[VscodeWebview] Failed to get file diff:", error)
-            await this.webviewManager.postMessage({
-              type: "diff-file-result",
-              data: {
-                ok: false,
-                message: `Failed to get file diff: ${formatError(error)}`,
-                code: -25343,
-              },
-            })
           }
           break
       }

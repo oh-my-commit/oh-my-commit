@@ -8,3 +8,11 @@
 ## 技术栈
 - 包管理器是 **pnpm**
 - 环境是 **monorepo**
+
+## extesnion(server) 和 webview(client) 通信接口
+
+- event 定义： @packages/shared/src/common/transport.ts
+- server listen: @packages/extension/src/commands/quick-commit.ts
+- server send: @packages/extension/src/vscode-webview.ts:postMessage
+- client listen: @packages/webview/src/hooks/use-commit-message.ts
+- client send: @packages/webview/src/clientPush.ts
