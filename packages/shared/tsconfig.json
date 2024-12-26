@@ -9,5 +9,4 @@
     "types": ["reflect-metadata", "node"]
   },
   "include": ["src/**/*.ts"]
-
 }

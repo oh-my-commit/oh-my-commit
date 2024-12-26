@@ -36,7 +36,7 @@ module.exports = {
     "import/resolver": {
       typescript: {
         project: ["./packages/*/tsconfig.json"],
-        alwaysTryTypes: true
+        alwaysTryTypes: true,
       },
     },
   },
@@ -68,13 +68,13 @@ module.exports = {
       files: ["./packages/shared/src/server/prompt-loader.ts"],
       parserOptions: {
         project: ["./packages/shared/tsconfig.json"],
-      }
+      },
     },
 
     // TypeScript 文件使用严格的 TS 规则
     {
       files: ["packages/*/src/**/*.{ts,tsx}"],
-      excludedFiles: ["**/dist/**", "**/build/**"],  // 明确排除构建目录
+      excludedFiles: ["**/dist/**", "**/build/**"], // 明确排除构建目录
       parserOptions: {
         project: ["./packages/*/tsconfig.json"],
         tsconfigRootDir: __dirname,
