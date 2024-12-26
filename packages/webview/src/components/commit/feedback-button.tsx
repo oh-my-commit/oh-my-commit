@@ -111,10 +111,10 @@ export const FeedbackButton = ({
   return (
     <div ref={menuRef} className="relative">
       <button
-        className={`px-4 py-[6px] text-sm rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
+        className={`px-3 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
           disabled || hasFeedback
             ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-foreground)]"
+            : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
         }`}
         disabled={disabled || hasFeedback}
         title={
