@@ -25,7 +25,8 @@
       },
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "new",
+        "group": "oh-my-commit-dev",
         "clear": true,
         "focus": true
       },
@@ -53,7 +54,8 @@
       },
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "new",
+        "group": "oh-my-commit-dev",
         "clear": true,
         "focus": true
       },
@@ -69,7 +71,8 @@
       "args": ["--filter", "@oh-my-commit/extension", "run", "build"],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "new",
+        "group": "oh-my-commit-build",
         "clear": true,
         "focus": true
       },
@@ -87,7 +90,8 @@
       "args": ["--filter", "@oh-my-commit/webview", "run", "build"],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "new",
+        "group": "oh-my-commit-build",
         "clear": true,
         "focus": true
       },
