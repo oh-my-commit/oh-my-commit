@@ -1,5 +1,17 @@
 # @oh-my-commit/extension
 
+## 0.11.0
+
+### Minor Changes
+
+- d99e271: chore: better eslint
+
+### Patch Changes
+
+- Updated dependencies [d99e271]
+  - @oh-my-commit/shared@0.11.0
+  - @oh-my-commit/webview@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes
