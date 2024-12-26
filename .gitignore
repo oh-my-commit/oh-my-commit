@@ -1,3 +1,4 @@
+.eslint.log
 .env
 .env.local
 temp/

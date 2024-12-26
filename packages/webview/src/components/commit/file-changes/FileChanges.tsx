@@ -12,7 +12,6 @@ import { useAtom } from "jotai"
 
 import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
-import { useToast } from "@/components/ui/use-toast"
 import {
   diffDetailAtom,
   diffResultAtom,
@@ -31,7 +30,9 @@ export const FileChanges: FC = () => {
   const initialSelection = diffResult?.files?.map((file) => file.file) || []
 
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  )
   const [searchQuery] = useAtom(searchQueryAtom)
 
   console.log({ diffFile, lastOpenedFilePath })
@@ -86,14 +87,18 @@ export const FileChanges: FC = () => {
       clientPush({
         type: "show-info",
         data: {
-          message: "File selection changed. You can regenerate the commit message."
-        }
+          message:
+            "File selection changed. You can regenerate the commit message.",
+        },
       })
     }
   }, [hasSelectionChanged])
 
   return (
-    <Section actions={<ViewToggle view={viewMode} onChange={setViewMode} />} title="Changed Files">
+    <Section
+      actions={<ViewToggle view={viewMode} onChange={setViewMode} />}
+      title="Changed Files"
+    >
       <div className="flex flex-col sm:flex-row relative gap-2 h-full">
         <div className="w-full sm:max-w-[300px] flex flex-col shrink-0 overflow-auto scrollbar-custom">
           <FileChangesView

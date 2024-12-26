@@ -12,13 +12,20 @@ import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_NAME, ClientMessageEvent, ServerMessageEvent, TOKENS } from "@shared/common"
+import {
+  APP_NAME,
+  ClientMessageEvent,
+  ServerMessageEvent,
+  TOKENS,
+} from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VSCODE_TOKENS } from "./vscode-token"
 
 @Service()
-export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposable {
+export class VscodeWebview
+  implements vscode.WebviewViewProvider, vscode.Disposable
+{
   private webview?: vscode.Webview
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private readonly title: string = `${APP_NAME} Webview`
@@ -30,14 +37,23 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
     @Inject(VSCODE_TOKENS.Context)
     private readonly context: vscode.ExtensionContext
   ) {
-    this.webviewPath = path.join(this.context.extensionPath, "..", "webview", "dist")
+    this.webviewPath = path.join(
+      this.context.extensionPath,
+      "..",
+      "webview",
+      "dist"
+    )
 
     // 只注册 WebviewViewProvider
-    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", this, {
-      webviewOptions: {
-        retainContextWhenHidden: true,
-      },
-    })
+    const registration = vscode.window.registerWebviewViewProvider(
+      "ohMyCommit.view",
+      this,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      }
+    )
 
     this.context.subscriptions.push(registration)
   }
@@ -67,7 +83,9 @@ export class VscodeWebview implements vscode.WebviewViewProvider, vscode.Disposa
     webviewView.title = this.title
   }
 
-  public setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
+  public setMessageHandler(
+    handler: (message: ClientMessageEvent) => Promise<void>
+  ) {
     this.messageHandler = handler
     if (this.webview) {
       this.webview.onDidReceiveMessage(handler)
