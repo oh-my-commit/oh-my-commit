@@ -25,8 +25,6 @@ export class VscodeWebview implements vscode.Disposable {
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private title: string = `${APP_NAME} Webview`
   private readonly webviewPath: string
-  private viewProvider?: vscode.WebviewViewProvider
-  private currentViewType?: string
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
@@ -51,6 +49,13 @@ export class VscodeWebview implements vscode.Disposable {
 
           webviewView.title = this.title
           webviewView.description = "Ready"
+
+          // 处理视图关闭
+          webviewView.onDidDispose(() => {
+            if (this.webviewView === webviewView) {
+              this.webviewView = undefined
+            }
+          })
         } catch (error) {
           this.logger.error("Error initializing webview:", error)
           webviewView.description = "Error"
@@ -59,56 +64,119 @@ export class VscodeWebview implements vscode.Disposable {
     })
 
     this.context.subscriptions.push(registration)
+
+    // 监听配置变化
+    this.context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(async e => {
+        if (e.affectsConfiguration("ohMyCommit.ui.viewLocation")) {
+          const location = this.getLocation()
+          this.logger.info("View location changed:", { location })
+
+          // 如果切换到编辑器模式，且当前在侧边栏中
+          if (location === "beside" && this.webviewView) {
+            this.logger.info("Switching to editor mode")
+            // 保存当前内容和状态
+            const content = this.webviewView.webview.html
+            const messageHandler = this.messageHandler
+
+            // 创建编辑器面板
+            const panel = vscode.window.createWebviewPanel(
+              APP_ID_CAMEL,
+              this.title,
+              this.getViewOptions().viewColumn,
+              this.getWebviewOptions(),
+            )
+
+            // 恢复内容和处理器
+            panel.webview.html = content
+            if (messageHandler) {
+              panel.webview.onDidReceiveMessage(messageHandler)
+            }
+
+            panel.onDidDispose(() => {
+              if (this.webviewPanel === panel) {
+                this.webviewPanel = undefined
+              }
+            })
+
+            this.webviewPanel = panel
+          }
+          // 如果切换到侧边栏模式，且当前在编辑器中
+          else if (location === "activitybar" && this.webviewPanel) {
+            this.logger.info("Switching to activitybar mode")
+            // 关闭编辑器面板，让它自动通过 provider 重新创建
+            this.webviewPanel.dispose()
+            this.webviewPanel = undefined
+
+            // 打开侧边栏视图
+            await vscode.commands.executeCommand("workbench.view.extension.ohMyCommit")
+          }
+        }
+      }),
+    )
   }
 
-  setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
-    this.messageHandler = handler
+  private getLocation(): string {
+    return vscode.workspace.getConfiguration("ohMyCommit").get("ui.viewLocation") || "activitybar"
   }
 
-  public get uiMode(): string {
-    return this.config.get<string>("ohMyCommit.ui.mode")!
+  /**
+   * 获取当前活跃的 webview
+   */
+  private getActiveWebview(): vscode.Webview | undefined {
+    return this.webviewPanel?.webview || this.webviewView?.webview
   }
 
-  private getViewOptions(): { viewColumn: vscode.ViewColumn } {
-    const location = this.config.get<string>("ohMyCommit.ui.viewLocation") || "editor"
+  public async postMessage(message: any) {
+    const webview = this.getActiveWebview()
+    if (webview) {
+      this.logger.debug("Posting message to webview:", message)
+      try {
+        await webview.postMessage(message)
+        this.logger.debug("Message posted successfully")
+      } catch (error) {
+        this.logger.error("Error posting message:", error)
+      }
+    } else {
+      // 如果没有活跃的 webview，创建一个
+      this.logger.info("No active webview, creating one...")
+      await this.createWebviewPanel()
 
-    switch (location) {
-      case "beside":
-        return { viewColumn: vscode.ViewColumn.Beside }
-      case "editor":
-      default:
-        return { viewColumn: vscode.ViewColumn.Active }
+      // 重试发送消息
+      const retryWebview = this.getActiveWebview()
+      if (retryWebview) {
+        try {
+          await retryWebview.postMessage(message)
+          this.logger.debug("Message posted successfully after retry")
+        } catch (error) {
+          this.logger.error("Error posting message after retry:", error)
+        }
+      } else {
+        this.logger.error("Cannot post message: no webview available after retry")
+      }
     }
   }
 
   public async createWebviewPanel(): Promise<vscode.WebviewPanel | undefined> {
-    const location = this.config.get<string>("ohMyCommit.ui.viewLocation") || "editor"
+    const location = this.getLocation()
 
-    // 如果是活动栏视图，使用已注册的 webview provider
-    if (location === "activitybar") {
-      // 如果视图已经存在，直接显示
-      if (this.webviewView) {
+    // 如果已经有活跃的 webview，直接使用
+    if (this.webviewPanel || this.webviewView) {
+      if (this.webviewPanel) {
+        this.webviewPanel.reveal()
+      } else if (this.webviewView) {
         this.webviewView.show(true)
-        return undefined
       }
+      return this.webviewPanel
+    }
 
-      // 否则，显示视图容器
+    // 如果是活动栏视图，使用 registerWebviewViewProvider
+    if (location === "activitybar") {
       await vscode.commands.executeCommand("workbench.view.extension.ohMyCommit")
       return undefined
     }
 
-    // 如果之前是活动栏视图，先清理
-    if (this.webviewView) {
-      // 不需要主动关闭视图，让用户自己控制
-      this.webviewView = undefined
-    }
-
-    // 对于编辑器视图，保持原有逻辑
-    if (this.webviewPanel) {
-      this.webviewPanel.reveal()
-      return this.webviewPanel
-    }
-
+    // 创建编辑器面板
     const viewOptions = this.getViewOptions()
     this.logger.info("Creating webview panel...", { viewOptions })
     const panel = vscode.window.createWebviewPanel(
@@ -127,7 +195,9 @@ export class VscodeWebview implements vscode.Disposable {
       }
 
       panel.onDidDispose(() => {
-        this.webviewPanel = undefined
+        if (this.webviewPanel === panel) {
+          this.webviewPanel = undefined
+        }
       })
 
       this.webviewPanel = panel
@@ -139,18 +209,23 @@ export class VscodeWebview implements vscode.Disposable {
     }
   }
 
-  public async postMessage(message: any) {
-    if (this.webviewPanel?.webview) {
-      this.logger.debug("Posting message to webview:", message)
-      try {
-        await this.webviewPanel.webview.postMessage(message)
-        this.logger.debug("Message posted successfully")
-      } catch (error) {
-        this.logger.error("Error posting message:", error)
-      }
-    } else {
-      this.logger.error("Cannot post message: webview panel not available")
+  private getViewOptions(): { viewColumn: vscode.ViewColumn } {
+    const location = this.getLocation()
+
+    switch (location) {
+      case "beside":
+        return { viewColumn: vscode.ViewColumn.Beside }
+      default:
+        return { viewColumn: vscode.ViewColumn.Active }
     }
+  }
+
+  setMessageHandler(handler: (message: ClientMessageEvent) => Promise<void>) {
+    this.messageHandler = handler
+  }
+
+  public get uiMode(): string {
+    return this.config.get<string>("ohMyCommit.ui.mode")!
   }
 
   private getWebviewOptions(): vscode.WebviewOptions {
@@ -228,7 +303,6 @@ export class VscodeWebview implements vscode.Disposable {
       this.webviewPanel = undefined
     }
     this.webviewView = undefined
-    this.viewProvider = undefined
   }
 
   dispose() {

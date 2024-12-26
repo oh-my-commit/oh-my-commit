@@ -106,12 +106,14 @@ export function CommitMessage() {
             Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
           </span>
         )}
+
         <FeedbackButton
           disabled={disabled}
           onFeedback={() => {
             // todo: feedback
           }}
         />
+
         <div className="flex items-center gap-2 shrink-0">
           <VSCodeButton
             appearance="icon"

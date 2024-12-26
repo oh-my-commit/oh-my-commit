@@ -90,16 +90,14 @@
         "ohMyCommit.ui.viewLocation": {
           "type": "string",
           "enum": [
-            "editor",
             "beside",
             "activitybar"
           ],
           "enumDescriptions": [
-            "在当前编辑器中打开",
             "在编辑器旁边打开",
             "在活动栏中打开（可拖动到侧边栏）"
           ],
-          "default": "editor",
+          "default": "activitybar",
           "markdownDescription": "Webview 打开位置（注：如需在右侧边栏显示，请先在活动栏打开后手动拖动）",
           "order": 11
         },
