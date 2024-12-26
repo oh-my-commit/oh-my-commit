@@ -118,7 +118,7 @@ export function CommitMessage() {
 
         <div className="flex items-center gap-2 shrink-0">
           <button
-            className={`px-3 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
+            className={`px-1 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
               isGenerating
                 ? "opacity-50 cursor-not-allowed animate-spin"
                 : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
@@ -132,7 +132,7 @@ export function CommitMessage() {
 
           <VSCodeButton
             appearance="primary"
-            className="shrink-0 w-40 inline-flex items-center justify-center gap-2 relative"
+            className="shrink-0 w-fill inline-flex items-center justify-center gap-2 relative"
             disabled={!isSubjectValid || disabled || isGenerating}
             onClick={handleCommit}
           >
