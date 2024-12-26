@@ -1,5 +1,16 @@
 # @oh-my-commit/cli
 
+## 0.8.0
+
+### Minor Changes
+
+- 3e3ed18: chore: unified formats
+
+### Patch Changes
+
+- Updated dependencies [3e3ed18]
+  - @oh-my-commit/shared@0.8.0
+
 ## 0.7.1
 
 ### Patch Changes

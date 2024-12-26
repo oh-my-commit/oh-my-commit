@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/website",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Documentation and landing page for Oh My Commit - AI-powered commit message generator",
   "type": "module",
   "publishConfig": {

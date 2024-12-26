@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.8.0
+
+### Minor Changes
+
+- 3e3ed18: chore: unified formats
+
 ## 0.7.1
 
 ### Patch Changes
