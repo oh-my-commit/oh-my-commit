@@ -87,7 +87,7 @@ export const FileChanges: FC = () => {
         </ErrorMessage>
       )}
 
-      <div className="flex flex-col sm:flex-row h-full relative gap-2">
+      <div className="flex flex-col sm:flex-row relative gap-2 h-full">
         <div className="w-full sm:max-w-[300px] flex flex-col pr-[1px] shrink-0">
           <div className="flex items-center gap-2 mb-2 w-full z-10 py-1">
             <SearchBar />
@@ -97,12 +97,12 @@ export const FileChanges: FC = () => {
 
         <div
           className={cn(
-            "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out",
+            "flex-1 border-l border-[var(--vscode-panel-border)] pl-3 transition-all duration-200 ease-in-out overflow-auto",
             !lastOpenedFilePath && "opacity-0",
           )}
         >
           {lastOpenedFilePath && (
-            <div className="sticky top-0 h-full">
+            <div className="h-full">
               <DiffViewer />
             </div>
           )}

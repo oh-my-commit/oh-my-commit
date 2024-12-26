@@ -64,7 +64,7 @@ export const DiffViewer: FC = () => {
   }
 
   return (
-    <div className="grid grid-rows-[auto_1fr] h-full overflow-hidden">
+    <div className="flex flex-col overflow-hidden">
       <div className="border-b min-w-0">
         <div className="flex items-center justify-between p-2 gap-2">
           <div className="min-w-0">
@@ -105,7 +105,7 @@ export const DiffViewer: FC = () => {
       </div>
       <div
         ref={scrollContainerRef}
-        className="min-w-0 overflow-auto h-[calc(100vh-120px)]"
+        className="min-w-0 overflow-auto max-h-[500px]"
         onScroll={() => saveScrollPosition()}
       >
         <table className="w-full border-collapse">

@@ -28,11 +28,13 @@ export const CommitPage = () => {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
       <Progress />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-hidden">
         <CommitMessage />
-        <FileChanges />
+        <div className="overflow-auto">
+          <FileChanges />
+        </div>
       </div>
       <Footer />
     </div>
