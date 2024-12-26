@@ -45,6 +45,10 @@ export class QuickCommitCommand implements BaseCommand {
           await this.syncFilesAndCommits()
           break
 
+        case "show-info":
+          vscode.window.showInformationMessage(message.data.message)
+          break
+
         case "selected-files":
           await this.syncFilesAndCommits(message.data)
           break
@@ -54,10 +58,7 @@ export class QuickCommitCommand implements BaseCommand {
           break
 
         case "diff-file":
-          this.logger.info(
-            "[VscodeWebview] Getting file diff for:",
-            message.data.filePath
-          )
+          this.logger.info("[VscodeWebview] Getting file diff for:", message.data.filePath)
           try {
             const workspaceRoot = this.gitService.workspaceRoot
             if (!workspaceRoot) {
@@ -73,8 +74,7 @@ export class QuickCommitCommand implements BaseCommand {
             this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
 
             // 获取 git 扩展
-            const gitExtension =
-              vscode.extensions.getExtension<any>("vscode.git")?.exports
+            const gitExtension = vscode.extensions.getExtension<any>("vscode.git")?.exports
             if (!gitExtension) {
               throw new Error("Git extension not found")
             }

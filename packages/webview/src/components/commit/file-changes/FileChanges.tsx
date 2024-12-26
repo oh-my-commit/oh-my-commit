@@ -6,12 +6,13 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { type FC, useCallback } from "react"
+import { type FC, useCallback, useEffect } from "react"
 
 import { useAtom } from "jotai"
 
 import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
+import { useToast } from "@/components/ui/use-toast"
 import {
   diffDetailAtom,
   diffResultAtom,
@@ -21,7 +22,6 @@ import {
 import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
 
-import { ErrorMessage } from "../../ui/error-message"
 import { FileChangesView } from "./FileChangesView"
 import { ViewToggle } from "./ViewToggle"
 
@@ -31,9 +31,7 @@ export const FileChanges: FC = () => {
   const initialSelection = diffResult?.files?.map((file) => file.file) || []
 
   const [selectedFiles, setSelectedFiles] = useAtom(selectedFilesAtom)
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
-  )
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
   const [searchQuery] = useAtom(searchQueryAtom)
 
   console.log({ diffFile, lastOpenedFilePath })
@@ -83,17 +81,19 @@ export const FileChanges: FC = () => {
 
   const [viewMode, setViewMode] = useAtom(viewModeAtom)
 
-  return (
-    <Section
-      actions={<ViewToggle view={viewMode} onChange={setViewMode} />}
-      title="Changed Files"
-    >
-      {hasSelectionChanged && (
-        <ErrorMessage icon={false}>
-          File selection changed. You can regenerate the commit message.
-        </ErrorMessage>
-      )}
+  useEffect(() => {
+    if (hasSelectionChanged) {
+      clientPush({
+        type: "show-info",
+        data: {
+          message: "File selection changed. You can regenerate the commit message."
+        }
+      })
+    }
+  }, [hasSelectionChanged])
 
+  return (
+    <Section actions={<ViewToggle view={viewMode} onChange={setViewMode} />} title="Changed Files">
       <div className="flex flex-col sm:flex-row relative gap-2 h-full">
         <div className="w-full sm:max-w-[300px] flex flex-col shrink-0 overflow-auto scrollbar-custom">
           <FileChangesView

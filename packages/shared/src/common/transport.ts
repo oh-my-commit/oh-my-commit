@@ -48,6 +48,12 @@ export type ClientMessageEvent_ =
   | {
       type: "init"
     }
+  | {
+      type: "show-info"
+      data: {
+        message: string
+      }
+    }
   // 3. 用户挑选文件
   | {
       type: "selected-files"
