@@ -24,8 +24,8 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
 
   const handleLinkClick = (url: string) => {
     vscode.postMessage({
-      command: "openExternal",
-      url,
+      type: "open-external",
+      data: { url },
     })
   }
 

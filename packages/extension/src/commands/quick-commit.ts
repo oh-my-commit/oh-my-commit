@@ -52,6 +52,10 @@ export class QuickCommitCommand implements BaseCommand {
             vscode.window.showInformationMessage(message.data.message)
             break
 
+          case "open-external":
+            vscode.env.openExternal(vscode.Uri.parse(message.data.url))
+            break
+
           case "regenerate-commit":
             if (message.data.requestStagedFiles) {
               await this.syncFilesAndCommits()
