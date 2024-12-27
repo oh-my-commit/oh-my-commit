@@ -116,8 +116,7 @@ A:
 A: 你可以通过以下方式获取帮助：
 
 1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
-2. 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit)
-3. 查看详细的[开发文档](docs/yet-another-best-practice/)
+2. TODO: 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit)
 </details>
 
 ## 其他问题
@@ -138,8 +137,6 @@ A: 是的，Oh My Commit 支持：
 
 A: 我们欢迎社区贡献！请：
 
-1. 阅读我们的[贡献指南](CONTRIBUTING.md)
-2. 了解项目的[最佳实践](docs/yet-another-best-practice/)
-3. 遵循项目的 API 规范
-4. 提交 Pull Request
+1. 阅读我们的[贡献指南](https://github.com/cs-magic-open/oh-my-commit/blob/main/CONTRIBUTING.md)
+2. 提交 Pull Request
 </details>
