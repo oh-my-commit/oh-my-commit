@@ -2,19 +2,18 @@
   "name": "@oh-my-commit/cli",
   "version": "0.14.1",
   "description": "Command-line interface for AI-powered commit message generation",
-  "type": "module",
   "bin": {
-    "omc": "./dist/index.mjs"
+    "omc": "./dist/index.js"
   },
   "exports": {
-    ".": "./dist/index.mjs",
-    "./config": "./dist/config.mjs"
+    ".": "./dist/index.js",
+    "./config": "./dist/config.js"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",

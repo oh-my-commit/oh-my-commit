@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- 249098a: fix esm import
+
+## 0.14.1
+
+### Patch Changes
+
 - 76b7cb3: fix: use esm
 
 ## 0.14.0
