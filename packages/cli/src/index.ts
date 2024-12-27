@@ -10,7 +10,9 @@ import "reflect-metadata"
 
 import chalk from "chalk"
 import { program } from "commander"
-import { readPackageUpSync } from "read-package-up"
+import figlet from "figlet"
+import { readFileSync } from "fs"
+import path, { resolve } from "path"
 import { Container } from "typedi"
 
 import {
@@ -27,16 +29,36 @@ import { GitCore, ProviderRegistry } from "@shared/server"
 import packageJson from "../package.json"
 import { CliConfig } from "./config"
 
+const displayBanner = () => {
+  // 解析并加载字体
+  const fontName = "Big"
+  const fontDir = resolve(require.resolve("figlet/package.json"), "../fonts")
+  const fontPath = path.join(fontDir, `${fontName}.flf`)
+  const fontData = readFileSync(fontPath, "utf8")
+  figlet.parseFont(fontName, fontData)
+
+  console.log(
+    chalk.cyan(
+      figlet.textSync("Oh My Commit", {
+        font: fontName,
+        horizontalLayout: "default",
+      })
+    )
+  )
+  console.log(
+    chalk.gray(
+      "✨ AI-powered commit message generator\n" +
+        `📦 Version ${packageJson.version}\n`
+    )
+  )
+}
+
 Container.set(TOKENS.Config, Container.get(CliConfig))
 Container.set(TOKENS.Logger, Container.get(ConsoleLogger))
 Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
 const git = Container.get(GitCore)
 
 const commitManager: CommitManager = Container.get(CommitManager)
-
-commitManager.logger.info(
-  chalk.blue("our coooooooool commit manager initialized")
-)
 
 // Command handlers
 const listModels = async () => {
@@ -180,6 +202,9 @@ program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
   .version(packageJson?.version ?? "0.0.0")
+  .hook("preAction", () => {
+    displayBanner()
+  })
 
 // Init command
 program

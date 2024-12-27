@@ -28,6 +28,7 @@
     "@types/node": "^20.0.0",
     "chokidar": "^4.0.3",
     "eslint": "^8.0.0",
+    "figlet": "^1.8.0",
     "tsconfig": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.0.0"
