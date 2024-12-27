@@ -6,12 +6,14 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 
 import { useSetAtom } from "jotai"
 
 import type { ServerMessageEvent } from "@shared/common"
 
+import { diffResultAtom } from "@/state/atoms/commit.changed-files"
+import { gitStatusAtom } from "@/state/atoms/git"
 import { progressAtom } from "@/state/atoms/progress"
 
 import { useMessage } from "./use-message"

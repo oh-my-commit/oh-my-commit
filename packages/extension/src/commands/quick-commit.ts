@@ -232,6 +232,24 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   private async syncFilesAndCommits(selectedFiles?: string[]) {
+    // First check git status
+    const isGitRepository = await this.gitService.isGitRepository()
+    const workspaceRoot = this.gitService.workspaceRoot
+
+    // Send git status
+    await this.webviewManager?.postMessage({
+      type: "git-status",
+      data: {
+        isGitRepository,
+        workspaceRoot: workspaceRoot || null,
+      },
+    })
+
+    // If not a git repository, don't proceed with diff
+    if (!isGitRepository) {
+      return
+    }
+
     const diff = await this.getLatestDiff(selectedFiles)
     if (!selectedFiles) {
       await this.webviewManager?.postMessage({

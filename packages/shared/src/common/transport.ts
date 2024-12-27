@@ -114,3 +114,10 @@ export type ServerMessageEvent =
       type: "diff-file-result"
       data: DiffFileResult
     }
+  | {
+      type: "git-status"
+      data: {
+        isGitRepository: boolean
+        workspaceRoot: string | null
+      }
+    }

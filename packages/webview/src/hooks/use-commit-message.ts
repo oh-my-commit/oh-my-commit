@@ -22,6 +22,7 @@ import {
   isCommittingAtom,
   isGeneratingAtom,
 } from "@/state/atoms/commit.message"
+import { gitStatusAtom } from "@/state/atoms/git"
 
 import { useMessage } from "./use-message"
 
@@ -32,6 +33,7 @@ export const useCommitMessage = () => {
   const setIsGenerating = useSetAtom(isGeneratingAtom)
   const setIsCommitting = useSetAtom(isCommittingAtom)
   const setDiffDetail = useSetAtom(diffDetailAtom)
+  const setGitStatus = useSetAtom(gitStatusAtom)
 
   const handleCommitMessage = useCallback(
     (message: ServerMessageEvent) => {
@@ -63,6 +65,10 @@ export const useCommitMessage = () => {
             })
           }
           break
+
+        case "git-status":
+          setGitStatus(message.data)
+          break
       }
     },
     [
@@ -72,6 +78,7 @@ export const useCommitMessage = () => {
       setIsGenerating,
       setIsCommitting,
       setDiffDetail,
+      setGitStatus,
     ]
   )
 
