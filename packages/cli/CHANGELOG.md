@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.14.1
+
+### Patch Changes
+
+- 76b7cb3: fix: use esm
+
 ## 0.14.0
 
 ### Minor Changes
