@@ -13,13 +13,12 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import { useAtom } from "jotai"
 
 import { clientPush } from "@/clientPush"
-import { CommitFormatTooltip } from "@/components/commit/commit-format-tooltip"
+import { CommitGuide } from "@/components/commit/commit-format-tooltip"
 import { FeedbackButton } from "@/components/commit/feedback-button"
 import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { ErrorMessage } from "@/components/ui/error-message"
-import { selectedFilesAtom } from "@/state/atoms/commit.changed-files"
 import {
   commitBodyAtom,
   commitTitleAtom,
@@ -32,9 +31,9 @@ const MAX_DETAIL_LENGTH = 1000
 export function CommitMessage() {
   const [title, setTitle] = useAtom(commitTitleAtom)
   const [body, setBody] = useAtom(commitBodyAtom)
-  const [showTooltip, setShowTooltip] = useState(false)
+  const [showCommitGuide, setShowCommitGuide] = useState(false)
   const [isGenerating, setIsGenerating] = useAtom(isGeneratingAtom)
-  const [selectedFiles, _setSelectedFiles] = useAtom(selectedFilesAtom)
+
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
   const isSubjectValid =
@@ -47,7 +46,7 @@ export function CommitMessage() {
         tooltipContainerRef.current &&
         !tooltipContainerRef.current.contains(event.target as Node)
       ) {
-        setShowTooltip(false)
+        setShowCommitGuide(false)
       }
     }
 
@@ -55,14 +54,9 @@ export function CommitMessage() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  // 处理重新生成
   const handleRegenerate = () => {
     setIsGenerating(true)
-    clientPush({
-      channel: "commitMesage",
-      type: "selected-files",
-      data: selectedFiles,
-    })
+    // todo: regenerate
   }
 
   const handleCommit = () => {
@@ -75,11 +69,11 @@ export function CommitMessage() {
         <div ref={tooltipContainerRef} className="relative">
           <button
             className="flex items-center justify-center w-4 h-4 rounded-sm hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)] opacity-60 hover:opacity-100 transition-opacity duration-150"
-            onClick={() => setShowTooltip(!showTooltip)}
+            onClick={() => setShowCommitGuide(!showCommitGuide)}
           >
             <InfoIcon />
           </button>
-          {showTooltip && <CommitFormatTooltip />}
+          {showCommitGuide && <CommitGuide />}
         </div>
       }
       title="Commit Message"

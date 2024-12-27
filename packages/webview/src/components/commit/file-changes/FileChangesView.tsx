@@ -16,19 +16,15 @@ import { FlatView } from "./FlatView"
 import { TreeView } from "./TreeView"
 
 interface FileChangesViewProps {
-  selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (paths: string | string[]) => void
   onClick: (path: string) => void
   className?: string
 }
 
 export const FileChangesView: React.FC<FileChangesViewProps> = ({
-  selectedFiles,
   selectedPath,
   searchQuery,
-  onSelect,
   onClick,
   className,
 }) => {
@@ -40,19 +36,15 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
         <FlatView
           className={className}
           searchQuery={searchQuery}
-          selectedFiles={selectedFiles}
           selectedPath={selectedPath}
           onClick={onClick}
-          onSelect={onSelect}
         />
       ) : (
         <TreeView
           className={className}
           searchQuery={searchQuery}
-          selectedFiles={selectedFiles}
           selectedPath={selectedPath}
           onClick={onClick}
-          onSelect={onSelect}
         />
       )}
     </div>

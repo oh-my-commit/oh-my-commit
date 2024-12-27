@@ -12,7 +12,7 @@ import Markdown from "marked-react"
 
 import { loadMarkdown } from "@/utils/loadMarkdown"
 
-export const CommitFormatTooltip = () => {
+export const CommitGuide = () => {
   const [markdown, setMarkdown] = useState("")
   const [loading, setLoading] = useState(true)
 

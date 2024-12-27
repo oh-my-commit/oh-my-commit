@@ -7,36 +7,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as React from "react"
-
 import { useAtom } from "jotai"
-
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
-
 import { FileItem } from "./FileItem"
 
 export interface FlatViewProps {
-  selectedFiles: string[]
   selectedPath?: string
   searchQuery?: string
-  onSelect: (paths: string | string[]) => void
   onClick: (path: string) => void
   className?: string
 }
 
 export const FlatView: React.FC<FlatViewProps> = ({
-  selectedFiles,
   selectedPath,
   searchQuery,
-  onSelect,
   onClick,
   className,
 }) => {
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
-
-  const handleSelect = (path: string) => {
-    onSelect([path])
-  }
 
   return (
     <div className={className}>
@@ -48,10 +37,8 @@ export const FlatView: React.FC<FlatViewProps> = ({
           isOpen={selectedPath === file.file}
           level={0}
           searchQuery={searchQuery}
-          selected={selectedFiles.includes(file.file)}
           viewMode="flat"
           onClick={onClick}
-          onSelect={handleSelect}
         />
       ))}
     </div>

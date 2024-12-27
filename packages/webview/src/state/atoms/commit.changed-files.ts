@@ -7,30 +7,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 import type { DiffResult } from "simple-git"
-
 import type { DiffFileResult } from "@shared/common"
-
 import { atomWithStorage } from "@/lib/storage"
 
-// 文件变更状态
+// File changes state
 export const diffResultAtom = atomWithStorage<DiffResult | null>({
   key: "oh-my-commit.commit.changed-files",
   defaultValue: null,
 })
 
-// 选中的文件路径列表
-export const selectedFilesAtom = atomWithStorage<string[]>({
-  defaultValue: [],
-  key: "oh-my-commit.commit.changed-files.selected",
-})
-
-// 展开的目录列表
+// Expanded directories list
 export const expandedDirsAtom = atomWithStorage<string[]>({
   defaultValue: [],
   key: "oh-my-commit.commit.changed-files.expanded",
 })
 
-// 最后打开的文件路径
+// Last opened file path
 export const lastOpenedFilePathAtom = atomWithStorage<string | null>({
   defaultValue: null,
   key: "oh-my-commit.commit.changed-files.last-opened",
@@ -40,6 +32,7 @@ export const diffDetailAtom = atomWithStorage<DiffFileResult | null>({
   defaultValue: null,
   key: "oh-my-commit.commit.changed-files.diff-detail",
 })
+
 export const viewModeAtom = atomWithStorage<"flat" | "tree">({
   defaultValue: "flat",
   key: "oh-my-commit.commit.changed-files.view-mode",

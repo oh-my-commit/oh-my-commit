@@ -19,6 +19,8 @@ export default defineConfig({
     logo: "/logo.svg",
     nav: [
       { text: "指南", link: "/guide/introduction" },
+      { text: "产品", link: "/product/prd" },
+      { text: "开发", link: "/development/todo" },
       { text: "API", link: "/api/" },
       { text: "即将推出", link: "/guide/coming-soon" },
       {
@@ -35,6 +37,7 @@ export default defineConfig({
             { text: "介绍", link: "/guide/introduction" },
             { text: "快速开始", link: "/guide/getting-started" },
             { text: "用户配置", link: "/guide/configuration" },
+            { text: "常见问题", link: "/guide/faq" },
           ],
         },
         {
@@ -43,6 +46,7 @@ export default defineConfig({
             { text: "AI 能力", link: "/guide/ai-capabilities" },
             { text: "提交模式", link: "/guide/commit-modes" },
             { text: "团队协作", link: "/guide/team-collaboration" },
+            { text: "文件变更视图", link: "/guide/file-changes-view" },
           ],
         },
         {
@@ -55,6 +59,26 @@ export default defineConfig({
         {
           text: "未来特性",
           items: [{ text: "即将推出", link: "/guide/coming-soon" }],
+        },
+      ],
+      "/product/": [
+        {
+          text: "产品",
+          items: [
+            { text: "产品需求文档", link: "/product/prd" },
+            { text: "设计理念", link: "/product/design" },
+            { text: "路线图", link: "/product/roadmap" },
+          ],
+        },
+      ],
+      "/development/": [
+        {
+          text: "开发",
+          items: [
+            { text: "开发计划", link: "/development/todo" },
+            { text: "架构设计", link: "/development/architecture" },
+            { text: "最佳实践", link: "/development/best-practices" },
+          ],
         },
       ],
       "/api/": [
