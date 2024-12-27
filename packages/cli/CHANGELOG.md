@@ -1,5 +1,18 @@
 # @oh-my-commit/cli
 
+## 0.13.0
+
+### Minor Changes
+
+- 9bba0e4: feat: cancel file selection
+
+### Patch Changes
+
+- e868400: cancel select file feat
+- Updated dependencies [e868400]
+- Updated dependencies [9bba0e4]
+  - @oh-my-commit/shared@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
