@@ -69,6 +69,15 @@ export type ClientMessageEvent_ =
         filePath: string
       }
     }
+  | {
+      type: "regenerate"
+    }
+  | {
+      type: "regenerate-commit"
+      data: {
+        requestStagedFiles: boolean
+      }
+    }
 
 export type DiffFileResult = ResultDTO<{
   diff: string

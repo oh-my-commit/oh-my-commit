@@ -49,6 +49,12 @@ export class QuickCommitCommand implements BaseCommand {
           vscode.window.showInformationMessage(message.data.message)
           break
 
+        case "regenerate-commit":
+          if (message.data.requestStagedFiles) {
+            await this.syncFilesAndCommits()
+          }
+          break
+
         case "selected-files":
           await this.syncFilesAndCommits(message.data)
           break

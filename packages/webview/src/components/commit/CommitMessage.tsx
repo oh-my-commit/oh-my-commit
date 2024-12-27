@@ -12,6 +12,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
+import { clientPush } from "@/clientPush"
 import { CommitGuide } from "@/components/commit/commit-guide"
 import { FeedbackButton } from "@/components/commit/feedback-button"
 import { InfoIcon } from "@/components/commit/info-icon"
@@ -55,7 +56,12 @@ export function CommitMessage() {
 
   const handleRegenerate = () => {
     setIsGenerating(true)
-    // todo: regenerate
+    clientPush({
+      type: "regenerate-commit",
+      data: {
+        requestStagedFiles: true,
+      },
+    })
   }
 
   const handleCommit = () => {
