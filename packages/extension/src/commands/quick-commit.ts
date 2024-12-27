@@ -13,9 +13,11 @@ import * as vscode from "vscode"
 
 import {
   COMMAND_QUICK_COMMIT,
+  ClientMessageEvent,
   type CommitManager,
   type ServerMessageEvent,
   TOKENS,
+  formatError,
 } from "@shared/common"
 
 import type { BaseCommand } from "@/vscode-command"
@@ -39,72 +41,135 @@ export class QuickCommitCommand implements BaseCommand {
     private readonly webviewManager: VscodeWebview
   ) {
     // 设置 webview 的消息处理
-    this.webviewManager.setMessageHandler(async (message) => {
-      switch (message.type) {
-        case "init":
-          await this.syncFilesAndCommits()
-          break
-
-        case "show-info":
-          vscode.window.showInformationMessage(message.data.message)
-          break
-
-        case "regenerate-commit":
-          if (message.data.requestStagedFiles) {
+    this.webviewManager.setMessageHandler(
+      async (message: ClientMessageEvent) => {
+        switch (message.type) {
+          case "init":
             await this.syncFilesAndCommits()
-          }
-          break
+            break
 
-        case "selected-files":
-          await this.syncFilesAndCommits(message.data)
-          break
+          case "show-info":
+            vscode.window.showInformationMessage(message.data.message)
+            break
 
-        case "commit":
-          // todo
-          break
-
-        case "diff-file":
-          this.logger.info(
-            "[VscodeWebview] Getting file diff for:",
-            message.data.filePath
-          )
-          try {
-            const workspaceRoot = this.gitService.workspaceRoot
-            if (!workspaceRoot) {
-              throw new Error("No workspace root found")
+          case "regenerate-commit":
+            if (message.data.requestStagedFiles) {
+              await this.syncFilesAndCommits()
             }
+            break
 
-            const filePath = message.data.filePath
-            const absolutePath = path.isAbsolute(filePath)
-              ? filePath
-              : path.join(workspaceRoot, filePath)
+          case "selected-files":
+            await this.syncFilesAndCommits(message.data)
+            break
 
-            const uri = vscode.Uri.file(absolutePath)
-            this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
+          case "commit":
+            this.logger.info(
+              "[VscodeWebview] Committing changes with message:",
+              message.data
+            )
+            try {
+              const { title, body } = message.data
+              const commitMessage = body ? `${title}\n\n${body}` : title
 
-            // 获取 git 扩展
-            const gitExtension =
-              vscode.extensions.getExtension<any>("vscode.git")?.exports
-            if (!gitExtension) {
-              throw new Error("Git extension not found")
+              // Ensure changes are staged
+              await this.gitService.stageAll()
+
+              // Check if there are changes to commit
+              if (!(await this.gitService.hasChanges())) {
+                throw new Error("No changes to commit")
+              }
+
+              // Perform the commit
+              await this.gitService.commit(commitMessage)
+
+              // Send success response
+              await this.webviewManager?.postMessage({
+                type: "commit-result",
+                data: {
+                  ok: true,
+                  data: { message: "Changes committed successfully" },
+                },
+              })
+
+              // Show success message
+              vscode.window.showInformationMessage(
+                "Changes committed successfully"
+              )
+
+              // Refresh git status
+              await this.syncFilesAndCommits()
+            } catch (error) {
+              this.logger.error(
+                "[VscodeWebview] Failed to commit changes:",
+                error
+              )
+
+              // Send error response
+              await this.webviewManager?.postMessage({
+                type: "commit-result",
+                data: {
+                  ok: false,
+                  code: 500,
+                  message: formatError(error, "Failed to commit changes"),
+                },
+              })
+
+              // Show error message
+              vscode.window.showErrorMessage(
+                formatError(error, "Failed to commit changes")
+              )
             }
+            break
 
-            const git = gitExtension.getAPI(1)
-            const repository = git.repositories[0]
-            if (!repository) {
-              throw new Error("No repository found")
+          case "diff-file":
+            this.logger.info(
+              "[VscodeWebview] Getting file diff for:",
+              message.data.filePath
+            )
+            try {
+              const workspaceRoot = this.gitService.workspaceRoot
+              if (!workspaceRoot) {
+                throw new Error("No workspace root found")
+              }
+
+              const filePath = message.data.filePath
+              const absolutePath = path.isAbsolute(filePath)
+                ? filePath
+                : path.join(workspaceRoot, filePath)
+
+              const uri = vscode.Uri.file(absolutePath)
+              this.logger.info(
+                "[VscodeWebview] Resolved file path:",
+                uri.fsPath
+              )
+
+              // 获取 git 扩展
+              const gitExtension =
+                vscode.extensions.getExtension<any>("vscode.git")?.exports
+              if (!gitExtension) {
+                throw new Error("Git extension not found")
+              }
+
+              const git = gitExtension.getAPI(1)
+              const repository = git.repositories[0]
+              if (!repository) {
+                throw new Error("No repository found")
+              }
+
+              // 打开差异视图
+              await vscode.commands.executeCommand("git.openChange", uri)
+
+              this.logger.info("[VscodeWebview] Opened file diff")
+            } catch (error) {
+              this.logger.error(
+                "[VscodeWebview] Failed to get file diff:",
+                error
+              )
             }
-
-            // 打开差异视图
-            await vscode.commands.executeCommand("git.openChange", uri)
-
-            this.logger.info("[VscodeWebview] Opened file diff")
-          } catch (error) {
-            this.logger.error("[VscodeWebview] Failed to get file diff:", error)
-          }
-          break
+            break
+        }
       }
-    })
+    )
 
     // Clean up file watcher when extension is deactivated
     this.context.subscriptions.push(this)

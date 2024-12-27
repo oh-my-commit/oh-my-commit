@@ -26,3 +26,5 @@ export const isGeneratingAtom = atom(
   // 所以默认为 true
   true
 )
+
+export const isCommittingAtom = atom(false)

@@ -19,6 +19,7 @@ import {
 import {
   commitBodyAtom,
   commitTitleAtom,
+  isCommittingAtom,
   isGeneratingAtom,
 } from "@/state/atoms/commit.message"
 
@@ -29,6 +30,7 @@ export const useCommitMessage = () => {
   const setBody = useSetAtom(commitBodyAtom)
   const setDiffResult = useSetAtom(diffResultAtom)
   const setIsGenerating = useSetAtom(isGeneratingAtom)
+  const setIsCommitting = useSetAtom(isCommittingAtom)
   const setDiffDetail = useSetAtom(diffDetailAtom)
 
   const handleCommitMessage = useCallback(
@@ -48,11 +50,29 @@ export const useCommitMessage = () => {
           setDiffDetail(message.data)
           break
         case "commit-result":
-          // 处理提交结果
+          setIsCommitting(false)
+          if (message.data.ok) {
+            // Clear the form on successful commit
+            setTitle("")
+            setBody("")
+            setDiffResult({
+              changed: 0,
+              deletions: 0,
+              insertions: 0,
+              files: [],
+            })
+          }
           break
       }
     },
-    [setTitle, setBody, setDiffResult, setIsGenerating, setDiffDetail]
+    [
+      setTitle,
+      setBody,
+      setDiffResult,
+      setIsGenerating,
+      setIsCommitting,
+      setDiffDetail,
+    ]
   )
 
   useMessage(handleCommitMessage)
@@ -61,5 +81,6 @@ export const useCommitMessage = () => {
     setTitle,
     setBody,
     setIsGenerating,
+    setIsCommitting,
   }
 }

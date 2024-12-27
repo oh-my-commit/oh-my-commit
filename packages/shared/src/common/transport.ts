@@ -62,6 +62,10 @@ export type ClientMessageEvent_ =
   // 4. 用户执行提交
   | {
       type: "commit"
+      data: {
+        title: string
+        body: string
+      }
     }
   | {
       type: "diff-file"

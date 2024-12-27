@@ -14,7 +14,8 @@ import { useAtom } from "jotai"
 
 import { clientPush } from "@/clientPush"
 import { CommitGuide } from "@/components/commit/commit-guide"
-import { FeedbackButton } from "@/components/commit/feedback-button"
+// todo: integrate feedbackv
+// import { FeedbackButton } from "@/components/commit/feedback-button"
 import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
@@ -22,6 +23,7 @@ import { ErrorMessage } from "@/components/ui/error-message"
 import {
   commitBodyAtom,
   commitTitleAtom,
+  isCommittingAtom,
   isGeneratingAtom,
 } from "@/state/atoms/commit.message"
 
@@ -33,6 +35,7 @@ export function CommitMessage() {
   const [body, setBody] = useAtom(commitBodyAtom)
   const [showCommitGuide, setShowCommitGuide] = useState(false)
   const [isGenerating, setIsGenerating] = useAtom(isGeneratingAtom)
+  const [isCommitting, setIsCommitting] = useAtom(isCommittingAtom)
 
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
@@ -65,8 +68,30 @@ export function CommitMessage() {
   }
 
   const handleCommit = () => {
-    // todo: commit
+    if (!title.trim()) return
+
+    // Show loading state
+    setIsCommitting(true)
+
+    // Send commit request to extension
+    clientPush({
+      type: "commit",
+      data: {
+        title: title.trim(),
+        body: body.trim(),
+      },
+    })
   }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && !disabled) {
+        handleCommit()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [disabled, title, body])
 
   return (
     <Section
@@ -100,60 +125,37 @@ export function CommitMessage() {
               Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
             </ErrorMessage>
           )}
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-            Details
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)] mt-2">
+            Description
           </div>
           <MessageInput
-            multiline
-            className="min-h-[120px]"
+            className="h-[120px]"
             maxLength={MAX_DETAIL_LENGTH}
-            placeholder="Add a detailed description of your changes (optional)"
+            placeholder="Add a more detailed description (optional)"
             value={body}
             onChange={setBody}
+            multiline
           />
+          <div className="flex justify-between items-center mt-4 gap-2">
+            <div className="flex items-center gap-2">
+              <VSCodeButton
+                appearance="secondary"
+                disabled={isGenerating}
+                onClick={handleRegenerate}
+              >
+                Regenerate
+              </VSCodeButton>
+              {/* <FeedbackButton /> */}
+            </div>
+            <VSCodeButton
+              disabled={disabled || isGenerating || isCommitting}
+              onClick={handleCommit}
+            >
+              {isCommitting ? "Committing..." : "Commit Changes"}
+            </VSCodeButton>
+          </div>
         </div>
       </Section.Content>
-
-      <Section.Footer>
-        <FeedbackButton
-          disabled={disabled}
-          onFeedback={() => {
-            // todo: feedback
-          }}
-        />
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            className={`px-1 py-1 text-xs rounded-sm inline-flex items-center gap-1.5 select-none transition-colors ${
-              isGenerating
-                ? "opacity-50 cursor-not-allowed animate-spin"
-                : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
-            }`}
-            disabled={isGenerating}
-            title="Regenerate commit message"
-            onClick={handleRegenerate}
-          >
-            <i className="codicon codicon-refresh" />
-          </button>
-
-          <VSCodeButton
-            appearance="primary"
-            className="shrink-0 w-fill inline-flex items-center justify-center gap-2 relative"
-            disabled={!isSubjectValid || disabled || isGenerating}
-            onClick={handleCommit}
-          >
-            <span className="w-full hidden xs:block text-center">
-              Commit Changes
-            </span>
-            <span className="grow block xs:hidden">
-              <i className="codicon codicon-git-commit" />
-            </span>
-          </VSCodeButton>
-        </div>
-      </Section.Footer>
     </Section>
   )
 }

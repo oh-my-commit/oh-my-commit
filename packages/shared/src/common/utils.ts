@@ -7,17 +7,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export function formatError(error: unknown): string {
+export function formatError(error: unknown, prefix = ""): string {
+  let s = ""
   if (error instanceof Error) {
-    return error.message
-  }
-  if (typeof error === "string") {
-    return error
-  }
-  if (error && typeof error === "object" && "message" in error) {
-    return String(error.message)
-  }
-  return String(error)
+    s = error.message
+  } else if (typeof error === "string") {
+    s = error
+  } else if (error && typeof error === "object" && "message" in error) {
+    s = String(error.message)
+  } else s = String(error)
+  return prefix ? `[${prefix}] ${s}` : s
 }
 
 export function formatMessage(...args: any[]): string {
