@@ -50,26 +50,28 @@ export const CommitPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Progress />
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col">
         {hasChanges ? (
           <>
             <CommitMessage />
             <FileChanges />
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center gap-2">
-            <div className="codicon codicon-git-commit text-[48px] text-[var(--vscode-foreground)] opacity-40" />
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-2">
+            <div className="codicon codicon-git-commit !text-[48px] text-[var(--vscode-foreground)] opacity-40" />
             <VSCodeDivider />
             <div className="my-4">
               <h2 className="text-[var(--vscode-foreground)] font-normal text-base mb-2">
                 No Changes to Commit
               </h2>
               <p className="text-[var(--vscode-descriptionForeground)] text-sm max-w-md">
-                Your working directory is clean. Make some changes to your files
-                and they'll appear here for commit.
+                Your working directory is clean.
+                <br />
+                Make some changes to your files and they'll appear here for
+                commit.
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col xs:flex-row gap-2">
               <VSCodeButton
                 appearance="secondary"
                 onClick={handleOpenSourceControl}
