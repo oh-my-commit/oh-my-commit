@@ -43,10 +43,11 @@ export type BaseServerMessageEvent =
       }
     }
 
-export type ClientMessageEvent_ =
+export type ClientMessageEvent =
   | BaseClientMessageEvent
   | {
       type: "init"
+      channel?: string
     }
   | {
       type: "show-info"
@@ -82,6 +83,10 @@ export type ClientMessageEvent_ =
         requestStagedFiles: boolean
       }
     }
+  | {
+      type: "execute-command"
+      command: string
+    }
 
 export type DiffFileResult = ResultDTO<{
   diff: string
@@ -109,7 +114,3 @@ export type ServerMessageEvent =
       type: "diff-file-result"
       data: DiffFileResult
     }
-
-export type ClientMessageEvent = ClientMessageEvent_ & {
-  channel?: string
-}

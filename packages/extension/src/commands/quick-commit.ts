@@ -167,6 +167,23 @@ export class QuickCommitCommand implements BaseCommand {
               )
             }
             break
+
+          case "execute-command":
+            if (message.command) {
+              try {
+                await vscode.commands.executeCommand(message.command)
+                this.logger.info(
+                  "[VscodeWebview] Executed command:",
+                  message.command
+                )
+              } catch (error) {
+                this.logger.error(
+                  "[VscodeWebview] Failed to execute command:",
+                  error
+                )
+              }
+            }
+            break
         }
       }
     )
