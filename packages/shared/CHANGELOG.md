@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.15.0
+
+### Minor Changes
+
+- 92f18df: fix cli
+
 ## 0.14.0
 
 ### Minor Changes

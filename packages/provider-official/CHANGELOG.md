@@ -1,5 +1,16 @@
 # @oh-my-commit/provider-official
 
+## 0.15.0
+
+### Minor Changes
+
+- 92f18df: fix cli
+
+### Patch Changes
+
+- Updated dependencies [92f18df]
+  - @oh-my-commit/shared@0.15.0
+
 ## 0.14.0
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @oh-my-commit/website
 
+## 0.15.0
+
+### Minor Changes
+
+- 92f18df: fix cli
+
+### Patch Changes
+
+- 5598d5e: fix dead links
+
 ## 0.14.0
 
 ### Minor Changes
