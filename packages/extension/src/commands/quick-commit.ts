@@ -180,6 +180,14 @@ export class QuickCommitCommand implements BaseCommand {
                   "[VscodeWebview] Executed command:",
                   message.command
                 )
+
+                // Auto refresh after git init
+                if (message.command === "git.init") {
+                  // Wait a bit for git to initialize
+                  setTimeout(async () => {
+                    await this.syncFilesAndCommits()
+                  }, 500)
+                }
               } catch (error) {
                 this.logger.error(
                   "[VscodeWebview] Failed to execute command:",

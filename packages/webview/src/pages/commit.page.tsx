@@ -6,7 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
 
@@ -29,6 +29,7 @@ export const CommitPage = () => {
   useCloseWindow()
   const [diffResult] = useAtom(diffResultAtom)
   const [gitStatus] = useAtom(gitStatusAtom)
+  const [isInitializing, setIsInitializing] = useState(false)
 
   useEffect(() => {
     clientPush({ type: "init", channel: "CommitPage" })
@@ -44,10 +45,15 @@ export const CommitPage = () => {
   }
 
   const handleInitGit = () => {
+    setIsInitializing(true)
     clientPush({
       type: "execute-command",
       command: "git.init",
     })
+    // Reset initializing state after a delay
+    setTimeout(() => {
+      setIsInitializing(false)
+    }, 1000)
   }
 
   const handleRefresh = () => {
@@ -75,16 +81,21 @@ export const CommitPage = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
+            <VSCodeButton onClick={handleInitGit} disabled={isInitializing}>
+              {isInitializing ? (
+                <span className="flex items-center gap-2">
+                  <span className="codicon codicon-loading codicon-modifier-spin" />
+                  Initializing...
+                </span>
+              ) : (
+                "Initialize Repository"
+              )}
+            </VSCodeButton>
             <VSCodeButton
               appearance="secondary"
-              onClick={handleOpenSourceControl}
+              onClick={handleRefresh}
+              disabled={isInitializing}
             >
-              Open Source Control
-            </VSCodeButton>
-            <VSCodeButton onClick={handleInitGit}>
-              Initialize Repository
-            </VSCodeButton>
-            <VSCodeButton appearance="secondary" onClick={handleRefresh}>
               Refresh
             </VSCodeButton>
           </div>
@@ -115,9 +126,7 @@ export const CommitPage = () => {
             >
               Open Source Control
             </VSCodeButton>
-            <VSCodeButton onClick={handleRefresh}>
-              Refresh
-            </VSCodeButton>
+            <VSCodeButton onClick={handleRefresh}>Refresh</VSCodeButton>
           </div>
         </div>
       )
