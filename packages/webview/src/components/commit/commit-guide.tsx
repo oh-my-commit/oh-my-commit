@@ -6,33 +6,50 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import Markdown from "marked-react"
-
-import { loadMarkdown } from "@/utils/loadMarkdown"
+import { outdent } from "outdent"
 
 export const CommitGuide = () => {
-  const [markdown, setMarkdown] = useState("")
-  const [loading, setLoading] = useState(true)
+  const [markdown, setMarkdown] = useState(outdent`
+    # Commit Specification
 
-  useEffect(() => {
-    const fetchMarkdown = async () => {
-      try {
-        const content = await loadMarkdown("commit-specification")
-        setMarkdown(content)
-      } catch (error) {
-        console.error("Failed to load markdown:", error)
-        setMarkdown(
-          "Failed to load commit format guide. Please try again later."
-        )
-      } finally {
-        setLoading(false)
-      }
-    }
+    ## Format
 
-    fetchMarkdown()
-  }, [])
+    Commit messages should follow this format:
+
+    \`\`\`
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+    \`\`\`
+
+    Where:
+    - \`<type>\`: The type of change (see Types section below)
+    - \`[optional scope]\`: The scope of the change (e.g., component or file name)
+    - \`<description>\`: A short description of the change
+    - \`[optional body]\`: A detailed description of the changes
+    - \`[optional footer(s)]\`: Any breaking changes or issue references
+
+    ## Types
+
+    - \`feat\`: A new feature
+    - \`fix\`: A bug fix
+    - \`docs\`: Documentation only changes
+    - \`style\`: Changes that do not affect the meaning of the code
+    - \`refactor\`: A code change that neither fixes a bug nor adds a feature
+    - \`perf\`: A code change that improves performance
+    - \`test\`: Adding missing or correcting existing tests
+    - \`build\`: Changes that affect the build system or dependencies
+    - \`ci\`: Changes to CI configuration files and scripts
+    - \`chore\`: Other changes that don't modify src or test files
+    - \`revert\`: Reverts a previous commit
+
+    [Learn more about Conventional Commits](https://www.conventionalcommits.org)
+  `)
 
   const renderer = {
     code(code: string, language: string) {
@@ -56,15 +73,12 @@ export const CommitGuide = () => {
 
   return (
     <div
-      className="absolute right-0 top-full mt-1 z-50 min-w-[320px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]"
+      className="absolute right-0 top-full mt-1 z-50 w-[240px] xs:w-[360px] p-3 rounded-sm shadow-lg bg-[var(--vscode-input-background)] border border-[var(--vscode-input-border)]"
       style={{ pointerEvents: "auto" }}
     >
       <div className="text-[11px] text-[var(--vscode-descriptionForeground)] space-y-3 markdown-content">
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <Markdown renderer={renderer} value={markdown} />
-        )}
+        <Markdown renderer={renderer} value={markdown} />
+
         <div className="pt-2 border-t border-[var(--vscode-widget-border)]">
           <a
             className="inline-flex items-center gap-1 text-[var(--vscode-textLink-foreground)] hover:text-[var(--vscode-textLink-activeForeground)] hover:underline"

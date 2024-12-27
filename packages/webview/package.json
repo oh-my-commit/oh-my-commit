@@ -30,6 +30,7 @@
     "jotai": "^2.10.4",
     "lodash-es": "^4.17.21",
     "marked-react": "^3.0.0",
+    "outdent": "^0.8.0",
     "parse-diff": "^0.11.1",
     "react": "^18.2.0",
     "react-diff-view": "^3.3.1",

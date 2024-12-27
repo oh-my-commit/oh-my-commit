@@ -12,8 +12,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
-import { clientPush } from "@/clientPush"
-import { CommitGuide } from "@/components/commit/commit-format-tooltip"
+import { CommitGuide } from "@/components/commit/commit-guide"
 import { FeedbackButton } from "@/components/commit/feedback-button"
 import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"

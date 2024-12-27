@@ -46,6 +46,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.469.0",
     "neverthrow": "^8.1.1",
+    "outdent": "^0.8.0",
     "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0"
   },
