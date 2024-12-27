@@ -29,17 +29,16 @@ export default defineConfig((options) => {
 
   return {
     ...baseConfig,
-    entry: ["./src/index.ts"],
-    format: ["cjs"],
-    // 不要将 shared 包视为外部依赖
-    noExternal: ["@oh-my-commit/shared"],
+    entry: ["src/index.ts"],
+    format: ["cjs"], // CLI 只需要 CJS 格式
     banner: {
       js: "#!/usr/bin/env node",
     },
     platform: "node",
     target: "node18",
-    onSuccess: async () => {
-      console.log("Build succeeded! Watching for changes...")
+    noExternal: ["@oh-my-commit/shared"],
+    onSuccess: () => {
+      console.log("Build successful!")
     },
   }
 })

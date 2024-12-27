@@ -6,10 +6,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import "reflect-metadata"
+
 import chalk from "chalk"
 import { program } from "commander"
 import { readPackageUpSync } from "read-package-up"
-import "reflect-metadata"
 import { Container } from "typedi"
 
 import {
@@ -23,6 +24,7 @@ import {
 } from "@shared/common"
 import { GitCore, ProviderRegistry } from "@shared/server"
 
+import packageJson from "../package.json"
 import { CliConfig } from "./config"
 
 Container.set(TOKENS.Config, Container.get(CliConfig))
@@ -174,12 +176,10 @@ const generateAndCommit = async (options: {
   }
 }
 
-// Register commands
-const pkg = readPackageUpSync()?.packageJson
 program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
-  .version(pkg?.version ?? "0.0.0")
+  .version(packageJson?.version ?? "0.0.0")
 
 // Init command
 program
