@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.14.2
+
+### Patch Changes
+
+- 4be7870: skip 11
+
 ## 0.14.1
 
 ### Patch Changes
