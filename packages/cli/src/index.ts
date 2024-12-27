@@ -147,12 +147,8 @@ const generateAndCommit = async (options: {
       await commitManager.config.update(SETTING_MODEL_ID, options.model)
     }
 
-    const result = await commitManager.generateCommit({
-      changed: 0, // TODO: Parse from git diff
-      files: [], // TODO: Parse from git diff
-      insertions: 0, // TODO: Parse from git diff
-      deletions: 0, // TODO: Parse from git diff
-    })
+    const diff = await git.getDiffResult()
+    const result = await commitManager.generateCommit(diff)
 
     if (!result.ok) {
       commitManager.logger.error(
