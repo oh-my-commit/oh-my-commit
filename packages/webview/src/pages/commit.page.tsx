@@ -50,6 +50,13 @@ export const CommitPage = () => {
     })
   }
 
+  const handleRefresh = () => {
+    clientPush({
+      type: "init",
+      channel: "CommitPage",
+    })
+  }
+
   // Render different states
   const renderContent = () => {
     if (!gitStatus?.isGitRepository) {
@@ -76,6 +83,9 @@ export const CommitPage = () => {
             </VSCodeButton>
             <VSCodeButton onClick={handleInitGit}>
               Initialize Repository
+            </VSCodeButton>
+            <VSCodeButton appearance="secondary" onClick={handleRefresh}>
+              Refresh
             </VSCodeButton>
           </div>
         </div>
@@ -105,14 +115,7 @@ export const CommitPage = () => {
             >
               Open Source Control
             </VSCodeButton>
-            <VSCodeButton
-              onClick={() => {
-                clientPush({
-                  type: "init",
-                  channel: "CommitPage",
-                })
-              }}
-            >
+            <VSCodeButton onClick={handleRefresh}>
               Refresh
             </VSCodeButton>
           </div>
