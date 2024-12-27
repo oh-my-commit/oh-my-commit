@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.15.1
+
+### Patch Changes
+
+- fd68817: fix 0.14.2
+
 ## 0.15.0
 
 ### Minor Changes

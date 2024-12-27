@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.15.1
+
+### Patch Changes
+
+- fd68817: fix 0.14.2
+- Updated dependencies [fd68817]
+  - @oh-my-commit/shared@0.15.1
+  - @oh-my-commit/webview@0.15.1
+
 ## 0.15.0
 
 ### Minor Changes
