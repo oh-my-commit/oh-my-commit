@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.15.2
+
+### Patch Changes
+
+- 8105bd3: fix cli from local
+
 ## 0.15.1
 
 ### Patch Changes
