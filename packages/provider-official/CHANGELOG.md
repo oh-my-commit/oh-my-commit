@@ -1,5 +1,16 @@
 # @oh-my-commit/provider-official
 
+## 0.14.0
+
+### Minor Changes
+
+- 9b3ed57: change commit logic
+
+### Patch Changes
+
+- Updated dependencies [9b3ed57]
+  - @oh-my-commit/shared@0.14.0
+
 ## 0.13.0
 
 ### Minor Changes
