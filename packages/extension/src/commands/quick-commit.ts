@@ -18,8 +18,6 @@ import {
   IInputOptions,
   IResult,
   ResultDTO,
-  type ServerMessageEvent,
-  TOKENS,
   formatError,
 } from "@shared/common"
 
@@ -40,7 +38,7 @@ export class QuickCommitCommand implements BaseCommand {
     private readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(TOKENS.Git) private readonly gitService: VscodeGit,
+    @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit,
 
     @Inject(TOKENS.Config)
     private readonly config: VscodeConfig,

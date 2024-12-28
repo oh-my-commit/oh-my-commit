@@ -12,12 +12,7 @@ import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import {
-  APP_NAME,
-  ClientMessageEvent,
-  ServerMessageEvent,
-  TOKENS,
-} from "@shared/common"
+import { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { TOKENS } from "./vscode-token"

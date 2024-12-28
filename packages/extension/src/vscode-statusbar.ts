@@ -15,7 +15,6 @@ import {
   BaseLogger,
   COMMAND_SELECT_MODEL,
   CommitManager,
-  TOKENS,
 } from "@shared/common"
 
 import { VscodeGit } from "./vscode-git"
@@ -34,7 +33,7 @@ export class StatusBarManager implements vscode.Disposable {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(TOKENS.Git) private readonly gitService: VscodeGit
+    @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit
   ) {
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
