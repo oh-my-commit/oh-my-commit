@@ -30,17 +30,10 @@ import packageJson from "../package.json"
 import { CliConfig } from "./config"
 
 const displayBanner = () => {
-  // 解析并加载字体
-  const fontName = "Big"
-  const fontDir = resolve(require.resolve("figlet/package.json"), "../fonts")
-  const fontPath = path.join(fontDir, `${fontName}.flf`)
-  const fontData = readFileSync(fontPath, "utf8")
-  figlet.parseFont(fontName, fontData)
-
+  // 使用默认字体，避免复杂的字体加载逻辑
   console.log(
     chalk.cyan(
       figlet.textSync("Oh My Commit", {
-        font: fontName,
         horizontalLayout: "default",
       })
     )
