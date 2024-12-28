@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress"
 
 export default defineConfig({
-  // base: '/docs/', // 使用子域名不需要 base
+  // 部署到组织的主页面，不需要 base 路径
   title: "Oh My Commit",
   description: "Your AI-Powered Git Commit Assistant - 让 Git 提交变得优雅而智能",
   lang: "zh-CN",

@@ -41,6 +41,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GH_TOKEN }}
-          external_repository: oh-my-commit/docs
+          external_repository: oh-my-commit/oh-my-commit.github.io
           publish_dir: docs/.vitepress/dist
           publish_branch: main
