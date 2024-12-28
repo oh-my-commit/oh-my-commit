@@ -59,7 +59,7 @@ export class CommitManager {
 
   async generateCommit(
     diff: DiffResult,
-    options?: IInputOptions
+    options: IInputOptions
   ): Promise<ResultDTO<IResult>> {
     try {
       const modelId =
@@ -84,15 +84,11 @@ export class CommitManager {
         }
       }
 
-      const generateOptions = options || {
-        lang: this.config.get("ohMyCommit.git.commitLanguage"),
-      }
-
       this.logger.debug(`Generating commit using model: ${modelId}`)
       const result = await provider.generateCommit({
         model: modelId,
         diff,
-        options: generateOptions,
+        options,
       })
 
       const parsed = ResultDTOSchema.safeParse(result)

@@ -15,6 +15,7 @@ import {
   COMMAND_QUICK_COMMIT,
   ClientMessageEvent,
   type CommitManager,
+  IInputOptions,
   type ServerMessageEvent,
   TOKENS,
   formatError,
@@ -338,10 +339,16 @@ export class QuickCommitCommand implements BaseCommand {
       })
     }
 
-    this.logger.info("[QuickCommit] Generating commit via acManager...")
-    const commit = await this.commitManager.generateCommit(diff, {
-      lang: this.config.get("ohMyCommit.git.commitLanguage"),
+    const options: IInputOptions = {
+      // 确保使用完整的配置路径
+      lang: await vscode.workspace
+        .getConfiguration("ohMyCommit")
+        .get("git.commitLanguage"),
+    }
+    this.logger.info("[QuickCommit] Generating commit via acManager: ", {
+      options,
     })
+    const commit = await this.commitManager.generateCommit(diff, options)
 
     const data: ServerMessageEvent = {
       type: "commit-message",
