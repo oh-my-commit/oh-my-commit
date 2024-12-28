@@ -39,7 +39,7 @@
 2. **克隆仓库**
 
    ```zsh
-   git clone https://github.com/cs-magic-open/oh-my-commit.git
+   git clone https://github.com/oh-my-commit/oh-my-commit.git
    cd oh-my-commit
    ```
 

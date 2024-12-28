@@ -88,7 +88,7 @@
 如果你遇到任何问题或有建议，请：
 
 1. 查看 [常见问题](docs/guide/faq.md)
-2. 提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
+2. 提交 [Issue](https://github.com/oh-my-commit/oh-my-commit/issues)
 
 ## 许可证
 

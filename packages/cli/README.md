@@ -10,7 +10,7 @@ Command-line interface for Oh My Commit - an AI-powered Git commit message gener
 
 ```bash
 # Clone the repository
-git clone https://github.com/cs-magic-open/oh-my-commit.git
+git clone https://github.com/oh-my-commit/oh-my-commit.git
 cd oh-my-commit
 
 # Install dependencies

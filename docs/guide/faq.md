@@ -115,7 +115,7 @@ A:
 
 A: 你可以通过以下方式获取帮助：
 
-1. 在 GitHub 上提交 [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
+1. 在 GitHub 上提交 [Issue](https://github.com/oh-my-commit/oh-my-commit/issues)
 2. TODO: 加入我们的 [Discord 社区](https://discord.gg/oh-my-commit)
 </details>
 
@@ -137,6 +137,6 @@ A: 是的，Oh My Commit 支持：
 
 A: 我们欢迎社区贡献！请：
 
-1. 阅读我们的[贡献指南](https://github.com/cs-magic-open/oh-my-commit/blob/main/CONTRIBUTING.md)
+1. 阅读我们的[贡献指南](https://github.com/oh-my-commit/oh-my-commit/blob/main/CONTRIBUTING.md)
 2. 提交 Pull Request
 </details>

@@ -1,14 +1,14 @@
 {
-  "name": "@cs-magic/oh-my-commit",
+  "name": "oh-my-commit",
   "displayName": "Oh My Commit",
   "version": "0.4.1",
   "description": "An elegant AI-powered commit message generator for VSCode",
-  "author": "cs-magic",
-  "publisher": "cs-magic",
+  "author": "markshawn2020",
+  "publisher": "markshawn2020",
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cs-magic-open/oh-my-commit"
+    "url": "https://github.com/oh-my-commit/oh-my-commit"
   },
   "keywords": [
     "git",

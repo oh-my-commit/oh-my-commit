@@ -9,7 +9,7 @@
 
 const MARKDOWN_URLS = {
   "commit-specification":
-    "https://raw.githubusercontent.com/cs-magic-open/oh-my-commit/main/packages/website/docs/yet-another-best-practice/commit-specification.md",
+    "https://raw.githubusercontent.com/oh-my-commit/oh-my-commit/main/packages/website/docs/yet-another-best-practice/commit-specification.md",
 }
 
 export const loadMarkdown = async (

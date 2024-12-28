@@ -47,8 +47,8 @@ class OfficialProvider extends BaseProvider implements IProvider {
   metadata = {
     version: "0.1.0",
     author: "CS Magic",
-    homepage: "https://github.com/cs-magic-open/oh-my-commits",
-    repository: "https://github.com/cs-magic-open/oh-my-commits",
+    homepage: "https://github.com/oh-my-commit/oh-my-commits",
+    repository: "https://github.com/oh-my-commit/oh-my-commits",
   }
 
   private anthropic: Anthropic | null = null
