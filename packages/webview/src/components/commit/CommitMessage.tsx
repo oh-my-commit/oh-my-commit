@@ -20,6 +20,7 @@ import { InfoIcon } from "@/components/commit/info-icon"
 import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { ErrorMessage } from "@/components/ui/error-message"
+import { cn } from "@/lib/utils"
 import {
   commitBodyAtom,
   commitTitleAtom,
@@ -142,12 +143,16 @@ export function CommitMessage() {
           <div className="flex justify-between items-center mt-4 gap-2">
             <div className="flex items-center gap-2">
               <VSCodeButton
-                appearance="secondary"
-                onClick={() => setShowSettings(true)}
+                appearance={showSettings ? "primary" : "secondary"}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowSettings(!showSettings)
+                }}
+                title="Settings"
               >
                 <span className="flex items-center w-fit">
                   <svg
-                    className="w-4 h-4 mr-1"
+                    className="w-4 h-4"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -167,21 +172,20 @@ export function CommitMessage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  {/* Settings */}
                 </span>
               </VSCodeButton>
 
               <VSCodeButton
-                appearance="secondary"
+                appearance={isGenerating ? "primary" : "secondary"}
                 disabled={isGenerating}
                 onClick={handleRegenerate}
               >
                 <span className="flex items-center w-fit">
                   <svg
-                    className="w-4 h-4 mr-1"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    className={cn("w-4 h-4", isGenerating && "animate-spin")}
                   >
                     <path
                       d="M1 4V10H7"
@@ -205,7 +209,6 @@ export function CommitMessage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  {/* {isGenerating ? "Regenerating..." : "Regenerate"} */}
                 </span>
               </VSCodeButton>
               {/* <FeedbackButton /> */}

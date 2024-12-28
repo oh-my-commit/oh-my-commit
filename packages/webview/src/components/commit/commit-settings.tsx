@@ -6,7 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
@@ -23,6 +23,33 @@ export function CommitSettingsDialog({
   onClose: () => void
 }) {
   const { commitLanguage, updateCommitLanguage } = useSettings()
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // 检查点击源是否是设置按钮或其子元素
+      const target = event.target as Element;
+      if (target.closest('vscode-button[title="Settings"]')) {
+        return;
+      }
+
+      // 检查点击源是否在面板外
+      if (panelRef.current && !panelRef.current.contains(target)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      // 使用 setTimeout 确保事件处理器在按钮点击事件之后执行
+      setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 0);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose])
 
   useEffect(() => {
     if (isOpen) {
@@ -51,13 +78,14 @@ export function CommitSettingsDialog({
 
   const panel = (
     <div
-      className={`fixed right-0 top-0 bottom-0 w-72 bg-[var(--vscode-editor-background)] border-l border-[var(--vscode-panel-border)] transform transition-transform duration-300 ease-in-out overflow-hidden shadow-lg ${
+      ref={panelRef}
+      className={`fixed right-0 top-0 bottom-0 w-72 bg-[var(--vscode-editor-background)] border-l border-[var(--vscode-panel-border)] transform transition-transform duration-200 ease-out overflow-hidden shadow-lg ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
       style={{
-        position: 'fixed',  // 强制使用固定定位
-        zIndex: 2147483647,  // 使用最大可能的 z-index
-        willChange: 'transform',  // 优化动画性能
+        position: "fixed",
+        zIndex: 2147483647,
+        willChange: "transform",
       }}
     >
       <div className="h-full flex flex-col">
