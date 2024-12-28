@@ -1,7 +1,6 @@
 import { defineConfig } from "vitepress"
 
 export default defineConfig({
-  base: '/oh-my-commit/',
   title: "Oh My Commit",
   description: "Your AI-Powered Git Commit Assistant - 让 Git 提交变得优雅而智能",
   lang: "zh-CN",
