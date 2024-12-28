@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-27
+ * @CreatedAt 2024-12-28
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -197,10 +197,9 @@ const generateAndCommit = async (options: {
 program
   .name(APP_NAME)
   .description("Oh My Commit - AI-powered commit message generator")
-  .version(packageJson?.version ?? "0.0.0")
-  .hook("preAction", () => {
-    displayBanner()
-  })
+  .version(packageJson?.version ?? "0.0.0", "-v, -V, --version")
+  .helpOption("-h, -H, --help")
+  .showHelpAfterError(true)
 
 // Init command
 program
@@ -231,10 +230,10 @@ program
   )
   .action(generateAndCommit)
 
-// Show help by default
-program.showHelpAfterError()
 if (process.argv.length === 2) {
-  program.help()
+  displayBanner()
+  program.outputHelp()
+  process.exit(1)
 }
 
 // Parse command line arguments
