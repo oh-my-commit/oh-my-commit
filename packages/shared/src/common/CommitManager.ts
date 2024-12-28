@@ -101,7 +101,7 @@ export class CommitManager {
         }
       }
 
-      return parsed.data
+      return parsed.data as ResultDTO<IResult>
     } catch (error: unknown) {
       this.logger.error("Failed to generate commit:", error)
       return {

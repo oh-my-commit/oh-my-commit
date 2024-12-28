@@ -107,7 +107,7 @@ export const FileItem: React.FC<FileItemProps> = ({
         <div className="flex-1 truncate text-[13px] pl-1 pr-2">
           <div className="flex items-center gap-0.5 transition-colors duration-100">
             {/* // todo: STATUS */}
-            <span
+            {/* <span
               className={cn(
                 "font-mono font-medium text-[12px]",
                 STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
@@ -115,7 +115,7 @@ export const FileItem: React.FC<FileItemProps> = ({
               title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
               {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
-            </span>
+            </span> */}
           </div>
 
           <span className="truncate">
