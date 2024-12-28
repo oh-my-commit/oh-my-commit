@@ -1,5 +1,16 @@
 # @oh-my-commit/shared
 
+## 0.17.0
+
+### Minor Changes
+
+- 776d14b: brand-new org of oh-my-commit
+
+### Patch Changes
+
+- d1fee47: tsup with patch
+- 3717858: fix dependencies
+
 ## 0.16.1
 
 ### Patch Changes

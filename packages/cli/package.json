@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/cli",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "description": "Command-line interface for AI-powered commit message generation",
   "bin": {
     "omc": "./dist/index.js"
