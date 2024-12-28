@@ -1,5 +1,16 @@
 # @oh-my-commit/extension
 
+## 0.16.1
+
+### Patch Changes
+
+- fde165e: fix extension
+- a7da32d: refactor: better extension
+- Updated dependencies [fde165e]
+- Updated dependencies [a7da32d]
+  - @oh-my-commit/shared@0.16.1
+  - @oh-my-commit/webview@0.16.1
+
 ## 0.16.0
 
 ### Minor Changes

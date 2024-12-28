@@ -1,5 +1,12 @@
 # @oh-my-commit/shared
 
+## 0.16.1
+
+### Patch Changes
+
+- fde165e: fix extension
+- a7da32d: refactor: better extension
+
 ## 0.16.0
 
 ### Minor Changes
