@@ -20,14 +20,12 @@ import {
 
 @Service()
 export class VscodeConfig implements IConfig {
-  private config = vscode.workspace.getConfiguration()
-
   get<T>(key: string): T | undefined {
-    return this.config.get<T>(key)
+    return vscode.workspace.getConfiguration().get<T>(key)
   }
 
   async update(key: string, value: any, global?: boolean): Promise<void> {
-    await this.config.update(key, value, global)
+    await vscode.workspace.getConfiguration().update(key, value, global)
   }
 }
 

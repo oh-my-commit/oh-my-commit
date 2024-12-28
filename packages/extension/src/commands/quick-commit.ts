@@ -340,10 +340,7 @@ export class QuickCommitCommand implements BaseCommand {
     }
 
     const options: IInputOptions = {
-      // 确保使用完整的配置路径
-      lang: await vscode.workspace
-        .getConfiguration("ohMyCommit")
-        .get("git.commitLanguage"),
+      lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),
     }
     this.logger.info("[QuickCommit] Generating commit via acManager: ", {
       options,
