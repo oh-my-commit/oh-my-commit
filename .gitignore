@@ -1,3 +1,6 @@
+docs/.vitepress/dist
+docs/.vitepress/cache
+
 .eslint.log
 .env
 .env.local
