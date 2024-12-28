@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.16.0
+
+### Minor Changes
+
+- 687da08: better webview with many problems fixed
+
 ## 0.15.1
 
 ### Patch Changes

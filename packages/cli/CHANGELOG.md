@@ -1,5 +1,16 @@
 # @oh-my-commit/cli
 
+## 0.16.0
+
+### Minor Changes
+
+- 687da08: better webview with many problems fixed
+
+### Patch Changes
+
+- Updated dependencies [687da08]
+  - @oh-my-commit/shared@0.16.0
+
 ## 0.15.2
 
 ### Patch Changes
