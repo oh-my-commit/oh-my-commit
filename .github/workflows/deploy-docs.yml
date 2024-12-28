@@ -44,4 +44,3 @@ jobs:
           external_repository: oh-my-commit/docs
           publish_dir: docs/.vitepress/dist
           publish_branch: main
-          cname: docs.oh-my-commit.github.io
