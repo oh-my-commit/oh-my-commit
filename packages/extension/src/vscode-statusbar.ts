@@ -25,6 +25,11 @@ import { VSCODE_TOKENS } from "./vscode-token"
 export class StatusBarManager implements vscode.Disposable {
   private disposables: vscode.Disposable[] = []
   private statusBarItem: vscode.StatusBarItem
+  private previousState?: {
+    text: string
+    tooltip?: string
+    command?: string
+  }
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
@@ -60,6 +65,34 @@ export class StatusBarManager implements vscode.Disposable {
     void this.update()
   }
 
+  public setWaiting(message: string = "Generating commit...") {
+    // Save current state
+    this.previousState = {
+      text: this.statusBarItem.text,
+      tooltip: this.statusBarItem.tooltip,
+      command:
+        typeof this.statusBarItem.command === "string"
+          ? this.statusBarItem.command
+          : undefined,
+    }
+
+    // Set waiting state
+    this.statusBarItem.text = `$(sync~spin) (${message})`
+    this.statusBarItem.tooltip = message
+    this.statusBarItem.command = undefined
+  }
+
+  public clearWaiting() {
+    if (this.previousState) {
+      this.statusBarItem.text = this.previousState.text
+      this.statusBarItem.tooltip = this.previousState.tooltip
+      this.statusBarItem.command = this.previousState.command
+      this.previousState = undefined
+    } else {
+      void this.update()
+    }
+  }
+
   private async update(): Promise<void> {
     try {
       if (!this.commitManager?.providersManager) {
@@ -69,7 +102,6 @@ export class StatusBarManager implements vscode.Disposable {
         return
       }
 
-      const modelId = this.commitManager.modelId
       const model = this.commitManager.model
       // this.logger.debug(`Updating status: `, { modelId, model })
       const isGitRepo = await this.gitService.isGitRepository()
@@ -101,7 +133,6 @@ export class StatusBarManager implements vscode.Disposable {
   }
 
   public dispose(): void {
-    this.logger.info("Disposing status bar")
     this.statusBarItem.dispose()
     this.disposables.forEach((d) => d.dispose())
   }

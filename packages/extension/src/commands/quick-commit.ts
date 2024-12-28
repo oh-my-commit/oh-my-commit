@@ -26,6 +26,7 @@ import {
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeConfig, VscodeLogger } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
+import { StatusBarManager } from "@/vscode-statusbar"
 import { VSCODE_TOKENS } from "@/vscode-token"
 import { VscodeWebview } from "@/vscode-webview"
 
@@ -45,7 +46,10 @@ export class QuickCommitCommand implements BaseCommand {
     private readonly config: VscodeConfig,
 
     @Inject(VSCODE_TOKENS.Webview)
-    private readonly webviewManager: VscodeWebview
+    private readonly webviewManager: VscodeWebview,
+
+    @Inject(VSCODE_TOKENS.StatusBar)
+    private readonly statusBar: StatusBarManager
   ) {
     // 监听配置变更
     context.subscriptions.push(
@@ -311,7 +315,21 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   async execute(): Promise<void> {
+    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
+    this.logger.info("[QuickCommit] UI mode:", uiMode)
+
+    // Show waiting state in status bar for notification mode
+    if (uiMode === "notification") {
+      this.statusBar.setWaiting("Generating commit message...")
+    }
+
     const commit = await this.genCommit()
+
+    // Clear waiting state
+    if (uiMode === "notification") {
+      this.statusBar.clearWaiting()
+    }
+
     if (!commit.ok) {
       void vscode.window.showErrorMessage(
         `Failed to generate commit! Reason: ${commit.message}`
@@ -319,8 +337,6 @@ export class QuickCommitCommand implements BaseCommand {
       return
     }
 
-    // Check UI mode
-    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
     this.logger.info("[QuickCommit] UI mode:", uiMode)
 
     if (uiMode === "notification") {

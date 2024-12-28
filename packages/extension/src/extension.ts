@@ -28,21 +28,22 @@ export async function activate(context: vscode.ExtensionContext) {
 
     Container.set(TOKENS_VSCODE.Context, context)
     Container.set(TOKENS.Logger, logger)
-    Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
-    Container.set(TOKENS_VSCODE.Git, Container.get(VscodeGit))
-    Container.set(TOKENS_VSCODE.Webview, Container.get(VscodeWebview))
-    Container.set(TOKENS.CommitManager, Container.get(CommitManager))
-
-    logger.info(`Initializing Background`)
-    // init providers, MUST wait
+    // log
+    Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+    // init providers, MUST wait, todo: parallel
     await Container.get(ProviderRegistry).initialize()
+    // log
+    Container.set(TOKENS_VSCODE.Git, Container.get(VscodeGit))
+    // log, config, context
+    Container.set(TOKENS_VSCODE.Webview, Container.get(VscodeWebview))
+    // log, config, provider
+    Container.set(TOKENS.CommitManager, Container.get(CommitManager))
+    // log, commit, git
+    Container.set(TOKENS_VSCODE.StatusBar, Container.get(StatusBarManager))
+
     // register commands
     Container.get(CommandManager)
-
-    logger.info(`Initializing UI`)
-    // status bar would call `select-model` or any other commands
-    Container.get(StatusBarManager)
 
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
