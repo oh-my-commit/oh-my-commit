@@ -1,7 +1,7 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-27
+ * @CreatedAt 2024-12-28
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -55,6 +55,19 @@ export type ClientMessageEvent =
         message: string
       }
     }
+  | {
+      type: "get-settings"
+      data: {
+        section: string
+      }
+    }
+  | {
+      type: "update-settings"
+      data: {
+        section: string
+        value: any
+      }
+    }
   // 3. 用户挑选文件
   | {
       type: "selected-files"
@@ -94,6 +107,20 @@ export type DiffFileResult = ResultDTO<{
 
 export type ServerMessageEvent =
   | BaseServerMessageEvent
+  | {
+      type: "settings-updated"
+      data: {
+        section: string
+        value: any
+      }
+    }
+  | {
+      type: "settings-value"
+      data: {
+        section: string
+        value: any
+      }
+    }
   // 1. 用户打开 commit 界面， server --> client
   | {
       type: "diff-result"

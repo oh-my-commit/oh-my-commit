@@ -40,6 +40,23 @@ export class QuickCommitCommand implements BaseCommand {
     @Inject(VSCODE_TOKENS.Webview)
     private readonly webviewManager: VscodeWebview
   ) {
+    // 监听配置变更
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("ohMyCommit.git.commitLanguage")) {
+          const config = vscode.workspace.getConfiguration("ohMyCommit")
+          const value = config.get("git.commitLanguage")
+          this.webviewManager?.postMessage({
+            type: "settings-updated",
+            data: {
+              section: "git.commitLanguage",
+              value,
+            },
+          })
+        }
+      })
+    )
+
     // 设置 webview 的消息处理
     this.webviewManager.setMessageHandler(
       async (message: ClientMessageEvent) => {
@@ -64,6 +81,57 @@ export class QuickCommitCommand implements BaseCommand {
 
           case "selected-files":
             await this.syncFilesAndCommits(message.data)
+            break
+
+          case "get-settings":
+            try {
+              const config = vscode.workspace.getConfiguration("ohMyCommit")
+              const value = config.get(message.data.section)
+              await this.webviewManager?.postMessage({
+                type: "settings-value",
+                data: {
+                  section: message.data.section,
+                  value,
+                },
+              })
+            } catch (error) {
+              this.logger.error(
+                "[VscodeWebview] Failed to get settings:",
+                error
+              )
+            }
+            break
+
+          case "update-settings":
+            try {
+              const config = vscode.workspace.getConfiguration("ohMyCommit")
+              // 对于 git.commitLanguage，需要更新完整的配置路径
+              const section = message.data.section.startsWith("ohMyCommit.")
+                ? message.data.section
+                : `ohMyCommit.${message.data.section}`
+
+              await vscode.workspace
+                .getConfiguration()
+                .update(
+                  section,
+                  message.data.value,
+                  vscode.ConfigurationTarget.Global
+                )
+
+              // 通知 webview 更新成功
+              await this.webviewManager?.postMessage({
+                type: "settings-updated",
+                data: {
+                  section: message.data.section,
+                  value: message.data.value,
+                },
+              })
+            } catch (error) {
+              this.logger.error(
+                "[VscodeWebview] Failed to update settings:",
+                error
+              )
+            }
             break
 
           case "commit":

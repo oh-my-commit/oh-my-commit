@@ -1,12 +1,14 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
  * @Author markshawn2020
- * @CreatedAt 2024-12-27
+ * @CreatedAt 2024-12-28
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 import { atom } from "jotai"
+
+import { clientPush } from "@/clientPush"
 
 import { getVSCodeAPI } from "./getVSCodeAPI"
 
@@ -38,15 +40,26 @@ function setToLocalStorage<T>(key: string, value: T) {
 }
 
 function getFromVSCode<T>(key: string, defaultValue: T): T {
-  const vscode = getVSCodeAPI()
-  const state = (vscode.getState() || {}) as Record<string, unknown>
-  return (state[key] as T) ?? defaultValue
+  // Request the value from VSCode extension
+  clientPush({
+    type: "get-settings",
+    data: {
+      section: key,
+    },
+  })
+  // Return default value initially, will be updated when response comes
+  return defaultValue
 }
 
 function setToVSCode<T>(key: string, value: T): void {
-  const vscode = getVSCodeAPI()
-  const state = (vscode.getState() || {}) as Record<string, unknown>
-  vscode.setState({ ...state, [key]: value })
+  // Send update request to VSCode extension
+  clientPush({
+    type: "update-settings",
+    data: {
+      section: key,
+      value,
+    },
+  })
 }
 
 export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
@@ -61,8 +74,9 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
     } else {
       // "both"
       // Prefer VSCode state over localStorage
-      const vscodeValue = getFromVSCode(key, undefined)
-      return vscodeValue ?? getFromLocalStorage(key, defaultValue)
+      const vscodeValue = getFromVSCode(key, defaultValue)
+      const localValue = getFromLocalStorage(key, defaultValue)
+      return vscodeValue ?? localValue
     }
   })()
 
@@ -100,15 +114,12 @@ export function createVSCodeAtom<T>({
     (get) => {
       const vscode = getVSCodeAPI()
       const state = (vscode.getState() || {}) as Record<string, unknown>
-      return state[key] ?? defaultValue
+      return (state[key] as T) ?? get(baseAtom)
     },
     (get, set, update: T) => {
       const vscode = getVSCodeAPI()
       const state = (vscode.getState() || {}) as Record<string, unknown>
-      vscode.setState({
-        ...state,
-        [key]: update,
-      })
+      vscode.setState({ ...state, [key]: update })
       set(baseAtom, update)
     }
   )

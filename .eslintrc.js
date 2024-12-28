@@ -53,7 +53,10 @@ module.exports = {
         "*",
         " * @Copyright Copyright (c) 2024 Oh My Commit",
         " * @Author markshawn2020",
-        ` * @CreatedAt ${moment(new Date()).format("YYYY-MM-DD")}`,
+        {
+          pattern: ` \\* @CreatedAt \\d{4}-\\d{2}-\\d{2}`,
+          template: ` * @CreatedAt ${moment(new Date()).format("YYYY-MM-DD")}`,
+        },
         " *",
         " * This source code is licensed under the MIT license found in the",
         " * LICENSE file in the root directory of this source tree.",
@@ -100,6 +103,8 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/no-floating-promises": "warn",
         "@typescript-eslint/await-thenable": "warn",
+        "jsx-a11y/no-static-element-interactions": "warn",
+        "jsx-a11y/click-events-have-key-events": "warn",
       },
     },
 
@@ -157,6 +162,9 @@ module.exports = {
         "react/prop-types": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
+        "jsx-a11y/no-static-element-interactions": "warn",
+        "jsx-a11y/click-events-have-key-events": "warn",
+        "jsx-a11y/label-has-associated-control": "warn",
       },
       settings: {
         react: {

@@ -7,7 +7,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import type { DiffResult } from "simple-git"
+
 import type { DiffFileResult } from "@shared/common"
+
 import { atomWithStorage } from "@/lib/storage"
 
 // File changes state
