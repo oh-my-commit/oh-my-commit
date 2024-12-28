@@ -41,6 +41,7 @@ export const useCommitMessage = () => {
         case "diff-result":
           setDiffResult(message.data)
           break
+
         case "commit-message":
           if (message.data.ok) {
             setTitle(message.data.data.title)
@@ -48,9 +49,11 @@ export const useCommitMessage = () => {
           }
           setIsGenerating(false)
           break
+
         case "diff-file-result":
           setDiffDetail(message.data)
           break
+
         case "commit-result":
           setIsCommitting(false)
           if (message.data.ok) {

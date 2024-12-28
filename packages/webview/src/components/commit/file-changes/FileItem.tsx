@@ -11,12 +11,10 @@ import { useEffect } from "react"
 
 import type { DiffResult } from "simple-git"
 
-import { clientPush } from "@/utils/clientPush"
 import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
+import { clientPush } from "@/utils/clientPush"
 import { basename } from "@/utils/path"
-
-import { Checkbox } from "../../common/Checkbox"
 
 interface FileItemProps {
   file: DiffResult["files"][0]
@@ -107,7 +105,7 @@ export const FileItem: React.FC<FileItemProps> = ({
             {/* // todo: STATUS */}
             <span
               className={cn(
-                "font-mono font-medium text-[12px]",
+                "font-mono font-medium text-[12px]"
                 // STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
               )}
               // title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
@@ -128,13 +126,13 @@ export const FileItem: React.FC<FileItemProps> = ({
 
       <div
         className={cn(
-          "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100",
+          "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100"
         )}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
           <span
             className={cn(
-              "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1",
+              "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1"
             )}
           >
             {pathMatchCount > 0 && (
@@ -149,14 +147,10 @@ export const FileItem: React.FC<FileItemProps> = ({
           </span>
         )}
         {!file.binary && file.insertions > 0 && (
-          <span className={cn("text-git-added-fg")}>
-            +{file.insertions}
-          </span>
+          <span className={cn("text-git-added-fg")}>+{file.insertions}</span>
         )}
         {!file.binary && file.deletions > 0 && (
-          <span className={cn("text-git-deleted-fg")}>
-            −{file.deletions}
-          </span>
+          <span className={cn("text-git-deleted-fg")}>−{file.deletions}</span>
         )}
       </div>
     </div>

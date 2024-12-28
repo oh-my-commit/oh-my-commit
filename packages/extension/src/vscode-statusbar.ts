@@ -71,7 +71,7 @@ export class StatusBarManager implements vscode.Disposable {
 
       const modelId = this.commitManager.modelId
       const model = this.commitManager.model
-      this.logger.info(`Updating status: `, { modelId, model })
+      // this.logger.debug(`Updating status: `, { modelId, model })
       const isGitRepo = await this.gitService.isGitRepository()
 
       if (!isGitRepo) {

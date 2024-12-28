@@ -51,7 +51,7 @@ export class QuickCommitCommand implements BaseCommand {
         if (e.affectsConfiguration("ohMyCommit.git.commitLanguage")) {
           const config = vscode.workspace.getConfiguration("ohMyCommit")
           const value = config.get("git.commitLanguage")
-          this.webviewManager?.postMessage({
+          void this.webviewManager?.postMessage({
             type: "settings-updated",
             data: {
               section: "git.commitLanguage",
@@ -171,7 +171,7 @@ export class QuickCommitCommand implements BaseCommand {
               })
 
               // Show success message
-              vscode.window.showInformationMessage(
+              void vscode.window.showInformationMessage(
                 "Changes committed successfully"
               )
 
@@ -194,7 +194,7 @@ export class QuickCommitCommand implements BaseCommand {
               })
 
               // Show error message
-              vscode.window.showErrorMessage(
+              void vscode.window.showErrorMessage(
                 formatError(error, "Failed to commit changes")
               )
             }
@@ -336,6 +336,11 @@ export class QuickCommitCommand implements BaseCommand {
     if (!isGitRepository) {
       return
     }
+
+    await this.webviewManager?.postMessage({
+      type: "diff-result",
+      data: await this.getLatestDiff(),
+    })
   }
 
   private async genCommit() {
