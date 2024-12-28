@@ -112,7 +112,7 @@ export const FileItem: React.FC<FileItemProps> = ({
       aria-label={`File: ${file.file}, Status: ${hasStatus(file) ? file.status : "unknown"}`}
       style={
         viewMode === "tree"
-          ? { paddingLeft: `${(level || 0) * 16 + 16}px` }
+          ? { paddingLeft: `${(level || 0) * 16}px` }
           : {}
       }
       tabIndex={0}
@@ -120,11 +120,11 @@ export const FileItem: React.FC<FileItemProps> = ({
       onKeyDown={(e) => e.key === "Enter" && handleClick(e)}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
-        <div className="flex-1 truncate text-sm pl-2 pr-3">
+        <div className="flex-1 truncate text-sm">
           <div className="flex items-center gap-1.5 transition-colors duration-150">
             <span
               className={cn(
-                "inline-flex items-center justify-center w-5 font-mono font-medium text-xs",
+                "inline-flex items-center justify-center w-4 h-4 font-mono font-medium text-xs",
                 hasStatus(file)
                   ? STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
                   : "text-git-unknown-fg"
@@ -136,7 +136,7 @@ export const FileItem: React.FC<FileItemProps> = ({
               {hasStatus(file) ? file.status : "?"}
             </span>
 
-            <span className="truncate font-medium">
+            <span className="truncate font-medium pl-1">
               <HighlightText
                 highlight={searchQuery}
                 text={viewMode === "tree" ? basename(file.file) : file.file}
