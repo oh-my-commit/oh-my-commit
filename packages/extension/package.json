@@ -12,8 +12,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "build:extension": "vsce package --no-dependencies -o ../../dist/oh-my-commit.vsix",
-    "clean": "rimraf dist tsconfig.tsbuildinfo ../../dist/extension.js .turbo",
+    "build:extension": "vsce package --no-dependencies -o dist/oh-my-commit.vsix",
+    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo",
     "type-check": "tsc --noEmit"
   },
   "activationEvents": [
@@ -158,7 +158,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1",
     "@oh-my-commit/shared": "workspace:^",
     "@oh-my-commit/webview": "workspace:^",
     "handlebars": "^4.7.8",

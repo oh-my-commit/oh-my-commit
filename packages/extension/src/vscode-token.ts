@@ -15,14 +15,12 @@ import type { CommandManager } from "./command-manager"
 import type { OpenPreferencesCommand } from "./commands/open-preferences"
 import type { QuickCommitCommand } from "./commands/quick-commit"
 import type { SelectModelCommand } from "./commands/select-model"
-import type { VscodeConfig } from "./vscode-commit-adapter"
 import type { VscodeGit } from "./vscode-git"
 import type { StatusBarManager } from "./vscode-statusbar"
 import type { VscodeWebview } from "./vscode-webview"
 
 export const TOKENS = {
   ...TOKENS_BASE,
-  Config: new Token<VscodeConfig>("Config"),
   Context: new Token<vscode.ExtensionContext>("Context"),
   GitManager: new Token<VscodeGit>("GitManager"),
   Webview: new Token<VscodeWebview>("Webview"),
