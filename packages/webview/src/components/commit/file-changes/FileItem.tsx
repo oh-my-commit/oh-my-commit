@@ -98,17 +98,18 @@ export const FileItem: React.FC<FileItemProps> = ({
     return null
   }
 
-  // const filePath = file.
-
   return (
     <div
       className={cn(
-        "group flex items-center h-[32px] select-none cursor-pointer transition-colors duration-100 ease-in-out w-full text-left",
+        "group relative flex items-center h-9 select-none cursor-pointer rounded-md transition-all duration-150 w-full text-left",
         isOpen
-          ? "bg-list-active-bg text-list-active-fg shadow-sm"
-          : "hover:bg-gray-100 dark:hover:bg-gray-800"
+          ? "bg-list-active-bg text-list-active-fg shadow-sm ring-1 ring-primary/10"
+          : "hover:bg-gray-100/80 dark:hover:bg-gray-800/80",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       )}
       role="button"
+      aria-expanded={isOpen}
+      aria-label={`File: ${file.file}, Status: ${hasStatus(file) ? file.status : "unknown"}`}
       style={
         viewMode === "tree"
           ? { paddingLeft: `${(level || 0) * 16 + 16}px` }
@@ -119,59 +120,86 @@ export const FileItem: React.FC<FileItemProps> = ({
       onKeyDown={(e) => e.key === "Enter" && handleClick(e)}
     >
       <div className="flex-1 flex items-center min-w-0 h-full">
-        <div className="flex-1 truncate text-[13px] pl-1 pr-2">
-          <div className="flex items-center gap-0.5 transition-colors duration-100">
-            {/* // todo: STATUS */}
-
+        <div className="flex-1 truncate text-sm pl-2 pr-3">
+          <div className="flex items-center gap-1.5 transition-colors duration-150">
             <span
               className={cn(
-                "font-mono font-medium text-[12px]",
+                "inline-flex items-center justify-center w-5 font-mono font-medium text-xs",
                 hasStatus(file)
                   ? STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
                   : "text-git-unknown-fg"
               )}
+              title={
+                hasStatus(file) ? `Status: ${file.status}` : "Unknown status"
+              }
             >
               {hasStatus(file) ? file.status : "?"}
             </span>
-          </div>
 
-          <span className="truncate">
-            <HighlightText
-              highlight={searchQuery}
-              text={viewMode === "tree" ? basename(file.file) : file.file}
-              onMatchCount={setPathMatchCount}
-            />
-          </span>
+            <span className="truncate font-medium">
+              <HighlightText
+                highlight={searchQuery}
+                text={viewMode === "tree" ? basename(file.file) : file.file}
+                onMatchCount={setPathMatchCount}
+              />
+            </span>
+          </div>
         </div>
       </div>
 
       <div
         className={cn(
-          "flex items-center gap-2 px-2 text-[12px] tabular-nums transition-colors duration-100"
+          "flex items-center gap-2 px-3 text-xs font-medium tabular-nums transition-colors duration-150"
         )}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
           <span
             className={cn(
-              "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-1.5 py-0.5 rounded-full text-[10px] flex items-center gap-1"
+              "text-[var(--vscode-badge-foreground)] bg-[var(--vscode-badge-background)] px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1.5"
             )}
           >
             {pathMatchCount > 0 && (
-              <span title="Matches in filename">{pathMatchCount}</span>
+              <span
+                className="flex items-center gap-1"
+                title="Matches in filename"
+              >
+                <span className="opacity-60">名称</span>
+                {pathMatchCount}
+              </span>
             )}
             {pathMatchCount > 0 && contentMatchCount > 0 && (
               <span className="opacity-40">·</span>
             )}
             {contentMatchCount > 0 && (
-              <span title="Matches in content">{contentMatchCount}</span>
+              <span
+                className="flex items-center gap-1"
+                title="Matches in content"
+              >
+                <span className="opacity-60">内容</span>
+                {contentMatchCount}
+              </span>
             )}
           </span>
         )}
-        {!file.binary && file.insertions > 0 && (
-          <span className={cn("text-git-added-fg")}>+{file.insertions}</span>
-        )}
-        {!file.binary && file.deletions > 0 && (
-          <span className={cn("text-git-deleted-fg")}>−{file.deletions}</span>
+        {!file.binary && (file.insertions > 0 || file.deletions > 0) && (
+          <div className="flex items-center gap-2">
+            {file.insertions > 0 && (
+              <span
+                className={cn("text-git-added-fg flex items-center gap-0.5")}
+              >
+                <span className="opacity-60">+</span>
+                {file.insertions}
+              </span>
+            )}
+            {file.deletions > 0 && (
+              <span
+                className={cn("text-git-deleted-fg flex items-center gap-0.5")}
+              >
+                <span className="opacity-60">−</span>
+                {file.deletions}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
