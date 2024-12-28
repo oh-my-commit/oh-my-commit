@@ -30,16 +30,16 @@ export class CommitManager {
     loadingProviders: "pending",
   }
 
-  get providers(): BaseProvider[] {
-    return this.providersManager.providers
-  }
-
   constructor(
     @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
     @Inject(TOKENS.Config) public readonly config: IConfig,
     @Inject(TOKENS.ProviderManager)
-    public readonly providersManager: IProviderManager
+    public readonly providerManager: IProviderManager
   ) {}
+
+  get providers(): BaseProvider[] {
+    return this.providerManager.providers
+  }
 
   get models(): IModel[] {
     return this.providers.flatMap((provider) => provider.models)
@@ -54,7 +54,7 @@ export class CommitManager {
   }
 
   selectModel(modelId: string): void {
-    this.config.update(SETTING_MODEL_ID, modelId)
+    void this.config.update(SETTING_MODEL_ID, modelId)
   }
 
   async generateCommit(

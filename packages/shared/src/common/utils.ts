@@ -13,8 +13,11 @@ export function formatError(error: unknown, prefix = ""): string {
     s = error.message
   } else if (typeof error === "string") {
     s = error
-  } else if (error && typeof error === "object" && "message" in error) {
-    s = String(error.message)
+  } else if (error && typeof error === "object") {
+    s =
+      "message" in error
+        ? String(error.message)
+        : JSON.stringify(error, null, 2)
   } else s = String(error)
   return prefix ? `[${prefix}] ${s}` : s
 }

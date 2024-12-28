@@ -22,16 +22,15 @@ import type { VscodeWebview } from "./vscode-webview"
 
 export const TOKENS = {
   ...TOKENS_BASE,
-  Context: new Token<vscode.ExtensionContext>("vscode.context"),
-  GitManager: new Token<VscodeGit>("vscode.git"),
-  Webview: new Token<VscodeWebview>("vscode.webview"),
-  Config: new Token<VscodeConfig>("vscode.config"),
-  StatusBar: new Token<StatusBarManager>("vscode.statusbar"),
-  QuickCommitCommand: new Token<QuickCommitCommand>("VscodeQuickCommitService"),
-  StatusbarService: new Token<StatusBarManager>("VscodeStatusbarService"),
-  CommandManager: new Token<CommandManager>("VscodeCommandService"),
+  Config: new Token<VscodeConfig>("Config"),
+  Context: new Token<vscode.ExtensionContext>("Context"),
+  GitManager: new Token<VscodeGit>("GitManager"),
+  Webview: new Token<VscodeWebview>("Webview"),
+  StatusBar: new Token<StatusBarManager>("StatusBar"),
+  CommandManager: new Token<CommandManager>("CommandManager"),
+  QuickCommitCommand: new Token<QuickCommitCommand>("QuickCommitCommand"),
   OpenPreferencesCommand: new Token<OpenPreferencesCommand>(
-    "VscodeOpenPreferencesService"
+    "OpenPreferencesCommand"
   ),
-  SelectModelService: new Token<SelectModelCommand>("VscodeSelectModelService"),
+  SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
 } as const

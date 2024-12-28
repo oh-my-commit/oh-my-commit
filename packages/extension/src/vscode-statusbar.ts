@@ -94,7 +94,7 @@ export class StatusBarManager implements vscode.Disposable {
 
   public async update(): Promise<void> {
     try {
-      if (!this.commitManager?.providersManager) {
+      if (!this.commitManager?.providerManager) {
         this.statusBarItem.text = `$(error) (Initializing...)`
         this.statusBarItem.tooltip = "Provider manager is not initialized"
         this.statusBarItem.command = undefined

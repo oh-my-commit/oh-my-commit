@@ -64,7 +64,7 @@ const commitManager: CommitManager = Container.get(CommitManager)
 const listModels = async () => {
   try {
     commitManager.logger.info(chalk.blue("Listing models..."))
-    await commitManager.providersManager.initialize()
+    await commitManager.providerManager.initialize()
     const models = commitManager.models
     commitManager.logger.info(chalk.blue("Available models:"))
     for (const model of models) {
@@ -96,7 +96,7 @@ const selectModel = async (modelId: string) => {
   commitManager.logger.info(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
-    await commitManager.providersManager.initialize()
+    await commitManager.providerManager.initialize()
 
     const availableModels: IModel[] = commitManager.models
     const selectedModel = availableModels.find((m) => m.id === modelId)
@@ -128,7 +128,7 @@ const generateAndCommit = async (options: {
   try {
     // Initialize providers if not already done
     if (commitManager.providers.length === 0) {
-      await commitManager.providersManager.initialize()
+      await commitManager.providerManager.initialize()
     }
 
     // If model is specified, validate and set it

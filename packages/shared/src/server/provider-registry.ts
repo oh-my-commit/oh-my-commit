@@ -33,7 +33,7 @@ export class ProviderRegistry implements IProviderManager {
   constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
 
   /** Load all providers from user directory */
-  public async initialize() {
+  public async initialize(): Promise<void> {
     if (this.initialized) return
 
     try {
@@ -73,7 +73,7 @@ export class ProviderRegistry implements IProviderManager {
   }
 
   /** Register a new provider */
-  registerProvider(provider: BaseProvider) {
+  registerProvider(provider: BaseProvider): void {
     this.logger.debug(`Registering provider: ${provider.id}`)
     if (this.providers.some((p) => p.id === provider.id)) {
       this.logger.warn(

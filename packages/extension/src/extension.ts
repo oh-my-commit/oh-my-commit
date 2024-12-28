@@ -22,8 +22,8 @@ import { TOKENS } from "./vscode-token"
 import { VscodeWebview } from "./vscode-webview"
 
 export function activate(context: vscode.ExtensionContext) {
+  const logger = Container.get(VscodeLogger)
   try {
-    const logger = Container.get(VscodeLogger)
     logger.info(`Initializing ${APP_NAME} extension...`)
 
     // basic
@@ -32,12 +32,18 @@ export function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
 
     // generic
+    logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+    logger.info("setting git manager...")
     Container.set(TOKENS.GitManager, Container.get(VscodeGit))
+    logger.info("setting webview...")
     Container.set(TOKENS.Webview, Container.get(VscodeWebview))
+    logger.info("setting commit manager...")
     Container.set(TOKENS.CommitManager, Container.get(CommitManager)) // provider
+    logger.info("setting status bar...")
     Container.set(TOKENS.StatusBar, Container.get(StatusBarManager)) // commit, git
 
+    logger.info("Initializing providers...")
     // Initialize providers asynchronously
     Container.get(ProviderRegistry)
       .initialize()
@@ -56,6 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
     // await app.initialize();
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
+    logger.error({ error })
+    logger.error(formatError(error, "Failed to initialize Oh My Commit"))
     void vscode.window.showErrorMessage(
       formatError(error, "Failed to initialize Oh My Commit")
     )

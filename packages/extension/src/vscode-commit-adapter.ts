@@ -24,7 +24,7 @@ export class VscodeConfig implements IConfig {
     return vscode.workspace.getConfiguration().get<T>(key)
   }
 
-  async update(key: string, value: any, global?: boolean): Promise<void> {
+  async update(key: string, value: unknown, global?: boolean): Promise<void> {
     await vscode.workspace.getConfiguration().update(key, value, global)
   }
 }
@@ -40,7 +40,7 @@ export class VscodeLogger extends BaseLogger {
     this.minLevel = normalizeLogLevel(process.env["LOG_LEVEL"])
   }
 
-  protected log(level: LogLevel, ...args: any[]) {
+  protected log(level: LogLevel, ...args: unknown[]) {
     // todo: better handle with formatMessage
     const rawMessage = formatMessage(...args)
     const prefix = `omc.${this.name}`
