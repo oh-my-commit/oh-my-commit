@@ -8,7 +8,7 @@
  */
 import { BaseLogger, type LogLevel, formatMessage } from "@shared/common"
 
-import { clientPush } from "@/clientPush"
+import { clientPush } from "@/utils/clientPush"
 
 export class VscodeClientLogger extends BaseLogger {
   constructor(name: string) {

@@ -10,11 +10,11 @@ import { type FC, useCallback } from "react"
 
 import { useAtom } from "jotai"
 
-import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
 import { lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
+import { clientPush } from "@/utils/clientPush"
 
 import { FileChangesView } from "./FileChangesView"
 import { ViewToggle } from "./ViewToggle"

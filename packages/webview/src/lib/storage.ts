@@ -8,7 +8,7 @@
  */
 import { atom } from "jotai"
 
-import { clientPush } from "@/clientPush"
+import { clientPush } from "@/utils/clientPush"
 
 import { getVSCodeAPI } from "./getVSCodeAPI"
 
@@ -17,7 +17,7 @@ export interface VSCodeStorageOptions<T> {
   key: string
   defaultValue: T
   // default: 'localStorage'
-  storageType?: "vscode" | "localStorage" | "both"
+  storageType?: "vscode" | "localStorage" | "both" | "none"
   // vscode workspace/global 配置
   storage?: "global" | "workspace"
 }
@@ -71,6 +71,8 @@ export function atomWithStorage<T>(options: VSCodeStorageOptions<T>) {
       return getFromLocalStorage(key, defaultValue)
     } else if (storageType === "vscode") {
       return getFromVSCode(key, defaultValue)
+    } else if (storageType === "none") {
+      return defaultValue
     } else {
       // "both"
       // Prefer VSCode state over localStorage

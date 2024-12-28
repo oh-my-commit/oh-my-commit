@@ -62,30 +62,32 @@ export class QuickCommitCommand implements BaseCommand {
       })
     )
 
+    // Subscribe to git changes
+    this.gitService.onGitStatusChanged(async () => {
+      this.logger.info(
+        "[QuickCommit] Git status changed, syncing files and commits..."
+      )
+      await this.syncFiles()
+    })
+
     // 设置 webview 的消息处理
     this.webviewManager.setMessageHandler(
       async (message: ClientMessageEvent) => {
         switch (message.type) {
           case "init":
-            await this.syncFilesAndCommits()
+            await this.syncFiles()
             break
 
           case "show-info":
-            vscode.window.showInformationMessage(message.data.message)
+            void vscode.window.showInformationMessage(message.data.message)
             break
 
           case "open-external":
-            vscode.env.openExternal(vscode.Uri.parse(message.data.url))
+            void vscode.env.openExternal(vscode.Uri.parse(message.data.url))
             break
 
-          case "regenerate-commit":
-            if (message.data.requestStagedFiles) {
-              await this.syncFilesAndCommits()
-            }
-            break
-
-          case "selected-files":
-            await this.syncFilesAndCommits(message.data)
+          case "generate":
+            await this.genCommit()
             break
 
           case "get-settings":
@@ -174,7 +176,7 @@ export class QuickCommitCommand implements BaseCommand {
               )
 
               // Refresh git status
-              await this.syncFilesAndCommits()
+              await this.syncFiles()
             } catch (error) {
               this.logger.error(
                 "[VscodeWebview] Failed to commit changes:",
@@ -258,7 +260,7 @@ export class QuickCommitCommand implements BaseCommand {
                 if (message.command === "git.init") {
                   // Wait a bit for git to initialize
                   setTimeout(() => {
-                    void this.syncFilesAndCommits()
+                    void this.syncFiles()
                   }, 500)
                 }
               } catch (error) {
@@ -285,6 +287,10 @@ export class QuickCommitCommand implements BaseCommand {
     await this.webviewManager?.createWebviewPanel()
   }
 
+  /**
+   * @param selectedFiles: todo (maybe not used)
+   * @returns
+   */
   private async getLatestDiff(selectedFiles?: string[]) {
     this.logger.info("Getting latest diff, selectedFiles:", selectedFiles)
     await this.gitService.stageAll()
@@ -312,7 +318,7 @@ export class QuickCommitCommand implements BaseCommand {
     return newDiffSummary
   }
 
-  private async syncFilesAndCommits(selectedFiles?: string[]) {
+  private async syncFiles() {
     // First check git status
     const isGitRepository = await this.gitService.isGitRepository()
     const workspaceRoot = this.gitService.workspaceRoot
@@ -330,14 +336,10 @@ export class QuickCommitCommand implements BaseCommand {
     if (!isGitRepository) {
       return
     }
+  }
 
-    const diff = await this.getLatestDiff(selectedFiles)
-    if (!selectedFiles) {
-      await this.webviewManager?.postMessage({
-        type: "diff-result",
-        data: diff,
-      })
-    }
+  private async genCommit() {
+    const diff = await this.getLatestDiff()
 
     const options: IInputOptions = {
       lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),

@@ -36,17 +36,49 @@ export class VscodeGit extends GitCore {
 
   private setupFileSystemWatcher(workspaceRoot: string) {
     this.fsWatcher?.dispose()
+
+    if (!workspaceRoot) {
+      this.logger.warn(
+        "[VscodeGit] No workspace root, skipping file watcher setup"
+      )
+      return
+    }
+
+    // Watch all files in workspace, not just .git directory
     this.fsWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, "**/.git/**")
+      new vscode.RelativePattern(workspaceRoot, "**/*")
     )
 
-    const handleGitChange = () => {
-      this._onGitStatusChanged.fire(true)
+    const handleGitChange = async (uri: vscode.Uri) => {
+      this.logger.info("[VscodeGit] File changed:", uri.fsPath)
+
+      // Ignore changes in .git directory to avoid feedback loops
+      if (uri.fsPath.includes("/.git/")) {
+        return
+      }
+
+      try {
+        // Only emit if the changed file is git tracked
+        const status = await this.git.status()
+        const hasChanges = status.files.length > 0
+
+        if (hasChanges) {
+          this.logger.info("[VscodeGit] Git status changed, emitting event")
+          this._onGitStatusChanged.fire(true)
+        }
+      } catch (error) {
+        this.logger.error("[VscodeGit] Error checking git status:", error)
+      }
     }
 
     this.fsWatcher.onDidChange(handleGitChange)
     this.fsWatcher.onDidCreate(handleGitChange)
     this.fsWatcher.onDidDelete(handleGitChange)
+
+    this.logger.info(
+      "[VscodeGit] File system watcher setup for:",
+      workspaceRoot
+    )
   }
 
   dispose() {

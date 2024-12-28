@@ -11,7 +11,7 @@ import { useEffect } from "react"
 
 import type { DiffResult } from "simple-git"
 
-import { clientPush } from "@/clientPush"
+import { clientPush } from "@/utils/clientPush"
 import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
 import { basename } from "@/utils/path"

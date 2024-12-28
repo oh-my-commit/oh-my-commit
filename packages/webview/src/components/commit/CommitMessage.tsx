@@ -12,7 +12,6 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
-import { clientPush } from "@/clientPush"
 import { CommitGuide } from "@/components/commit/commit-guide"
 // todo: integrate feedbackv
 // import { FeedbackButton } from "@/components/commit/feedback-button"
@@ -27,6 +26,7 @@ import {
   isCommittingAtom,
   isGeneratingAtom,
 } from "@/state/atoms/commit.message"
+import { clientPush } from "@/utils/clientPush"
 
 import { CommitSettingsDialog } from "./commit-settings"
 
@@ -64,10 +64,7 @@ export function CommitMessage() {
   const handleRegenerate = () => {
     setIsGenerating(true)
     clientPush({
-      type: "regenerate-commit",
-      data: {
-        requestStagedFiles: true,
-      },
+      type: "generate",
     })
   }
 

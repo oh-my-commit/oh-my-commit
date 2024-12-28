@@ -11,7 +11,7 @@ import { createPortal } from "react-dom"
 
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
-import { clientPush } from "@/clientPush"
+import { clientPush } from "@/utils/clientPush"
 import { useSettings } from "@/hooks/use-settings"
 import type { CommitLanguage } from "@/state/atoms/settings"
 

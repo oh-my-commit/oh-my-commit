@@ -88,13 +88,7 @@ export type ClientMessageEvent =
       }
     }
   | {
-      type: "regenerate"
-    }
-  | {
-      type: "regenerate-commit"
-      data: {
-        requestStagedFiles: boolean
-      }
+      type: "generate"
     }
   | {
       type: "execute-command"

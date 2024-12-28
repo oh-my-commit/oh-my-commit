@@ -14,17 +14,18 @@ import { atomWithStorage } from "@/lib/storage"
 export const commitTitleAtom = atomWithStorage({
   key: "oh-my-commit.commit.title",
   defaultValue: "",
+  storageType: "none",
 })
+
 export const commitBodyAtom = atomWithStorage({
   key: "oh-my-commit.commit.body",
   defaultValue: "",
+  storageType: "none",
 })
 
 export const isGeneratingAtom = atom(
-  // 为了提高用户体验，目前的机制是一旦 webview 初始化成功，
-  // exntension 就会向 webview 发送初始 commit message
-  // 所以默认为 true
-  true
+  // 暂时默认为 false，之后可以根据实际情况进行调整
+  false
 )
 
 export const isCommittingAtom = atom(false)

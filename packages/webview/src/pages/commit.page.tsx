@@ -12,7 +12,6 @@ import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
-import { clientPush } from "@/clientPush"
 import { CommitMessage } from "@/components/commit/CommitMessage"
 import { FileChanges } from "@/components/commit/file-changes/FileChanges"
 import { Footer } from "@/components/footer"
@@ -22,6 +21,7 @@ import { useCloseWindow } from "@/hooks/use-close-window"
 import { useCommitMessage } from "@/hooks/use-commit-message"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 import { gitStatusAtom } from "@/state/atoms/git"
+import { clientPush } from "@/utils/clientPush"
 
 export const CommitPage = () => {
   useBasicMessage()
