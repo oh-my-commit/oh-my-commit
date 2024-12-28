@@ -10,34 +10,110 @@ import * as React from "react"
 
 import { useAtom } from "jotai"
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
+import type {
+  DiffResult,
+  DiffResultBinaryFile,
+  DiffResultNameStatusFile,
+  DiffResultTextFile,
+} from "simple-git"
 
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 
 import { FileItem } from "./FileItem"
 
+type GitDiffFile =
+  | DiffResultTextFile
+  | DiffResultBinaryFile
+  | DiffResultNameStatusFile
+
 interface TreeNodeProps {
-  path: string
-  files: any[]
+  node: FileTreeNode
   level: number
   selectedPath?: string
   searchQuery?: string
   onClick: (path: string) => void
-  getFolderFileCount: (path: string) => number
+}
+
+interface FileTreeNode {
+  name: string
+  path: string
+  type: "file" | "directory"
+  children: FileTreeNode[]
+  file?: GitDiffFile
+}
+
+const buildFileTree = (files: DiffResult["files"]): FileTreeNode[] => {
+  const tree: FileTreeNode[] = []
+
+  for (const file of files) {
+    if (!file.file) continue
+
+    const parts = file.file.split("/")
+    let current = tree
+    let currentPath: string = ""
+
+    for (let i = 0; i < parts.length; i++) {
+      const name = parts[i]
+      if (!name) continue
+
+      currentPath = currentPath ? `${currentPath}/${name}` : name
+      const isFile = i === parts.length - 1
+
+      let node = current.find((n) => n.name === name)
+      if (!node) {
+        const newNode: FileTreeNode = {
+          name: name,
+          path: currentPath,
+          type: isFile ? "file" : "directory",
+          children: [],
+          ...(isFile ? { file } : {}),
+        }
+        current.push(newNode)
+        node = newNode
+
+        // Sort after insertion
+        current.sort((a, b) => {
+          if (a.type !== b.type) return a.type === "directory" ? -1 : 1
+          return a.name.localeCompare(b.name)
+        })
+      }
+
+      current = node.children
+    }
+  }
+
+  return tree
 }
 
 const TreeNode: React.FC<TreeNodeProps> = ({
-  path,
-  files,
+  node,
   level,
   selectedPath,
   searchQuery,
   onClick,
-  getFolderFileCount,
 }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
-  const filesInPath = files.filter((file) => file.file.startsWith(path))
 
-  const handleToggle = () => setIsExpanded(!isExpanded)
+  const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsExpanded(!isExpanded)
+  }
+
+  if (node.type === "file") {
+    return (
+      <FileItem
+        key={node.path}
+        diff="todo: diff"
+        file={node.file!}
+        isOpen={selectedPath === node.path}
+        level={level}
+        searchQuery={searchQuery}
+        viewMode="tree"
+        onClick={onClick}
+      />
+    )
+  }
 
   return (
     <div className="select-none">
@@ -46,15 +122,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         role="button"
         style={{ paddingLeft: `${level * 16}px` }}
         tabIndex={0}
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          handleToggle()
-        }}
+        onClick={handleToggle}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            handleToggle()
+            handleToggle(e)
           }
         }}
       >
@@ -64,7 +135,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               className="flex items-center justify-center w-4 h-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={(e) => {
                 e.stopPropagation()
-                handleToggle()
+                setIsExpanded(!isExpanded)
               }}
             >
               {isExpanded ? (
@@ -73,25 +144,23 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 <ChevronRightIcon className="w-3 h-3" />
               )}
             </button>
-            <span className="truncate">{path}</span>
+            <span className="truncate">{node.name}</span>
             <span className="text-xs text-gray-500">
-              ({getFolderFileCount(path)})
+              ({node.children.length})
             </span>
           </div>
         </div>
       </div>
 
-      {isExpanded && (
+      {isExpanded && node.children.length > 0 && (
         <div>
-          {filesInPath.map((file, index) => (
-            <FileItem
-              key={index}
-              diff="todo: diff"
-              file={file}
-              isOpen={selectedPath === file.file}
+          {node.children.map((child) => (
+            <TreeNode
+              key={child.path}
+              node={child}
               level={level + 1}
+              selectedPath={selectedPath}
               searchQuery={searchQuery}
-              viewMode="tree"
               onClick={onClick}
             />
           ))}
@@ -117,30 +186,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
   const [isRootExpanded, setIsRootExpanded] = React.useState(true)
-
-  const getFolderFileCount = React.useCallback(
-    (path: string) => {
-      return files.filter((file) => file.file.startsWith(path + "/")).length
-    },
-    [files]
-  )
-
-  const getFolders = React.useCallback(() => {
-    const folders = new Set<string>()
-    files.forEach((file) => {
-      const parts = file.file.split("/")
-      parts.pop() // Remove filename
-      let path = ""
-      parts.forEach((part) => {
-        path = path ? `${path}/${part}` : part
-        folders.add(path)
-      })
-    })
-    return Array.from(folders).sort()
-  }, [files])
-
-  // Get root directory files (files without a path)
-  const rootFiles = files.filter((file) => !file.file.includes("/"))
+  const tree = React.useMemo(() => buildFileTree(files), [files])
 
   return (
     <div className={className}>
@@ -176,7 +222,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
                 <ChevronRightIcon className="w-3 h-3" />
               )}
             </button>
-            <span className="font-semibold">Staged </span>
+            <span className="font-semibold">Staged</span>
             {files.length > 0 && (
               <span className="text-xs text-gray-500">({files.length})</span>
             )}
@@ -184,33 +230,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
         </div>
       </div>
 
-      {isRootExpanded && (
+      {isRootExpanded && tree.length > 0 && (
         <div>
-          {/* Root directory files */}
-          {rootFiles.map((file, index) => (
-            <FileItem
-              key={`root-${index}`}
-              diff="todo: diff"
-              file={file}
-              isOpen={selectedPath === file.file}
-              level={1}
-              searchQuery={searchQuery}
-              viewMode="tree"
-              onClick={onClick}
-            />
-          ))}
-
-          {/* Folders and their files */}
-          {getFolders().map((folder) => (
+          {tree.map((node) => (
             <TreeNode
-              key={folder}
-              files={files}
-              getFolderFileCount={getFolderFileCount}
+              key={node.path}
+              node={node}
               level={1}
-              onClick={onClick}
-              path={folder}
-              searchQuery={searchQuery}
               selectedPath={selectedPath}
+              searchQuery={searchQuery}
+              onClick={onClick}
             />
           ))}
         </div>
