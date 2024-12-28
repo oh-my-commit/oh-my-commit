@@ -40,6 +40,7 @@
     "inquirer": "^9.2.12",
     "neverthrow": "^8.1.1",
     "read-package-up": "^11.0.0",
+    "reflect-metadata": "^0.2.1",
     "simple-git": "^3.22.0",
     "typedi": "^0.10.0"
   },

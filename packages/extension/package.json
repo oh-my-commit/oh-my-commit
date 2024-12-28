@@ -162,6 +162,7 @@
     "@oh-my-commit/webview": "workspace:^",
     "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
+    "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0",
     "vscode": "^1.1.37",
     "yaml": "^2.6.1",

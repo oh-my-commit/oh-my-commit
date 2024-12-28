@@ -31,6 +31,7 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20.0.0",
     "eslint": "^8.0.0",
     "prettier": "^3.1.0",
@@ -43,8 +44,10 @@
     "chalk": "^5.4.1",
     "handlebars": "^4.7.8",
     "jiti": "^2.4.2",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "neverthrow": "^8.1.1",
+    "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0",
     "typedi": "^0.10.0",
     "yaml": "^2.6.1",
