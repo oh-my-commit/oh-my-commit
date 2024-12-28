@@ -10,7 +10,10 @@ import * as React from "react"
 
 import { useAtom } from "jotai"
 
-import { viewModeAtom } from "@/state/atoms/ui"
+import {
+  diffResultAtom,
+  viewModeAtom,
+} from "@/state/atoms/commit.changed-files"
 
 import { FlatView } from "./FlatView"
 import { TreeView } from "./TreeView"
@@ -22,6 +25,17 @@ interface FileChangesViewProps {
   className?: string
 }
 
+const EmptyState = () => (
+  <div className="flex flex-col items-center justify-center p-4 text-center h-full min-h-[200px]">
+    <div className="codicon codicon-git-commit text-[32px] text-[var(--vscode-foreground)] opacity-40 mb-2" />
+    <p className="text-[var(--vscode-descriptionForeground)] text-sm">
+      No changes detected in your workspace.
+      <br />
+      Make some changes to start committing.
+    </p>
+  </div>
+)
+
 export const FileChangesView: React.FC<FileChangesViewProps> = ({
   selectedPath,
   searchQuery,
@@ -29,6 +43,12 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
   className,
 }) => {
   const [viewMode] = useAtom(viewModeAtom)
+  const [diffResult] = useAtom(diffResultAtom)
+  const files = diffResult?.files || []
+
+  if (!files.length) {
+    return <EmptyState />
+  }
 
   return (
     <div className="flex flex-col h-full">
