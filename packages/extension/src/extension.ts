@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import "reflect-metadata"
+
 import { Container } from "typedi"
 import * as vscode from "vscode"
 

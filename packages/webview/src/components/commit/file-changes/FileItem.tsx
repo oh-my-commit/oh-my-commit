@@ -111,9 +111,7 @@ export const FileItem: React.FC<FileItemProps> = ({
       aria-expanded={isOpen}
       aria-label={`File: ${file.file}, Status: ${hasStatus(file) ? file.status : "unknown"}`}
       style={
-        viewMode === "tree"
-          ? { paddingLeft: `${(level || 0) * 16}px` }
-          : {}
+        viewMode === "tree" ? { paddingLeft: `${(level || 0) * 16}px` } : {}
       }
       tabIndex={0}
       onClick={handleClick}

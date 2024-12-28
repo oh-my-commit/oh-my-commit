@@ -8,8 +8,5 @@
     "module": "CommonJS",
     "moduleResolution": "node"
   },
-  "include": [
-    "packages/**/*.test.ts",
-    "packages/**/*.spec.ts"
-  ]
+  "include": ["packages/**/*.test.ts", "packages/**/*.spec.ts"]
 }

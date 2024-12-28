@@ -37,7 +37,7 @@ body {
 }
 
 html {
-  overflow-y: overlay;  /* 使用 overlay 让滚动条覆盖在内容上 */
+  overflow-y: overlay; /* 使用 overlay 让滚动条覆盖在内容上 */
 }
 
 body {
@@ -52,7 +52,7 @@ body {
 
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {
-  width: 6px;  /* 减小滚动条宽度 */
+  width: 6px; /* 减小滚动条宽度 */
   height: 6px;
   background-color: transparent;
 }

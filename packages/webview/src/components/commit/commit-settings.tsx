@@ -11,9 +11,9 @@ import { createPortal } from "react-dom"
 
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
-import { clientPush } from "@/utils/clientPush"
 import { useSettings } from "@/hooks/use-settings"
 import type { CommitLanguage } from "@/state/atoms/settings"
+import { clientPush } from "@/utils/clientPush"
 
 export function CommitSettingsDialog({
   isOpen,
@@ -28,27 +28,27 @@ export function CommitSettingsDialog({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // 检查点击源是否是设置按钮或其子元素
-      const target = event.target as Element;
+      const target = event.target as Element
       if (target.closest('vscode-button[title="Settings"]')) {
-        return;
+        return
       }
 
       // 检查点击源是否在面板外
       if (panelRef.current && !panelRef.current.contains(target)) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
     if (isOpen) {
       // 使用 setTimeout 确保事件处理器在按钮点击事件之后执行
       setTimeout(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-      }, 0);
+        document.addEventListener("mousedown", handleClickOutside)
+      }, 0)
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
   }, [isOpen, onClose])
 
   useEffect(() => {

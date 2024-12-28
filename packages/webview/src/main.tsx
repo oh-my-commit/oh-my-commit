@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as React from "react"
+import { createRoot } from "react-dom/client"
 
 import "@vscode/codicons/dist/codicon.css"
 import {
@@ -15,7 +16,6 @@ import {
 } from "@vscode/webview-ui-toolkit"
 
 import { Provider } from "jotai"
-import { createRoot } from "react-dom/client"
 
 import { CommitPage } from "./pages/commit.page"
 import "./styles/global.css"
