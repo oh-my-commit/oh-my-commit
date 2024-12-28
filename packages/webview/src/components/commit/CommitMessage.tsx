@@ -143,13 +143,6 @@ export function CommitMessage() {
             <div className="flex items-center gap-2">
               <VSCodeButton
                 appearance="secondary"
-                disabled={isGenerating}
-                onClick={handleRegenerate}
-              >
-                Regenerate
-              </VSCodeButton>
-              <VSCodeButton
-                appearance="secondary"
                 onClick={() => setShowSettings(true)}
               >
                 <span className="flex items-center w-fit">
@@ -174,7 +167,45 @@ export function CommitMessage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  Settings
+                  {/* Settings */}
+                </span>
+              </VSCodeButton>
+
+              <VSCodeButton
+                appearance="secondary"
+                disabled={isGenerating}
+                onClick={handleRegenerate}
+              >
+                <span className="flex items-center w-fit">
+                  <svg
+                    className="w-4 h-4 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 4V10H7"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M23 20V14H17"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M20.49 9C19.9828 7.56678 19.1209 6.28378 17.9845 5.27573C16.8482 4.26768 15.4745 3.56674 13.9917 3.23525C12.5089 2.90377 10.9652 2.95008 9.50481 3.37037C8.04437 3.79066 6.71475 4.57038 5.64 5.64L1 10M23 14L18.36 18.36C17.2853 19.4296 15.9556 20.2093 14.4952 20.6296C13.0348 21.0499 11.4911 21.0962 10.0083 20.7648C8.52547 20.4333 7.1518 19.7323 6.01547 18.7243C4.87913 17.7162 4.01717 16.4332 3.51 15"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  {/* {isGenerating ? "Regenerating..." : "Regenerate"} */}
                 </span>
               </VSCodeButton>
               {/* <FeedbackButton /> */}
@@ -183,7 +214,7 @@ export function CommitMessage() {
               disabled={disabled || isGenerating || isCommitting}
               onClick={handleCommit}
             >
-              {isCommitting ? "Committing..." : "Commit Changes"}
+              {isCommitting ? "Committing..." : "Commit"}
             </VSCodeButton>
           </div>
         </div>
