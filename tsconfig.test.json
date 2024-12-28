@@ -4,7 +4,9 @@
     "types": ["jest", "node"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "module": "CommonJS",
+    "moduleResolution": "node"
   },
   "include": [
     "packages/**/*.test.ts",

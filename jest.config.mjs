@@ -6,6 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+/** @type {import('jest').Config} */
 export default {
   preset: "ts-jest",
   testEnvironment: "node",
@@ -18,9 +19,12 @@ export default {
       "ts-jest",
       {
         tsconfig: "tsconfig.test.json",
+        useESM: true,
       },
     ],
   },
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
   testMatch: ["**/packages/**/*.test.ts"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  transformIgnorePatterns: ["node_modules/(?!(chalk)/)"],
 }

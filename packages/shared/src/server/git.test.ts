@@ -7,34 +7,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 /// <reference types="jest" />
-import simpleGit, { DiffResult, SimpleGit } from "simple-git"
+import * as fs from "fs"
+import * as os from "os"
+import * as path from "path"
+import { type DiffResult } from "simple-git"
 
 import { ConsoleLogger } from "../common/log"
 import { GitCore } from "./git"
 
-jest.mock("simple-git", () => {
-  const mockSimpleGit = jest.fn()
-  return jest.fn(() => mockSimpleGit)
-})
-
 describe("GitCore", () => {
   let gitCore: GitCore
-  let mockGit: jest.Mocked<SimpleGit>
   let mockLogger: ConsoleLogger
-  const workspaceRoot = "/test/workspace"
+  let tempDir: string
 
-  beforeEach(() => {
-    mockGit = {
-      diffSummary: jest.fn(),
-      add: jest.fn(),
-      commit: jest.fn(),
-      status: jest.fn(),
-      log: jest.fn(),
-      diff: jest.fn(),
-    } as unknown as jest.Mocked<SimpleGit>
-    ;(simpleGit as jest.MockedFunction<typeof simpleGit>).mockReturnValue(
-      mockGit
-    )
+  beforeEach(async () => {
+    // Create a temporary directory
+    tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "git-test-"))
+
+    // Initialize git repo
+    await new Promise<void>((resolve, reject) => {
+      const { exec } = require("child_process")
+      exec("git init", { cwd: tempDir }, (error: any) => {
+        if (error) reject(error)
+        else resolve()
+      })
+    })
 
     mockLogger = new ConsoleLogger()
     jest.spyOn(mockLogger, "debug").mockImplementation(jest.fn())
@@ -42,114 +39,110 @@ describe("GitCore", () => {
     jest.spyOn(mockLogger, "warn").mockImplementation(jest.fn())
     jest.spyOn(mockLogger, "error").mockImplementation(jest.fn())
 
-    gitCore = new GitCore(workspaceRoot, mockLogger)
+    gitCore = new GitCore(tempDir, mockLogger)
+  })
+
+  afterEach(async () => {
+    // Clean up temporary directory
+    await fs.promises.rm(tempDir, { recursive: true, force: true })
   })
 
   describe("getDiffResult", () => {
     it("should return diff summary for staged files without renames", async () => {
-      const mockDiffSummary: DiffResult = {
-        files: [
-          {
-            file: "file1.ts",
-            changes: 10,
-            insertions: 8,
-            deletions: 2,
-            binary: false as const,
-            similarity: 100,
-          },
-          {
-            file: "file2.ts",
-            changes: 5,
-            insertions: 3,
-            deletions: 2,
-            binary: false as const,
-            similarity: 100,
-          },
-        ],
-        insertions: 11,
-        deletions: 4,
-        changed: 2,
-      }
+      // Create and stage a new file
+      const file1Path = path.join(tempDir, "file1.ts")
+      const file2Path = path.join(tempDir, "file2.ts")
 
-      const diffSummarySpy = jest.spyOn(mockGit, "diffSummary")
-      diffSummarySpy.mockResolvedValue(mockDiffSummary)
+      await fs.promises.writeFile(file1Path, "console.log('test1')")
+      await fs.promises.writeFile(file2Path, "console.log('test2')")
+
+      await new Promise<void>((resolve, reject) => {
+        const { exec } = require("child_process")
+        exec("git add .", { cwd: tempDir }, (error: any) => {
+          if (error) reject(error)
+          else resolve()
+        })
+      })
 
       const result = await gitCore.getDiffResult(false)
 
-      expect(diffSummarySpy).toHaveBeenCalledWith(["--staged"])
-      expect(result).toEqual(mockDiffSummary)
+      expect(result.files).toHaveLength(2)
+      // 确保文件存在并按字母顺序排序
+      const sortedFiles = [...result.files].sort((a, b) =>
+        a.file.localeCompare(b.file)
+      )
+      expect(sortedFiles.length).toBe(2)
+      expect(sortedFiles[0]?.file).toBe("file1.ts")
+      expect(sortedFiles[1]?.file).toBe("file2.ts")
+      expect(result.insertions).toBeGreaterThan(0)
+      expect(result.deletions).toBe(0)
     })
 
     it("should handle renamed files in diff summary", async () => {
-      const mockDiffSummary: DiffResult = {
-        files: [
-          {
-            file: "newfile.ts",
-            changes: 0,
-            insertions: 0,
-            deletions: 0,
-            binary: false as const,
-            similarity: 100,
-            from: "oldfile.ts",
-          } as {
-            file: string
-            changes: number
-            insertions: number
-            deletions: number
-            binary: false
-            similarity: number
-            from: string
-          },
-          {
-            file: "file2.ts",
-            changes: 5,
-            insertions: 3,
-            deletions: 2,
-            binary: false as const,
-            similarity: 100,
-          },
-        ],
-        insertions: 3,
-        deletions: 2,
-        changed: 2,
-      }
+      // Create and stage a file
+      const oldFilePath = path.join(tempDir, "oldfile.ts")
+      await fs.promises.writeFile(oldFilePath, "console.log('test')")
 
-      const diffSummarySpy = jest.spyOn(mockGit, "diffSummary")
-      diffSummarySpy.mockResolvedValue(mockDiffSummary)
+      await new Promise<void>((resolve, reject) => {
+        const { exec } = require("child_process")
+        exec("git add .", { cwd: tempDir }, (error: any) => {
+          if (error) reject(error)
+          else resolve()
+        })
+      })
+
+      // Commit the file
+      await new Promise<void>((resolve, reject) => {
+        const { exec } = require("child_process")
+        exec(
+          'git commit -m "Initial commit"',
+          { cwd: tempDir },
+          (error: any) => {
+            if (error) reject(error)
+            else resolve()
+          }
+        )
+      })
+
+      // Rename the file
+      const newFilePath = path.join(tempDir, "newfile.ts")
+      await fs.promises.rename(oldFilePath, newFilePath)
+
+      // Stage the rename
+      await new Promise<void>((resolve, reject) => {
+        const { exec } = require("child_process")
+        exec("git add -A", { cwd: tempDir }, (error: any) => {
+          if (error) reject(error)
+          else resolve()
+        })
+      })
 
       const result = await gitCore.getDiffResult(true)
 
-      expect(diffSummarySpy).toHaveBeenCalledWith(["--staged"])
-      expect(result).toEqual(mockDiffSummary)
-
-      // Type assertion for renamed file
-      const renamedFile = result.files[0] as { from?: string }
-      expect(renamedFile.from).toBe("oldfile.ts")
+      expect(result.files).toHaveLength(1)
+      const renamedFile = result.files[0] as DiffResult["files"][0] & {
+        from?: string
+      }
+      expect(renamedFile?.file).toBe("newfile.ts")
+      expect(renamedFile?.from).toBe("oldfile.ts")
     })
 
     it("should handle empty diff summary", async () => {
-      const mockDiffSummary: DiffResult = {
-        files: [],
-        insertions: 0,
-        deletions: 0,
-        changed: 0,
-      }
-
-      const diffSummarySpy = jest.spyOn(mockGit, "diffSummary")
-      diffSummarySpy.mockResolvedValue(mockDiffSummary)
-
       const result = await gitCore.getDiffResult()
 
-      expect(diffSummarySpy).toHaveBeenCalledWith(["--staged"])
-      expect(result).toEqual(mockDiffSummary)
+      expect(result.files).toHaveLength(0)
+      expect(result.insertions).toBe(0)
+      expect(result.deletions).toBe(0)
     })
 
     it("should handle errors in diff summary", async () => {
-      const error = new Error("Git diff failed")
-      const diffSummarySpy = jest.spyOn(mockGit, "diffSummary")
-      diffSummarySpy.mockRejectedValue(error)
+      // Corrupt git repo to cause an error
+      await fs.promises.rm(path.join(tempDir, ".git"), {
+        recursive: true,
+        force: true,
+      })
 
-      await expect(gitCore.getDiffResult()).rejects.toThrow("Git diff failed")
+      await expect(gitCore.getDiffResult()).rejects.toThrow()
     })
   })
 })

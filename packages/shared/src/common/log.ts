@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import chalk from "chalk"
 import { Service } from "typedi"
 
 import type { ILogger } from "./core"
@@ -50,10 +49,6 @@ export abstract class BaseLogger implements ILogger {
     this.minLevel = level
   }
 
-  protected shouldLog(level: LogLevel): boolean {
-    return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.minLevel]
-  }
-
   info(...args: unknown[]): void {
     this._log("info", ...args)
   }
@@ -72,6 +67,10 @@ export abstract class BaseLogger implements ILogger {
 
   trace(...args: unknown[]): void {
     this._log("trace", ...args)
+  }
+
+  protected shouldLog(level: LogLevel): boolean {
+    return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.minLevel]
   }
 
   protected _log(level: LogLevel, ...args: unknown[]): void {
@@ -93,9 +92,7 @@ export class ConsoleLogger extends BaseLogger implements ILogger {
     const formattedMsg = formatMessage(...args)
 
     console.log(
-      chalk.green(`${timestamp} ${levelStr}`) +
-        ` | [${loggerName}] ` +
-        formattedMsg
+      `${timestamp} ${levelStr}` + ` | [${loggerName}] ` + formattedMsg
     )
   }
 }
