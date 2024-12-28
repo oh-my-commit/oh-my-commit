@@ -27,12 +27,17 @@ html,
 body {
   width: 100%;
   height: 100%;
-  padding: 0;
+  padding: 0 !important;
   margin: 0;
 }
 
+/* 移除 vscode webview 的默认 padding */
+.vscode-webview {
+  padding: 0 !important;
+}
+
 html {
-  scrollbar-gutter: stable both-edges;
+  overflow-y: overlay;  /* 使用 overlay 让滚动条覆盖在内容上 */
 }
 
 body {
@@ -47,8 +52,8 @@ body {
 
 /* 全局滚动条样式 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;  /* 减小滚动条宽度 */
+  height: 6px;
   background-color: transparent;
 }
 

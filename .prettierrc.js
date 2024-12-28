@@ -12,7 +12,7 @@ module.exports = {
   plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [
     "^reflect-metadata$",
-    "^react(/.*)?$",
+    "^react.*(/.*)?$",
     "^@vscode/(.*)$",
     "<THIRD_PARTY_MODULES>",
     "@oh-my-commit/(.*)$",
