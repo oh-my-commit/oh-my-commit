@@ -21,7 +21,7 @@ import {
 } from "@shared/common"
 
 import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VscodeConfig, VscodeLogger } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
 import { VSCODE_TOKENS } from "@/vscode-token"
 import { VscodeWebview } from "@/vscode-webview"
@@ -37,6 +37,10 @@ export class QuickCommitCommand implements BaseCommand {
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
     @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
+
+    @Inject(TOKENS.Config)
+    private readonly config: VscodeConfig,
+
     @Inject(VSCODE_TOKENS.Webview)
     private readonly webviewManager: VscodeWebview
   ) {
@@ -252,8 +256,8 @@ export class QuickCommitCommand implements BaseCommand {
                 // Auto refresh after git init
                 if (message.command === "git.init") {
                   // Wait a bit for git to initialize
-                  setTimeout(async () => {
-                    await this.syncFilesAndCommits()
+                  setTimeout(() => {
+                    void this.syncFilesAndCommits()
                   }, 500)
                 }
               } catch (error) {
@@ -335,7 +339,9 @@ export class QuickCommitCommand implements BaseCommand {
     }
 
     this.logger.info("[QuickCommit] Generating commit via acManager...")
-    const commit = await this.commitManager.generateCommit(diff)
+    const commit = await this.commitManager.generateCommit(diff, {
+      lang: this.config.get("ohMyCommit.git.commitLanguage"),
+    })
 
     const data: ServerMessageEvent = {
       type: "commit-message",

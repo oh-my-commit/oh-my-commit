@@ -85,7 +85,7 @@ export class CommitManager {
       }
 
       const generateOptions = options || {
-        lang: this.config.get("lang"),
+        lang: this.config.get("ohMyCommit.git.commitLanguage"),
       }
 
       this.logger.debug(`Generating commit using model: ${modelId}`)
