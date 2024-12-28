@@ -11,36 +11,44 @@ import "reflect-metadata"
 import { Container } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
+import { APP_NAME, CommitManager, formatError } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 
 import { CommandManager } from "./command-manager"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git"
 import { StatusBarManager } from "./vscode-statusbar"
-import { VSCODE_TOKENS as TOKENS_VSCODE } from "./vscode-token"
+import { TOKENS } from "./vscode-token"
 import { VscodeWebview } from "./vscode-webview"
 
-export async function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
   try {
     const logger = Container.get(VscodeLogger)
     logger.info(`Initializing ${APP_NAME} extension...`)
 
-    Container.set(TOKENS_VSCODE.Context, context)
+    // basic
+    Container.set(TOKENS.Context, context)
     Container.set(TOKENS.Logger, logger)
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
-    // log
+
+    // generic
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
-    // init providers, MUST wait, todo: parallel
-    await Container.get(ProviderRegistry).initialize()
-    // log
-    Container.set(TOKENS_VSCODE.Git, Container.get(VscodeGit))
-    // log, config, context
-    Container.set(TOKENS_VSCODE.Webview, Container.get(VscodeWebview))
-    // log, config, provider
-    Container.set(TOKENS.CommitManager, Container.get(CommitManager))
-    // log, commit, git
-    Container.set(TOKENS_VSCODE.StatusBar, Container.get(StatusBarManager))
+    Container.set(TOKENS.GitManager, Container.get(VscodeGit))
+    Container.set(TOKENS.Webview, Container.get(VscodeWebview))
+    Container.set(TOKENS.CommitManager, Container.get(CommitManager)) // provider
+    Container.set(TOKENS.StatusBar, Container.get(StatusBarManager)) // commit, git
+
+    // Initialize providers asynchronously
+    Container.get(ProviderRegistry)
+      .initialize()
+      .then(() => {
+        logger.debug("Provider initialization complete")
+        // Notify StatusBar to update if needed
+        void Container.get(StatusBarManager).update()
+      })
+      .catch((error) => {
+        logger.error("Failed to initialize providers:", error)
+      })
 
     // register commands
     Container.get(CommandManager)
@@ -49,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
     void vscode.window.showErrorMessage(
-      `Failed to initialize Oh My Commit: ${formatError(error)}`
+      formatError(error, "Failed to initialize Oh My Commit")
     )
   }
 }

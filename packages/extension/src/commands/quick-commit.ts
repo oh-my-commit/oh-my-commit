@@ -27,7 +27,7 @@ import type { BaseCommand } from "@/vscode-command"
 import { VscodeConfig, VscodeLogger } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
 import { StatusBarManager } from "@/vscode-statusbar"
-import { VSCODE_TOKENS } from "@/vscode-token"
+import { TOKENS } from "@/vscode-token"
 import { VscodeWebview } from "@/vscode-webview"
 
 @Service()
@@ -36,19 +36,19 @@ export class QuickCommitCommand implements BaseCommand {
   public name = "Quick Commit"
 
   constructor(
-    @Inject(VSCODE_TOKENS.Context)
+    @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit,
+    @Inject(TOKENS.Git) private readonly gitService: VscodeGit,
 
     @Inject(TOKENS.Config)
     private readonly config: VscodeConfig,
 
-    @Inject(VSCODE_TOKENS.Webview)
+    @Inject(TOKENS.Webview)
     private readonly webviewManager: VscodeWebview,
 
-    @Inject(VSCODE_TOKENS.StatusBar)
+    @Inject(TOKENS.StatusBar)
     private readonly statusBar: StatusBarManager
   ) {
     // 监听配置变更

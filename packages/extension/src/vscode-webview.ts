@@ -20,7 +20,7 @@ import {
 } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
-import { VSCODE_TOKENS } from "./vscode-token"
+import { TOKENS } from "./vscode-token"
 
 @Service()
 export class VscodeWebview
@@ -34,7 +34,7 @@ export class VscodeWebview
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.Config) private readonly config: VscodeConfig,
-    @Inject(VSCODE_TOKENS.Context)
+    @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext
   ) {
     this.webviewPath = path.join(

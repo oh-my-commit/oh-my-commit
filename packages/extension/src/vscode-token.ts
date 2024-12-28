@@ -9,6 +9,8 @@
 import { Token } from "typedi"
 import type * as vscode from "vscode"
 
+import { TOKENS as TOKENS_BASE } from "@shared/common"
+
 import type { CommandManager } from "./command-manager"
 import type { OpenPreferencesCommand } from "./commands/open-preferences"
 import type { QuickCommitCommand } from "./commands/quick-commit"
@@ -18,9 +20,10 @@ import type { VscodeGit } from "./vscode-git"
 import type { StatusBarManager } from "./vscode-statusbar"
 import type { VscodeWebview } from "./vscode-webview"
 
-export const VSCODE_TOKENS = {
+export const TOKENS = {
+  ...TOKENS_BASE,
   Context: new Token<vscode.ExtensionContext>("vscode.context"),
-  Git: new Token<VscodeGit>("vscode.git"),
+  GitManager: new Token<VscodeGit>("vscode.git"),
   Webview: new Token<VscodeWebview>("vscode.webview"),
   Config: new Token<VscodeConfig>("vscode.config"),
   StatusBar: new Token<StatusBarManager>("vscode.statusbar"),

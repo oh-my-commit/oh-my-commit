@@ -28,7 +28,7 @@ import { PromptTemplate } from "@shared/server"
 
 class StandardModel implements IModel {
   id = `${APP_ID_DASH}.standard`
-  name = `${APP_NAME} Standard Model`
+  name = `omc-standard-claude-3.5`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
   providerId = APP_ID_CAMEL
   aiProviderId = "anthropic"
@@ -99,7 +99,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
       return {
         ok: false,
         code: -999,
-        message: `Failed to generate commit: ${formatError(error)}`,
+        message: formatError(error, "Failed to generate commit"),
       }
     }
   }

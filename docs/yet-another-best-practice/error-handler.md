@@ -29,7 +29,7 @@ type AppError =
 // 错误处理函数
 const handleApiError = (e: unknown): AppError => ({
   type: "API_ERROR",
-  message: `API call failed: ${formatError(e)}`,
+  message: formatError(e, "API Error: "),
   originalError: e,
 })
 

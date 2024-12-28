@@ -33,7 +33,7 @@ export class SelectModelCommand implements BaseCommand {
 
     if (this.commitManager.models.length === 0) {
       this.logger.info("No available models found")
-      vscode.window.showErrorMessage("No available models")
+      void vscode.window.showErrorMessage("No available models")
       return
     }
 
@@ -59,8 +59,8 @@ export class SelectModelCommand implements BaseCommand {
         await this.commitManager.selectModel(selected.id)
       }
     } catch (error: unknown) {
-      vscode.window.showErrorMessage(
-        `Failed to manage models: ${formatError(error)}`
+      void vscode.window.showErrorMessage(
+        formatError(error, "Failed to manage models")
       )
     }
   }

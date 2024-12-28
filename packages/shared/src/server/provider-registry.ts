@@ -112,7 +112,7 @@ export class ProviderRegistry implements IProviderManager {
       return provider
     } catch (error) {
       this.logger.error(
-        `Error loading provider from ${filePath}: ${formatError(error)}`
+        formatError(error, `Error loading provider from ${filePath}`)
       )
       return null
     }

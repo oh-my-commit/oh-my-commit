@@ -71,7 +71,7 @@ export class GitCore {
       await this.git.commit(message)
       this.logger.debug("[GitCore] Changes committed successfully")
     } catch (error) {
-      throw new Error(`Failed to commit changes: ${formatError(error)}`)
+      throw new Error(formatError(error, "Failed to commit changes"))
     }
   }
 
@@ -80,7 +80,7 @@ export class GitCore {
       const status = await this.git.status()
       return !status.isClean()
     } catch (error) {
-      throw new Error(`Failed to check changes: ${formatError(error)}`)
+      throw new Error(formatError(error, "Failed to check changes"))
     }
   }
 
@@ -91,9 +91,7 @@ export class GitCore {
       this.logger.debug("[GitCore] Last commit message:", result.latest?.hash)
       return result.latest?.message || ""
     } catch (error) {
-      throw new Error(
-        `Failed to get last commit message: ${formatError(error)}`
-      )
+      throw new Error(formatError(error, "Failed to get last commit message"))
     }
   }
 
@@ -103,7 +101,7 @@ export class GitCore {
       await this.git.commit(message, ["--amend"])
       this.logger.debug("[GitCore] Last commit amended successfully")
     } catch (error) {
-      throw new Error(`Failed to amend last commit: ${formatError(error)}`)
+      throw new Error(formatError(error, "Failed to amend last commit"))
     }
   }
 
@@ -126,7 +124,7 @@ export class GitCore {
       ])
       return diff
     } catch (error) {
-      throw new Error(`Failed to get file diff detail: ${formatError(error)}`)
+      throw new Error(formatError(error, "Failed to get file diff detail"))
     }
   }
 }

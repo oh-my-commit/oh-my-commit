@@ -107,7 +107,7 @@ export class CommitManager {
       return {
         ok: false,
         code: -999,
-        message: `[UNKNOWN ERROR] Failed to generate commit: ${formatError(error)}`,
+        message: formatError(error, "Failed to generate commit"),
       }
     }
   }

@@ -93,7 +93,7 @@ export class VscodeGit extends GitCore {
 
       return logs.all
     } catch (error) {
-      this.logger.error("Failed to get recent commits:", formatError(error))
+      this.logger.error(formatError(error, "Failed to get recent commits"))
       return []
     }
   }

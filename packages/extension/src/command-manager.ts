@@ -17,7 +17,7 @@ import {
 
 import type { VscodeCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
-import { VSCODE_TOKENS } from "@/vscode-token"
+import { TOKENS } from "@/vscode-token"
 
 import { OpenPreferencesCommand } from "./commands/open-preferences"
 import { QuickCommitCommand } from "./commands/quick-commit"
@@ -28,7 +28,7 @@ export class CommandManager {
   private readonly commands: Map<string, VscodeCommand> = new Map()
 
   constructor(
-    @Inject(VSCODE_TOKENS.Context)
+    @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext,
     private readonly logger: VscodeLogger
   ) {

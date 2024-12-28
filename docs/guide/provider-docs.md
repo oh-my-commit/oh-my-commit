@@ -70,7 +70,7 @@ export class MyProvider extends BaseProvider implements IProvider {
 
       return { ok: true, data: commit }
     } catch (error) {
-      const message = "Failed to generate commit, reason: " + formatError(error)
+      const message = formatError(error, "Failed to generate commit")
       this.logger.error(message)
       return {
         ok: false,
@@ -209,7 +209,7 @@ this.logger.info("Generating commit", {
       Promise.resolve().then(() => this.templateProcessor.fill({ diff, lang })),
       // error 1
       error =>
-        new GenerateCommitError(-10085, `failed to load prompt, reason: ${formatError(error)}`),
+        new GenerateCommitError(-10085, formatError(error, "failed to load prompt")),
     )
       .andThen(prompt =>
         ResultAsync.fromPromise(
@@ -217,7 +217,7 @@ this.logger.info("Generating commit", {
           this.callApi(prompt),
           // error 2
           error =>
-            new GenerateCommitError(-10086, `failed to call api, reason: ${formatError(error)}`),
+            new GenerateCommitError(-10086, formatError(error, "failed to call api")),
         ),
       )
       .andThen(response =>
@@ -228,7 +228,7 @@ this.logger.info("Generating commit", {
           error =>
             new GenerateCommitError(
               -10087,
-              `failed to handle api result, reason: ${formatError(error)}`,
+              formatError(error, "failed to handle api result"),
             ),
         ),
       )

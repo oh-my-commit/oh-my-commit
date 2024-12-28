@@ -19,7 +19,7 @@ import {
 } from "@shared/common"
 
 import { VscodeGit } from "./vscode-git"
-import { VSCODE_TOKENS } from "./vscode-token"
+import { TOKENS } from "./vscode-token"
 
 @Service()
 export class StatusBarManager implements vscode.Disposable {
@@ -34,7 +34,7 @@ export class StatusBarManager implements vscode.Disposable {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(VSCODE_TOKENS.Git) private readonly gitService: VscodeGit
+    @Inject(TOKENS.Git) private readonly gitService: VscodeGit
   ) {
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
@@ -50,7 +50,7 @@ export class StatusBarManager implements vscode.Disposable {
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration(APP_ID_CAMEL)) {
-          this.update()
+          void this.update()
         }
       })
     )
@@ -58,7 +58,7 @@ export class StatusBarManager implements vscode.Disposable {
     // 监听工作区变化（可能影响 git 状态）
     this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
-        this.update()
+        void this.update()
       })
     )
 
@@ -93,7 +93,7 @@ export class StatusBarManager implements vscode.Disposable {
     }
   }
 
-  private async update(): Promise<void> {
+  public async update(): Promise<void> {
     try {
       if (!this.commitManager?.providersManager) {
         this.statusBarItem.text = `$(error) (Initializing...)`
