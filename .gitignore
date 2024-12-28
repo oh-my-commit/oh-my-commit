@@ -47,3 +47,11 @@ tsconfig.tsbuildinfo
 temp/
 out/
 dist/
+__essence__/
+
+# Build outputs
+build/
+lib/
+dist-*/
+docs/.vitepress/dist
+docs/.vitepress/cache
