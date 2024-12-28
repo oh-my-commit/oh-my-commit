@@ -84,9 +84,8 @@ Contributions are welcome! Please check our [Contributing Guide](CONTRIBUTING.md
 
 If you encounter any issues or have suggestions:
 
-1. Check the [FAQ](FAQ.md)
+1. Check the [FAQ](docs/guide/faq.md)
 2. Submit an [Issue](https://github.com/cs-magic-open/oh-my-commit/issues)
-3. Join our [Discord Community](https://discord.gg/oh-my-commit)
 
 ## License
 
