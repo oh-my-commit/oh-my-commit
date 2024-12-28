@@ -7,27 +7,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { type FC, useCallback } from "react"
+
 import { useAtom } from "jotai"
+
 import { clientPush } from "@/clientPush"
 import { Section } from "@/components/layout/Section"
-import {
-  diffDetailAtom,
-  diffResultAtom,
-  lastOpenedFilePathAtom,
-} from "@/state/atoms/commit.changed-files"
+import { lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { viewModeAtom } from "@/state/atoms/ui"
+
 import { FileChangesView } from "./FileChangesView"
 import { ViewToggle } from "./ViewToggle"
 
 export const FileChanges: FC = () => {
-  const [diffResult] = useAtom(diffResultAtom)
-  const [diffFile] = useAtom(diffDetailAtom)
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
+    lastOpenedFilePathAtom
+  )
   const [searchQuery] = useAtom(searchQueryAtom)
   const [viewMode, setViewMode] = useAtom(viewModeAtom)
-
-  console.log({ diffFile, lastOpenedFilePath })
 
   const handleFileClick = useCallback(
     (path: string) => {
