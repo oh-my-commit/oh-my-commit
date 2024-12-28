@@ -19,9 +19,9 @@ import type { VscodeCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-commit-adapter"
 import { VSCODE_TOKENS } from "@/vscode-token"
 
-import { OpenPreferencesCommand } from "./open-preferences"
-import { QuickCommitCommand } from "./quick-commit"
-import { SelectModelCommand } from "./select-model"
+import { OpenPreferencesCommand } from "./commands/open-preferences"
+import { QuickCommitCommand } from "./commands/quick-commit"
+import { SelectModelCommand } from "./commands/select-model"
 
 @Service()
 export class CommandManager {

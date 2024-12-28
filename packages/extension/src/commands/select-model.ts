@@ -49,7 +49,7 @@ export class SelectModelCommand implements BaseCommand {
           picked: this.commitManager.modelId === s.id,
         })),
         {
-          placeHolder: "Select AI Model to Use",
+          placeHolder: `Select AI Model to Use`,
           matchOnDescription: true,
           matchOnDetail: true,
         }

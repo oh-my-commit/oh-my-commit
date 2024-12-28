@@ -16,6 +16,8 @@ import {
   ClientMessageEvent,
   type CommitManager,
   IInputOptions,
+  IResult,
+  ResultDTO,
   type ServerMessageEvent,
   TOKENS,
   formatError,
@@ -87,7 +89,7 @@ export class QuickCommitCommand implements BaseCommand {
             break
 
           case "generate":
-            await this.genCommit()
+            await this.execute()
             break
 
           case "get-settings":
@@ -283,8 +285,87 @@ export class QuickCommitCommand implements BaseCommand {
     this.webviewManager?.dispose()
   }
 
+  async genCommit(): Promise<ResultDTO<IResult>> {
+    const diff = await this.getLatestDiff()
+
+    if (!diff.changed) {
+      this.logger.info(
+        "[QuickCommit] No changes to commit, skipping commit generation"
+      )
+      return {
+        ok: false,
+        code: 500,
+        message: "No changes to commit",
+      }
+    }
+
+    const options: IInputOptions = {
+      lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),
+    }
+    this.logger.info("[QuickCommit] Generating commit via acManager: ", {
+      options,
+    })
+    const commit = await this.commitManager.generateCommit(diff, options)
+    this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
+    return commit
+  }
+
   async execute(): Promise<void> {
-    await this.webviewManager?.createWebviewPanel()
+    const commit = await this.genCommit()
+    if (!commit.ok) {
+      void vscode.window.showErrorMessage(
+        `Failed to generate commit! Reason: ${commit.message}`
+      )
+      return
+    }
+
+    // Check UI mode
+    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
+    this.logger.info("[QuickCommit] UI mode:", uiMode)
+
+    if (uiMode === "notification") {
+      // Show commit message in notification
+      const result = await vscode.window.showInformationMessage(
+        commit.data.title,
+        { modal: false, detail: commit.data.body },
+        "Commit",
+        "Edit",
+        "Cancel"
+      )
+
+      if (result === "Commit") {
+        // Direct commit
+        await this.gitService.stageAll()
+        if (!(await this.gitService.hasChanges())) {
+          void vscode.window.showErrorMessage("No changes to commit")
+          return
+        }
+        const commitMessage = commit.data.body
+          ? `${commit.data.title}\n\n${commit.data.body}`
+          : commit.data.title
+        await this.gitService.commit(commitMessage)
+        void vscode.window.showInformationMessage(
+          "Changes committed successfully"
+        )
+        await this.syncFiles()
+      } else if (result === "Edit") {
+        // Fall back to panel mode for editing
+        await this.webviewManager?.createWebviewPanel()
+        await this.webviewManager?.postMessage({
+          type: "commit-message",
+          data: commit,
+        })
+      }
+      return
+    } else {
+      await this.webviewManager?.createWebviewPanel()
+      // Default panel mode
+      await this.webviewManager?.postMessage({
+        type: "commit-message",
+        data: commit,
+      })
+    }
+    this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
   }
 
   /**
@@ -341,25 +422,5 @@ export class QuickCommitCommand implements BaseCommand {
       type: "diff-result",
       data: await this.getLatestDiff(),
     })
-  }
-
-  private async genCommit() {
-    const diff = await this.getLatestDiff()
-
-    const options: IInputOptions = {
-      lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),
-    }
-    this.logger.info("[QuickCommit] Generating commit via acManager: ", {
-      options,
-    })
-    const commit = await this.commitManager.generateCommit(diff, options)
-
-    const data: ServerMessageEvent = {
-      type: "commit-message",
-      data: commit,
-    }
-    this.logger.info("[QuickCommit] Generated commit via acManager:", data)
-
-    await this.webviewManager?.postMessage(data)
   }
 }

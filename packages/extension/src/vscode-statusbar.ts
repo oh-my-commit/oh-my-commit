@@ -38,7 +38,7 @@ export class StatusBarManager implements vscode.Disposable {
     this.statusBarItem.name = APP_NAME
 
     // 设置初始状态
-    this.statusBarItem.text = `$(sync~spin) ${APP_NAME} (Initializing...)`
+    this.statusBarItem.text = `$(sync~spin) (Initializing...)`
     this.statusBarItem.show()
 
     // 监听配置变化
@@ -63,7 +63,7 @@ export class StatusBarManager implements vscode.Disposable {
   private async update(): Promise<void> {
     try {
       if (!this.commitManager?.providersManager) {
-        this.statusBarItem.text = `$(error) ${APP_NAME} (Initializing...)`
+        this.statusBarItem.text = `$(error) (Initializing...)`
         this.statusBarItem.tooltip = "Provider manager is not initialized"
         this.statusBarItem.command = undefined
         return
@@ -75,25 +75,25 @@ export class StatusBarManager implements vscode.Disposable {
       const isGitRepo = await this.gitService.isGitRepository()
 
       if (!isGitRepo) {
-        this.statusBarItem.text = `$(error) ${APP_NAME} (Not a Git repository)`
+        this.statusBarItem.text = `$(error) (Not a Git repository)`
         this.statusBarItem.tooltip = "This workspace is not a Git repository"
         this.statusBarItem.command = undefined
         return
       }
 
       if (!model) {
-        this.statusBarItem.text = `$(error) ${APP_NAME} (No model selected)`
+        this.statusBarItem.text = `$(error) (No model selected)`
         this.statusBarItem.tooltip = "Click to select a model"
         this.statusBarItem.command = COMMAND_SELECT_MODEL
         return
       }
 
-      this.statusBarItem.text = `$(git-commit) ${APP_NAME} (${model.name})`
+      this.statusBarItem.text = `$(git-commit) (${model.name})`
       this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`
       this.statusBarItem.command = COMMAND_SELECT_MODEL
     } catch (error) {
       this.logger.error("Error updating status bar:", error)
-      this.statusBarItem.text = `$(error) ${APP_NAME} (Error)`
+      this.statusBarItem.text = `$(error) (Error)`
       this.statusBarItem.tooltip =
         "Error updating status. Check logs for details."
       this.statusBarItem.command = undefined

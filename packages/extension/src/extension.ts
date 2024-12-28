@@ -14,7 +14,7 @@ import * as vscode from "vscode"
 import { APP_NAME, CommitManager, TOKENS, formatError } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 
-import { CommandManager } from "./commands/command-manager"
+import { CommandManager } from "./command-manager"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git"
 import { StatusBarManager } from "./vscode-statusbar"
