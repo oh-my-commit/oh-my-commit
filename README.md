@@ -17,6 +17,7 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
 ## Highlights
 
 - **Ultimate User Experience**
+
   - Modern interface design with light/dark theme support
   - Smooth animations with zero-delay response
   - Smart context awareness adapting to your workflow
@@ -40,11 +41,13 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
 ## AI Capabilities
 
 - **Multi-model Support**
+
   - Built-in Oh My Commit professional model optimized for code commits
   - Support for OpenAI GPT-3.5/4, Claude, and other mainstream models
   - Customizable AI service endpoints for flexible expansion
 
 - **Intelligent Analysis**
+
   - Deep understanding of code change context
   - Automatic identification of refactoring, bugfix, feature types
   - Generate commit messages matching team style
@@ -62,19 +65,19 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
 
 ## Configuration
 
-| Configuration                          | Type    | Default             | Description                                        | Options                                                                                                                                              |
-| ------------------------------------- | ------- | ------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oh-my-commit.basic.enabled`          | boolean | true                | Enable Oh My Commit                                | `true / false`                                                                                                                                       |
-| `oh-my-commit.basic.uiLanguage`       | string  | "system"            | Interface display language                         | • `system`: Follow system language<br>• `zh_CN`: Chinese<br>• `en_US`: English                                                                       |
-| `oh-my-commit.ac.model`               | string  | "oh-my-commit.test" | Select AC service provider and model               | • `oh-my-commit.test`<br>• `oh-my-commit.balanced`<br>• `oh-my-commit.professional`<br>• `cgop.openai.chatgpt-3.5`<br>• `cgop.openai.chatgpt-4`      |
-| `oh-my-commit.git.emptyChangeBehavior`| string  | "skip"              | Behavior when no file changes                      | • `skip`: Skip empty changes<br>• `amend`: Modify last commit (git commit --amend)                                                                    |
-| `oh-my-commit.git.autoStage`          | boolean | true                | Auto stage all changes                             | `true / false`                                                                                                                                       |
-| `oh-my-commit.git.commitLanguage`     | string  | "system"            | Git commit message language                        | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages                                        |
-| `oh-my-commit.ai.apiKeys`             | object  | -                   | AI service provider API key configuration          |                                                                                                                                                      |
-| `oh-my-commit.ui.mode`                | string  | "webview"           | Commit interface mode                              | • `quickInput`: Quick & Simple: Single-line input box for fast commits<br>• `webview`: Professional: Full-featured editor with preview and formatting |
-| `oh-my-commit.telemetry.enabled`      | boolean | true                | Enable usage data collection (anonymous)           | `true / false`                                                                                                                                       |
-| `oh-my-commit.telemetry.shareLevel`   | string  | "basic"             | Data collection level                             | • `minimal`: Basic error info only<br>• `basic`: Feature usage stats and performance data<br>• `full`: Additional AI generation quality feedback      |
-| `oh-my-commit.feedback.enabled`       | boolean | true                | Enable user feedback (one-click GitHub Issues)     | `true / false`                                                                                                                                       |
+| Configuration                          | Type    | Default             | Description                                    | Options                                                                                                                                               |
+| -------------------------------------- | ------- | ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `oh-my-commit.basic.enabled`           | boolean | true                | Enable Oh My Commit                            | `true / false`                                                                                                                                        |
+| `oh-my-commit.basic.uiLanguage`        | string  | "system"            | Interface display language                     | • `system`: Follow system language<br>• `zh_CN`: Chinese<br>• `en_US`: English                                                                        |
+| `oh-my-commit.ac.model`                | string  | "oh-my-commit.test" | Select AC service provider and model           | • `oh-my-commit.test`<br>• `oh-my-commit.balanced`<br>• `oh-my-commit.professional`<br>• `cgop.openai.chatgpt-3.5`<br>• `cgop.openai.chatgpt-4`       |
+| `oh-my-commit.git.emptyChangeBehavior` | string  | "skip"              | Behavior when no file changes                  | • `skip`: Skip empty changes<br>• `amend`: Modify last commit (git commit --amend)                                                                    |
+| `oh-my-commit.git.autoStage`           | boolean | true                | Auto stage all changes                         | `true / false`                                                                                                                                        |
+| `oh-my-commit.git.commitLanguage`      | string  | "system"            | Git commit message language                    | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages                                        |
+| `oh-my-commit.ai.apiKeys`              | object  | -                   | AI service provider API key configuration      |                                                                                                                                                       |
+| `oh-my-commit.ui.mode`                 | string  | "webview"           | Commit interface mode                          | • `quickInput`: Quick & Simple: Single-line input box for fast commits<br>• `webview`: Professional: Full-featured editor with preview and formatting |
+| `oh-my-commit.telemetry.enabled`       | boolean | true                | Enable usage data collection (anonymous)       | `true / false`                                                                                                                                        |
+| `oh-my-commit.telemetry.shareLevel`    | string  | "basic"             | Data collection level                          | • `minimal`: Basic error info only<br>• `basic`: Feature usage stats and performance data<br>• `full`: Additional AI generation quality feedback      |
+| `oh-my-commit.feedback.enabled`        | boolean | true                | Enable user feedback (one-click GitHub Issues) | `true / false`                                                                                                                                        |
 
 ## Contributing
 
