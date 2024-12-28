@@ -28,9 +28,14 @@ export class GitCore {
 
   /**
    * 获取已暂存文件的统计摘要，用于生成提交信息
+   * @param findRenames 是否检测重命名（默认开启）
    */
-  public async getDiffResult(): Promise<DiffResult> {
-    return this.git.diffSummary("--staged")
+  public async getDiffResult(findRenames: boolean = true): Promise<DiffResult> {
+    const options = ["--staged"]
+    // if (findRenames) {
+    //   options.push("--stat")
+    // }
+    return this.git.diffSummary(options)
   }
 
   /**

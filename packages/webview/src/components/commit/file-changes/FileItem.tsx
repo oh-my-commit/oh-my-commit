@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils"
 import { clientPush } from "@/utils/clientPush"
 import { basename } from "@/utils/path"
 
+import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants"
+
 interface FileItemProps {
   file: DiffResult["files"][0]
   diff?: string
@@ -81,6 +83,8 @@ export const FileItem: React.FC<FileItemProps> = ({
     return null
   }
 
+  // const filePath = file.
+
   return (
     <div
       className={cn(
@@ -105,12 +109,12 @@ export const FileItem: React.FC<FileItemProps> = ({
             {/* // todo: STATUS */}
             <span
               className={cn(
-                "font-mono font-medium text-[12px]"
-                // STATUS_COLORS[file.status as keyof typeof STATUS_COLORS],
+                "font-mono font-medium text-[12px]",
+                STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
               )}
-              // title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
+              title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
-              {/* {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]} */}
+              {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
             </span>
           </div>
 
