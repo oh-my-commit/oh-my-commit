@@ -56,12 +56,21 @@
     "configuration": {
       "title": "Oh My Commit",
       "properties": {
-        "ohMyCommit.basic.enabled": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "是否启用 Oh My Commit",
+        "ohMyCommit.ui.mode": {
+          "type": "string",
+          "enum": [
+            "notification",
+            "panel"
+          ],
+          "enumDescriptions": [
+            "弹出通知，支持修改按钮",
+            "在面板中显示完整提交界面"
+          ],
+          "default": "panel",
+          "markdownDescription": "提交界面显示模式",
           "order": 1
         },
+
         "ohMyCommit.basic.uiLanguage": {
           "type": "string",
           "enum": [
@@ -103,58 +112,8 @@
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 4
         },
-        "ohMyCommit.ui.viewLocation": {
-          "type": "string",
-          "enum": [
-            "beside",
-            "activitybar"
-          ],
-          "enumDescriptions": [
-            "在编辑器旁边打开",
-            "在活动栏中打开（可拖动到侧边栏）"
-          ],
-          "default": "activitybar",
-          "markdownDescription": "Webview 打开位置（注：如需在右侧边栏显示，请先在活动栏打开后手动拖动）",
-          "order": 11
-        },
-        "ohMyCommit.git.emptyChangeBehavior": {
-          "type": "string",
-          "enum": [
-            "skip",
-            "amend"
-          ],
-          "enumDescriptions": [
-            "跳过空更改，不执行任何操作",
-            "修改最近一次提交（git commit --amend）"
-          ],
-          "default": "skip",
-          "markdownDescription": "当工作区没有文件变更时的行为",
-          "order": 20
-        },
-        "ohMyCommit.git.autoStage": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "是否自动暂存所有更改",
-          "order": 21
-        },
-        "ohMyCommit.ui.mode": {
-          "type": "string",
-          "enum": [
-            "silent",
-            "notification",
-            "window",
-            "panel"
-          ],
-          "enumDescriptions": [
-            "仅在状态栏显示提交信息和状态",
-            "弹出通知，支持修改按钮",
-            "以浮动窗口显示提交界面",
-            "在面板中显示完整提交界面"
-          ],
-          "default": "window",
-          "markdownDescription": "提交界面显示模式",
-          "order": 23
-        },
+
+
         "ohMyCommit.ai.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
@@ -177,12 +136,6 @@
           },
           "order": 30
         },
-        "ohMyCommit.telemetry.enabled": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "是否启用使用数据收集（匿名）",
-          "order": 50
-        },
         "ohMyCommit.telemetry.shareLevel": {
           "type": "string",
           "enum": [
@@ -198,12 +151,6 @@
           "default": "basic",
           "markdownDescription": "数据收集级别",
           "order": 51
-        },
-        "ohMyCommit.feedback.enabled": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "是否启用用户反馈功能（支持一键创建 GitHub Issue）",
-          "order": 60
         }
       }
     }

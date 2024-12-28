@@ -28,7 +28,7 @@ export class VscodeWebview
 {
   private webview?: vscode.Webview
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
-  private readonly title: string = `${APP_NAME} Webview`
+  private readonly title: string = `Commit Assistant`
   private readonly webviewPath: string
 
   constructor(
