@@ -118,6 +118,7 @@ describe("GitCore", () => {
       })
 
       const result = await gitCore.getDiffResult(true)
+      console.log(JSON.stringify(result, null, 2))
 
       expect(result.files).toHaveLength(1)
       const renamedFile = result.files[0] as DiffResult["files"][0] & {

@@ -32,9 +32,9 @@ export class GitCore {
    */
   public async getDiffResult(findRenames: boolean = true): Promise<DiffResult> {
     const options = ["--staged"]
-    // if (findRenames) {
-    //   options.push("--stat")
-    // }
+    if (findRenames) {
+      options.push("--name-status")
+    }
     return this.git.diffSummary(options)
   }
 

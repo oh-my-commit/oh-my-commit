@@ -9,17 +9,32 @@
 import * as React from "react"
 import { useEffect } from "react"
 
-import type { DiffResult } from "simple-git"
+import type {
+  DiffResultBinaryFile,
+  DiffResultNameStatusFile,
+  DiffResultTextFile,
+} from "simple-git"
 
 import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
 import { clientPush } from "@/utils/clientPush"
 import { basename } from "@/utils/path"
 
-import { STATUS_COLORS, STATUS_LABELS, STATUS_LETTERS } from "./constants"
+import { STATUS_COLORS } from "./constants"
+
+// Type guard to check if file has a valid status
+function hasStatus(
+  file: DiffResultNameStatusFile | DiffResultBinaryFile | DiffResultTextFile
+): file is DiffResultNameStatusFile {
+  return (
+    "status" in file &&
+    typeof file.status === "string" &&
+    file.status in STATUS_COLORS
+  )
+}
 
 interface FileItemProps {
-  file: DiffResult["files"][0]
+  file: DiffResultNameStatusFile | DiffResultBinaryFile | DiffResultTextFile
   diff?: string
   isOpen: boolean
   viewMode: "flat" | "tree"
@@ -107,15 +122,17 @@ export const FileItem: React.FC<FileItemProps> = ({
         <div className="flex-1 truncate text-[13px] pl-1 pr-2">
           <div className="flex items-center gap-0.5 transition-colors duration-100">
             {/* // todo: STATUS */}
-            {/* <span
+
+            <span
               className={cn(
                 "font-mono font-medium text-[12px]",
-                STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
+                hasStatus(file)
+                  ? STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
+                  : "text-git-unknown-fg"
               )}
-              title={STATUS_LABELS[file.status as keyof typeof STATUS_LABELS]}
             >
-              {STATUS_LETTERS[file.status as keyof typeof STATUS_LETTERS]}
-            </span> */}
+              {hasStatus(file) ? file.status : "?"}
+            </span>
           </div>
 
           <span className="truncate">
