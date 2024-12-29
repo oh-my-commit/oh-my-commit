@@ -43,7 +43,9 @@
     "release": "pnpm build && changeset publish",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "extension:package": "pnpm -F oh-my-commit-vscode package",
+    "extension:publish": "pnpm -F oh-my-commit-vscode publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
