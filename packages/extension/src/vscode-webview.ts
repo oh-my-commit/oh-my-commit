@@ -7,12 +7,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as Handlebars from "handlebars"
-// import outdent from "outdent"
 import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
+import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { TOKENS } from "./vscode-token"
@@ -32,6 +31,7 @@ export class VscodeWebview
     @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext
   ) {
+    console.log("-- init webview --")
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
     // 只注册 WebviewViewProvider
@@ -46,6 +46,7 @@ export class VscodeWebview
     )
 
     this.context.subscriptions.push(registration)
+    console.log("-- webview initialized --")
   }
 
   // WebviewViewProvider 接口实现
@@ -54,6 +55,7 @@ export class VscodeWebview
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ): Promise<void> {
+    console.log("-- resolving webview view --")
     this.webview = webviewView.webview
 
     // 配置 webview
@@ -93,6 +95,7 @@ export class VscodeWebview
   }
 
   public async createWebviewPanel() {
+    console.log("-- creating webview panel --")
     const panel = vscode.window.createWebviewPanel(
       "ohMyCommit.panel",
       this.title,
@@ -116,9 +119,13 @@ export class VscodeWebview
   private getWebviewContent(): string {
     const isDev = process.env["NODE_ENV"] === "development"
     const devServerHost = "http://localhost:18080"
+    console.log("-- init webview content -- ", { isDev })
 
     if (isDev) {
+      console.log("-- generating dev template --")
       const nonce = require("crypto").randomBytes(16).toString("base64")
+      console.log("-- generated nonce --", nonce)
+
       const csp = [
         `form-action 'none'`,
         `default-src ${this.webview?.cspSource} ${devServerHost}`,
@@ -126,56 +133,65 @@ export class VscodeWebview
         `script-src ${devServerHost} 'unsafe-eval' 'nonce-${nonce}'`,
         `connect-src ${devServerHost} ws://localhost:18080/ws`,
       ].join("; ")
+      console.log("-- generated csp --", csp)
 
-      return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      try {
+        console.log("-- before outdent --")
+        const htmlContent = outdent`
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <!-- no cache for development -->
-            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-            <meta http-equiv="Pragma" content="no-cache" />
-            <meta http-equiv="Expires" content="0" />
-            
-            <meta http-equiv="Content-Security-Policy" content="${csp}">
+              <!-- no cache for development -->
+              <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+              <meta http-equiv="Pragma" content="no-cache" />
+              <meta http-equiv="Expires" content="0" />
+              
+              <meta http-equiv="Content-Security-Policy" content="${csp}">
 
-            <title>${this.title}</title>
-        </head>
-        <body>
-            <div id="root"></div>
-            <script type="module" nonce="${nonce}" src="${devServerHost}/main.js"></script>
-        </body>
-        </html>
-        `
+              <title>${this.title}</title>
+            </head>
+            <body>
+              <div id="root"></div>
+              <script type="module" nonce="${nonce}" src="${devServerHost}/main.js"></script>
+            </body>
+          </html>
+          `
+        console.log("-- after outdent --", htmlContent.slice(0, 100)) // 只显示前100个字符避免日志过长
+        return htmlContent
+      } catch (error) {
+        console.error("-- outdent error --", error)
+        throw error
+      }
     }
 
     const template = `
-  <!doctype html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <meta http-equiv="Content-Security-Policy" content="{{{csp}}}" />
+          <meta http-equiv="Content-Security-Policy" content="{{{csp}}}" />
 
-      <title>${this.title}</title>
-      <script
-        crossorigin
-        src="https://unpkg.com/react@18/umd/react.development.js"
-      ></script>
-      <script
-        crossorigin
-        src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-      ></script>
-    </head>
-    <body>
-      <div id="root"></div>
-      <script type="module" src="{{{scriptUri}}}"></script>
-    </body>
-  </html>
-  `
+          <title>${this.title}</title>
+          <script
+            crossorigin
+            src="https://unpkg.com/react@18/umd/react.development.js"
+          ></script>
+          <script
+            crossorigin
+            src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+          ></script>
+        </head>
+        <body>
+          <div id="root"></div>
+          <script type="module" src="{{{scriptUri}}}"></script>
+        </body>
+      </html>
+    `
     const scriptPath = path.join(this.webviewPath, "main.js")
     const scriptUri = this.webview?.asWebviewUri(vscode.Uri.file(scriptPath))
 
