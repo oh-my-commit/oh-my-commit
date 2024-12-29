@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.17.2
+
+### Patch Changes
+
+- a7c59cc: fix some builds problem
+
 ## 0.17.1
 
 ### Patch Changes

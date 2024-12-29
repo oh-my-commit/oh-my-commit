@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.17.2
+
+### Patch Changes
+
+- a7c59cc: fix some builds problem
+- Updated dependencies [a7c59cc]
+  - @oh-my-commit/shared@0.17.2
+
 ## 0.17.1
 
 ### Patch Changes
