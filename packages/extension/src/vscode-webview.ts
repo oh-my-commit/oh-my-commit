@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as Handlebars from "handlebars"
-import outdent from "outdent"
+// import outdent from "outdent"
 import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
@@ -127,7 +127,7 @@ export class VscodeWebview
         `connect-src ${devServerHost} ws://localhost:18080/ws`,
       ].join("; ")
 
-      return outdent`
+      return `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -137,7 +137,7 @@ export class VscodeWebview
             <!-- no cache for development -->
             <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
             <meta http-equiv="Pragma" content="no-cache" />
-            <meta http-equiv="Expires" content="0" /> -->
+            <meta http-equiv="Expires" content="0" />
             
             <meta http-equiv="Content-Security-Policy" content="${csp}">
 
@@ -151,7 +151,7 @@ export class VscodeWebview
         `
     }
 
-    const template = outdent`
+    const template = `
   <!doctype html>
   <html lang="en">
     <head>
