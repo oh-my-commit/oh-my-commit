@@ -104,6 +104,7 @@ module.exports = {
         "jsx-a11y/no-static-element-interactions": "warn",
         "jsx-a11y/click-events-have-key-events": "warn",
         "@typescript-eslint/ no-var-requires": "off",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
       },
     },
 

@@ -49,7 +49,6 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
   if (!files.length) {
     return <EmptyState />
   }
-  logger.info("Rendering FileChangesView: ", { viewMode })
 
   return (
     <div className="flex flex-col h-full">

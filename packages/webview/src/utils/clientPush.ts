@@ -12,7 +12,6 @@ import { getVSCodeAPI } from "../lib/getVSCodeAPI"
 export const clientPush = (
   message: ClientMessageEvent & { channel?: string }
 ) => {
-  console.debug("clientPush: ", message)
   // 不能开这个
   // vscodeClientLogger.info(message)
   const vscode = getVSCodeAPI()

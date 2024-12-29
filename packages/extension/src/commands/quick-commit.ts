@@ -31,6 +31,8 @@ import { VscodeWebview } from "@/vscode-webview"
 export class QuickCommitCommand implements BaseCommand {
   public id = COMMAND_QUICK_COMMIT
   public name = "Quick Commit"
+  private commit: ResultDTO<IResult> | null = null
+  private isWebviewInitialized = false
 
   constructor(
     @Inject(TOKENS.Context)
@@ -78,6 +80,8 @@ export class QuickCommitCommand implements BaseCommand {
       async (message: ClientMessageEvent) => {
         switch (message.type) {
           case "init":
+            this.isWebviewInitialized = true
+            await this.syncCommitMessage()
             await this.syncFiles()
             break
 
@@ -308,22 +312,14 @@ export class QuickCommitCommand implements BaseCommand {
     })
     const commit = await this.commitManager.generateCommit(diff, options)
     this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
+    this.commit = commit
     return commit
   }
 
   async execute(): Promise<void> {
     this.statusBar.setWaiting("Generating commit message...")
-
     const commit = await this.genCommit()
-
     this.statusBar.clearWaiting()
-
-    if (!commit.ok) {
-      void vscode.window.showErrorMessage(
-        `Failed to generate commit! Reason: ${commit.message}`
-      )
-      return
-    }
 
     const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
     this.logger.info("[QuickCommit] UI mode:", uiMode)
@@ -332,26 +328,26 @@ export class QuickCommitCommand implements BaseCommand {
     await Promise.all([
       // Create and update webview panel
       (async () => {
-        this.logger.info(
-          "[QuickCommit] posting commit message to webview panel..."
-        )
-        // await this.webviewManager?.createWebviewPanel()
-        await this.webviewManager?.postMessage({
-          type: "commit-message",
-          data: commit,
-        })
+        await this.syncCommitMessage()
       })(),
       // Show notification and handle user interaction
       (async () => {
         if (uiMode !== "notification") return
 
         this.logger.info("[QuickCommit] showing commit message notification...")
+
+        if (!commit.ok) {
+          void vscode.window.showErrorMessage(
+            `Failed to generate commit! Reason: ${commit.message}`
+          )
+          return
+        }
+
         const result = await vscode.window.showInformationMessage(
           commit.data.title,
           { modal: false, detail: commit.data.body },
           "Commit",
           "Edit"
-
           // "Cancel" // 有 x 不需要
         )
 
@@ -370,6 +366,9 @@ export class QuickCommitCommand implements BaseCommand {
             "Changes committed successfully"
           )
           await this.syncFiles()
+        } else if (result === "Edit") {
+          this.logger.info("[QuickCommit] user selected to edit commit message")
+          await this.webviewManager.show()
         }
         // Note: No need to handle "Edit" case since webview panel is already created
       })(),
@@ -381,10 +380,10 @@ export class QuickCommitCommand implements BaseCommand {
    * @returns
    */
   private async getLatestDiff(selectedFiles?: string[]) {
-    this.logger.info("Getting latest diff, selectedFiles:", selectedFiles)
+    this.logger.debug("Getting latest diff, selectedFiles:", selectedFiles)
     await this.gitService.stageAll()
     const diffResult = await this.gitService.getDiffResult()
-    this.logger.info("Done Getting Latest diff: ", diffResult)
+    this.logger.debug("Done Getting Latest diff: ", diffResult)
     if (!selectedFiles) return diffResult
 
     const newDiffSummary: DiffResult = {
@@ -405,6 +404,15 @@ export class QuickCommitCommand implements BaseCommand {
     this.logger.info("New Diff Summary: ", newDiffSummary)
 
     return newDiffSummary
+  }
+
+  private async syncCommitMessage() {
+    if (!this.commit || !this.isWebviewInitialized) return
+    await this.webviewManager.postMessage({
+      type: "commit-message",
+      data: this.commit,
+    })
+    this.commit = null
   }
 
   private async syncFiles() {

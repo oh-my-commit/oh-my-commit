@@ -31,6 +31,7 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
+    // Register the webview provider with options to keep it alive
     const registration = vscode.window.registerWebviewViewProvider(
       "ohMyCommit.view",
       this,
@@ -42,6 +43,8 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     )
 
     this.context.subscriptions.push(registration)
+
+    this.logger.info(">> Webview provider registered")
   }
 
   async resolveWebviewView(
@@ -49,6 +52,7 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ): Promise<void> {
+    this.logger.info(">> Resolving webview view")
     this.view = webviewView
     this.webview = webviewView.webview
 
@@ -60,7 +64,12 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     webviewView.webview.html = this.getWebviewContent()
 
     if (this.messageHandler) {
-      webviewView.webview.onDidReceiveMessage(this.messageHandler)
+      webviewView.webview.onDidReceiveMessage(async (message: any) => {
+        this.logger.info("[Host << Webview] ", message)
+        if (this.messageHandler) {
+          await this.messageHandler(message)
+        }
+      })
     }
 
     webviewView.title = this.title
@@ -76,14 +85,8 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
   }
 
   public async postMessage(message: ServerMessageEvent) {
-    this.logger.info("Posting message:", message)
-    if (this.webview) {
-      try {
-        await this.webview.postMessage(message)
-      } catch (error) {
-        this.logger.error("Error posting message:", error)
-      }
-    }
+    this.logger.info("[Host >> Webview]", message)
+    await this.webview?.postMessage(message)
   }
 
   private getWebviewContent(): string {
@@ -159,5 +162,15 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
       scriptUri,
       cspSource: this.webview?.cspSource,
     })
+  }
+
+  public async show(preserveFocus = true) {
+    this.logger.info("Showing webview panel", { view: this.view })
+    await vscode.commands.executeCommand("ohMyCommit.view.focus")
+    if (this.view) {
+      this.view.show(preserveFocus)
+    } else {
+      this.logger.warn("Webview not yet initialized")
+    }
   }
 }

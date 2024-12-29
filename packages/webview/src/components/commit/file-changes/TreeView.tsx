@@ -187,7 +187,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const [isExpanded, setIsExpanded] = React.useState(true)
 
   const tree = React.useMemo(() => buildFileTree(files), [files])
-  logger.info("tree", tree)
 
   const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault()

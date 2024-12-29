@@ -39,8 +39,6 @@ export const FileChanges: FC = () => {
     [setLastOpenedFilePath]
   )
 
-  logger.info("Rendering FileChanges: ", { viewMode })
-
   return (
     <Section
       actions={<ViewToggle view={viewMode} onChange={setViewMode} />}

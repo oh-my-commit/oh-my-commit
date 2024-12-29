@@ -37,14 +37,13 @@ export const useCommitMessage = () => {
 
   const handleCommitMessage = useCallback(
     (message: ServerMessageEvent) => {
-      logger.info("Received commit message:", message)
-
       switch (message.type) {
         case "diff-result":
           setDiffResult(message.data)
           break
 
         case "commit-message":
+          logger.info("Received commit message:", message)
           if (message.data.ok) {
             setTitle(message.data.data.title)
             setBody(message.data.data.body ?? "")
