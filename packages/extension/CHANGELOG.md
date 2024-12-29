@@ -1,4 +1,4 @@
-# oh-my-commit-vscode
+# @oh-my-commit/extension
 
 ## 0.18.0
 

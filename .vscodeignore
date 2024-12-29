@@ -1,0 +1,7 @@
+!dist/main
+!dist/webview
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+**/*
