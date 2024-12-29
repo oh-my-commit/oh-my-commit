@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.18.1
+
+### Patch Changes
+
+- 8ab2f6b: fix: ui
+
 ## 0.18.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @oh-my-commit/extension
 
+## 0.18.1
+
+### Patch Changes
+
+- 8ab2f6b: fix: ui
+- Updated dependencies [8ab2f6b]
+  - @oh-my-commit/shared@0.18.1
+
 ## 0.18.0
 
 ### Minor Changes
