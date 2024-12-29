@@ -1,5 +1,13 @@
 # @oh-my-commit/webview
 
+## 0.17.3
+
+### Patch Changes
+
+- 7120105: perf: smaller package size
+- Updated dependencies [7120105]
+  - @oh-my-commit/shared@0.17.3
+
 ## 0.17.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.17.3
+
+### Patch Changes
+
+- 7120105: perf: smaller package size
+
 ## 0.17.2
 
 ### Patch Changes
