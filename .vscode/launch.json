@@ -21,7 +21,7 @@
         "webpack:///./*": "${workspaceFolder}/packages/extension/*",
         "webpack:///src/*": "${workspaceFolder}/packages/extension/src/*"
       },
-      "preLaunchTask": "pnpm: extension:dev",
+      "preLaunchTask": "Dev Services",
       "env": {
         "NODE_ENV": "development",
         "VSCODE_DEBUG": "true"
