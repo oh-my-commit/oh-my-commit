@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.18.0
+
+### Minor Changes
+
+- 378dd8e: build with new relation
+
 ## 0.17.3
 
 ### Patch Changes

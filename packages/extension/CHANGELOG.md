@@ -1,5 +1,16 @@
 # oh-my-commit-vscode
 
+## 0.18.0
+
+### Minor Changes
+
+- 378dd8e: build with new relation
+
+### Patch Changes
+
+- Updated dependencies [378dd8e]
+  - @oh-my-commit/shared@0.18.0
+
 ## 0.17.3
 
 ### Patch Changes
