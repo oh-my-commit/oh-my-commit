@@ -11,6 +11,7 @@ import { useSetAtom } from "jotai"
 
 import type { ServerMessageEvent } from "@shared/common"
 
+import { logger } from "@/lib/vscode-client-logger"
 import {
   diffDetailAtom,
   diffResultAtom,
@@ -36,6 +37,8 @@ export const useCommitMessage = () => {
 
   const handleCommitMessage = useCallback(
     (message: ServerMessageEvent) => {
+      logger.info("Received commit message:", message)
+
       switch (message.type) {
         case "diff-result":
           setDiffResult(message.data)

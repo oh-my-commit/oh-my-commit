@@ -30,7 +30,6 @@ export class VscodeWebview
     @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext
   ) {
-    console.log("-- init webview --")
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
     // 只注册 WebviewViewProvider
@@ -45,7 +44,6 @@ export class VscodeWebview
     )
 
     this.context.subscriptions.push(registration)
-    console.log("-- webview initialized --")
   }
 
   // WebviewViewProvider 接口实现
@@ -54,7 +52,6 @@ export class VscodeWebview
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ): Promise<void> {
-    console.log("-- resolving webview view --")
     this.webview = webviewView.webview
 
     // 配置 webview
@@ -84,6 +81,7 @@ export class VscodeWebview
   }
 
   public async postMessage(message: ServerMessageEvent) {
+    this.logger.info("Posting message:", message)
     if (this.webview) {
       try {
         await this.webview.postMessage(message)
@@ -94,7 +92,6 @@ export class VscodeWebview
   }
 
   public async createWebviewPanel() {
-    console.log("-- creating webview panel --")
     const panel = vscode.window.createWebviewPanel(
       "ohMyCommit.panel",
       this.title,
@@ -118,12 +115,9 @@ export class VscodeWebview
   private getWebviewContent(): string {
     const isDev = process.env["NODE_ENV"] === "development"
     const devServerHost = "http://localhost:18080"
-    console.log("-- init webview content -- ", { isDev })
 
     if (isDev) {
-      console.log("-- generating dev template --")
       const nonce = require("crypto").randomBytes(16).toString("base64")
-      console.log("-- generated nonce --", nonce)
 
       const csp = [
         `form-action 'none'`,
@@ -132,11 +126,8 @@ export class VscodeWebview
         `script-src ${devServerHost} 'unsafe-eval' 'nonce-${nonce}'`,
         `connect-src ${devServerHost} ws://localhost:18080/ws`,
       ].join("; ")
-      console.log("-- generated csp --", csp)
 
-      try {
-        console.log("-- before outdent --")
-        const htmlContent = outdent`
+      const htmlContent = outdent`
           <!DOCTYPE html>
           <html lang="en">
             <head>
@@ -158,12 +149,7 @@ export class VscodeWebview
             </body>
           </html>
           `
-        console.log("-- after outdent --", htmlContent.slice(0, 100)) // 只显示前100个字符避免日志过长
-        return htmlContent
-      } catch (error) {
-        console.error("-- outdent error --", error)
-        throw error
-      }
+      return htmlContent
     }
 
     const template = `

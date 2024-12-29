@@ -55,7 +55,7 @@ const buildFileTree = (files: DiffResult["files"]): FileTreeNode[] => {
     let currentPath = ""
 
     for (let i = 0; i < parts.length; i++) {
-      const name = parts[i]
+      const name = parts[i]!
       currentPath = currentPath ? `${currentPath}/${name}` : name
       const isFile = i === parts.length - 1
 

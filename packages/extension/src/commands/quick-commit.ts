@@ -315,17 +315,11 @@ export class QuickCommitCommand implements BaseCommand {
     const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
     this.logger.info("[QuickCommit] UI mode:", uiMode)
 
-    // Show waiting state in status bar for notification mode
-    if (uiMode === "notification") {
-      this.statusBar.setWaiting("Generating commit message...")
-    }
+    this.statusBar.setWaiting("Generating commit message...")
 
     const commit = await this.genCommit()
 
-    // Clear waiting state
-    if (uiMode === "notification") {
-      this.statusBar.clearWaiting()
-    }
+    this.statusBar.clearWaiting()
 
     if (!commit.ok) {
       void vscode.window.showErrorMessage(
@@ -369,15 +363,15 @@ export class QuickCommitCommand implements BaseCommand {
           data: commit,
         })
       }
-      return
-    } else {
-      await this.webviewManager?.createWebviewPanel()
-      // Default panel mode
-      await this.webviewManager?.postMessage({
-        type: "commit-message",
-        data: commit,
-      })
     }
+
+    await this.webviewManager?.createWebviewPanel()
+    // Default panel mode
+    await this.webviewManager?.postMessage({
+      type: "commit-message",
+      data: commit,
+    })
+
     this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
   }
 
