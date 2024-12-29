@@ -34,9 +34,8 @@ export class VscodeWebview
   ) {
     this.webviewPath = path.join(
       this.context.extensionPath,
-      "..",
+      "dist",
       "webview",
-      "dist"
     )
 
     // 只注册 WebviewViewProvider

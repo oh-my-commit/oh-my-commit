@@ -1,7 +1,7 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const webpack = require("webpack")
-const distDir = path.resolve(__dirname, "dist")
+const distDir = path.resolve(__dirname, "../extension/dist/webview")
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {

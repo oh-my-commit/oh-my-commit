@@ -13,7 +13,7 @@ import basaeConfig from "../__base__/tsup.config"
 export default defineConfig({
   ...basaeConfig,
   entry: ["src/extension.ts"],
-  outDir: "dist",
+  outDir: "dist/main",
   format: ["cjs"],
   platform: "node",
   target: "node16",

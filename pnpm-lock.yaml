@@ -225,9 +225,6 @@ importers:
       '@oh-my-commit/shared':
         specifier: workspace:^
         version: link:../shared
-      '@oh-my-commit/webview':
-        specifier: workspace:^
-        version: link:../webview
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
