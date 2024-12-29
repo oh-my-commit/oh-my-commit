@@ -14,17 +14,17 @@
 
 1. **最佳实践指南**
 
-   请阅读我们的最佳实践文档（`docs/yet-another-best-practice/`）：
+   请阅读我们的最佳实践文档（`docs/best-practice/`）：
 
-   - [状态管理最佳实践](docs/yet-another-best-practice/state-management.md)
-   - [CSS 管理最佳实践](docs/yet-another-best-practice/css-management.md)
+   - [状态管理最佳实践](docs/best-practice/state-management.md)
+   - [CSS 管理最佳实践](docs/best-practice/css-management.md)
 
 2. **API 规范**
 
    所有底层实现必须严格遵循我们的 [API 规范](docs/api-spec.md)，这确保了代码的一致性和可维护性。
 
 3. **Commit 规范**
-   - [Commit 规范](docs/yet-another-best-practice/commit-specification.md)
+   - [Commit 规范](docs/best-practice/commit-specification.md)
 
 ## 开发环境设置
 

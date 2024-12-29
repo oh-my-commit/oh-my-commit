@@ -11,7 +11,7 @@ import basaeConfig from "../__base__/tsup.config"
 
 const pkg = require("./package.json")
 
-export default defineConfig({
+export default defineConfig(() => ({
   ...basaeConfig,
   entry: ["src/extension.ts"],
   external: ["vscode"],
@@ -22,4 +22,4 @@ export default defineConfig({
   target: "node16",
   splitting: false,
   clean: true,
-})
+}))
