@@ -283,7 +283,7 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   public dispose(): void {
-    this.webviewManager?.dispose()
+    // this.webviewManager?.dispose()
   }
 
   async genCommit(): Promise<ResultDTO<IResult>> {
@@ -312,9 +312,6 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   async execute(): Promise<void> {
-    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
-    this.logger.info("[QuickCommit] UI mode:", uiMode)
-
     this.statusBar.setWaiting("Generating commit message...")
 
     const commit = await this.genCommit()
@@ -328,51 +325,55 @@ export class QuickCommitCommand implements BaseCommand {
       return
     }
 
+    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
     this.logger.info("[QuickCommit] UI mode:", uiMode)
 
-    if (uiMode === "notification") {
-      // Show commit message in notification
-      const result = await vscode.window.showInformationMessage(
-        commit.data.title,
-        { modal: false, detail: commit.data.body },
-        "Commit",
-        "Edit",
-        "Cancel"
-      )
-
-      if (result === "Commit") {
-        // Direct commit
-        await this.gitService.stageAll()
-        if (!(await this.gitService.hasChanges())) {
-          void vscode.window.showErrorMessage("No changes to commit")
-          return
-        }
-        const commitMessage = commit.data.body
-          ? `${commit.data.title}\n\n${commit.data.body}`
-          : commit.data.title
-        await this.gitService.commit(commitMessage)
-        void vscode.window.showInformationMessage(
-          "Changes committed successfully"
+    // Concurrently create webview panel and show notification
+    await Promise.all([
+      // Create and update webview panel
+      (async () => {
+        this.logger.info(
+          "[QuickCommit] posting commit message to webview panel..."
         )
-        await this.syncFiles()
-      } else if (result === "Edit") {
-        // Fall back to panel mode for editing
-        await this.webviewManager?.createWebviewPanel()
+        // await this.webviewManager?.createWebviewPanel()
         await this.webviewManager?.postMessage({
           type: "commit-message",
           data: commit,
         })
-      }
-    }
+      })(),
+      // Show notification and handle user interaction
+      (async () => {
+        if (uiMode !== "notification") return
 
-    await this.webviewManager?.createWebviewPanel()
-    // Default panel mode
-    await this.webviewManager?.postMessage({
-      type: "commit-message",
-      data: commit,
-    })
+        this.logger.info("[QuickCommit] showing commit message notification...")
+        const result = await vscode.window.showInformationMessage(
+          commit.data.title,
+          { modal: false, detail: commit.data.body },
+          "Commit",
+          "Edit"
 
-    this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
+          // "Cancel" // 有 x 不需要
+        )
+
+        if (result === "Commit") {
+          // Direct commit
+          await this.gitService.stageAll()
+          if (!(await this.gitService.hasChanges())) {
+            void vscode.window.showErrorMessage("No changes to commit")
+            return
+          }
+          const commitMessage = commit.data.body
+            ? `${commit.data.title}\n\n${commit.data.body}`
+            : commit.data.title
+          await this.gitService.commit(commitMessage)
+          void vscode.window.showInformationMessage(
+            "Changes committed successfully"
+          )
+          await this.syncFiles()
+        }
+        // Note: No need to handle "Edit" case since webview panel is already created
+      })(),
+    ])
   }
 
   /**

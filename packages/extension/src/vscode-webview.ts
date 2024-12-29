@@ -16,13 +16,12 @@ import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { TOKENS } from "./vscode-token"
 
 @Service()
-export class VscodeWebview
-  implements vscode.WebviewViewProvider, vscode.Disposable
-{
+export class VscodeWebview implements vscode.WebviewViewProvider {
   private webview?: vscode.Webview
   private messageHandler?: (message: ClientMessageEvent) => Promise<void>
   private readonly title: string = `Commit Assistant`
   private readonly webviewPath: string
+  private view?: vscode.WebviewView
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
@@ -32,7 +31,6 @@ export class VscodeWebview
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
-    // 只注册 WebviewViewProvider
     const registration = vscode.window.registerWebviewViewProvider(
       "ohMyCommit.view",
       this,
@@ -46,24 +44,21 @@ export class VscodeWebview
     this.context.subscriptions.push(registration)
   }
 
-  // WebviewViewProvider 接口实现
   async resolveWebviewView(
     webviewView: vscode.WebviewView,
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ): Promise<void> {
+    this.view = webviewView
     this.webview = webviewView.webview
 
-    // 配置 webview
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [vscode.Uri.file(this.webviewPath)],
     }
 
-    // 设置内容
     webviewView.webview.html = this.getWebviewContent()
 
-    // 设置消息处理器
     if (this.messageHandler) {
       webviewView.webview.onDidReceiveMessage(this.messageHandler)
     }
@@ -89,27 +84,6 @@ export class VscodeWebview
         this.logger.error("Error posting message:", error)
       }
     }
-  }
-
-  public async createWebviewPanel() {
-    const panel = vscode.window.createWebviewPanel(
-      "ohMyCommit.panel",
-      this.title,
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        localResourceRoots: [vscode.Uri.file(this.webviewPath)],
-      }
-    )
-
-    this.webview = panel.webview
-    panel.webview.html = this.getWebviewContent()
-
-    if (this.messageHandler) {
-      panel.webview.onDidReceiveMessage(this.messageHandler)
-    }
-
-    return panel
   }
 
   private getWebviewContent(): string {
@@ -185,9 +159,5 @@ export class VscodeWebview
       scriptUri,
       cspSource: this.webview?.cspSource,
     })
-  }
-
-  dispose() {
-    // Nothing to dispose
   }
 }
