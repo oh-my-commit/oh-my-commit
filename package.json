@@ -50,7 +50,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "vscode:package": "vsce package --no-dependencies -o dist",
+    "vscode:package": "pnpm build && vsce package --no-dependencies -o dist",
     "vscode:publish": "vsce publish --no-dependencies"
   },
   "devDependencies": {
