@@ -5,10 +5,10 @@ const distDir = path.resolve(__dirname, "../extension/dist/webview")
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
-  const isProduction = argv.mode === "production"
-  const isDevelopment = !isProduction
+  const isDev = argv.mode === "development"
+  const isProd = !isDev
 
-  console.log("-- init webpack config -- ", { isDevelopment })
+  console.log("-- init webpack config -- ", { isDevelopment: isDev })
 
   return {
     target: "web",
@@ -19,15 +19,15 @@ const config = (env, argv) => {
     output: {
       path: distDir,
       filename: "[name].js",
-      clean: isProduction,
+      clean: isProd,
     },
-    devtool: isDevelopment ? "eval-source-map" : "source-map",
+    devtool: isDev ? "eval-source-map" : false,
     plugins: [
       new webpack.ProvidePlugin({
         React: "react",
       }),
-      isDevelopment && new webpack.HotModuleReplacementPlugin(),
-      isDevelopment && new ReactRefreshWebpackPlugin(),
+      isDev && new webpack.HotModuleReplacementPlugin(),
+      isDev && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     devServer: {
       static: {
@@ -76,8 +76,8 @@ const config = (env, argv) => {
                 transform: {
                   react: {
                     runtime: "automatic",
-                    development: isDevelopment,
-                    refresh: isDevelopment,
+                    development: isDev,
+                    refresh: isDev,
                   },
                   decoratorMetadata: true,
                   legacyDecorator: true,
@@ -111,7 +111,7 @@ const config = (env, argv) => {
       ],
     },
     optimization: {
-      minimize: !isDevelopment,
+      minimize: !isDev,
     },
   }
 }

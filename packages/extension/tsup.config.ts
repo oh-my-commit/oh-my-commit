@@ -18,6 +18,5 @@ export default defineConfig({
   platform: "node",
   target: "node16",
   splitting: false,
-  sourcemap: true,
   clean: true,
 })
