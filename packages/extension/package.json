@@ -16,6 +16,7 @@
     "@oh-my-commit/shared": "workspace:^",
     "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
+    "outdent": "^0.8.0",
     "reflect-metadata": "^0.2.1",
     "simple-git": "^3.27.0",
     "yaml": "^2.6.1",

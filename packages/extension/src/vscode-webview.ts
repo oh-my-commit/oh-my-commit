@@ -6,7 +6,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import * as fs from "fs"
 import * as Handlebars from "handlebars"
 import path from "path"
 import { Inject, Service } from "typedi"
@@ -14,6 +13,7 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
 
+import { outdent } from "outdent"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { TOKENS } from "./vscode-token"
 
@@ -131,27 +131,55 @@ export class VscodeWebview
         `connect-src ${devServerHost} ws://localhost:18080/ws`,
       ].join("; ")
 
-      return `<!DOCTYPE html>
+      return outdent`
+        <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <!-- no cache for development -->
+            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+            <meta http-equiv="Pragma" content="no-cache" />
+            <meta http-equiv="Expires" content="0" /> -->
+            
             <meta http-equiv="Content-Security-Policy" content="${csp}">
+
             <title>${this.title}</title>
         </head>
         <body>
             <div id="root"></div>
             <script type="module" nonce="${nonce}" src="${devServerHost}/main.js"></script>
         </body>
-        </html>`
+        </html>
+        `
     }
 
-    const indexPath = path.join(this.webviewPath, "index.html")
-    if (!fs.existsSync(indexPath)) {
-      throw new Error(`Template file not found: ${indexPath}`)
-    }
+const template = outdent`
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    const template = fs.readFileSync(indexPath, "utf-8")
+      <meta http-equiv="Content-Security-Policy" content="{{{csp}}}" />
+
+      <title>${this.title}</title>
+      <script
+        crossorigin
+        src="https://unpkg.com/react@18/umd/react.development.js"
+      ></script>
+      <script
+        crossorigin
+        src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      ></script>
+    </head>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="{{{scriptUri}}}"></script>
+    </body>
+  </html>
+  `
     const scriptPath = path.join(this.webviewPath, "main.js")
     const scriptUri = this.webview?.asWebviewUri(vscode.Uri.file(scriptPath))
 

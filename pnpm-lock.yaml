@@ -240,6 +240,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      outdent:
+        specifier: ^0.8.0
+        version: 0.8.0
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.2
