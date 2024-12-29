@@ -9,7 +9,7 @@
 import { useState } from "react"
 
 import Markdown from "marked-react"
-import { outdent } from "outdent"
+import outdent from "outdent"
 
 export const CommitGuide = () => {
   const [markdown, setMarkdown] = useState(outdent`

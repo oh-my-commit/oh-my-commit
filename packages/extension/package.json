@@ -26,6 +26,7 @@
     "@types/lodash": "^4.14.202",
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.80.0",
+    "@types/web": "^0.0.135",
     "@vscode/vsce": "^3.2.1",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",

@@ -30,7 +30,13 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["./dist", "dist", "tsconfig.tsbuildinfo", "tsup.config.*", "webpack.config.*"]
+      "outputs": [
+        "./dist",
+        "dist",
+        "tsconfig.tsbuildinfo",
+        "tsup.config.*",
+        "webpack.config.*"
+      ]
     },
     "build:extension": {
       "dependsOn": ["build"],

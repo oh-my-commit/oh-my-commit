@@ -7,13 +7,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as Handlebars from "handlebars"
+import outdent from "outdent"
 import path from "path"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent } from "@shared/common"
 
-import { outdent } from "outdent"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { TOKENS } from "./vscode-token"
 
@@ -32,11 +32,7 @@ export class VscodeWebview
     @Inject(TOKENS.Context)
     private readonly context: vscode.ExtensionContext
   ) {
-    this.webviewPath = path.join(
-      this.context.extensionPath,
-      "dist",
-      "webview",
-    )
+    this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
     // 只注册 WebviewViewProvider
     const registration = vscode.window.registerWebviewViewProvider(
@@ -155,7 +151,7 @@ export class VscodeWebview
         `
     }
 
-const template = outdent`
+    const template = outdent`
   <!doctype html>
   <html lang="en">
     <head>
