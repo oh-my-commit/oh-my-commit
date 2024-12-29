@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.17.1
+
+### Patch Changes
+
+- 09fd2c9: design: separate running extension and webview
+
 ## 0.17.0
 
 ### Minor Changes

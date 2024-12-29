@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.17.1
+
+### Patch Changes
+
+- 09fd2c9: design: separate running extension and webview
+- Updated dependencies [09fd2c9]
+  - @oh-my-commit/shared@0.17.1
+
 ## 0.17.0
 
 ### Minor Changes
