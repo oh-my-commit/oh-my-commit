@@ -52,7 +52,6 @@ module.exports = {
       [
         "*",
         " * @Copyright Copyright (c) 2024 Oh My Commit",
-        " * @Author markshawn2020",
         {
           pattern: ` \\* @CreatedAt \\d{4}-\\d{2}-\\d{2}`,
           template: ` * @CreatedAt ${moment(new Date()).format("YYYY-MM-DD")}`,
