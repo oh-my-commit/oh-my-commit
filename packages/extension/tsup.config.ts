@@ -9,7 +9,7 @@
 import { defineConfig } from "tsup"
 
 import basaeConfig from "../__base__/tsup.config"
-import pkg from "./package.json"
+const pkg = require("./package.json")
 
 export default defineConfig({
   ...basaeConfig,
