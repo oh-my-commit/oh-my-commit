@@ -94,7 +94,7 @@ pnpm dev
 
 ## Dependencies
 
-- [@oh-my-commit/extension](../extension) - Core extension functionality
+- [oh-my-commit-vscode](../extension) - Core extension functionality
 - [@oh-my-commit/shared](../shared) - Shared utilities and types
 - [commander](https://github.com/tj/commander.js) - Command-line interface
 - [inquirer](https://github.com/SBoudrias/Inquirer.js) - Interactive command line prompts

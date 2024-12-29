@@ -18,6 +18,11 @@
     "productivity"
   ],
   "packageManager": "pnpm@8.10.0",
+  "pnpm": {
+    "overrides": {
+      "typescript": "5.3.3"
+    }
+  },
   "workspaces": [
     "packages/*"
   ],

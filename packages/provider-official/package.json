@@ -29,7 +29,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.10.2",
     "tsup": "8.3.5",
-    "typescript": "^5.7.2"
+    "typescript": "5.3.3"
   },
   "gitHead": "b642fb2921e3f62189d77a6c8f58bf2807f514bc"
 }

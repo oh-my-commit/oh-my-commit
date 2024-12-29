@@ -1,4 +1,4 @@
-# @oh-my-commit/extension
+# oh-my-commit-vscode
 
 ## 0.17.1
 
