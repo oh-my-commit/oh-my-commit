@@ -34,7 +34,11 @@ export const diffDetailAtom = atomWithStorage<DiffFileResult | null>({
   key: "oh-my-commit.commit.changed-files.diff-detail",
 })
 
-export const viewModeAtom = atomWithStorage<"flat" | "tree">({
+// View modes
+export type ViewMode = "flat" | "tree"
+
+export const viewModeAtom = atomWithStorage<ViewMode>({
   defaultValue: "flat",
   key: "oh-my-commit.commit.changed-files.view-mode",
+  storageType: "localStorage",
 })

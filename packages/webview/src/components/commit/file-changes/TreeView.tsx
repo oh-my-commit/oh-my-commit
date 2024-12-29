@@ -16,6 +16,7 @@ import type {
   DiffResultTextFile,
 } from "simple-git"
 
+import { logger } from "@/lib/vscode-client-logger"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 
 import { FileItem } from "./FileItem"
@@ -47,32 +48,33 @@ const buildFileTree = (files: DiffResult["files"]): FileTreeNode[] => {
   for (const file of files) {
     if (!file.file) continue
 
-    const parts = file.file.split("/")
+    // 规范化路径分隔符为 /
+    const normalizedPath = file.file.replace(/\\/g, "/")
+    const parts = normalizedPath.split("/").filter(Boolean)
     let current = tree
-    let currentPath: string = ""
+    let currentPath = ""
 
     for (let i = 0; i < parts.length; i++) {
       const name = parts[i]
-      if (!name) continue
-
       currentPath = currentPath ? `${currentPath}/${name}` : name
       const isFile = i === parts.length - 1
 
       let node = current.find((n) => n.name === name)
       if (!node) {
-        const newNode: FileTreeNode = {
-          name: name,
+        node = {
+          name,
           path: currentPath,
           type: isFile ? "file" : "directory",
           children: [],
           ...(isFile ? { file } : {}),
         }
-        current.push(newNode)
-        node = newNode
+        current.push(node)
 
-        // Sort after insertion
+        // 对目录进行排序：目录在前，文件在后，同类型按名称排序
         current.sort((a, b) => {
-          if (a.type !== b.type) return a.type === "directory" ? -1 : 1
+          if (a.type !== b.type) {
+            return a.type === "directory" ? -1 : 1
+          }
           return a.name.localeCompare(b.name)
         })
       }
@@ -99,12 +101,11 @@ const TreeNode: React.FC<TreeNodeProps> = ({
     setIsExpanded(!isExpanded)
   }
 
-  if (node.type === "file") {
+  // 如果是文件节点
+  if (node.type === "file" && node.file) {
     return (
       <FileItem
-        key={node.path}
-        diff="todo: diff"
-        file={node.file!}
+        file={node.file}
         isOpen={selectedPath === node.path}
         level={level}
         searchQuery={searchQuery}
@@ -114,12 +115,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
     )
   }
 
+  // 如果是目录节点
   return (
-    <div className="select-none">
+    <div>
       <div
-        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
-        role="button"
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group rounded-md"
         style={{ paddingLeft: `${level * 16}px` }}
+        role="button"
         tabIndex={0}
         onClick={handleToggle}
         onKeyDown={(e) => {
@@ -128,34 +130,32 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           }
         }}
       >
-        <div className="flex-1 flex items-center min-w-0 h-full">
-          <div className="flex items-center gap-1">
-            <button
-              className="flex items-center justify-center w-4 h-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={(e) => {
-                e.stopPropagation()
-                setIsExpanded(!isExpanded)
-              }}
-            >
-              {isExpanded ? (
-                <ChevronDownIcon className="w-3 h-3" />
-              ) : (
-                <ChevronRightIcon className="w-3 h-3" />
-              )}
-            </button>
-            <span className="truncate">{node.name}</span>
-            <span className="text-xs text-gray-500">
-              ({node.children.length})
-            </span>
-          </div>
-        </div>
+        <button
+          className="flex items-center justify-center w-4 h-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsExpanded(!isExpanded)
+          }}
+        >
+          {isExpanded ? (
+            <ChevronDownIcon className="w-3 h-3" />
+          ) : (
+            <ChevronRightIcon className="w-3 h-3" />
+          )}
+        </button>
+        <span className="text-sm">{node.name}</span>
+        {node.children.length > 0 && (
+          <span className="text-xs text-gray-500">
+            ({node.children.length})
+          </span>
+        )}
       </div>
 
-      {isExpanded && node.children.length > 0 && (
-        <div>
-          {node.children.map((child) => (
+      {isExpanded && (
+        <div className="pl-2">
+          {node.children.map((child, index) => (
             <TreeNode
-              key={child.path}
+              key={index}
               node={child}
               level={level + 1}
               selectedPath={selectedPath}
@@ -184,25 +184,28 @@ export const TreeView: React.FC<TreeViewProps> = ({
 }) => {
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
-  const [isRootExpanded, setIsRootExpanded] = React.useState(true)
+  const [isExpanded, setIsExpanded] = React.useState(true)
+
   const tree = React.useMemo(() => buildFileTree(files), [files])
+  logger.info("tree", tree)
+
+  const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsExpanded(!isExpanded)
+  }
 
   return (
     <div className={className}>
-      {/* Root Node */}
+      {/* Staged Files Header */}
       <div
-        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group"
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group rounded-md"
         role="button"
         tabIndex={0}
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          setIsRootExpanded(!isRootExpanded)
-        }}
+        onClick={handleToggle}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            setIsRootExpanded(!isRootExpanded)
+            handleToggle(e)
           }
         }}
       >
@@ -212,10 +215,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
               className="flex items-center justify-center w-4 h-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={(e) => {
                 e.stopPropagation()
-                setIsRootExpanded(!isRootExpanded)
+                setIsExpanded(!isExpanded)
               }}
             >
-              {isRootExpanded ? (
+              {isExpanded ? (
                 <ChevronDownIcon className="w-3 h-3" />
               ) : (
                 <ChevronRightIcon className="w-3 h-3" />
@@ -229,13 +232,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
         </div>
       </div>
 
-      {isRootExpanded && tree.length > 0 && (
-        <div>
-          {tree.map((node) => (
+      {/* Tree View */}
+      {isExpanded && (
+        <div className="mt-1">
+          {tree.map((node, index) => (
             <TreeNode
-              key={node.path}
+              key={index}
               node={node}
-              level={1}
+              level={0}
               selectedPath={selectedPath}
               searchQuery={searchQuery}
               onClick={onClick}

@@ -9,7 +9,7 @@ import { useEffect } from "react"
 
 import type { ServerMessageEvent } from "@shared/common"
 
-import { vscodeClientLogger } from "@/lib/vscode-client-logger"
+import { logger } from "@/lib/vscode-client-logger"
 
 type MessageHandler = (message: ServerMessageEvent) => void
 
@@ -19,7 +19,7 @@ export const useMessage = (handler: MessageHandler) => {
       const message = event.data as ServerMessageEvent
 
       if (!message || typeof message !== "object" || !("type" in message)) {
-        vscodeClientLogger.info("Unknown event:", message)
+        logger.info("Unknown event:", message)
         return
       }
 

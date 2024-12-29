@@ -10,9 +10,12 @@ import { type FC, useCallback } from "react"
 import { useAtom } from "jotai"
 
 import { Section } from "@/components/layout/Section"
-import { lastOpenedFilePathAtom } from "@/state/atoms/commit.changed-files"
+import { logger } from "@/lib/vscode-client-logger"
+import {
+  lastOpenedFilePathAtom,
+  viewModeAtom,
+} from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
-import { viewModeAtom } from "@/state/atoms/ui"
 import { clientPush } from "@/utils/clientPush"
 
 import { FileChangesView } from "./FileChangesView"
@@ -35,6 +38,8 @@ export const FileChanges: FC = () => {
     },
     [setLastOpenedFilePath]
   )
+
+  logger.info("Rendering FileChanges: ", { viewMode })
 
   return (
     <Section

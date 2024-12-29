@@ -9,6 +9,7 @@ import * as React from "react"
 
 import { useAtom } from "jotai"
 
+import { logger } from "@/lib/vscode-client-logger"
 import {
   diffResultAtom,
   viewModeAtom,
@@ -48,6 +49,7 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
   if (!files.length) {
     return <EmptyState />
   }
+  logger.info("Rendering FileChangesView: ", { viewMode })
 
   return (
     <div className="flex flex-col h-full">

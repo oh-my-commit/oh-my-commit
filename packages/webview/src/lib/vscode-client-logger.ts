@@ -29,4 +29,4 @@ export class VscodeClientLogger extends BaseLogger {
   }
 }
 
-export const vscodeClientLogger = new VscodeClientLogger("Webview")
+export const logger = new VscodeClientLogger("Webview")

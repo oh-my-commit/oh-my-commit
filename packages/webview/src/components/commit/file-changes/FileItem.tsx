@@ -9,6 +9,7 @@ import * as React from "react"
 import { useEffect } from "react"
 
 import type {
+  DiffNameStatus,
   DiffResultBinaryFile,
   DiffResultNameStatusFile,
   DiffResultTextFile,
@@ -19,7 +20,17 @@ import { cn } from "@/lib/utils"
 import { clientPush } from "@/utils/clientPush"
 import { basename } from "@/utils/path"
 
-import { STATUS_COLORS } from "./constants"
+export const STATUS_COLORS: Record<DiffNameStatus, string> = {
+  A: "text-git-added-fg",
+  M: "text-git-modified-fg",
+  D: "text-git-deleted-fg",
+  R: "text-git-renamed-fg",
+  C: "text-git-copied-fg",
+  U: "text-git-unmerged-fg",
+  X: "text-git-unknown-fg",
+  B: "text-git-broken-fg",
+  T: "text-git-changed-fg",
+} as const
 
 // Type guard to check if file has a valid status
 function hasStatus(

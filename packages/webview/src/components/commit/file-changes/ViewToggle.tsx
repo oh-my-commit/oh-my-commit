@@ -10,8 +10,7 @@ import * as React from "react"
 import { FoldersIcon, ListIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-
-import type { ViewMode } from "./constants"
+import { ViewMode } from "@/state/atoms/commit.changed-files"
 
 interface ViewToggleProps {
   view: ViewMode
