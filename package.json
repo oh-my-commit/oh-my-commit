@@ -33,6 +33,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "",
     "prepare": "husky install",
     "build": "turbo run build",
     "clean": "turbo run clean",
@@ -104,7 +105,7 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "tsup": "8.3.5",
+    "tsup": "workspace:*",
     "turbo": "^2.3.3",
     "typedi": "^0.10.0",
     "typescript": "5.3.3",

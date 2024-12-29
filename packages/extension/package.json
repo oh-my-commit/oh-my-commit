@@ -30,7 +30,7 @@
     "@vscode/vsce": "^3.2.1",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",
-    "tsup": "8.3.5",
+    "tsup": "workspace:*",
     "typescript": "5.3.3",
     "vscode": "^1.1.37"
   }

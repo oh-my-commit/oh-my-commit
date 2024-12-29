@@ -36,7 +36,7 @@
     "eslint": "^8.0.0",
     "prettier": "^3.1.0",
     "tsconfig": "^0.0.1",
-    "tsup": "8.3.5",
+    "tsup": "workspace:*",
     "typescript": "5.3.3"
   },
   "dependencies": {

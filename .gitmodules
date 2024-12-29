@@ -10,3 +10,6 @@
 [submodule "third-parties/changesets"]
 	path = third-parties/changesets
 	url = git@github.com:changesets/changesets.git
+[submodule "third-parties/tsup"]
+	path = third-parties/tsup
+	url = git@github.com:egoist/tsup.git

@@ -30,7 +30,7 @@
     "eslint": "^8.0.0",
     "figlet": "^1.8.0",
     "tsconfig": "*",
-    "tsup": "8.3.5",
+    "tsup": "workspace:*",
     "typescript": "5.3.3"
   },
   "dependencies": {
