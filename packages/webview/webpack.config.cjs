@@ -1,14 +1,14 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const webpack = require("webpack")
-const distDir = path.resolve(__dirname, "../extension/dist/webview")
+const distDir = path.resolve(__dirname, "../../dist/webview")
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
   const isDev = argv.mode === "development"
   const isProd = !isDev
 
-  console.log("-- init webpack config -- ", { isDevelopment: isDev })
+  console.log("-- init webpack config -- ", { isDev })
 
   return {
     target: "web",

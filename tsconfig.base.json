@@ -4,6 +4,7 @@
     "allowImportingTsExtensions": false,
     "resolveJsonModule": true,
     "emitDeclarationOnly": false,
+    "noEmit": true,
 
     "target": "ES2020",
     "module": "ESNext",

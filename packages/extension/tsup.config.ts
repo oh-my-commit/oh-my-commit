@@ -9,11 +9,14 @@
 import { defineConfig } from "tsup"
 
 import basaeConfig from "../__base__/tsup.config"
+import pkg from "./package.json"
 
 export default defineConfig({
   ...basaeConfig,
   entry: ["src/extension.ts"],
-  outDir: "dist/main",
+  external: ["vscode"],
+  "noExternal": Object.keys(pkg.dependencies),
+  outDir: "../../dist/main",
   format: ["cjs"],
   platform: "node",
   target: "node16",

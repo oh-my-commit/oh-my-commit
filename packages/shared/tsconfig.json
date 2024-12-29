@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",
+    "noEmit": false,
     "composite": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
