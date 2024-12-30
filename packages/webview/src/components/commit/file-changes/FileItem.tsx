@@ -113,7 +113,7 @@ export const FileItem: React.FC<FileItemProps> = ({
       className={cn(
         "group relative flex items-center h-9 select-none cursor-pointer rounded-md transition-all duration-150 w-full text-left",
         isOpen
-          ? "bg-list-active-bg text-list-active-fg shadow-sm ring-1 ring-primary/10"
+          ? "bg-list-active-bg/50 text-list-active-fg shadow-sm  ring-primary/10"
           : "hover:bg-gray-100/80 dark:hover:bg-gray-800/80",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       )}

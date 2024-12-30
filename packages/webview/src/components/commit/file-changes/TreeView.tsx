@@ -20,6 +20,7 @@ import { logger } from "@/lib/vscode-client-logger"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 
 import { FileItem } from "./FileItem"
+import { StagedSection } from "./StagedSection"
 
 type GitDiffFile =
   | DiffResultTextFile
@@ -152,7 +153,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
       </div>
 
       {isExpanded && (
-        <div className="pl-2">
+        <div className="">
           {node.children.map((child, index) => (
             <TreeNode
               key={index}
@@ -184,68 +185,22 @@ export const TreeView: React.FC<TreeViewProps> = ({
 }) => {
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
-  const [isExpanded, setIsExpanded] = React.useState(true)
-
   const tree = React.useMemo(() => buildFileTree(files), [files])
-
-  const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsExpanded(!isExpanded)
-  }
 
   return (
     <div className={className}>
-      {/* Staged Files Header */}
-      <div
-        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 cursor-pointer group rounded-md"
-        role="button"
-        tabIndex={0}
-        onClick={handleToggle}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            handleToggle(e)
-          }
-        }}
-      >
-        <div className="flex-1 flex items-center min-w-0 h-full">
-          <div className="flex items-center gap-1">
-            <button
-              className="flex items-center justify-center w-4 h-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={(e) => {
-                e.stopPropagation()
-                setIsExpanded(!isExpanded)
-              }}
-            >
-              {isExpanded ? (
-                <ChevronDownIcon className="w-3 h-3" />
-              ) : (
-                <ChevronRightIcon className="w-3 h-3" />
-              )}
-            </button>
-            <span className="font-semibold">Staged</span>
-            {files.length > 0 && (
-              <span className="text-xs text-gray-500">({files.length})</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Tree View */}
-      {isExpanded && (
-        <div className="mt-1">
-          {tree.map((node, index) => (
-            <TreeNode
-              key={index}
-              node={node}
-              level={0}
-              selectedPath={selectedPath}
-              searchQuery={searchQuery}
-              onClick={onClick}
-            />
-          ))}
-        </div>
-      )}
+      <StagedSection count={files.length}>
+        {tree.map((node) => (
+          <TreeNode
+            key={node.path}
+            node={node}
+            level={0}
+            selectedPath={selectedPath}
+            searchQuery={searchQuery}
+            onClick={onClick}
+          />
+        ))}
+      </StagedSection>
     </div>
   )
 }
