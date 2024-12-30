@@ -13,8 +13,8 @@
                                                      __/ |                                        
                                                     |___/                                         
                             
-                            ✨Your AI-powered Commit Generator Solution ✨
-                            
+                            ✨Your AI-powered Commit Generator Solution ✨      
+                                                                                                                        
 ```
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
