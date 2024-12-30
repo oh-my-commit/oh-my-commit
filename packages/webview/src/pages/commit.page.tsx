@@ -5,9 +5,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { PropsWithChildren, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
-import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 
 import { useAtom } from "jotai"
 
@@ -22,16 +22,7 @@ import { gitStatusAtom } from "@/state/atoms/git"
 import { workspaceStatusAtom } from "@/state/atoms/workspace"
 import { clientPush } from "@/utils/clientPush"
 
-export const ErrorLayout = (props: PropsWithChildren) => {
-  return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-2">
-      <div className="codicon codicon-source-control !text-[48px] text-[var(--vscode-foreground)] opacity-40" />
-      <VSCodeDivider />
-
-      {props.children}
-    </div>
-  )
-}
+import { ErrorLayout } from "./ErrorLayout"
 
 export const CommitPage = () => {
   useBasicMessage()
@@ -77,9 +68,30 @@ export const CommitPage = () => {
             <p className="mb-4 text-gray-500">
               {workspaceStatus?.error || "请打开一个有效的工作区以使用完整功能"}
             </p>
-            <p className="text-sm text-gray-400">
-              您可以打开一个包含代码的文件夹，或者创建一个新的工作区
-            </p>
+            <div className="flex flex-col gap-2">
+              <VSCodeButton
+                appearance="primary"
+                onClick={() => {
+                  clientPush("vscode.openFolder")
+                }}
+              >
+                打开文件夹
+              </VSCodeButton>
+              <VSCodeButton
+                onClick={() => {
+                  clientPush("workbench.action.addRootFolder")
+                }}
+              >
+                添加文件夹到工作区
+              </VSCodeButton>
+              <VSCodeButton
+                onClick={() => {
+                  clientPush("workbench.action.files.openFileFolder")
+                }}
+              >
+                打开新窗口
+              </VSCodeButton>
+            </div>
           </div>
         </ErrorLayout>
       )

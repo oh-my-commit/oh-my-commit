@@ -9,11 +9,20 @@ import type { ClientMessageEvent } from "@shared/common"
 
 import { getVSCodeAPI } from "../lib/getVSCodeAPI"
 
-export const clientPush = (
+export function clientPush(command: string): void
+export function clientPush(
   message: ClientMessageEvent & { channel?: string }
-) => {
-  // 不能开这个
-  // vscodeClientLogger.info(message)
+): void
+export function clientPush(
+  messageOrCommand: string | (ClientMessageEvent & { channel?: string })
+): void {
   const vscode = getVSCodeAPI()
-  vscode.postMessage(message)
+  if (typeof messageOrCommand === "string") {
+    vscode.postMessage({
+      type: "execute-command",
+      command: messageOrCommand,
+    })
+  } else {
+    vscode.postMessage(messageOrCommand)
+  }
 }

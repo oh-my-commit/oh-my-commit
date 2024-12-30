@@ -49,6 +49,11 @@ export type ClientMessageEvent =
       channel?: string
     }
   | {
+      type: "execute-command"
+      command: string
+      data?: any
+    }
+  | {
       type: "show-info"
       data: {
         message: string
@@ -88,10 +93,6 @@ export type ClientMessageEvent =
     }
   | {
       type: "generate"
-    }
-  | {
-      type: "execute-command"
-      command: string
     }
 
 export type DiffFileResult = ResultDTO<{
@@ -135,15 +136,18 @@ export type ServerMessageEvent =
       data: DiffFileResult
     }
   | {
-      type: "git-status"
+      type: "workspace-status"
       data: {
         isGitRepository: boolean
-        workspaceRoot: string | null
+        workspaceRoot: string | undefined
+        isWorkspaceValid: boolean
+        error?: string
       }
     }
 
 export interface WorkspaceStatus {
-  isValid: boolean
+  isValid?: boolean
+  isGitRepository?: boolean
   error?: string
 }
 

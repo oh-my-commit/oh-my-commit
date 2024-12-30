@@ -30,29 +30,16 @@ export function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.Logger, logger)
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
 
-    // Check workspace validity
-    const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders
-      ? workspaceFolders[0]?.uri.fsPath
-      : ""
-    const isWorkspaceValid =
-      workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
-    // Container.set(TOKENS.IsWorkspaceValid, isWorkspaceValid)
+    logger.info("setting git manager...")
+    Container.set(TOKENS.GitManager, Container.get(VscodeGit))
 
     // Always set up webview first
     logger.info("setting webview...")
-    Container.set(TOKENS.Webview, Container.get(VscodeWebview))
+    Container.set(TOKENS.Webview, Container.get(VscodeWebview)) // git
 
-    if (!isWorkspaceValid) {
-      logger.warn("No valid workspace found. Some features will be disabled.")
-      return
-    }
-
-    // generic - only initialize these when workspace is valid
     logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
-    logger.info("setting git manager...")
-    Container.set(TOKENS.GitManager, Container.get(VscodeGit))
+
     logger.info("setting commit manager...")
     Container.set(TOKENS.CommitManager, Container.get(CommitManager)) // provider
     logger.info("setting status bar...")

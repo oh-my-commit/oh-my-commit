@@ -13,6 +13,7 @@ import * as vscode from "vscode"
 import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
+import { VscodeGit } from "./vscode-git.js"
 import { TOKENS } from "./vscode-token"
 
 @Service()
@@ -26,8 +27,8 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
     @Inject(TOKENS.Config) private readonly config: VscodeConfig,
-    @Inject(TOKENS.Context)
-    private readonly context: vscode.ExtensionContext
+    @Inject(TOKENS.Context) private readonly context: vscode.ExtensionContext,
+    @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
@@ -64,21 +65,22 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     const workspaceFolders = vscode.workspace.workspaceFolders
     const workspaceRoot = workspaceFolders
       ? workspaceFolders[0]?.uri.fsPath
-      : ""
-    const isWorkspaceValid =
+      : undefined
+    const isWorkspaceValid = !!(
       workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
+    )
 
-    this.postMessage({
+    void this.postMessage({
       type: "workspace-status",
       data: {
-        workspaceStatus: {
-          isValid: !!isWorkspaceValid,
-          error: !workspaceRoot
-            ? "请打开一个工作区文件夹"
-            : !isWorkspaceValid
-              ? "工作区文件夹不存在或已被删除"
-              : undefined,
-        },
+        workspaceRoot,
+        isWorkspaceValid,
+        isGitRepository: await this.gitService.isGitRepository(),
+        error: !workspaceRoot
+          ? "请打开一个工作区文件夹"
+          : !isWorkspaceValid
+            ? "工作区文件夹不存在或已被删除"
+            : undefined,
       },
     })
 

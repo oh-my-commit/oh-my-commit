@@ -25,19 +25,6 @@ export class VscodeGit extends GitCore {
       ? workspaceFolders[0]!.uri.fsPath
       : ""
 
-    if (!workspaceRoot) {
-      throw new Error(
-        "No workspace folder is opened. Please open a workspace first."
-      )
-    }
-
-    // Validate workspace exists
-    if (!vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))) {
-      throw new Error(
-        "The workspace directory does not exist. Please open a valid workspace."
-      )
-    }
-
     super(workspaceRoot, logger)
 
     this._onGitStatusChanged = new vscode.EventEmitter<boolean>()

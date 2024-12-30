@@ -214,9 +214,7 @@ export class QuickCommitCommand implements BaseCommand {
             )
             try {
               const workspaceRoot = this.gitService.workspaceRoot
-              if (!workspaceRoot) {
-                throw new Error("No workspace root found")
-              }
+              if (!workspaceRoot) return
 
               const filePath = message.data.filePath
               const absolutePath = path.isAbsolute(filePath)
@@ -232,15 +230,11 @@ export class QuickCommitCommand implements BaseCommand {
               // 获取 git 扩展
               const gitExtension =
                 vscode.extensions.getExtension<any>("vscode.git")?.exports
-              if (!gitExtension) {
-                throw new Error("Git extension not found")
-              }
+              if (!gitExtension) return
 
               const git = gitExtension.getAPI(1)
               const repository = git.repositories[0]
-              if (!repository) {
-                throw new Error("No repository found")
-              }
+              if (!repository) return
 
               // 打开差异视图
               await vscode.commands.executeCommand("git.openChange", uri)
@@ -248,8 +242,7 @@ export class QuickCommitCommand implements BaseCommand {
               this.logger.info("[VscodeWebview] Opened file diff")
             } catch (error) {
               this.logger.error(
-                "[VscodeWebview] Failed to get file diff:",
-                error
+                formatError(error, "[VscodeWebview] Failed to get file diff")
               )
             }
             break
@@ -416,24 +409,6 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   private async syncFiles() {
-    // First check git status
-    const isGitRepository = await this.gitService.isGitRepository()
-    const workspaceRoot = this.gitService.workspaceRoot
-
-    // Send git status
-    await this.webviewManager?.postMessage({
-      type: "git-status",
-      data: {
-        isGitRepository,
-        workspaceRoot: workspaceRoot || null,
-      },
-    })
-
-    // If not a git repository, don't proceed with diff
-    if (!isGitRepository) {
-      return
-    }
-
     await this.webviewManager?.postMessage({
       type: "diff-result",
       data: await this.getLatestDiff(),
