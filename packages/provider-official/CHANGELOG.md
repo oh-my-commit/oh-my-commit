@@ -1,5 +1,13 @@
 # @oh-my-commit/provider-official
 
+## 0.21.2
+
+### Patch Changes
+
+- 2de510e: skip omc
+- Updated dependencies [2de510e]
+  - @oh-my-commit/shared@0.21.2
+
 ## 0.21.0
 
 ### Minor Changes
