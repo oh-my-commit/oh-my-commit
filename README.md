@@ -19,37 +19,7 @@
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
 
-<!-- toc -->
-
-[Highlights](#highlights) • [AI Capabilities](#ai-capabilities) • [Usage](#usage) • [Configuration](#configuration) • [Contributing](#contributing) • [Support](#support) • [License](#license)
-
-<!-- tocstop -->
-
 </div>
-
-## Highlights
-
-- **Ultimate User Experience**
-
-  - Modern interface design with light/dark theme support
-  - Smooth animations with zero-delay response
-  - Smart context awareness adapting to your workflow
-  - Keyboard-first operation design for efficiency
-  - Diverse file change views for enhanced browsing:
-    - Tree view: Clear file hierarchy structure
-    - Tile view: Quick overview of all changed files
-    - Auto staging: Smart handling of all file changes
-  - Multiple interface modes for different scenarios:
-    - Silent mode: Commit info in status bar only
-    - Notification mode: Pop-up notifications with quick edits
-    - Window mode: Floating window, clean and efficient
-    - Panel mode: Full functionality, professional experience
-
-- **Efficient Workflow**
-  - One-click smart commits, goodbye to tedious operations
-  - Real-time preview and editing, WYSIWYG
-  - Quick switching between commit schemes
-  - Team configuration sharing, unified commit style
 
 ## Product Comparison
 
@@ -184,12 +154,6 @@ omc gen # AI generate commit
 | `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890"     | Proxy server URL                              | Any valid proxy URL (e.g. "http://localhost:7890")                                                          |
 
 Note: Our omc-standard-claude-3.5 requires users to configure their own ANTHROPIC_API_KEY and proxy (if necessary), which can be set in user settings.
-
-## Documentation
-
-- [使用文档](./README.zh-CN.md)
-- [发布指南](./docs/publish-guide.md)
-- [更新日志](./CHANGELOG.md)
 
 ## Contributing
 
