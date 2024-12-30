@@ -29,6 +29,8 @@
 ✅ 完整支持 &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ 部分支持 &nbsp;&nbsp;|&nbsp;&nbsp; 🚧 开发中 &nbsp;&nbsp;|&nbsp;&nbsp; ➖ 不支持
 </div>
 
+&nbsp;
+
 | 功能特性          | Oh My Commit | VSCode VCS | JetBrains VCS | 其他 AI Commit 插件 | AI Commit CLI |
 |---------------|---------|------------|--------------|-------------------|---------------|
 | **基础功能**      |
