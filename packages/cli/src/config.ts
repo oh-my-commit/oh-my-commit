@@ -13,6 +13,43 @@ import type { Config, IConfig } from "@shared/common"
 import { configSchema, defaultConfig } from "@shared/common"
 import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 
+/**
+ * Transform environment variables to config object
+ * - Convert uppercase to camelCase
+ * - Convert underscore to dot
+ */
+function transformEnvToConfig(env: NodeJS.ProcessEnv = process.env): Record<string, any> {
+  const config: Record<string, any> = {}
+
+  for (const [key, value] of Object.entries(env)) {
+    if (!value) continue
+
+    // Convert key to camelCase and dots
+    const transformedKey = key
+      .toLowerCase()
+      .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+      .replace(/_/g, ".")
+
+    // Build nested object structure
+    const parts = transformedKey.split(".")
+    let current = config
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      current[parts[i]!] = current[parts[i]!] || {}
+      current = current[parts[i]!]
+    }
+
+    // Set the value, converting to appropriate type
+    const lastPart = parts[parts.length - 1]!
+    if (value.toLowerCase() === "true") current[lastPart] = true
+    else if (value.toLowerCase() === "false") current[lastPart] = false
+    else if (!isNaN(Number(value))) current[lastPart] = Number(value)
+    else current[lastPart] = value
+  }
+
+  return config
+}
+
 @Service()
 export class CliConfig implements IConfig {
   private config: Config = defaultConfig
@@ -44,7 +81,8 @@ export class CliConfig implements IConfig {
 
       if (fs.existsSync(USER_CONFIG_PATH)) {
         const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
-        this.config = configSchema.parse(merge({}, defaultConfig, userConfig))
+        const envConfig = transformEnvToConfig()
+        this.config = configSchema.parse(merge({}, defaultConfig, userConfig, envConfig))
       }
     } catch (error) {
       console.error("Failed to load config:", error)

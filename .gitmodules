@@ -12,4 +12,4 @@
 	url = git@github.com:changesets/changesets.git
 [submodule "third-parties/tsup"]
 	path = third-parties/tsup
-	url = git@github.com:egoist/tsup.git
+	url = git@github.com:markshawn2020/tsup.git

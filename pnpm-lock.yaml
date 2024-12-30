@@ -240,6 +240,9 @@ importers:
 
   packages/extension:
     dependencies:
+      '@oh-my-commit/provider-official':
+        specifier: ^0.22.0
+        version: 0.22.0
       '@oh-my-commit/shared':
         specifier: workspace:^
         version: link:../shared
@@ -2374,6 +2377,12 @@ packages:
 
   '@nx/workspace@19.8.4':
     resolution: {integrity: sha512-ub4nD2klOj00onF1KrNXIlLB9hXN9ybHs7XSP9YW+52qz79KaJWJm46ebTqeLnDZApYbAcB0vSCp2+kaEV24Ew==}
+
+  '@oh-my-commit/provider-official@0.22.0':
+    resolution: {integrity: sha512-RyowFAwz85RctEBcpSfYBesl52M7XKSjvBlv+hfxktc8tlPcd0tP+hGmrntm+q1wL0PUyWXqN7ScLr1KTbUUug==}
+
+  '@oh-my-commit/shared@0.22.0':
+    resolution: {integrity: sha512-rMHZHQ79NkcJqCPiknHRnkMXC1xhPEK2PMaU92r0/jgulxQ09X4lhRzu7XUICcduOiwch/n/ZQmKKqQqr3HOiA==}
 
   '@parcel/watcher-android-arm64@2.5.0':
     resolution: {integrity: sha512-qlX4eS28bUcQCdribHkg/herLe+0A9RyYC+mm2PXpncit8z5b3nSqGVzMNR3CmtAOgRutiZ02eIJJgP/b1iEFQ==}
@@ -10374,6 +10383,38 @@ snapshots:
       - '@swc-node/register'
       - '@swc/core'
       - debug
+
+  '@oh-my-commit/provider-official@0.22.0':
+    dependencies:
+      '@anthropic-ai/sdk': 0.32.1
+      '@oh-my-commit/shared': 0.22.0
+      handlebars: 4.7.8
+      https-proxy-agent: 7.0.6
+      lodash-es: 4.17.21
+      neverthrow: 8.1.1
+      reflect-metadata: 0.2.2
+      typedi: 0.10.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@oh-my-commit/shared@0.22.0':
+    dependencies:
+      '@anthropic-ai/sdk': 0.32.1
+      chalk: 5.4.1
+      handlebars: 4.7.8
+      jiti: 2.4.2
+      lodash: 4.17.21
+      lodash-es: 4.17.21
+      neverthrow: 8.1.1
+      reflect-metadata: 0.2.2
+      simple-git: 3.27.0
+      typedi: 0.10.0
+      yaml: 2.6.1
+      zod: 3.24.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
 
   '@parcel/watcher-android-arm64@2.5.0':
     optional: true

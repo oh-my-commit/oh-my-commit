@@ -14,12 +14,13 @@ import {
   APP_NAME,
   CommitManager,
   ConsoleLogger,
+  IInputOptions,
   type IModel,
   type IResult,
   Inject,
   SETTING_MODEL_ID,
 } from "@shared/common"
-import { GitCore, ProviderRegistry, TOKENS } from "@shared/server"
+import { GitCommitManager, GitCore, ProviderRegistry, TOKENS } from "@shared/server"
 
 import { displayBanner } from "@/utils"
 
@@ -31,6 +32,7 @@ Inject(TOKENS.Logger, ConsoleLogger)
 Inject(TOKENS.ProviderManager, ProviderRegistry)
 const git = Inject(TOKENS.GitManager, GitCore)
 const commitManager = Inject(TOKENS.CommitManager, CommitManager)
+const gitCommitManager = Inject(TOKENS.GitCommitManager, GitCommitManager)
 
 // Command handlers
 const listModels = async () => {
@@ -84,31 +86,15 @@ const selectModel = async (modelId: string) => {
   }
 }
 
-const generateAndCommit = async (options: { yes?: boolean; model?: string }) => {
+const generateAndCommit = async (options: IInputOptions & { yes?: boolean }) => {
   commitManager.logger.info(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
     if (commitManager.providers.length === 0) {
       await commitManager.providerManager.initialize()
     }
-
-    // If model is specified, validate and set it
-    if (options.model) {
-      const availableModels: IModel[] = commitManager.models
-      const selectedModel = availableModels.find((m) => m.id === options.model)
-      if (!selectedModel) {
-        console.error(chalk.red(`Model "${options.model}" not found. Use 'list' to see available models.`))
-        process.exit(1)
-      }
-      // Set the selected model in config
-      await commitManager.config.update(SETTING_MODEL_ID, options.model)
-    }
-
-    const diff = await git.getDiffResult()
     // todo: init lang
-    const result = await commitManager.generateCommitWithDiff(diff, {
-      lang: "en",
-    })
+    const result = await gitCommitManager.generateCommit()
 
     if (!result.ok) {
       commitManager.logger.error(chalk.red("Failed to generate commit message:"))
