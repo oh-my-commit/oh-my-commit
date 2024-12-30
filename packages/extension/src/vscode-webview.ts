@@ -12,17 +12,16 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
-import { VscodeConfig } from "@/vscode-config"
 import { VscodeLogger } from "@/vscode-logger"
 
-import { WebviewMessageHandler } from "./WebviewMessageHandler"
-import { VscodeGit } from "./vscode-git.js"
-import { TOKENS } from "./vscode-token"
+import { TOKENS } from "./vscode-tokens.js"
+import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
 
 export interface IWebviewManager {
   show(): void
   // hide(): void
   postMessage(message: ServerMessageEvent): void
+  setMessageHandler(handler: IWebviewMessageHandler): void
 }
 
 @Service()
@@ -30,16 +29,14 @@ export class WebviewManager
   implements vscode.WebviewViewProvider, IWebviewManager
 {
   private webview?: vscode.Webview
-  private messageHandler?: WebviewMessageHandler
+  private messageHandler?: IWebviewMessageHandler
   private readonly title: string = `Commit Assistant`
   private readonly webviewPath: string
   private view?: vscode.WebviewView
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
-    @Inject(TOKENS.Config) private readonly config: VscodeConfig,
-    @Inject(TOKENS.Context) private readonly context: vscode.ExtensionContext,
-    @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit
+    @Inject(TOKENS.Context) private readonly context: vscode.ExtensionContext
   ) {
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
@@ -56,91 +53,7 @@ export class WebviewManager
 
     this.context.subscriptions.push(registration)
 
-    // Setup workspace monitoring
-    this.setupWorkspaceMonitoring()
-
     this.logger.info(">> Webview provider registered")
-  }
-
-  private setupWorkspaceMonitoring() {
-    // Monitor workspace folder changes
-    const workspaceWatcher = vscode.workspace.onDidChangeWorkspaceFolders(
-      (event) => {
-        this.logger.info("[VscodeWebview] Workspace folders changed:", {
-          added: event.added.length,
-          removed: event.removed.length,
-        })
-        this.updateWorkspaceStatus()
-      }
-    )
-
-    // Monitor git status changes
-    const gitWatcher = this.gitService.onGitStatusChanged(() => {
-      this.logger.info("[VscodeWebview] Git status changed")
-      this.updateWorkspaceStatus()
-    })
-
-    // Cleanup watchers when extension is deactivated
-    this.context.subscriptions.push(workspaceWatcher, gitWatcher)
-
-    // Initial status update
-    this.updateWorkspaceStatus()
-  }
-
-  private async updateWorkspaceStatus() {
-    if (!this.webview) {
-      return
-    }
-
-    const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders?.[0]?.uri.fsPath
-
-    // Check if workspace directory actually exists
-    let isWorkspaceValid = false
-    if (workspaceRoot) {
-      try {
-        await vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
-        isWorkspaceValid = true
-      } catch (e) {
-        this.logger.warn(
-          "[VscodeWebview] Workspace directory does not exist:",
-          workspaceRoot
-        )
-        isWorkspaceValid = false
-      }
-    }
-
-    try {
-      const isGitRepository = await this.gitService.isGitRepository()
-      this.logger.info("[VscodeWebview] Workspace status:", {
-        isGitRepository,
-        workspaceRoot,
-        isWorkspaceValid,
-      })
-
-      await this.postMessage({
-        type: "workspace-status",
-        data: {
-          isGitRepository,
-          workspaceRoot,
-          isWorkspaceValid,
-        },
-      })
-    } catch (error) {
-      this.logger.error(
-        "[VscodeWebview] Error updating workspace status:",
-        error
-      )
-      await this.postMessage({
-        type: "workspace-status",
-        data: {
-          isGitRepository: false,
-          workspaceRoot,
-          isWorkspaceValid,
-          error: error instanceof Error ? error.message : String(error),
-        },
-      })
-    }
   }
 
   async resolveWebviewView(
@@ -152,34 +65,24 @@ export class WebviewManager
     this.view = webviewView
     this.webview = webviewView.webview
 
+    this.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
+      this.logger.info("[Host << Webview] ", message)
+      if (this.messageHandler) {
+        await this.messageHandler.handleMessage(message)
+      }
+    })
+
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [vscode.Uri.file(this.webviewPath)],
     }
     webviewView.webview.html = this.getWebviewContent()
 
-    if (this.messageHandler) {
-      webviewView.webview.onDidReceiveMessage(async (message: any) => {
-        this.logger.info("[Host << Webview] ", message)
-        if (this.messageHandler) {
-          await this.messageHandler.handleMessage(message)
-        }
-      })
-    }
-
     webviewView.title = this.title
   }
 
-  public setMessageHandler(handler: WebviewMessageHandler) {
+  public setMessageHandler(handler: IWebviewMessageHandler) {
     this.messageHandler = handler
-    if (this.webview) {
-      this.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
-        this.logger.info("[Host << Webview] ", message)
-        if (this.messageHandler) {
-          await this.messageHandler.handleMessage(message)
-        }
-      })
-    }
   }
 
   public async postMessage(message: ServerMessageEvent) {

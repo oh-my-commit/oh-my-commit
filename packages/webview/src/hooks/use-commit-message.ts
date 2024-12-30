@@ -43,7 +43,7 @@ export const useCommitMessage = () => {
           setDiffResult(message.data)
           break
 
-        case "commit-message":
+        case "generate-result":
           logger.info("Received commit message:", message)
           if (message.data.ok) {
             setTitle(message.data.data.title)

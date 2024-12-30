@@ -9,8 +9,7 @@ import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 
 import { SETTING_MODEL_ID } from "./app"
-import { type IConfig, type IProviderManager, TOKENS } from "./core"
-import { BaseLogger } from "./log"
+import { type IConfig, type ILogger, type IProviderManager } from "./core"
 import {
   BaseProvider,
   type IInputOptions,
@@ -19,10 +18,19 @@ import {
   ResultDTOSchema,
   type Status,
 } from "./provider.interface"
+import { TOKENS } from "./tokens"
 import { type ResultDTO, formatError } from "./utils"
 
 export interface ICommitManager {
-  generateCommit(
+  providers: BaseProvider[]
+  models: IModel[]
+  modelId?: string
+  model?: IModel
+  status: {
+    loadingProviders: Status
+  }
+  selectModel(modelId: string): void
+  generateCommitWithDiff(
     diff: DiffResult,
     options: IInputOptions
   ): Promise<ResultDTO<IResult>>
@@ -37,7 +45,7 @@ export class CommitManager implements ICommitManager {
   }
 
   constructor(
-    @Inject(TOKENS.Logger) public readonly logger: BaseLogger,
+    @Inject(TOKENS.Logger) public readonly logger: ILogger,
     @Inject(TOKENS.Config) public readonly config: IConfig,
     @Inject(TOKENS.ProviderManager)
     public readonly providerManager: IProviderManager
@@ -63,7 +71,7 @@ export class CommitManager implements ICommitManager {
     void this.config.update(SETTING_MODEL_ID, modelId)
   }
 
-  async generateCommit(
+  async generateCommitWithDiff(
     diff: DiffResult,
     options: IInputOptions
   ): Promise<ResultDTO<IResult>> {

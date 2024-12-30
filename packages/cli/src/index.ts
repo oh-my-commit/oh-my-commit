@@ -141,7 +141,9 @@ const generateAndCommit = async (options: {
 
     const diff = await git.getDiffResult()
     // todo: init lang
-    const result = await commitManager.generateCommit(diff, { lang: "en" })
+    const result = await commitManager.generateCommitWithDiff(diff, {
+      lang: "en",
+    })
 
     if (!result.ok) {
       commitManager.logger.error(

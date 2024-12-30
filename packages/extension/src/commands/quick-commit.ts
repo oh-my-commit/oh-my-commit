@@ -12,7 +12,7 @@ import { COMMAND_QUICK_COMMIT } from "@shared/common"
 
 import type { IOrchestrator } from "@/orchestrator"
 import type { BaseCommand } from "@/vscode-command"
-import { TOKENS } from "@/vscode-token"
+import { TOKENS } from "@/vscode-tokens"
 
 @Service()
 export class QuickCommitCommand implements BaseCommand {
@@ -21,8 +21,8 @@ export class QuickCommitCommand implements BaseCommand {
 
   constructor(
     @Inject(TOKENS.Context) private readonly context: vscode.ExtensionContext,
-    @Inject(TOKENS.CommitOrchestrator)
-    private readonly commitOrchestrator: IOrchestrator
+    @Inject(TOKENS.Orchestrator)
+    private readonly orchestrator: IOrchestrator
   ) {
     //
     // // 设置 webview 的消息处理
@@ -37,6 +37,6 @@ export class QuickCommitCommand implements BaseCommand {
   }
 
   async execute(): Promise<void> {
-    await this.commitOrchestrator.diffAndCommit()
+    await this.orchestrator.generateCommit()
   }
 }

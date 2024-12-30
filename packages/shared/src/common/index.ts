@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export * from "./CommitManager"
+export * from "./commit-manager"
 export * from "./app"
 export * from "./config"
 export * from "./core"
 export * from "./git"
 export * from "./log"
 export * from "./provider.interface"
+export * from "./tokens"
 export * from "./transport"
 export * from "./utils"
 export * from "./validators"

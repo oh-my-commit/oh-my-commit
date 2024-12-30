@@ -16,7 +16,7 @@ import {
 
 import type { VscodeCommand } from "@/vscode-command"
 import { VscodeLogger } from "@/vscode-logger"
-import { TOKENS } from "@/vscode-token"
+import { TOKENS } from "@/vscode-tokens"
 
 import { OpenPreferencesCommand } from "./commands/open-preferences"
 import { QuickCommitCommand } from "./commands/quick-commit"

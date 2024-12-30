@@ -5,10 +5,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Token } from "typedi"
-
-import type { CommitManager } from "./CommitManager"
-import type { BaseLogger } from "./log"
 import type { BaseProvider } from "./provider.interface"
 
 export interface ILogger {
@@ -33,11 +29,3 @@ export interface IUIProvider {
   showError(message: string, ...actions: string[]): Promise<string | undefined>
   showInfo(message: string): Promise<string | undefined>
 }
-
-export const TOKENS = {
-  Config: new Token<IConfig>("Config"),
-  Logger: new Token<BaseLogger>("Logger"),
-  ProviderManager: new Token<IProviderManager>("ProviderManager"),
-  CommitManager: new Token<CommitManager>("CommitManager"),
-  UIProvider: new Token<IUIProvider>("UIProvider"),
-} as const

@@ -10,53 +10,63 @@ import "reflect-metadata"
 import { Container } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_NAME, CommitManager, formatError } from "@shared/common"
-import { ProviderRegistry } from "@shared/server"
+import { APP_NAME, formatError } from "@shared/common"
+import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
-import { Orchestrator } from "@/orchestrator"
 import { VscodeConfig } from "@/vscode-config"
 import { VscodeLogger } from "@/vscode-logger"
-import { VscodeWorkspaceMonitor } from "@/vscode-workspace-monitor"
 
 import { CommandManager } from "./command-manager"
+import { Orchestrator } from "./orchestrator"
 import { VscodeGit } from "./vscode-git"
+import { VscodeSettings } from "./vscode-settings"
 import { StatusBarManager } from "./vscode-statusbar"
-import { TOKENS } from "./vscode-token"
+import { TOKENS } from "./vscode-tokens"
 import { WebviewManager } from "./vscode-webview"
+import { WebviewMessageHandler } from "./vscode-webview-message-handler"
 
 export function activate(context: vscode.ExtensionContext) {
   const logger = Container.get(VscodeLogger)
   try {
     logger.info(`Initializing ${APP_NAME} extension...`)
 
-    // basic
+    // 1. 基础服务
     Container.set(TOKENS.Context, context)
     Container.set(TOKENS.Logger, logger)
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
 
+    // 2. 功能服务
+    logger.info("setting status bar...")
+    Container.set(TOKENS.StatusBar, Container.get(StatusBarManager))
+
     logger.info("setting git manager...")
     Container.set(TOKENS.GitManager, Container.get(VscodeGit))
-
-    logger.info("setting workspace monitor...")
-    Container.set(
-      TOKENS.WorkspaceMonitor,
-      Container.get(VscodeWorkspaceMonitor)
-    )
-
-    // Always set up webview first
-    logger.info("setting webview...")
-    Container.set(TOKENS.Webview, Container.get(WebviewManager)) // git
 
     logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
 
     logger.info("setting commit manager...")
-    Container.set(TOKENS.CommitManager, Container.get(CommitManager)) // provider
-    logger.info("setting status bar...")
-    Container.set(TOKENS.StatusBar, Container.get(StatusBarManager)) // commit, git
+    Container.set(TOKENS.GitCommitManager, Container.get(GitCommitManager))
 
-    Container.set(TOKENS.CommitOrchestrator, Container.get(Orchestrator))
+    logger.info("setting webview...")
+    const webviewManager = Container.get(WebviewManager)
+    Container.set(TOKENS.WebviewManager, webviewManager)
 
+    logger.info("setting webview message handler...")
+    const messageHandler = Container.get(WebviewMessageHandler)
+    Container.set(TOKENS.WebviewMessageHandler, messageHandler)
+    webviewManager.setMessageHandler(messageHandler)
+
+    // 4. 依赖 Orchestrator 的服务
+    logger.info("setting settings...")
+    Container.set(TOKENS.Settings, Container.get(VscodeSettings))
+
+    logger.info("setting orchestrator...")
+    const orchestrator = Container.get(Orchestrator)
+    Container.set(TOKENS.Orchestrator, orchestrator)
+    void orchestrator.initialize()
+
+    // 5. 异步初始化
     logger.info("Initializing providers...")
     // Initialize providers asynchronously
     Container.get(ProviderRegistry)
@@ -64,7 +74,9 @@ export function activate(context: vscode.ExtensionContext) {
       .then(() => {
         logger.debug("Provider initialization complete")
         // Notify StatusBar to update if needed
-        void Container.get(StatusBarManager).update()
+        void Container.get(StatusBarManager).setModel({
+          name: Container.get(TOKENS.GitCommitManager).model!.name,
+        })
       })
       .catch((error) => {
         logger.error("Failed to initialize providers:", error)

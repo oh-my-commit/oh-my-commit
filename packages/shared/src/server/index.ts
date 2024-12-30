@@ -9,4 +9,6 @@
 export * from "./config"
 export * from "./git"
 export * from "./prompt-template"
+export * from "./tokens"
+export * from "./git-commit-manager"
 export { ProviderRegistry } from "./provider-registry.js"

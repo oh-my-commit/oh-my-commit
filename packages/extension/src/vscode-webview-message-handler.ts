@@ -11,68 +11,85 @@ import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { ClientMessageEvent, CommitManager, formatError } from "@shared/common"
+import {
+  ClientMessageEvent,
+  clientMessageTips,
+  formatError,
+} from "@shared/common"
+import type { IGitCommitManager } from "@shared/server/git-commit-manager"
 
-import { IOrchestrator } from "@/orchestrator"
-import { VscodeConfig } from "@/vscode-config"
-import { VscodeLogger } from "@/vscode-logger"
+import type { VscodeLogger } from "@/vscode-logger"
 
-import { VscodeGit } from "./vscode-git.js"
-import { TOKENS } from "./vscode-token"
-import { WebviewManager } from "./vscode-webview"
+import type { VscodeGit } from "./vscode-git"
+import type { IStatusBarManager } from "./vscode-statusbar"
+import { TOKENS } from "./vscode-tokens"
+import type { IWebviewManager } from "./vscode-webview"
+
+export interface IWebviewMessageHandler {
+  handleMessage(message: ClientMessageEvent): Promise<void>
+}
 
 @Service()
-export class WebviewMessageHandler {
+export class WebviewMessageHandler implements IWebviewMessageHandler {
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: VscodeLogger,
-    @Inject(TOKENS.Config) private readonly config: VscodeConfig,
     @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit,
-    @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(TOKENS.CommitOrchestrator)
-    private readonly commitOrchestrator: IOrchestrator,
-    private readonly webview: WebviewManager
+    @Inject(TOKENS.GitCommitManager)
+    private readonly gitCommitManager: IGitCommitManager,
+    @Inject(TOKENS.WebviewManager)
+    private readonly webviewManager: IWebviewManager,
+    @Inject(TOKENS.StatusBar) private readonly statusBar: IStatusBarManager
   ) {}
 
   async handleMessage(message: ClientMessageEvent): Promise<void> {
-    switch (message.type) {
-      case "init":
-        await this.handleInit()
-        break
+    try {
+      this.statusBar.setWaiting(clientMessageTips[message.type])
+      switch (message.type) {
+        case "init":
+          await this.handleInit()
+          break
 
-      case "show-info":
-        void vscode.window.showInformationMessage(message.data.message)
-        break
+        case "show-info":
+          void vscode.window.showInformationMessage(message.data.message)
+          break
 
-      case "open-external":
-        void vscode.env.openExternal(vscode.Uri.parse(message.data.url))
-        break
+        case "open-external":
+          void vscode.env.openExternal(vscode.Uri.parse(message.data.url))
+          break
 
-      case "get-settings":
-        await this.handleGetSettings(message)
-        break
+        case "get-settings":
+          await this.handleGetSettings(message)
+          break
 
-      case "update-settings":
-        await this.handleUpdateSettings(message)
-        break
+        case "update-settings":
+          await this.handleUpdateSettings(message)
+          break
 
-      case "generate":
-        await this.commitOrchestrator.diffAndCommit()
-        break
+        case "generate":
+          this.webviewManager.postMessage({
+            type: "generate-result",
+            data: await this.gitCommitManager.generateCommit(),
+          })
 
-      case "commit":
-        await this.handleCommit(message)
-        break
+          break
 
-      case "diff-file":
-        await this.handleDiffFile(message)
-        break
+        case "commit":
+          await this.handleCommit(message)
+          break
 
-      case "execute-command":
-        await this.handleExecuteCommand(message)
-        break
+        case "diff-file":
+          await this.handleDiffFile(message)
+          break
 
-      default:
-        this.logger.error(`Unknown message type: ${message.type}`)
+        case "execute-command":
+          await this.handleExecuteCommand(message)
+          break
+
+        default:
+          this.logger.error(`Unknown message type: ${message.type}`)
+      }
+    } finally {
+      this.statusBar.clearWaiting()
     }
   }
 
@@ -87,7 +104,7 @@ export class WebviewMessageHandler {
     try {
       const config = vscode.workspace.getConfiguration("ohMyCommit")
       const value = config.get(message.data.section)
-      await this.webview.postMessage({
+      await this.webviewManager.postMessage({
         type: "settings-value",
         data: {
           section: message.data.section,
@@ -115,7 +132,7 @@ export class WebviewMessageHandler {
         .getConfiguration()
         .update(section, message.data.value, vscode.ConfigurationTarget.Global)
 
-      await this.webview.postMessage({
+      await this.webviewManager.postMessage({
         type: "settings-updated",
         data: {
           section: message.data.section,
@@ -149,7 +166,7 @@ export class WebviewMessageHandler {
 
       await this.gitService.commit(commitMessage)
 
-      await this.webview.postMessage({
+      await this.webviewManager.postMessage({
         type: "commit-result",
         data: {
           ok: true,
@@ -167,7 +184,7 @@ export class WebviewMessageHandler {
         error
       )
 
-      await this.webview.postMessage({
+      await this.webviewManager.postMessage({
         type: "commit-result",
         data: {
           ok: false,
@@ -236,7 +253,7 @@ export class WebviewMessageHandler {
 
   private async syncFiles() {
     const diffResult = await this.getDiffResult()
-    await this.webview.postMessage({
+    await this.webviewManager.postMessage({
       type: "diff-result",
       data: diffResult,
     })
@@ -279,7 +296,7 @@ export class WebviewMessageHandler {
       workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
     )
 
-    void this.webview.postMessage({
+    void this.webviewManager.postMessage({
       type: "workspace-status",
       data: {
         workspaceRoot,

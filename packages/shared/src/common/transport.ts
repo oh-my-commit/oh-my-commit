@@ -95,6 +95,22 @@ export type ClientMessageEvent =
       type: "generate"
     }
 
+export const clientMessageTips: Record<ClientMessageEvent["type"], string> = {
+  generate: "Generate Commit...",
+  commit: "Commiting Changes...",
+  "selected-files": "Select files",
+  "diff-file": "Diff file",
+  "execute-command": "Executing command...",
+  "show-info": "Show info",
+  "get-settings": "Get settings",
+  "update-settings": "Update settings",
+  init: "Initializing...",
+  "open-external": "Opening external...",
+  ping: "Ping...",
+  log: "Logging...",
+  "close-window": "Closing window...",
+}
+
 export type DiffFileResult = ResultDTO<{
   diff: string
 }>
@@ -122,7 +138,7 @@ export type ServerMessageEvent =
     }
   // 2. 异步生成的 commits，无论是初次，还是等用户挑选文件后的结果
   | {
-      type: "commit-message"
+      type: "generate-result"
       data: ResultDTO<IResult>
     }
 

@@ -5,6 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
@@ -13,155 +14,184 @@ import type {
   IConfig,
   IInputOptions,
   ILogger,
-  IResult,
-  ResultDTO,
-  ServerMessageEvent,
 } from "@shared/common"
+import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/vscode-git"
 import type { IStatusBarManager } from "@/vscode-statusbar"
-import { TOKENS } from "@/vscode-token"
+import { TOKENS } from "@/vscode-tokens"
 import type { IWebviewManager } from "@/vscode-webview"
 
+import type { IWorkspaceSettings } from "./vscode-settings"
+import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
+
 export interface IOrchestrator {
-  gitService: IVscodeGit
+  // 基础服务
+  readonly context: vscode.ExtensionContext
+  readonly logger: ILogger
+  readonly config: IConfig
 
-  webviewManager: IWebviewManager
+  // 管理的服务
+  readonly gitService: IVscodeGit
+  readonly webviewManager: IWebviewManager
+  readonly gitCommitManager: ICommitManager
+  readonly statusBar: IStatusBarManager
+  readonly workspaceSettings: IWorkspaceSettings
 
-  commitManager: ICommitManager
+  // Git 相关操作
+  getDiff(): Promise<DiffResult>
+  commit(message: string): Promise<void>
 
-  statusBar: IStatusBarManager
+  // UI 相关操作
+  showMessage(
+    message: string,
+    type?: "info" | "warning" | "error"
+  ): Promise<void>
+  updateStatusBar(message: string): Promise<void>
 
-  logger: ILogger
+  // Webview 相关操作
+  updateWebview(data: any): Promise<void>
+  handleWebviewMessage(message: any): Promise<void>
 
-  config: IConfig
+  // 业务流程
+  generateCommit(): Promise<void>
+  quickCommit(): Promise<void>
 
-  context: vscode.ExtensionContext
-
-  syncFiles(): Promise<void>
-
-  syncCommitMessage(): Promise<void>
-
-  diffAndCommit(): Promise<void>
-
-  onWorkspaceChange(): Promise<void>
-
-  postMessage: (message: ServerMessageEvent) => Promise<void>
+  // 生命周期
+  initialize(): Promise<void>
+  dispose(): void
 }
 
 @Service()
 export class Orchestrator implements IOrchestrator {
-  private isWebviewInitialized = false
-  private commit: ResultDTO<IResult> | null = null
-
   constructor(
     @Inject(TOKENS.Context) public readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
     @Inject(TOKENS.Config) public readonly config: IConfig,
+    @Inject(TOKENS.GitCommitManager)
+    public readonly gitCommitManager: IGitCommitManager,
     @Inject(TOKENS.StatusBar) public readonly statusBar: IStatusBarManager,
-    @Inject(TOKENS.CommitManager) public readonly commitManager: ICommitManager,
     @Inject(TOKENS.GitManager) public readonly gitService: IVscodeGit,
-    @Inject(TOKENS.Webview) public readonly webviewManager: IWebviewManager
+    @Inject(TOKENS.WebviewMessageHandler)
+    public readonly webviewMessageHandler: IWebviewMessageHandler,
+    @Inject(TOKENS.WebviewManager)
+    public readonly webviewManager: IWebviewManager,
+    @Inject(TOKENS.Settings)
+    public readonly workspaceSettings: IWorkspaceSettings
   ) {}
 
-  async postMessage(message: ServerMessageEvent): Promise<void> {
-    void this.webviewManager.postMessage(message)
+  async initialize(): Promise<void> {
+    this.logger.info("Initializing Orchestrator...")
+
+    // 注册所有事件监听
+    this.webviewManager.setMessageHandler(this.webviewMessageHandler)
+
+    // 监听工作区变化
+    this.workspaceSettings.onSettingChange((section, value) => {
+      void this.webviewManager.postMessage({
+        type: "settings-updated",
+        data: { section, value },
+      })
+    })
+
+    // 初始化状态栏
+    const model = this.gitCommitManager.model
+    if (model) {
+      await this.statusBar.setModel({ name: model.name })
+    }
+
+    this.logger.info("Orchestrator initialized")
   }
 
-  async diffAndCommit(): Promise<void> {
-    this.statusBar.setWaiting("Generating commit message...")
-    const diff = await this.gitService.getDiffResult()
+  async getDiff(): Promise<DiffResult> {
+    return this.gitService.getDiffResult()
+  }
 
+  async commit(message: string): Promise<void> {
+    await this.gitService.commit(message)
+    await this.updateStatusBar("Committed successfully")
+  }
+
+  async showMessage(
+    message: string,
+    type: "info" | "warning" | "error" = "info"
+  ): Promise<void> {
+    switch (type) {
+      case "warning":
+        void vscode.window.showWarningMessage(message)
+        break
+      case "error":
+        void vscode.window.showErrorMessage(message)
+        break
+      default:
+        void vscode.window.showInformationMessage(message)
+    }
+  }
+
+  async updateStatusBar(message: string): Promise<void> {
+    await this.statusBar.setText(message)
+  }
+
+  async updateWebview(data: any): Promise<void> {
+    // todo
+    // await this.webviewManager.postMessage({
+    //   type: "update",
+    //   data,
+    // })
+  }
+
+  async handleWebviewMessage(message: any): Promise<void> {
+    this.logger.info("Received message from webview:", message)
+    // 处理来自 webview 的消息
+    switch (message.type) {
+      case "commit":
+        await this.quickCommit()
+        break
+      // 其他消息类型...
+    }
+  }
+
+  async generateCommit(): Promise<void> {
+    const diff = await this.getDiff()
     if (!diff.changed) {
-      this.logger.info(
-        "[QuickCommit] No changes to commit, skipping commit generation"
-      )
-      void vscode.window.showInformationMessage("No changes to commit")
+      await this.showMessage("No changes to commit")
       return
     }
 
     const options: IInputOptions = {
       lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),
     }
-    this.logger.info("[QuickCommit] Generating commit via acManager: ", {
-      options,
-    })
-    const commit = await this.commitManager.generateCommit(diff, options)
-    this.commit = commit
-    this.logger.info("[QuickCommit] Generated commit via acManager:", commit)
-    this.statusBar.clearWaiting()
 
-    const uiMode = this.config.get<string>("ohMyCommit.ui.mode") || "panel"
-    this.logger.info("[QuickCommit] UI mode:", uiMode)
-
-    // Concurrently create webview panel and show notification
-    await Promise.all([
-      // Create and update webview panel
-      (async (): Promise<void> => {
-        await this.syncCommitMessage()
-      })(), // Show notification and handle user interaction
-      (async (): Promise<void> => {
-        if (uiMode !== "notification") return
-
-        this.logger.info("[QuickCommit] showing commit message notification...")
-
-        if (!commit.ok) {
-          void vscode.window.showErrorMessage(
-            `Failed to generate commit! Reason: ${commit.message}`
-          )
-          return
-        }
-
-        const result = await vscode.window.showInformationMessage(
-          commit.data.title,
-          {
-            modal: false,
-            detail: commit.data.body,
-          },
-          "Commit",
-          "Edit"
-          // "Cancel" // 有 x 不需要
-        )
-
-        if (result === "Commit") {
-          // Direct commit
-          await this.gitService.stageAll()
-          if (!(await this.gitService.hasChanges())) {
-            void vscode.window.showErrorMessage("No changes to commit")
-            return
-          }
-          const commitMessage = commit.data.body
-            ? `${commit.data.title}\n\n${commit.data.body}`
-            : commit.data.title
-          await this.gitService.commit(commitMessage)
-          void vscode.window.showInformationMessage(
-            "Changes committed successfully"
-          )
-          await this.syncFiles()
-        } else if (result === "Edit") {
-          this.logger.info("[QuickCommit] user selected to edit commit message")
-          await this.webviewManager.show()
-        }
-        // Note: No need to handle "Edit" case since webview panel is already created
-      })(),
-    ])
+    const result = await this.gitCommitManager.generateCommitWithDiff(
+      diff,
+      options
+    )
+    await this.updateWebview(result)
   }
 
-  async onWorkspaceChange(): Promise<void> {}
-
-  async syncCommitMessage() {
-    if (!this.commit || !this.isWebviewInitialized) return
-    this.webviewManager.postMessage({
-      type: "commit-message",
-      data: this.commit,
-    })
-    this.commit = null
+  async quickCommit(): Promise<void> {
+    try {
+      await this.updateStatusBar("Generating commit message...")
+      await this.generateCommit()
+    } catch (error) {
+      this.logger.error("Failed to quick commit:", error)
+      await this.showMessage("Failed to generate commit message", "error")
+    } finally {
+      await this.updateStatusBar("")
+    }
   }
 
-  async syncFiles() {
-    this.webviewManager?.postMessage({
+  async syncFiles(): Promise<void> {
+    const diffResult = await this.getDiff()
+    void this.webviewManager.postMessage({
       type: "diff-result",
-      data: await this.gitService.getDiffResult(),
+      data: diffResult,
     })
+  }
+
+  async dispose(): Promise<void> {
+    this.logger.info("Disposing Orchestrator...")
+    // todo
+    this.logger.info("Orchestrator disposed")
   }
 }

@@ -8,26 +8,29 @@
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import {
-  APP_ID_CAMEL,
-  APP_NAME,
-  BaseLogger,
-  COMMAND_SELECT_MODEL,
-  CommitManager,
-} from "@shared/common"
+import { APP_NAME, COMMAND_SELECT_MODEL, type ILogger } from "@shared/common"
 
-import { VscodeGit } from "./vscode-git"
-import { TOKENS } from "./vscode-token"
+import { EventEmitter, IService, type ServiceEvent } from "@/core/base-service"
+import { TOKENS } from "@/vscode-tokens"
 
-export interface IStatusBarManager extends vscode.Disposable {
+export type StatusBarEvent = ServiceEvent<{
+  text?: string
+  tooltip?: string
+  command?: string
+}>
+
+export interface IStatusBarManager extends IService {
   setWaiting(message?: string): void
   clearWaiting(): void
-  update(): Promise<void>
+  setText(text: string): void
+  setModel(model: { name: string }): void
 }
 
 @Service()
-export class StatusBarManager implements vscode.Disposable, IStatusBarManager {
-  private disposables: vscode.Disposable[] = []
+export class StatusBarManager
+  extends EventEmitter<StatusBarEvent>
+  implements IStatusBarManager
+{
   private statusBarItem: vscode.StatusBarItem
   private previousState?: {
     text: string
@@ -35,109 +38,78 @@ export class StatusBarManager implements vscode.Disposable, IStatusBarManager {
     command?: string
   }
 
-  constructor(
-    @Inject(TOKENS.Logger) private readonly logger: BaseLogger,
-    @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit
-  ) {
+  constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {
+    super()
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
       100
     )
     this.statusBarItem.name = APP_NAME
 
-    // 设置初始状态
+    this.logger.info("Initializing StatusBar...")
     this.statusBarItem.text = `$(sync~spin) (Initializing...)`
     this.statusBarItem.show()
 
-    // 监听配置变化
-    this.disposables.push(
-      vscode.workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration(APP_ID_CAMEL)) {
-          void this.update()
-        }
-      })
-    )
-
-    // 监听工作区变化（可能影响 git 状态）
-    this.disposables.push(
-      vscode.workspace.onDidChangeWorkspaceFolders(() => {
-        void this.update()
-      })
-    )
-
-    void this.update()
+    // 监听状态变化事件
+    this.on("status.update", (event) => {
+      if (event.data.text) {
+        this.statusBarItem.text = event.data.text
+      }
+      if (event.data.tooltip) {
+        this.statusBarItem.tooltip = event.data.tooltip
+      }
+      if (event.data.command) {
+        this.statusBarItem.command = event.data.command
+      }
+    })
   }
 
-  public setWaiting(message: string = "Generating commit...") {
-    // Save current state
+  setWaiting(message = "Working..."): void {
     this.previousState = {
       text: this.statusBarItem.text,
       tooltip: this.statusBarItem.tooltip,
-      command:
-        typeof this.statusBarItem.command === "string"
-          ? this.statusBarItem.command
-          : undefined,
+      command: this.statusBarItem.command,
     }
-
-    // Set waiting state
-    this.statusBarItem.text = `$(sync~spin) (${message})`
-    this.statusBarItem.tooltip = message
-    this.statusBarItem.command = undefined
+    this.emit("status.update", {
+      type: "status.update",
+      data: {
+        text: `$(sync~spin) ${message}`,
+        tooltip: undefined,
+        command: undefined,
+      },
+    })
   }
 
-  public clearWaiting() {
+  clearWaiting(): void {
+    this.logger.info("Clearing waiting status...", this.previousState)
     if (this.previousState) {
-      this.statusBarItem.text = this.previousState.text
-      this.statusBarItem.tooltip = this.previousState.tooltip
-      this.statusBarItem.command = this.previousState.command
+      this.emit("status.update", {
+        type: "status.update",
+        data: this.previousState,
+      })
       this.previousState = undefined
-    } else {
-      void this.update()
     }
   }
 
-  public async update(): Promise<void> {
-    try {
-      if (!this.commitManager?.providerManager) {
-        this.statusBarItem.text = `$(error) (Initializing...)`
-        this.statusBarItem.tooltip = "Provider manager is not initialized"
-        this.statusBarItem.command = undefined
-        return
-      }
-
-      const model = this.commitManager.model
-      // this.logger.debug(`Updating status: `, { modelId, model })
-      const isGitRepo = await this.gitService.isGitRepository()
-
-      if (!isGitRepo) {
-        this.statusBarItem.text = `$(error) (Not a Git repository)`
-        this.statusBarItem.tooltip = "This workspace is not a Git repository"
-        this.statusBarItem.command = undefined
-        return
-      }
-
-      if (!model) {
-        this.statusBarItem.text = `$(error) (No model selected)`
-        this.statusBarItem.tooltip = "Click to select a model"
-        this.statusBarItem.command = COMMAND_SELECT_MODEL
-        return
-      }
-
-      this.statusBarItem.text = `$(git-commit) (${model.name})`
-      this.statusBarItem.tooltip = `Current model: ${model.name}\nClick to change model`
-      this.statusBarItem.command = COMMAND_SELECT_MODEL
-    } catch (error) {
-      this.logger.error("Error updating status bar:", error)
-      this.statusBarItem.text = `$(error) (Error)`
-      this.statusBarItem.tooltip =
-        "Error updating status. Check logs for details."
-      this.statusBarItem.command = undefined
-    }
+  setText(text: string): void {
+    this.emit("status.update", {
+      type: "status.update",
+      data: { text },
+    })
   }
 
-  public dispose(): void {
+  setModel(model: { name: string }): void {
+    this.emit("status.update", {
+      type: "status.update",
+      data: {
+        text: `$(git-commit) ${model.name}`,
+        tooltip: `${APP_NAME}\nCurrent Model: ${model.name}`,
+        command: COMMAND_SELECT_MODEL,
+      },
+    })
+  }
+
+  dispose(): void {
     this.statusBarItem.dispose()
-    this.disposables.forEach((d) => d.dispose())
   }
 }

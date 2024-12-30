@@ -8,31 +8,34 @@
 import { Token } from "typedi"
 import type * as vscode from "vscode"
 
-import { TOKENS as TOKENS_BASE } from "@shared/common"
+import { TOKENS as TOKENS_BASE } from "@shared/server"
 
-import { IOrchestrator } from "@/orchestrator"
-import type { IVscodeWorkspaceMonitor } from "@/vscode-workspace-monitor"
+import type { IOrchestrator } from "@/orchestrator"
 
 import type { CommandManager } from "./command-manager"
 import type { OpenPreferencesCommand } from "./commands/open-preferences"
 import type { QuickCommitCommand } from "./commands/quick-commit"
 import type { SelectModelCommand } from "./commands/select-model"
-import type { VscodeGit } from "./vscode-git"
-import type { StatusBarManager } from "./vscode-statusbar"
-import type { WebviewManager } from "./vscode-webview"
+import type { IWorkspaceSettings } from "./vscode-settings"
+import type { IStatusBarManager } from "./vscode-statusbar"
+import type { IWebviewManager } from "./vscode-webview"
+import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
 
 export const TOKENS = {
   ...TOKENS_BASE,
   Context: new Token<vscode.ExtensionContext>("Context"),
-  GitManager: new Token<VscodeGit>("GitManager"),
-  Webview: new Token<WebviewManager>("Webview"),
-  StatusBar: new Token<StatusBarManager>("StatusBar"),
+  WebviewManager: new Token<IWebviewManager>("Webview"),
+  WebviewMessageHandler: new Token<IWebviewMessageHandler>(
+    "WebviewMessageHandler"
+  ),
+  Settings: new Token<IWorkspaceSettings>("WorkspaceSettings"),
+  Orchestrator: new Token<IOrchestrator>("Orchestrator"),
+  StatusBar: new Token<IStatusBarManager>("StatusBar"),
+
   CommandManager: new Token<CommandManager>("CommandManager"),
   QuickCommitCommand: new Token<QuickCommitCommand>("QuickCommitCommand"),
   OpenPreferencesCommand: new Token<OpenPreferencesCommand>(
     "OpenPreferencesCommand"
   ),
   SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
-  WorkspaceMonitor: new Token<IVscodeWorkspaceMonitor>("WorkspaceMonitor"),
-  CommitOrchestrator: new Token<IOrchestrator>("CommitOrchestrator"),
 } as const
