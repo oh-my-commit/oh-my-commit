@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.21.10
+
+### Patch Changes
+
+- 5b2fede: update buil;d
+
 ## 0.21.9
 
 ### Patch Changes
