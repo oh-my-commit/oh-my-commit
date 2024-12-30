@@ -58,15 +58,13 @@
 
 ## 使用方法
 
-> ⚠️ 您需要配置一定参数条件，具体视各算法要求
->
-> 以我们官方提供的算法 `@oh-my-commit/provider-official` 为例，
->
-> 您需要在命令行里配置 ANTHROPIC_API_KEY / HTTP_PROXY 环境变量，
->
-> 或者在 VSCode 用户设置里配置 `oh-my-commit.ai.apiKeys.anthropic` / `ohMyCommit.proxy.url`
->
-> 并启用 `ohMyCommit.proxy.enabled` （如果需要的话）
+> ⚠️ **使用前配置**
+> 
+> 以官方算法 `@oh-my-commit/provider-official` 为例，您需要：
+> 1. 配置 AI 服务密钥：`ANTHROPIC_API_KEY` 或 VSCode 设置 `oh-my-commit.ai.apiKeys.anthropic`
+> 2. （可选）配置代理：
+>    - CLI：`HTTP_PROXY` 环境变量
+>    - VSCode：`ohMyCommit.proxy.url` 与 `ohMyCommit.proxy.enabled`
 
 ### Using CLI
 
