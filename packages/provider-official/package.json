@@ -5,9 +5,6 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "bin": {
-    "omc-provider-official-install": "./dist/install.js"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -21,7 +18,7 @@
     "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp dist/* package.json CHANGELOG.md $DIR",
     "build": "tsup",
     "dev": "tsup --watch",
-    "clean": "rimraf ../providers/dist tsconfig.tsbuildinfo .turbo"
+    "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
   },
   "keywords": [],
   "author": "",
