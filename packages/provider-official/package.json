@@ -14,10 +14,11 @@
   },
   "files": [
     "dist",
-    "package.json"
+    "package.json",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "postinstall": "node ./dist/install.js",
+    "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp dist/* package.json CHANGELOG.md $DIR",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf ../providers/dist tsconfig.tsbuildinfo .turbo"

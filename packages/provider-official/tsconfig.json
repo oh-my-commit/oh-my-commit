@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
   },
   "include": ["./src/**/*", "../shared/src/server/prompt-template.ts"],
   "references": [
