@@ -69,14 +69,14 @@ omc gen # AI 自动生成 commit
 
 ## 用户配置
 
-| 配置项                                 | 类型     | 默认值              | 说明                                              | 可选值                                                                                                                                                |
-| -------------------------------------- |--------| ------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oh-my-commit.model.id`                | string | "omc-standard-claude-3.5" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard-claude-3.5`<br>• `omc-standard-gpt-4o`      |
-| `oh-my-commit.git.lang`      | string | "system"            | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages                                                             |
-| `oh-my-commit.ai.apiKeys`              | object | -                   | AI 服务提供商的 API 密钥配置                      |                                                                                                                                                       |
-| `oh-my-commit.ui.mode`                 | string | "webview"           | 提交界面模式选择                                  | • `quickInput`: 快速简单：单行输入框快速提交<br>• `webview`: 专业模式：带预览和格式化的完整编辑器                                                     |
-| `ohMyCommit.proxy.enabled`             | boolean | false               | 是否启用代理                                      | `true / false`                                                                                                                                        |
-| `ohMyCommit.proxy.url`                 | string | "http://localhost:7890" | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                                                                                       |
+| 配置项                                 | 类型     | 默认值              | 说明                                              | 可选值                                                                           |
+| -------------------------------------- |--------| ------------------- | ------------------------------------------------- |-------------------------------------------------------------------------------|
+| `oh-my-commit.model.id`                | string | "omc-standard-claude-3.5" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard-claude-3.5`<br>• （可自定义实现，本地安装 / 源码 PR / npm 发布）               |
+| `oh-my-commit.git.lang`      | string | "system"            | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages |
+| `oh-my-commit.ai.apiKeys`              | object | -                   | AI 服务提供商的 API 密钥配置                      |                                                                               |
+| `oh-my-commit.ui.mode`                 | string | "webview"           | 提交界面模式选择                                  | • `quickInput`: 快速简单：单行输入框快速提交<br>• `webview`: 专业模式：带预览和格式化的完整编辑器             |
+| `ohMyCommit.proxy.enabled`             | boolean | false               | 是否启用代理                                      | `true / false`                                                                |
+| `ohMyCommit.proxy.url`                 | string | "http://localhost:7890" | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                         |
 
 ## 贡献指南
 
