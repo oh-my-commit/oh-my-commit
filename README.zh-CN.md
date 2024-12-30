@@ -67,6 +67,8 @@ omc gen # AI 自动生成 commit
    - 状态栏：点击状态栏的 Commit 图标
    - 源代码管理：使用 VSCode 内置的 Git 面板
 
+![panel comparison](assets/panel-comparison.png)
+
 ## 用户配置
 
 | 配置项                                 | 类型     | 默认值                       | 说明                                              | 可选值                                                                                           |

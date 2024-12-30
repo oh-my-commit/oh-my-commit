@@ -2,9 +2,21 @@
 
 # Oh My Commit
 
-A VSCode extension redefining Git commits with a focus on user experience, making every commit elegant and professional.
+```shell
+                               ____  _       __  __          _____                          _ _   
+                              / __ \| |     |  \/  |        / ____|                        (_) |  
+                             | |  | | |__   | \  / |_   _  | |     ___  _ __ ___  _ __ ___  _| |_ 
+                             | |  | | '_ \  | |\/| | | | | | |    / _ \| '_ ` _ \| '_ ` _ \| | __|
+                             | |__| | | | | | |  | | |_| | | |___| (_) | | | | | | | | | | | | |_ 
+                              \____/|_| |_| |_|  |_|\__, |  \_____\___/|_| |_| |_|_| |_| |_|_|\__|
+                                                     __/ |                                        
+                                                    |___/                                         
+                            
+                            ✨Your AI-powered Commit Generator Solution ✨      
+                                                                            
+```
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+[English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
 
 <!-- toc -->
 
@@ -37,6 +49,25 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
   - Real-time preview and editing, WYSIWYG
   - Quick switching between commit schemes
   - Team configuration sharing, unified commit style
+
+## System Architecture
+
+Oh My Commit is a modular intelligent commit solution:
+
+- **Multi-platform Support**
+  - CLI Tool: Standalone command-line program for use in any terminal
+  - VSCode Extension: Graphical interface with silent and interactive modes
+  - Future Plans: Support for more IDEs and platforms
+
+- **Core Components**
+  - Shared Configuration: Cross-platform unified user settings and team standards
+  - Algorithm Marketplace: Customizable AI commit algorithms with extensible provider system
+  - Data Analytics: Commit history analysis and team collaboration insights (planned)
+
+- **Technical Features**
+  - Monorepo Architecture: Multi-package management with pnpm
+  - Module Decoupling: Separation of core logic, UI, and algorithm providers
+  - Plugin Design: Support for third-party extensions and customization
 
 ## AI Capabilities
 
@@ -72,27 +103,43 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
 
 ## Usage
 
-1. Install "Oh My Commit" from VSCode Extension Marketplace
-2. After making code changes, press `cmd+shift+p` to open the command palette, search for "Oh My Commit: Quick Commit"
-3. The plugin will automatically analyze your changes and generate appropriate commit messages, which you can confirm with Enter or modify
+> CLI and VSCode can be used independently with shared synchronized configuration
+
+### CLI Usage
+
+```bash
+# Install CLI tool globally
+npm install -g oh-my-commit
+
+# Install official AI Commit algorithm implementation
+# Third-party directory: `~/.oh-my-commit/providers/`
+npm install -g @oh-my-commit/provider-official
+
+# Use in git repository
+omc  # View help
+omc gen # AI generate commit
+```
+
+### VSCode Extension
+
+1. Install "Oh My Commit" from VSCode marketplace
+2. Usage methods:
+   - Shortcut: `cmd+shift+p` search for "OMC: Quick Commit"
+   - Status Bar: Click the Commit icon in status bar
+   - Source Control: Use VSCode's built-in Git panel
 
 ## Configuration
 
-| Configuration                          | Type    | Default             | Description                                    | Options                                                                                                                                               |
-| -------------------------------------- | ------- | ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oh-my-commit.basic.enabled`           | boolean | true                | Enable Oh My Commit                            | `true / false`                                                                                                                                        |
-| `oh-my-commit.basic.uiLanguage`        | string  | "system"            | Interface display language                     | • `system`: Follow system language<br>• `zh_CN`: Chinese<br>• `en_US`: English                                                                        |
-| `oh-my-commit.ac.model`                | string  | "oh-my-commit.test" | Select AC service provider and model           | • `oh-my-commit.test`<br>• `oh-my-commit.balanced`<br>• `oh-my-commit.professional`<br>• `cgop.openai.chatgpt-3.5`<br>• `cgop.openai.chatgpt-4`       |
-| `oh-my-commit.git.emptyChangeBehavior` | string  | "skip"              | Behavior when no file changes                  | • `skip`: Skip empty changes<br>• `amend`: Modify last commit (git commit --amend)                                                                    |
-| `oh-my-commit.git.autoStage`           | boolean | true                | Auto stage all changes                         | `true / false`                                                                                                                                        |
-| `oh-my-commit.git.lang`      | string  | "system"            | Git commit message language                    | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages                                        |
-| `oh-my-commit.ai.apiKeys`              | object  | -                   | AI service provider API key configuration      |                                                                                                                                                       |
-| `oh-my-commit.ui.mode`                 | string  | "webview"           | Commit interface mode                          | • `quickInput`: Quick & Simple: Single-line input box for fast commits<br>• `webview`: Professional: Full-featured editor with preview and formatting |
-| `ohMyCommit.proxy.enabled`             | boolean | false               | Enable proxy for API requests                  | `true / false`                                                                                                                                        |
-| `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890" | Proxy server URL                          | Any valid proxy URL (e.g. "http://localhost:7890")                                                                                                    |
-| `oh-my-commit.telemetry.enabled`       | boolean | true                | Enable usage data collection (anonymous)       | `true / false`                                                                                                                                        |
-| `oh-my-commit.telemetry.shareLevel`    | string  | "basic"             | Data collection level                          | • `minimal`: Basic error info only<br>• `basic`: Feature usage stats and performance data<br>• `full`: Additional AI generation quality feedback      |
-| `oh-my-commit.feedback.enabled`        | boolean | true                | Enable user feedback (one-click GitHub Issues) | `true / false`                                                                                                                                        |
+| Setting                                | Type    | Default                      | Description                                   | Options                                                                                                    |
+| -------------------------------------- | ------- | ---------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `oh-my-commit.model.id`                | string  | "omc-standard-claude-3.5"    | Select AC service provider and model          | • `omc-standard-claude-3.5`<br>• (Custom implementations via local install / source PR / npm publish)        |
+| `oh-my-commit.git.lang`                | string  | "system"                     | Git commit message language                    | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages |
+| `oh-my-commit.ai.apiKeys`              | object  | -                           | AI service provider API key configuration      |                                                                                                            |
+| `oh-my-commit.ui.mode`                 | string  | "panel"                      | Commit interface mode                          | • `notification`: Generate commit messages via notifications, ideal for quick personal development<br>• `panel`: Resident panel with professional view supporting title/content editing and diff viewing, suitable for professional collaboration |
+| `ohMyCommit.proxy.enabled`             | boolean | false                       | Enable proxy for API requests                  | `true / false`                                                                                              |
+| `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890"     | Proxy server URL                              | Any valid proxy URL (e.g. "http://localhost:7890")                                                          |
+
+Note: Our omc-standard-claude-3.5 requires users to configure their own ANTHROPIC_API_KEY and proxy (if necessary), which can be set in user settings.
 
 ## Documentation
 
