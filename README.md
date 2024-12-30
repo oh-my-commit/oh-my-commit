@@ -29,7 +29,7 @@ English | [中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.gith
 
 </div>
 
-## Product Comparison
+## Features Comparison
 
 <div align="center">
 ✅ Full Support &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ Partial Support &nbsp;&nbsp;|&nbsp;&nbsp; 🚧 In Development &nbsp;&nbsp;|&nbsp;&nbsp; ➖ Not Supported

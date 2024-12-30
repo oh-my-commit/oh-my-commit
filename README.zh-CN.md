@@ -16,7 +16,7 @@
 <h1 align="center">Oh My Commit</h1>
 
 <p align="center">
-  ✨ 你的下一代 AI 提交助手解决方案 ✨
+  ✨ 专业级 AI 提交助手，让每一次代码提交都完美优雅 ✨
 </p>
 
 <p align="center">
@@ -25,11 +25,32 @@
   <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=00a8f0" alt="License" />
 </p>
 
-
-
-[English](./README.md) | 中文 | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
+[English](./README.md) | 中文 | [在线文档](https://oh-my-commit.github.io) | [VSCode 插件](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
 
 </div>
+
+## 产品特色
+
+- **智能提交信息生成**
+  - 深度理解代码变更上下文
+  - 自动识别重构、修复、新功能等类型
+  - 支持中英双语提交信息
+  - 符合团队提交规范要求
+
+- **优秀的用户体验**
+  - 现代化界面设计，支持明暗主题
+  - 零延迟响应，流畅动画效果
+  - 智能感知工作流程，自适应场景
+  - 键盘优先的操作设计，提升效率
+  - 多样化的文件变更视图：
+    - 树形视图：清晰的文件层级结构
+    - 平铺视图：快速预览所有变更
+    - 智能暂存：自动处理文件变更
+  - 多种界面模式满足不同场景：
+    - 静默模式：仅在状态栏显示提交信息
+    - 通知模式：弹窗通知，快速编辑
+    - 窗口模式：浮动窗口，简洁高效
+    - 面板模式：功能完整，专业体验
 
 ## 产品对比
 
