@@ -105,6 +105,7 @@ module.exports = {
         "@typescript-eslint/ no-var-requires": "off",
         "@typescript-eslint/no-redundant-type-constituents": "off",
         "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/require-await": "off"
       },
     },
 

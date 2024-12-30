@@ -15,6 +15,8 @@ import type {
   IConfig,
   IInputOptions,
   ILogger,
+  IResult,
+  ResultDTO,
   UiMode,
 } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
@@ -80,6 +82,8 @@ export class Orchestrator implements IOrchestrator {
     public readonly workspaceSettings: IPreferenceMonitor
   ) {}
 
+  result: ResultDTO<IResult> | null = null
+
   async initialize(): Promise<void> {
     this.logger.info("Initializing Orchestrator...")
 
@@ -140,24 +144,45 @@ export class Orchestrator implements IOrchestrator {
     // })
   }
 
+  async handleSimpleGen() {
+    const uiMode = this.config.get<UiMode>("ohMyCommit.ui.mode")!
+    if (!this.result || uiMode !== "notification") return
+
+    if (this.result.ok) {
+      const selection = await vscode.window.showInformationMessage(
+        this.result.data.title,
+        { modal: false },
+        "Commit",
+        "Edit"
+      )
+
+      if (selection === "Commit") {
+        await this.commit(this.result.data.title)
+        await vscode.window.showInformationMessage("Successfully commited")
+      } else if (selection === "Edit") {
+        this.webviewManager.show()
+      }
+    } else {
+      await this.showMessage(
+        `Failed to generate message, reason: ${this.result.message}`,
+        "error"
+      )
+    }
+  }
+
+  async handleWebviewGen() {
+    if (!this.result) return
+    this.webviewManager.postMessage({
+      type: "generate-result",
+      data: this.result,
+    })
+  }
+
   async generateCommit(): Promise<void> {
     try {
       this.statusBar.setWaiting("Generating commit...")
-      const result = await this.gitCommitManager.generateCommit()
-
-      const uiMode = this.config.get<UiMode>("ohMyCommit.ui.mode")!
-      if (uiMode === "notification") {
-        if (result.ok) await this.showMessage(result.data.title, "info")
-        else
-          await this.showMessage(
-            `failed to generate message, reason: ${result.message}`,
-            "error"
-          )
-      }
-      this.webviewManager.postMessage({
-        type: "generate-result",
-        data: result,
-      })
+      this.result = await this.gitCommitManager.generateCommit()
+      await Promise.all([this.handleSimpleGen(), this.handleWebviewGen()])
     } finally {
       this.statusBar.clearWaiting()
     }
