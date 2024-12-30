@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 // import type { DiffResult } from "simple-git"
+import path from "path"
 import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
@@ -172,29 +173,39 @@ export class WebviewMessageHandler {
   private async handleDiffFile(message: ClientMessageEvent) {
     if (message.type !== "diff-file") return
 
+    this.logger.info(
+      "[VscodeWebview] Getting file diff for:",
+      message.data.filePath
+    )
     try {
-      const diffResult = await this.gitService.getFileDiffDetail(
-        message.data.filePath
-      )
-      await this.webview.postMessage({
-        type: "diff-file-result",
-        data: {
-          ok: true,
-          data: {
-            diff: diffResult,
-          },
-        },
-      })
+      const workspaceRoot = this.gitService.workspaceRoot
+      if (!workspaceRoot) return
+
+      const filePath = message.data.filePath
+      const absolutePath = path.isAbsolute(filePath)
+        ? filePath
+        : path.join(workspaceRoot, filePath)
+
+      const uri = vscode.Uri.file(absolutePath)
+      this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
+
+      // 获取 git 扩展
+      const gitExtension =
+        vscode.extensions.getExtension<any>("vscode.git")?.exports
+      if (!gitExtension) return
+
+      const git = gitExtension.getAPI(1)
+      const repository = git.repositories[0]
+      if (!repository) return
+
+      // 打开差异视图
+      await vscode.commands.executeCommand("git.openChange", uri)
+
+      this.logger.info("[VscodeWebview] Opened file diff")
     } catch (error) {
-      this.logger.error("[WebviewMessageHandler] Failed to get diff:", error)
-      await this.webview.postMessage({
-        type: "diff-file-result",
-        data: {
-          ok: false,
-          code: 500,
-          message: formatError(error, "Failed to get diff"),
-        },
-      })
+      this.logger.error(
+        formatError(error, "[VscodeWebview] Failed to get file diff")
+      )
     }
   }
 
