@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.21.4
+
+### Patch Changes
+
+- e03c27c: font
+
 ## 0.21.3
 
 ### Patch Changes
