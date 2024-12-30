@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.21.3
+
+### Patch Changes
+
+- 2937abb: update build
+
 ## 0.21.2
 
 ### Patch Changes
