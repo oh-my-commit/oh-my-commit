@@ -85,7 +85,7 @@ omc gen # AI 自动生成 commit
 
 ### Using VSCode
 
-1. 在 VSCode 扩展商店安装 "Oh My Commit"
+1. 在 VSCode 扩展商店安装 "[**Oh My Commit**](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit)"
 2. 使用方式：
    - 快捷键：`cmd+shift+p` 搜索 "OMC: Quick Commit"
    - 状态栏：点击状态栏的 Commit 图标

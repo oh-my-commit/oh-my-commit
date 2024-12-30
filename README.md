@@ -136,7 +136,7 @@ omc gen # AI generate commit
 
 ### VSCode Extension
 
-1. Install "Oh My Commit" from VSCode marketplace
+1. Install "[**Oh My Commit**](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit)" from VSCode marketplace
 2. Usage methods:
    - Shortcut: `cmd+shift+p` search for "OMC: Quick Commit"
    - Status Bar: Click the Commit icon in status bar
