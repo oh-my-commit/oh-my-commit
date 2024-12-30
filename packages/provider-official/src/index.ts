@@ -57,12 +57,12 @@ class OfficialProvider extends BaseProvider implements IProvider {
     super(context)
 
     this.logger.debug("Initializing Anthropic API...")
-    const proxy = this.config.get<string | undefined>("proxy")
-    const apiKey = this.config.get<string | undefined>("apiKeys.anthropic")
+    const proxy = this.config.get<string | undefined>("ohMyCommit.proxy")
+    const apiKey = this.config.get<string | undefined>("ohMyCommit.ai.apiKeys.anthropic")
 
+    this.logger.info("Initializing Anthropic config: ", { proxy, apiKey })
     const config: Record<string, any> = { apiKey }
     if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
-    this.logger.debug("Initializing Anthropic API: ", config)
     this.anthropic = new Anthropic(config)
   }
 

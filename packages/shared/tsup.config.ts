@@ -45,7 +45,7 @@ export default defineConfig({
     })
 
     // Copy prompts to output directory
-    const promptsDir = resolve(__dirname, "../../prompts")
+    const promptsDir = resolve(__dirname, "../../docs/prompts")
     const outPromptsDir = TEMPLATES_DIR
     await promises.mkdir(outPromptsDir, { recursive: true })
     await promises.cp(promptsDir, outPromptsDir, { recursive: true })
