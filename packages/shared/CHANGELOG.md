@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.19.0
+
+### Minor Changes
+
+- b1513b8: new project structure
+
 ## 0.18.1
 
 ### Patch Changes
