@@ -12,7 +12,11 @@
     "url": "https://github.com/oh-my-commit/oh-my-commit"
   },
   "files": [
-    "dist",
+    "dist/main",
+    "dist/webview",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
     "package.json"
   ],
   "publishConfig": {
