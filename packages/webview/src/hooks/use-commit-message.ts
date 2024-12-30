@@ -23,6 +23,7 @@ import {
   isGeneratingAtom,
 } from "@/state/atoms/commit.message"
 import { gitStatusAtom } from "@/state/atoms/git"
+import { workspaceStatusAtom } from "@/state/atoms/workspace"
 
 import { useMessage } from "./use-message"
 
@@ -34,6 +35,8 @@ export const useCommitMessage = () => {
   const setIsCommitting = useSetAtom(isCommittingAtom)
   const setDiffDetail = useSetAtom(diffDetailAtom)
   const setGitStatus = useSetAtom(gitStatusAtom)
+
+  const setWorkspaceStatus = useSetAtom(workspaceStatusAtom)
 
   const handleCommitMessage = useCallback(
     (message: ServerMessageEvent) => {
@@ -71,7 +74,14 @@ export const useCommitMessage = () => {
           break
 
         case "git-status":
-          setGitStatus(message.data)
+          if (message.data?.gitStatus) {
+            setGitStatus(message.data.gitStatus)
+          }
+          break
+        case "workspace-status":
+          if (message.data?.workspaceStatus) {
+            setWorkspaceStatus(message.data.workspaceStatus)
+          }
           break
       }
     },

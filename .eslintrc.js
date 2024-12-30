@@ -105,6 +105,7 @@ module.exports = {
         "jsx-a11y/click-events-have-key-events": "warn",
         "@typescript-eslint/ no-var-requires": "off",
         "@typescript-eslint/no-redundant-type-constituents": "off",
+        "@typescript-eslint/no-misused-promises": "off",
       },
     },
 

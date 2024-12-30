@@ -5,7 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 
 import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
 
@@ -19,7 +19,19 @@ import { useBasicMessage } from "@/hooks/use-basic-message"
 import { useCloseWindow } from "@/hooks/use-close-window"
 import { useCommitMessage } from "@/hooks/use-commit-message"
 import { gitStatusAtom } from "@/state/atoms/git"
+import { workspaceStatusAtom } from "@/state/atoms/workspace"
 import { clientPush } from "@/utils/clientPush"
+
+export const ErrorLayout = (props: PropsWithChildren) => {
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-2">
+      <div className="codicon codicon-source-control !text-[48px] text-[var(--vscode-foreground)] opacity-40" />
+      <VSCodeDivider />
+
+      {props.children}
+    </div>
+  )
+}
 
 export const CommitPage = () => {
   useBasicMessage()
@@ -29,6 +41,7 @@ export const CommitPage = () => {
   useCloseWindow()
 
   const [gitStatus] = useAtom(gitStatusAtom)
+  const [workspaceStatus] = useAtom(workspaceStatusAtom)
   const [isInitializing, setIsInitializing] = useState(false)
 
   useEffect(() => {
@@ -56,11 +69,25 @@ export const CommitPage = () => {
 
   // Render different states
   const renderContent = () => {
+    if (!workspaceStatus?.isValid) {
+      return (
+        <ErrorLayout>
+          <div className="flex flex-col items-center justify-center p-4 text-center">
+            <h2 className="text-xl font-semibold mb-4">工作区不可用</h2>
+            <p className="mb-4 text-gray-500">
+              {workspaceStatus?.error || "请打开一个有效的工作区以使用完整功能"}
+            </p>
+            <p className="text-sm text-gray-400">
+              您可以打开一个包含代码的文件夹，或者创建一个新的工作区
+            </p>
+          </div>
+        </ErrorLayout>
+      )
+    }
+
     if (!gitStatus?.isGitRepository) {
       return (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-2">
-          <div className="codicon codicon-source-control !text-[48px] text-[var(--vscode-foreground)] opacity-40" />
-          <VSCodeDivider />
+        <ErrorLayout>
           <div className="my-4">
             <h2 className="text-[var(--vscode-foreground)] font-normal text-base mb-2">
               Git Not Initialized
@@ -90,7 +117,7 @@ export const CommitPage = () => {
               Refresh
             </VSCodeButton>
           </div>
-        </div>
+        </ErrorLayout>
       )
     }
 

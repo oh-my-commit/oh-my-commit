@@ -11,14 +11,6 @@
     "type": "git",
     "url": "https://github.com/oh-my-commit/oh-my-commit"
   },
-  "files": [
-    "dist/main",
-    "dist/webview",
-    "CHANGELOG.md",
-    "README.md",
-    "LICENSE",
-    "package.json"
-  ],
   "publishConfig": {
     "access": "public"
   },
@@ -51,7 +43,6 @@
     "clean": "turbo run clean",
     "dev": "turbo run dev",
     "watch": "turbo run watch",
-    "gen-docs": "ts-node -P packages/scripts/tsconfig.json scripts/generate-config-docs.ts",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

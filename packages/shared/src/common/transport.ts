@@ -141,3 +141,17 @@ export type ServerMessageEvent =
         workspaceRoot: string | null
       }
     }
+
+export interface WorkspaceStatus {
+  isValid: boolean
+  error?: string
+}
+
+export interface BasicMessage {
+  type: "init" | "git-status" | "workspace-status"
+  channel?: string
+  data?: {
+    gitStatus?: any
+    workspaceStatus?: WorkspaceStatus
+  }
+}
