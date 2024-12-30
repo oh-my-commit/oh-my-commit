@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.21.1
+
+### Patch Changes
+
+- b9aa9ef: fix fonts
+
 ## 0.21.0
 
 ### Minor Changes
