@@ -14,12 +14,11 @@ import * as vscode from "vscode"
 import { ClientMessageEvent, formatError } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server/git-commit-manager"
 
-import type { VscodeLogger } from "@/vscode-logger"
-
-import type { VscodeGit } from "./vscode-git"
-import type { IStatusBarManager } from "./vscode-statusbar"
-import { TOKENS } from "./vscode-tokens"
-import type { IWebviewManager } from "./vscode-webview"
+import type { IWebviewManager } from "@/core/webview/vscode-webview"
+import type { VscodeGit } from "@/managers/vscode-git"
+import type { VscodeLogger } from "@/managers/vscode-logger"
+import type { IStatusBarManager } from "@/managers/vscode-statusbar"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 export interface IWebviewMessageHandler {
   handleMessage(message: ClientMessageEvent): Promise<void>

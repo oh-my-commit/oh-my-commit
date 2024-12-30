@@ -11,8 +11,8 @@ import * as vscode from "vscode"
 import { COMMAND_SELECT_MODEL, formatError } from "@shared/common"
 import { GitCommitManager, TOKENS } from "@shared/server"
 
-import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-logger"
+import type { BaseCommand } from "@/interface/vscode-command"
+import { VscodeLogger } from "@/managers/vscode-logger"
 
 @Service()
 export class SelectModelCommand implements BaseCommand {

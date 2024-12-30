@@ -8,20 +8,21 @@
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { TOKENS, formatError } from "@shared/common"
+import { TOKENS } from "@shared/common"
 import { GitCore, IGitCore } from "@shared/server"
 
-import { VscodeLogger } from "@/vscode-logger"
+import { VscodeLogger } from "@/managers/vscode-logger"
 
 export interface IVscodeGit extends IGitCore {
   onGitStatusChanged: vscode.Event<boolean>
+
   dispose(): void
 }
 
 @Service()
 export class VscodeGit extends GitCore implements IVscodeGit {
-  private _onGitStatusChanged: vscode.EventEmitter<boolean>
   readonly onGitStatusChanged: vscode.Event<boolean>
+  private _onGitStatusChanged: vscode.EventEmitter<boolean>
   private fsWatcher: vscode.FileSystemWatcher | undefined
 
   constructor(@Inject(TOKENS.Logger) protected override logger: VscodeLogger) {
@@ -36,6 +37,11 @@ export class VscodeGit extends GitCore implements IVscodeGit {
     this.onGitStatusChanged = this._onGitStatusChanged.event
 
     this.setupFileSystemWatcher(workspaceRoot)
+  }
+
+  dispose() {
+    this.fsWatcher?.dispose()
+    this._onGitStatusChanged.dispose()
   }
 
   private setupFileSystemWatcher(workspaceRoot: string) {
@@ -92,10 +98,5 @@ export class VscodeGit extends GitCore implements IVscodeGit {
       "[VscodeGit] File system watcher setup for:",
       workspaceRoot
     )
-  }
-
-  dispose() {
-    this.fsWatcher?.dispose()
-    this._onGitStatusChanged.dispose()
   }
 }

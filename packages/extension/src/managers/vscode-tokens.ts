@@ -10,16 +10,15 @@ import type * as vscode from "vscode"
 
 import { TOKENS as TOKENS_BASE } from "@shared/server"
 
-import type { IOrchestrator } from "@/orchestrator"
-
-import type { CommandManager } from "./command-manager"
-import type { OpenPreferencesCommand } from "./commands/open-preferences"
-import type { QuickCommitCommand } from "./commands/quick-commit"
-import type { SelectModelCommand } from "./commands/select-model"
-import type { IWorkspaceSettings } from "./vscode-settings"
-import type { IStatusBarManager } from "./vscode-statusbar"
-import type { IWebviewManager } from "./vscode-webview"
-import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
+import type { OpenPreferencesCommand } from "@/commands/open-preferences"
+import type { QuickCommitCommand } from "@/commands/quick-commit"
+import type { SelectModelCommand } from "@/commands/select-model"
+import type { IWebviewManager } from "@/core/webview/vscode-webview"
+import type { IWebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
+import type { CommandManager } from "@/managers/command-manager"
+import type { IOrchestrator } from "@/managers/orchestrator"
+import type { IPreferenceMonitor } from "@/managers/vscode-preference-monitor"
+import type { IStatusBarManager } from "@/managers/vscode-statusbar"
 
 export const TOKENS = {
   ...TOKENS_BASE,
@@ -28,7 +27,7 @@ export const TOKENS = {
   WebviewMessageHandler: new Token<IWebviewMessageHandler>(
     "WebviewMessageHandler"
   ),
-  Settings: new Token<IWorkspaceSettings>("WorkspaceSettings"),
+  PreferenceMonitor: new Token<IPreferenceMonitor>("PreferenceMonitor"),
   Orchestrator: new Token<IOrchestrator>("Orchestrator"),
   StatusBar: new Token<IStatusBarManager>("StatusBar"),
 

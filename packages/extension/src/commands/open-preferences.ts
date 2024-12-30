@@ -10,8 +10,8 @@ import vscode from "vscode"
 
 import { APP_ID_CAMEL, COMMAND_OPEN_PREFERENCE, TOKENS } from "@shared/common"
 
-import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-logger"
+import type { BaseCommand } from "@/interface/vscode-command"
+import { VscodeLogger } from "@/managers/vscode-logger"
 
 @Service()
 export class OpenPreferencesCommand implements BaseCommand {

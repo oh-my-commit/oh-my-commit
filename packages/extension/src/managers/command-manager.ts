@@ -14,13 +14,12 @@ import {
   COMMAND_SELECT_MODEL,
 } from "@shared/common"
 
-import type { VscodeCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-logger"
-import { TOKENS } from "@/vscode-tokens"
-
-import { OpenPreferencesCommand } from "./commands/open-preferences"
-import { QuickCommitCommand } from "./commands/quick-commit"
-import { SelectModelCommand } from "./commands/select-model"
+import { OpenPreferencesCommand } from "@/commands/open-preferences"
+import { QuickCommitCommand } from "@/commands/quick-commit"
+import { SelectModelCommand } from "@/commands/select-model"
+import type { VscodeCommand } from "@/interface/vscode-command"
+import { VscodeLogger } from "@/managers/vscode-logger"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 @Service()
 export class CommandManager {

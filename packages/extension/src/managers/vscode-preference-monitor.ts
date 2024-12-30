@@ -10,15 +10,15 @@ import * as vscode from "vscode"
 
 import type { ILogger } from "@shared/common"
 
-import type { IVscodeGit } from "@/vscode-git"
-import { TOKENS } from "@/vscode-tokens"
+import type { IVscodeGit } from "@/managers/vscode-git"
+import { TOKENS } from "@/managers/vscode-tokens"
 
-export interface IWorkspaceSettings extends vscode.Disposable {
-  onSettingChange(callback: (section: string, value: any) => void): void
+export interface IPreferenceMonitor extends vscode.Disposable {
+  onPreferenceChange(callback: (section: string, value: any) => void): void
 }
 
 @Service()
-export class VscodeSettings implements IWorkspaceSettings {
+export class PreferenceMonitor implements IPreferenceMonitor {
   private disposables: vscode.Disposable[] = []
   private configChangeHandlers: ((section: string, value: any) => void)[] = []
 
@@ -40,7 +40,7 @@ export class VscodeSettings implements IWorkspaceSettings {
     )
   }
 
-  onSettingChange(callback: (section: string, value: any) => void): void {
+  onPreferenceChange(callback: (section: string, value: any) => void): void {
     this.configChangeHandlers.push(callback)
   }
 

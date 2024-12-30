@@ -12,10 +12,9 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
-import { VscodeLogger } from "@/vscode-logger"
-
-import { TOKENS } from "./vscode-tokens.js"
-import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
+import type { IWebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
+import { VscodeLogger } from "@/managers/vscode-logger"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 export interface IWebviewManager {
   show(): void

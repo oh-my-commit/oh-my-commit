@@ -10,9 +10,9 @@ import * as vscode from "vscode"
 
 import { COMMAND_QUICK_COMMIT } from "@shared/common"
 
-import type { IOrchestrator } from "@/orchestrator"
-import type { BaseCommand } from "@/vscode-command"
-import { TOKENS } from "@/vscode-tokens"
+import type { BaseCommand } from "@/interface/vscode-command"
+import type { IOrchestrator } from "@/managers/orchestrator"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 @Service()
 export class QuickCommitCommand implements BaseCommand {
@@ -20,17 +20,9 @@ export class QuickCommitCommand implements BaseCommand {
   public name = "Quick Commit"
 
   constructor(
-    @Inject(TOKENS.Context) private readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Orchestrator)
     private readonly orchestrator: IOrchestrator
-  ) {
-    //
-    // // 设置 webview 的消息处理
-    // this.webviewManager.setMessageHandler(Container.get(WebviewMessageHandler))
-
-    // Clean up file watcher when extension is deactivated
-    this.context.subscriptions.push(this)
-  }
+  ) {}
 
   public dispose(): void {
     // this.webviewManager?.dispose()

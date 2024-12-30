@@ -13,17 +13,16 @@ import * as vscode from "vscode"
 import { APP_NAME, formatError } from "@shared/common"
 import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
-import { VscodeConfig } from "@/vscode-config"
-import { VscodeLogger } from "@/vscode-logger"
-
-import { CommandManager } from "./command-manager"
-import { Orchestrator } from "./orchestrator"
-import { VscodeGit } from "./vscode-git"
-import { VscodeSettings } from "./vscode-settings"
-import { StatusBarManager } from "./vscode-statusbar"
-import { TOKENS } from "./vscode-tokens"
-import { WebviewManager } from "./vscode-webview"
-import { WebviewMessageHandler } from "./vscode-webview-message-handler"
+import { WebviewManager } from "@/core/webview/vscode-webview"
+import { WebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
+import { CommandManager } from "@/managers/command-manager"
+import { Orchestrator } from "@/managers/orchestrator"
+import { VscodeConfig } from "@/managers/vscode-config"
+import { VscodeGit } from "@/managers/vscode-git"
+import { VscodeLogger } from "@/managers/vscode-logger"
+import { PreferenceMonitor } from "@/managers/vscode-preference-monitor"
+import { StatusBarManager } from "@/managers/vscode-statusbar"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 export function activate(context: vscode.ExtensionContext) {
   const logger = Container.get(VscodeLogger)
@@ -57,16 +56,16 @@ export function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.WebviewMessageHandler, messageHandler)
     webviewManager.setMessageHandler(messageHandler)
 
-    // 4. 依赖 Orchestrator 的服务
-    logger.info("setting settings...")
-    Container.set(TOKENS.Settings, Container.get(VscodeSettings))
+    logger.info("setting preference monitor...")
+    Container.set(TOKENS.PreferenceMonitor, Container.get(PreferenceMonitor))
 
+    // 3. orchestrator
     logger.info("setting orchestrator...")
     const orchestrator = Container.get(Orchestrator)
     Container.set(TOKENS.Orchestrator, orchestrator)
     void orchestrator.initialize()
 
-    // 5. 异步初始化
+    // 4. 异步初始化
     logger.info("Initializing providers...")
     // Initialize providers asynchronously
     Container.get(ProviderRegistry)
@@ -82,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
         logger.error("Failed to initialize providers:", error)
       })
 
-    // register commands
+    // 5. register commands
     Container.get(CommandManager)
 
     context.subscriptions.push({ dispose: () => {} })

@@ -10,8 +10,12 @@ import * as vscode from "vscode"
 
 import { APP_NAME, COMMAND_SELECT_MODEL, type ILogger } from "@shared/common"
 
-import { EventEmitter, IService, type ServiceEvent } from "@/core/base-service"
-import { TOKENS } from "@/vscode-tokens"
+import {
+  EventEmitter,
+  IService,
+  type ServiceEvent,
+} from "@/interface/base-service"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 export type StatusBarEvent = ServiceEvent<{
   text?: string

@@ -7,23 +7,24 @@
  */
 import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
-import * as vscode from "vscode"
+import { aw } from "vitest/dist/chunks/reporters.C4ZHgdxQ"
+import vscode from "vscode"
 
 import type {
   ICommitManager,
   IConfig,
   IInputOptions,
   ILogger,
+  UiMode,
 } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
-import type { IVscodeGit } from "@/vscode-git"
-import type { IStatusBarManager } from "@/vscode-statusbar"
-import { TOKENS } from "@/vscode-tokens"
-import type { IWebviewManager } from "@/vscode-webview"
-
-import type { IWorkspaceSettings } from "./vscode-settings"
-import type { IWebviewMessageHandler } from "./vscode-webview-message-handler"
+import type { IWebviewManager } from "@/core/webview/vscode-webview"
+import type { IWebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
+import type { IVscodeGit } from "@/managers/vscode-git"
+import type { IPreferenceMonitor } from "@/managers/vscode-preference-monitor"
+import type { IStatusBarManager } from "@/managers/vscode-statusbar"
+import { TOKENS } from "@/managers/vscode-tokens"
 
 export interface IOrchestrator {
   // 基础服务
@@ -36,7 +37,7 @@ export interface IOrchestrator {
   readonly webviewManager: IWebviewManager
   readonly gitCommitManager: ICommitManager
   readonly statusBar: IStatusBarManager
-  readonly workspaceSettings: IWorkspaceSettings
+  readonly workspaceSettings: IPreferenceMonitor
 
   // Git 相关操作
   getDiff(): Promise<DiffResult>
@@ -51,11 +52,10 @@ export interface IOrchestrator {
 
   // Webview 相关操作
   updateWebview(data: any): Promise<void>
-  handleWebviewMessage(message: any): Promise<void>
+  // handleWebviewMessage(message: any): Promise<void>
 
   // 业务流程
   generateCommit(): Promise<void>
-  quickCommit(): Promise<void>
 
   // 生命周期
   initialize(): Promise<void>
@@ -76,8 +76,8 @@ export class Orchestrator implements IOrchestrator {
     public readonly webviewMessageHandler: IWebviewMessageHandler,
     @Inject(TOKENS.WebviewManager)
     public readonly webviewManager: IWebviewManager,
-    @Inject(TOKENS.Settings)
-    public readonly workspaceSettings: IWorkspaceSettings
+    @Inject(TOKENS.PreferenceMonitor)
+    public readonly workspaceSettings: IPreferenceMonitor
   ) {}
 
   async initialize(): Promise<void> {
@@ -87,7 +87,7 @@ export class Orchestrator implements IOrchestrator {
     this.webviewManager.setMessageHandler(this.webviewMessageHandler)
 
     // 监听工作区变化
-    this.workspaceSettings.onSettingChange((section, value) => {
+    this.workspaceSettings.onPreferenceChange((section, value) => {
       void this.webviewManager.postMessage({
         type: "settings-updated",
         data: { section, value },
@@ -140,44 +140,26 @@ export class Orchestrator implements IOrchestrator {
     // })
   }
 
-  async handleWebviewMessage(message: any): Promise<void> {
-    this.logger.info("Received message from webview:", message)
-    // 处理来自 webview 的消息
-    switch (message.type) {
-      case "commit":
-        await this.quickCommit()
-        break
-      // 其他消息类型...
-    }
-  }
-
   async generateCommit(): Promise<void> {
-    const diff = await this.getDiff()
-    if (!diff.changed) {
-      await this.showMessage("No changes to commit")
-      return
-    }
-
-    const options: IInputOptions = {
-      lang: this.config.get<string>("ohMyCommit.git.commitLanguage"),
-    }
-
-    const result = await this.gitCommitManager.generateCommitWithDiff(
-      diff,
-      options
-    )
-    await this.updateWebview(result)
-  }
-
-  async quickCommit(): Promise<void> {
     try {
-      await this.updateStatusBar("Generating commit message...")
-      await this.generateCommit()
-    } catch (error) {
-      this.logger.error("Failed to quick commit:", error)
-      await this.showMessage("Failed to generate commit message", "error")
+      this.statusBar.setWaiting("Generating commit...")
+      const result = await this.gitCommitManager.generateCommit()
+
+      const uiMode = this.config.get<UiMode>("ohMyCommit.ui.mode")!
+      if (uiMode === "notification") {
+        if (result.ok) await this.showMessage(result.data.title, "info")
+        else
+          await this.showMessage(
+            `failed to generate message, reason: ${result.message}`,
+            "error"
+          )
+      }
+      this.webviewManager.postMessage({
+        type: "generate-result",
+        data: result,
+      })
     } finally {
-      await this.updateStatusBar("")
+      this.statusBar.clearWaiting()
     }
   }
 
