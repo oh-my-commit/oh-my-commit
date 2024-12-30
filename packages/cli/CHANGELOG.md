@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.22.1
+
+### Patch Changes
+
+- 47abd44: fix config read from env
+
 ## 0.22.0
 
 ### Minor Changes
