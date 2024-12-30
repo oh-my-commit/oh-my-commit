@@ -2,7 +2,7 @@
   "name": "oh-my-commit",
   "displayName": "Oh My Commit",
   "private": false,
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "markshawn2020",
   "publisher": "markshawn2020",
