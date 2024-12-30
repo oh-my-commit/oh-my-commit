@@ -8,7 +8,13 @@
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
-import type { ICommitManager, IConfig, ILogger, UiMode } from "@shared/common"
+import type {
+  ICommitManager,
+  IConfig,
+  ILogger,
+  IProviderManager,
+  UiMode,
+} from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/managers/vscode-git"
@@ -19,6 +25,7 @@ import type { IWebviewManager } from "@/webview/vscode-webview"
 import type { IWebviewMessageHandler } from "@/webview/vscode-webview-message-handler"
 
 import type { ICommitMessageStore } from "./commit-message-store"
+import { CommandManager } from "./vscode-command-manager"
 
 export interface IOrchestrator {
   // 基础服务
@@ -54,6 +61,8 @@ export class Orchestrator implements IOrchestrator {
     public readonly gitCommitManager: IGitCommitManager,
     @Inject(TOKENS.StatusBar) public readonly statusBar: IStatusBarManager,
     @Inject(TOKENS.GitManager) public readonly gitService: IVscodeGit,
+    @Inject(TOKENS.ProviderManager)
+    public readonly providerManager: IProviderManager,
     @Inject(TOKENS.WebviewMessageHandler)
     public readonly webviewMessageHandler: IWebviewMessageHandler,
     @Inject(TOKENS.WebviewManager)
@@ -62,7 +71,9 @@ export class Orchestrator implements IOrchestrator {
     public readonly workspaceSettings: IPreferenceMonitor,
     @Inject(TOKENS.CommitMessageStore)
     private readonly commitMessageStore: ICommitMessageStore
-  ) {}
+  ) {
+    void this.initialize()
+  }
 
   async initialize(): Promise<void> {
     this.logger.info("Initializing Orchestrator...")
@@ -83,6 +94,19 @@ export class Orchestrator implements IOrchestrator {
     if (model) {
       this.statusBar.setModel({ name: model.name })
     }
+
+    this.providerManager
+      .initialize()
+      .then(() => {
+        this.logger.debug("Provider initialization complete")
+        // Notify StatusBar to update if needed
+        void this.statusBar.setModel({
+          name: this.gitCommitManager.model!.name,
+        })
+      })
+      .catch((error) => {
+        this.logger.error("Failed to initialize providers:", error)
+      })
 
     this.logger.info("Orchestrator initialized")
   }

@@ -28,15 +28,14 @@ export const TOKENS = {
     "WebviewMessageHandler"
   ),
   PreferenceMonitor: new Token<IPreferenceMonitor>("PreferenceMonitor"),
-  Orchestrator: new Token<IOrchestrator>("Orchestrator"),
+  CommitMessageStore: new Token<unknown>("CommitMessageStore"),
   StatusBar: new Token<IStatusBarManager>("StatusBar"),
+  Orchestrator: new Token<IOrchestrator>("Orchestrator"),
 
-  CommandManager: new Token<CommandManager>("CommandManager"),
   QuickCommitCommand: new Token<QuickCommitCommand>("QuickCommitCommand"),
   OpenPreferencesCommand: new Token<OpenPreferencesCommand>(
     "OpenPreferencesCommand"
   ),
   SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
-
-  CommitMessageStore: new Token<unknown>("CommitMessageStore"),
+  CommandManager: new Token<CommandManager>("CommandManager"),
 } as const

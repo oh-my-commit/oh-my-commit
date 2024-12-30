@@ -14,7 +14,6 @@ import { APP_NAME, formatError } from "@shared/common"
 import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
 import { Orchestrator } from "@/managers/orchestrator"
-import { CommandManager } from "@/managers/vscode-command-manager"
 import { VscodeConfig } from "@/managers/vscode-config"
 import { VscodeGit } from "@/managers/vscode-git"
 import { VscodeLogger } from "@/managers/vscode-logger"
@@ -25,6 +24,7 @@ import { WebviewManager } from "@/webview/vscode-webview"
 import { WebviewMessageHandler } from "@/webview/vscode-webview-message-handler"
 
 import { CommitMessageStore } from "./managers/commit-message-store"
+import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
   const logger = Container.get(VscodeLogger)
@@ -37,55 +37,18 @@ export function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.Config, Container.get(VscodeConfig))
 
     // 2. 功能服务
-    logger.info("setting status bar...")
     Container.set(TOKENS.StatusBar, Container.get(StatusBarManager))
-
-    logger.info("setting git manager...")
     Container.set(TOKENS.GitManager, Container.get(VscodeGit))
-
-    logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
-
     Container.set(TOKENS.CommitMessageStore, Container.get(CommitMessageStore))
-
-    logger.info("setting commit manager...")
     Container.set(TOKENS.GitCommitManager, Container.get(GitCommitManager))
-
-    logger.info("setting webview...")
-    const webviewManager = Container.get(WebviewManager)
-    Container.set(TOKENS.WebviewManager, webviewManager)
-
-    logger.info("setting webview message handler...")
-    const messageHandler = Container.get(WebviewMessageHandler)
-    Container.set(TOKENS.WebviewMessageHandler, messageHandler)
-    webviewManager.setMessageHandler(messageHandler)
-
-    logger.info("setting preference monitor...")
+    Container.set(TOKENS.WebviewManager, Container.get(WebviewManager))
+    Container.set(
+      TOKENS.WebviewMessageHandler,
+      Container.get(WebviewMessageHandler)
+    )
     Container.set(TOKENS.PreferenceMonitor, Container.get(PreferenceMonitor))
-
-    // 3. orchestrator
-    logger.info("setting orchestrator...")
-    const orchestrator = Container.get(Orchestrator)
-    Container.set(TOKENS.Orchestrator, orchestrator)
-    void orchestrator.initialize()
-
-    // 4. 异步初始化
-    logger.info("Initializing providers...")
-    // Initialize providers asynchronously
-    Container.get(ProviderRegistry)
-      .initialize()
-      .then(() => {
-        logger.debug("Provider initialization complete")
-        // Notify StatusBar to update if needed
-        void Container.get(StatusBarManager).setModel({
-          name: Container.get(TOKENS.GitCommitManager).model!.name,
-        })
-      })
-      .catch((error) => {
-        logger.error("Failed to initialize providers:", error)
-      })
-
-    // 5. register commands
+    Container.set(TOKENS.Orchestrator, Container.get(Orchestrator))
     Container.get(CommandManager)
 
     context.subscriptions.push({ dispose: () => {} })
