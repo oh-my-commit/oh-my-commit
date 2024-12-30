@@ -1,7 +1,5 @@
 <div align="center">
 
-
-
 ```shell
                                ____  _       __  __          _____                          _ _   
                               / __ \| |     |  \/  |        / ____|                        (_) |  
@@ -18,7 +16,7 @@
 <h1 align="center">Oh My Commit</h1>
 
 <p align="center">
-  ✨Your Next-gen AI-powered Commit Solution ✨
+  ✨ 你的下一代 AI 提交助手解决方案 ✨
 </p>
 
 <p align="center">
@@ -29,7 +27,7 @@
 
 
 
-English | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
+[English](./README.md) | 简体中文 | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
 
 </div>
 

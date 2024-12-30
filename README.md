@@ -1,23 +1,32 @@
 <div align="center">
 
-
 ```shell
-                  ____  _       __  __          _____                          _ _   
-                 / __ \| |     |  \/  |        / ____|                        (_) |  
-                | |  | | |__   | \  / |_   _  | |     ___  _ __ ___  _ __ ___  _| |_ 
-                | |  | | '_ \  | |\/| | | | | | |    / _ \| '_ ` _ \| '_ ` _ \| | __|
-                | |__| | | | | | |  | | |_| | | |___| (_) | | | | | | | | | | | | |_ 
-                 \____/|_| |_| |_|  |_|\__, |  \_____\___/|_| |_| |_|_| |_| |_|_|\__|
-                                        __/ |                                        
-                                       |___/                                         
-               
-               ✨Your Next-gen AI-powered Commit Solution ✨      
-   
+                               ____  _       __  __          _____                          _ _   
+                              / __ \| |     |  \/  |        / ____|                        (_) |  
+                             | |  | | |__   | \  / |_   _  | |     ___  _ __ ___  _ __ ___  _| |_ 
+                             | |  | | '_ \  | |\/| | | | | | |    / _ \| '_ ` _ \| '_ ` _ \| | __|
+                             | |__| | | | | | |  | | |_| | | |___| (_) | | | | | | | | | | | | |_ 
+                              \____/|_| |_| |_|  |_|\__, |  \_____\___/|_| |_| |_|_| |_| |_|_|\__|
+                                                     __/ |                                        
+                                                    |___/                                         
+                               
+                                                                            
 ```
 
-# Oh My Commit
+<h1 align="center">Oh My Commit</h1>
 
-[English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
+<p align="center">
+  ✨Your Next-gen AI-powered Commit Solution ✨
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/npm/v/@oh-my-commit/core?style=flat-square&color=00a8f0" alt="npm version" />
+  <img src="https://img.shields.io/npm/dm/@oh-my-commit/core.svg?style=flat-square&color=00a8f0" alt="downloads" />
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=00a8f0" alt="License" />
+</p>
+
+
+English | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
 
 </div>
 
