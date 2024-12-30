@@ -46,6 +46,19 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
   - Support for OpenAI GPT-3.5/4, Claude, and other mainstream models
   - Customizable AI service endpoints for flexible expansion
 
+- **Provider Installation**
+
+  - Install official provider via npm:
+    ```bash
+    # Install globally
+    npm install -g @oh-my-commit/provider-official
+    
+    # Or install locally in your project
+    npm install @oh-my-commit/provider-official
+    ```
+  - Provider files will be automatically installed to `~/.oh-my-commit/providers/official/`
+  - Custom providers can be installed to the same directory structure
+
 - **Intelligent Analysis**
 
   - Deep understanding of code change context

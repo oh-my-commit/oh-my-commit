@@ -13,7 +13,6 @@ export default defineConfig({
   ...baseConfig,
   entry: {
     index: "src/index.ts",
-    install: "src/install.ts",
   },
   format: ["cjs", "esm"],
   noExternal: [/.*/], // 打包所有依赖
