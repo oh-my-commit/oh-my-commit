@@ -24,6 +24,7 @@ export const displayBanner = () => {
   console.log(
     chalk.cyan(
       figlet.textSync("Oh My Commit", {
+        font: fontName,
         horizontalLayout: "default",
       })
     )

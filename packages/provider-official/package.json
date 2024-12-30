@@ -2,12 +2,22 @@
   "name": "@oh-my-commit/provider-official",
   "version": "0.21.2",
   "description": "Official AI providers for Oh My Commit - intelligent commit message generation",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "omc-provider-official-install": "./dist/install.js"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "scripts": {
+    "postinstall": "node ./dist/install.js",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf ../providers/dist tsconfig.tsbuildinfo .turbo"
