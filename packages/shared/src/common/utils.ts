@@ -5,6 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { Container, Token } from "typedi"
 
 export function formatError(error: unknown, prefix = ""): string {
   let s = ""
@@ -54,4 +55,26 @@ export function outdent(strings: TemplateStringsArray, ...values: any[]) {
     }
   }
   return result
+}
+
+/**
+ * Injects a value into the dependency injection container for a given token
+ * @param token The dependency injection token
+ * @param value The value or service constructor to inject
+ * @returns The injected instance
+ */
+export const Inject = <T>(
+  token: Token<T>,
+  value: T | (abstract new (...args: any[]) => T)
+): T => {
+  let instance: T
+  if (typeof value === "function") {
+    // handle class constructors
+    instance = Container.get(value as any)
+  } else {
+    // handle values
+    instance = value
+  }
+  Container.set(token, instance)
+  return instance
 }

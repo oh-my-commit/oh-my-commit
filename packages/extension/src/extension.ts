@@ -7,10 +7,9 @@
  */
 import "reflect-metadata"
 
-import { Container } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_NAME, formatError } from "@shared/common"
+import { APP_NAME, Inject, formatError } from "@shared/common"
 import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
 import { Orchestrator } from "@/managers/orchestrator"
@@ -27,37 +26,27 @@ import { CommitMessageStore } from "./managers/commit-message-store"
 import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
-  const logger = Container.get(VscodeLogger)
+  const logger = Inject(TOKENS.Logger, VscodeLogger)
+  logger.info(`Initializing ${APP_NAME} extension...`)
+
   try {
-    logger.info(`Initializing ${APP_NAME} extension...`)
-
-    // 1. 基础服务
-    Container.set(TOKENS.Context, context)
-    Container.set(TOKENS.Logger, logger)
-    Container.set(TOKENS.Config, Container.get(VscodeConfig))
-
-    // 2. 功能服务
-    Container.set(TOKENS.StatusBar, Container.get(StatusBarManager))
-    Container.set(TOKENS.GitManager, Container.get(VscodeGit))
-    Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
-    Container.set(TOKENS.CommitMessageStore, Container.get(CommitMessageStore))
-    Container.set(TOKENS.GitCommitManager, Container.get(GitCommitManager))
-    Container.set(TOKENS.WebviewManager, Container.get(WebviewManager))
-    Container.set(
-      TOKENS.WebviewMessageHandler,
-      Container.get(WebviewMessageHandler)
-    )
-    Container.set(TOKENS.PreferenceMonitor, Container.get(PreferenceMonitor))
-    Container.set(TOKENS.Orchestrator, Container.get(Orchestrator))
-    Container.get(CommandManager)
+    Inject(TOKENS.Context, context)
+    Inject(TOKENS.Config, VscodeConfig)
+    Inject(TOKENS.StatusBar, StatusBarManager)
+    Inject(TOKENS.GitManager, VscodeGit)
+    Inject(TOKENS.ProviderManager, ProviderRegistry)
+    Inject(TOKENS.CommitMessageStore, CommitMessageStore)
+    Inject(TOKENS.GitCommitManager, GitCommitManager)
+    Inject(TOKENS.WebviewManager, WebviewManager)
+    Inject(TOKENS.WebviewMessageHandler, WebviewMessageHandler)
+    Inject(TOKENS.PreferenceMonitor, PreferenceMonitor)
+    Inject(TOKENS.Orchestrator, Orchestrator)
+    Inject(TOKENS.CommandManager, CommandManager)
 
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
-    logger.error({ error })
-    logger.error(formatError(error, "Failed to initialize Oh My Commit"))
-    void vscode.window.showErrorMessage(
-      formatError(error, "Failed to initialize Oh My Commit")
-    )
+    logger.error(formatError(error, `Failed to initialize Oh My Commit: ${error as string}`))
+    void vscode.window.showErrorMessage(formatError(error, `Failed to initialize Oh My Commit`))
   }
 }
 
