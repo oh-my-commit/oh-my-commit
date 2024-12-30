@@ -40,6 +40,16 @@ Oh My Commit 是一套模块化的智能提交解决方案：
   - 模块解耦：核心逻辑、UI、算法提供者分离
   - 插件化设计：支持第三方扩展与自定义
 
+## 产品对比
+
+### 功能
+
+
+
+### UI
+
+![panel comparison](assets/panel-comparison.png)
+
 ## 使用方法
 
 > ⚠️ 您需要配置一定参数条件，具体视各算法要求
@@ -74,16 +84,6 @@ omc gen # AI 自动生成 commit
    - 快捷键：`cmd+shift+p` 搜索 "OMC: Quick Commit"
    - 状态栏：点击状态栏的 Commit 图标
    - 源代码管理：使用 VSCode 内置的 Git 面板
-
-## 产品对比
-
-### 功能
-
-
-
-### UI
-
-![panel comparison](assets/panel-comparison.png)
 
 ## 用户配置
 
