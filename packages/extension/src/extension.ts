@@ -7,6 +7,9 @@
  */
 import "reflect-metadata"
 
+import * as fs from "fs"
+import * as os from "os"
+import * as path from "path"
 import * as vscode from "vscode"
 
 import { APP_NAME, Inject, formatError } from "@shared/common"
@@ -30,6 +33,19 @@ export function activate(context: vscode.ExtensionContext) {
   logger.info(`Initializing ${APP_NAME} extension...`)
 
   try {
+    // 确保 provider 目录存在
+    const providerDir = path.join(os.homedir(), ".oh-my-commit/providers/official")
+    if (!fs.existsSync(providerDir)) {
+      fs.mkdirSync(providerDir, { recursive: true })
+    }
+
+    // 复制内置的 provider 文件到用户目录
+    const builtinProviderPath = path.join(context.extensionPath, "dist/providers/official")
+    if (fs.existsSync(builtinProviderPath)) {
+      fs.cpSync(builtinProviderPath, providerDir, { recursive: true })
+      logger.info("Successfully installed official provider")
+    }
+
     Inject(TOKENS.Context, context)
     Inject(TOKENS.Config, VscodeConfig)
     Inject(TOKENS.StatusBar, StatusBarManager)
@@ -45,15 +61,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
-    logger.error(
-      formatError(
-        error,
-        `Failed to initialize Oh My Commit: ${error as string}`
-      )
-    )
-    void vscode.window.showErrorMessage(
-      formatError(error, `Failed to initialize Oh My Commit`)
-    )
+    logger.error(formatError(error, `Failed to initialize Oh My Commit: ${error as string}`))
+    void vscode.window.showErrorMessage(formatError(error, `Failed to initialize Oh My Commit`))
   }
 }
 

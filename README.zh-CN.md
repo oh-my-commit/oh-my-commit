@@ -46,6 +46,19 @@
   - 支持 OpenAI GPT-3.5/4，Claude 等主流模型
   - 可自定义 AI 服务端点，灵活扩展
 
+- **提供者安装**
+
+  - 通过 npm 安装官方提供者：
+    ```bash
+    # 全局安装
+    npm install -g @oh-my-commit/provider-official
+    
+    # 或在项目中本地安装
+    npm install @oh-my-commit/provider-official
+    ```
+  - 提供者文件将自动安装到 `~/.oh-my-commit/providers/official/` 目录
+  - 自定义提供者可以安装到相同的目录结构中
+
 - **智能分析**
 
   - 深度理解代码变更上下文

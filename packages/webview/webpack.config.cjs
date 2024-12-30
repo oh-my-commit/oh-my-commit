@@ -1,3 +1,10 @@
+/**
+ * @Copyright Copyright (c) 2024 Oh My Commit
+ * @CreatedAt 2024-12-31
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const webpack = require("webpack")

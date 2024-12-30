@@ -14,6 +14,7 @@ export default defineConfig({
   entry: {
     index: "src/index.ts",
   },
+  outDir: "../../dist/providers/official",
   format: ["cjs", "esm"],
   noExternal: [/.*/], // 打包所有依赖
 })
