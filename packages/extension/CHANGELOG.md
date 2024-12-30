@@ -1,5 +1,16 @@
 # @oh-my-commit/extension
 
+## 0.21.0
+
+### Minor Changes
+
+- fa0eaf5: fix provider official
+
+### Patch Changes
+
+- Updated dependencies [fa0eaf5]
+  - @oh-my-commit/shared@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes
