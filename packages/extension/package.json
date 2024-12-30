@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/extension",
-  "version": "0.21.2",
+  "version": "0.21.6",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
   "publishConfig": {
     "access": "public",

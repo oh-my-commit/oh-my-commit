@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.21.6
+
+### Patch Changes
+
+- 21c563d: update
+- Updated dependencies [21c563d]
+  - @oh-my-commit/shared@0.21.6
+
 ## 0.21.5
 
 ### Patch Changes

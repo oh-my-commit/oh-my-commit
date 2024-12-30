@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.21.6
+
+### Patch Changes
+
+- 21c563d: update
+
 ## 0.21.2
 
 ### Patch Changes
