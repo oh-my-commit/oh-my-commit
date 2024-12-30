@@ -50,13 +50,6 @@ export const CommitPage = () => {
     }, 1000)
   }
 
-  const handleRefresh = () => {
-    clientPush({
-      type: "init",
-      channel: "CommitPage",
-    })
-  }
-
   // Render different states
   const renderContent = () => {
     logger.info("workspaceStatus:", workspaceStatus)
@@ -121,13 +114,6 @@ export const CommitPage = () => {
               ) : (
                 "Initialize Repository"
               )}
-            </VSCodeButton>
-            <VSCodeButton
-              appearance="secondary"
-              onClick={handleRefresh}
-              disabled={isInitializing}
-            >
-              Refresh
             </VSCodeButton>
           </div>
         </ErrorLayout>

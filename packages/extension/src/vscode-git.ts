@@ -51,7 +51,14 @@ export class VscodeGit extends GitCore {
     const handleGitChange = async (uri: vscode.Uri) => {
       this.logger.info("[VscodeGit] File changed:", uri.fsPath)
 
-      // Ignore changes in .git directory to avoid feedback loops
+      // Special case: if .git directory is deleted, we need to emit the change
+      if (uri.fsPath.endsWith("/.git")) {
+        this.logger.info("[VscodeGit] .git directory changed, emitting event")
+        this._onGitStatusChanged.fire(false)
+        return
+      }
+
+      // Ignore other changes in .git directory to avoid feedback loops
       if (uri.fsPath.includes("/.git/")) {
         return
       }
@@ -66,7 +73,9 @@ export class VscodeGit extends GitCore {
           this._onGitStatusChanged.fire(true)
         }
       } catch (error) {
+        // If git command fails, it might mean we're no longer in a git repo
         this.logger.error("[VscodeGit] Error checking git status:", error)
+        this._onGitStatusChanged.fire(false)
       }
     }
 

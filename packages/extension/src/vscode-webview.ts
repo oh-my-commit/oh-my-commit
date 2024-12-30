@@ -46,7 +46,57 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
 
     this.context.subscriptions.push(registration)
 
+    // Setup workspace monitoring
+    this.setupWorkspaceMonitoring()
+
     this.logger.info(">> Webview provider registered")
+  }
+
+  private setupWorkspaceMonitoring() {
+    // Monitor workspace folder changes
+    vscode.workspace.onDidChangeWorkspaceFolders(() => {
+      this.updateWorkspaceStatus()
+    })
+
+    // Monitor git status changes
+    this.gitService.onGitStatusChanged(() => {
+      this.updateWorkspaceStatus()
+    })
+
+    // Initial status update
+    this.updateWorkspaceStatus()
+  }
+
+  private async updateWorkspaceStatus() {
+    if (!this.webview) {
+      return
+    }
+
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    const workspaceRoot = workspaceFolders?.[0]?.uri.fsPath
+
+    try {
+      const isGitRepository = await this.gitService.isGitRepository()
+
+      await this.postMessage({
+        type: "workspace-status",
+        data: {
+          isGitRepository,
+          workspaceRoot,
+          isWorkspaceValid: !!workspaceRoot,
+        },
+      })
+    } catch (error) {
+      await this.postMessage({
+        type: "workspace-status",
+        data: {
+          isGitRepository: false,
+          workspaceRoot,
+          isWorkspaceValid: !!workspaceRoot,
+          error: error instanceof Error ? error.message : String(error),
+        },
+      })
+    }
   }
 
   async resolveWebviewView(
