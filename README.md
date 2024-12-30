@@ -163,6 +163,26 @@ omc gen # AI generate commit
 
 Note: Our omc-standard-claude-3.5 requires users to configure their own ANTHROPIC_API_KEY and proxy (if necessary), which can be set in user settings.
 
+## Acknowledgments
+
+This project is inspired by and builds upon the work of several excellent projects:
+
+- [vscode-i-dont-care-about-commit-message](https://github.com/mefengl/vscode-i-dont-care-about-commit-message) - VSCode extension inspiration
+- [gcop](https://github.com/undertone0809/gcop) - CLI implementation inspiration
+
+## Contributors
+
+<div align="center">
+  <a href="https://github.com/markshawn2020">
+    <img src="https://github.com/markshawn2020.png" width="50" height="50" alt="markshawn2020" />
+  </a>
+</div>
+
+## Built With
+
+- [Windsurf Editor by Codeium](https://codeium.com/windsurf) - Development Environment
+- [Claude](https://claude.ai) - AI Assistant
+
 ## Contributing
 
 Contributions are welcome! Please check our [Contributing Guide](CONTRIBUTING.md) for details.

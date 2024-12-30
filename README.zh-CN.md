@@ -135,6 +135,26 @@ Waiting for release !
 | `ohMyCommit.proxy.enabled`             | boolean | false                     | 是否启用代理                                      | `true / false`                                                                                |
 | `ohMyCommit.proxy.url`                 | string | "http://localhost:7890"   | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                                         |
 
+## 致谢
+
+本项目的灵感来源于以下优秀的项目：
+
+- [vscode-i-dont-care-about-commit-message](https://github.com/mefengl/vscode-i-dont-care-about-commit-message) - VSCode 插件灵感来源
+- [gcop](https://github.com/undertone0809/gcop) - CLI 实现灵感来源
+
+## 贡献者
+
+<div align="center">
+  <a href="https://github.com/markshawn2020">
+    <img src="https://github.com/markshawn2020.png" width="50" height="50" alt="markshawn2020" />
+  </a>
+</div>
+
+## 技术支持
+
+- [Windsurf Editor by Codeium](https://codeium.com/windsurf) - 开发环境
+- [Claude](https://claude.ai) - AI 助手
+
 ## 贡献指南
 
 欢迎贡献代码！请查看我们的 [贡献指南](CONTRIBUTING.md) 了解详情。
