@@ -8,13 +8,7 @@
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
-import type {
-  ICommitManager,
-  IConfig,
-  ILogger,
-  IProviderManager,
-  UiMode,
-} from "@shared/common"
+import type { ICommitManager, IConfig, ILogger, IProviderManager, UiMode } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/managers/vscode-git"
@@ -136,16 +130,12 @@ export class Orchestrator implements IOrchestrator {
 
             if (selection === "Commit") {
               await this.commit(result.data.title)
-              await vscode.window.showInformationMessage(
-                "Successfully commited"
-              )
+              await vscode.window.showInformationMessage("Successfully commited")
             } else if (selection === "Edit") {
               this.webviewManager.show()
             }
           } else {
-            await vscode.window.showErrorMessage(
-              `Failed to generate message, reason: ${result.message}`
-            )
+            await vscode.window.showErrorMessage(`Failed to generate message, reason: ${result.message}`)
           }
           break
 
@@ -162,10 +152,7 @@ export class Orchestrator implements IOrchestrator {
       this.statusBar.setWaiting("Generating commit...")
       const result = await this.gitCommitManager.generateCommit()
       this.commitMessageStore.setResult(result)
-      await Promise.all([
-        postGenerateCommit("notification"),
-        postGenerateCommit("panel"),
-      ])
+      await Promise.all([postGenerateCommit("notification"), postGenerateCommit("panel")])
     } finally {
       this.statusBar.clearWaiting()
     }

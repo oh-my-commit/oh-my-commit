@@ -46,9 +46,7 @@ export function buildFileTree(files: GitFileChange[]): TreeNode {
     // Create directory nodes
     for (let i = 0; i < pathParts.length - 1; i++) {
       const pathSoFar = pathParts.slice(0, i + 1).join("/")
-      let childNode = currentNode.children?.find(
-        (child) => child.type === "directory" && child.path === pathSoFar
-      )
+      let childNode = currentNode.children?.find((child) => child.type === "directory" && child.path === pathSoFar)
 
       if (!childNode) {
         childNode = createDirectoryNode(pathSoFar)

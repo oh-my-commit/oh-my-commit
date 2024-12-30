@@ -19,7 +19,7 @@ import type { VscodeGit } from "@/managers/vscode-git"
 import type { VscodeLogger } from "@/managers/vscode-logger"
 import type { IStatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
-import type { IWebviewManager } from "@/webview/vscode-webview"
+import { IWebviewManager } from "@/webview/vscode-webview"
 
 export interface IWebviewMessageHandler {
   handleMessage(message: ClientMessageEvent): Promise<void>

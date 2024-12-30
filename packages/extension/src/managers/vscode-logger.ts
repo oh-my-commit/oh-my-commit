@@ -8,14 +8,7 @@
 import { Service } from "typedi"
 import vscode from "vscode"
 
-import {
-  APP_NAME,
-  BaseLogger,
-  type ILogger,
-  type LogLevel,
-  formatMessage,
-  normalizeLogLevel,
-} from "@shared/common"
+import { APP_NAME, BaseLogger, type ILogger, type LogLevel, formatMessage, normalizeLogLevel } from "@shared/common"
 
 @Service()
 export class VscodeLogger extends BaseLogger implements ILogger {

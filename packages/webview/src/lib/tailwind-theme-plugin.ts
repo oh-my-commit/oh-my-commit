@@ -65,13 +65,10 @@ export function createTailwindThemePlugin(config: ThemePluginConfig) {
     {
       theme: {
         extend: {
-          colors: Object.entries(mapping).reduce<Record<string, string>>(
-            (acc, [key, value]) => {
-              acc[key] = typeof value === "function" ? value(key) : value
-              return acc
-            },
-            {}
-          ),
+          colors: Object.entries(mapping).reduce<Record<string, string>>((acc, [key, value]) => {
+            acc[key] = typeof value === "function" ? value(key) : value
+            return acc
+          }, {}),
         },
       },
     }

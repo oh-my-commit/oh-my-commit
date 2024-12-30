@@ -18,11 +18,7 @@ interface ViewToggleProps {
   className?: string
 }
 
-export const ViewToggle: React.FC<ViewToggleProps> = ({
-  view,
-  onChange,
-  className,
-}) => {
+export const ViewToggle: React.FC<ViewToggleProps> = ({ view, onChange, className }) => {
   return (
     <div
       className={cn(

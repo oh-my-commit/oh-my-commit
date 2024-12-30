@@ -39,9 +39,7 @@ export class VibrateWindow {
     },
   }
 
-  private getWorkspaceConfig(
-    key: keyof typeof this.windowModeConfigs.workspace
-  ) {
+  private getWorkspaceConfig(key: keyof typeof this.windowModeConfigs.workspace) {
     return this.windowModeConfigs.workspace[key]
   }
 
@@ -59,9 +57,7 @@ export class VibrateWindow {
         // 设置目标值
         await this.updateWorkspaceConfig(
           key,
-          this.getWorkspaceConfig(
-            key as keyof typeof this.windowModeConfigs.workspace
-          ),
+          this.getWorkspaceConfig(key as keyof typeof this.windowModeConfigs.workspace),
           vscode.ConfigurationTarget.Workspace
         )
       }
@@ -84,33 +80,19 @@ export class VibrateWindow {
   }
 
   private async restoreWindowState() {
-    if (
-      this.uiMode === "window" &&
-      this.persistWindowState &&
-      Object.keys(this.savedStates).length > 0
-    ) {
+    if (this.uiMode === "window" && this.persistWindowState && Object.keys(this.savedStates).length > 0) {
       for (const key of Object.keys(this.windowModeConfigs.workspace) as Array<
         keyof typeof this.windowModeConfigs.workspace
       >) {
         await vscode.workspace
           .getConfiguration()
-          .update(
-            key,
-            this.getWorkspaceConfig(key),
-            vscode.ConfigurationTarget.Workspace
-          )
+          .update(key, this.getWorkspaceConfig(key), vscode.ConfigurationTarget.Workspace)
       }
 
-      for (const key of Object.keys(this.windowModeConfigs.user) as Array<
-        keyof typeof this.windowModeConfigs.user
-      >) {
+      for (const key of Object.keys(this.windowModeConfigs.user) as Array<keyof typeof this.windowModeConfigs.user>) {
         await vscode.workspace
           .getConfiguration()
-          .update(
-            key,
-            this.getUserConfig(key),
-            vscode.ConfigurationTarget.Global
-          )
+          .update(key, this.getUserConfig(key), vscode.ConfigurationTarget.Global)
       }
 
       // 清空保存的状态
@@ -119,11 +101,7 @@ export class VibrateWindow {
     }
   }
 
-  private async updateWorkspaceConfig(
-    key: string,
-    value: unknown,
-    target: vscode.ConfigurationTarget
-  ) {
+  private async updateWorkspaceConfig(key: string, value: unknown, target: vscode.ConfigurationTarget) {
     this.logger.debug(`Setting ${key} to ${value} (target: ${target})`)
     await vscode.workspace.getConfiguration().update(key, value, target)
   }

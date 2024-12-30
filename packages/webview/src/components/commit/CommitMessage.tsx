@@ -19,12 +19,7 @@ import { MessageInput } from "@/components/commit/message-input"
 import { Section } from "@/components/layout/Section"
 import { ErrorMessage } from "@/components/ui/error-message"
 import { cn } from "@/lib/utils"
-import {
-  commitBodyAtom,
-  commitTitleAtom,
-  isCommittingAtom,
-  isGeneratingAtom,
-} from "@/state/atoms/commit.message"
+import { commitBodyAtom, commitTitleAtom, isCommittingAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 import { clientPush } from "@/utils/clientPush"
 
 import { CommitSettingsDialog } from "./commit-settings"
@@ -42,16 +37,12 @@ export function CommitMessage() {
 
   const tooltipContainerRef = useRef<HTMLDivElement>(null)
   const subjectLength = title.length
-  const isSubjectValid =
-    subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH
+  const isSubjectValid = subjectLength > 0 && subjectLength <= MAX_SUBJECT_LENGTH
   const disabled = !title.trim()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        tooltipContainerRef.current &&
-        !tooltipContainerRef.current.contains(event.target as Node)
-      ) {
+      if (tooltipContainerRef.current && !tooltipContainerRef.current.contains(event.target as Node)) {
         setShowCommitGuide(false)
       }
     }
@@ -110,9 +101,7 @@ export function CommitMessage() {
     >
       <Section.Content>
         <div className="flex flex-col gap-1.5">
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">
-            Summary
-          </div>
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)]">Summary</div>
           <MessageInput
             className="h-[32px]"
             maxLength={MAX_SUBJECT_LENGTH}
@@ -121,13 +110,9 @@ export function CommitMessage() {
             onChange={setTitle}
           />
           {!isSubjectValid && subjectLength > 0 && (
-            <ErrorMessage>
-              Subject must be ≤ {MAX_SUBJECT_LENGTH} characters
-            </ErrorMessage>
+            <ErrorMessage>Subject must be ≤ {MAX_SUBJECT_LENGTH} characters</ErrorMessage>
           )}
-          <div className="text-xs font-medium text-[var(--vscode-input-foreground)] mt-2">
-            Description
-          </div>
+          <div className="text-xs font-medium text-[var(--vscode-input-foreground)] mt-2">Description</div>
           <MessageInput
             className="h-[120px]"
             maxLength={MAX_DETAIL_LENGTH}
@@ -147,12 +132,7 @@ export function CommitMessage() {
                 title="Settings"
               >
                 <span className="flex items-center w-fit">
-                  <svg
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
                       stroke="currentColor"
@@ -209,19 +189,13 @@ export function CommitMessage() {
               </VSCodeButton>
               {/* <FeedbackButton /> */}
             </div>
-            <VSCodeButton
-              disabled={disabled || isGenerating || isCommitting}
-              onClick={handleCommit}
-            >
+            <VSCodeButton disabled={disabled || isGenerating || isCommitting} onClick={handleCommit}>
               {isCommitting ? "Committing..." : "Commit"}
             </VSCodeButton>
           </div>
         </div>
       </Section.Content>
-      <CommitSettingsDialog
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
+      <CommitSettingsDialog isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </Section>
   )
 }

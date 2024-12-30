@@ -10,10 +10,7 @@ import * as React from "react"
 import { useAtom } from "jotai"
 
 import { logger } from "@/lib/vscode-client-logger"
-import {
-  diffResultAtom,
-  viewModeAtom,
-} from "@/state/atoms/commit.changed-files"
+import { diffResultAtom, viewModeAtom } from "@/state/atoms/commit.changed-files"
 
 import { FlatView } from "./FlatView"
 import { TreeView } from "./TreeView"
@@ -36,12 +33,7 @@ const EmptyState = () => (
   </div>
 )
 
-export const FileChangesView: React.FC<FileChangesViewProps> = ({
-  selectedPath,
-  searchQuery,
-  onClick,
-  className,
-}) => {
+export const FileChangesView: React.FC<FileChangesViewProps> = ({ selectedPath, searchQuery, onClick, className }) => {
   const [viewMode] = useAtom(viewModeAtom)
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
@@ -53,19 +45,9 @@ export const FileChangesView: React.FC<FileChangesViewProps> = ({
   return (
     <div className="flex flex-col h-full">
       {viewMode === "flat" ? (
-        <FlatView
-          className={className}
-          searchQuery={searchQuery}
-          selectedPath={selectedPath}
-          onClick={onClick}
-        />
+        <FlatView className={className} searchQuery={searchQuery} selectedPath={selectedPath} onClick={onClick} />
       ) : (
-        <TreeView
-          className={className}
-          searchQuery={searchQuery}
-          selectedPath={selectedPath}
-          onClick={onClick}
-        />
+        <TreeView className={className} searchQuery={searchQuery} selectedPath={selectedPath} onClick={onClick} />
       )}
     </div>
   )

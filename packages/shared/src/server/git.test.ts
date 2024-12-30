@@ -67,9 +67,7 @@ describe("GitCore", () => {
 
       expect(result.files).toHaveLength(2)
       // 确保文件存在并按字母顺序排序
-      const sortedFiles = [...result.files].sort((a, b) =>
-        a.file.localeCompare(b.file)
-      )
+      const sortedFiles = [...result.files].sort((a, b) => a.file.localeCompare(b.file))
       expect(sortedFiles.length).toBe(2)
       expect(sortedFiles[0]?.file).toBe("file1.ts")
       expect(sortedFiles[1]?.file).toBe("file2.ts")
@@ -93,14 +91,10 @@ describe("GitCore", () => {
       // Commit the file
       await new Promise<void>((resolve, reject) => {
         const { exec } = require("child_process")
-        exec(
-          'git commit -m "Initial commit"',
-          { cwd: tempDir },
-          (error: any) => {
-            if (error) reject(error)
-            else resolve()
-          }
-        )
+        exec('git commit -m "Initial commit"', { cwd: tempDir }, (error: any) => {
+          if (error) reject(error)
+          else resolve()
+        })
       })
 
       // Rename the file

@@ -22,18 +22,13 @@ export class CliConfig implements IConfig {
   }
 
   get<T>(key: string): T | undefined {
-    return key
-      .split(".")
-      .reduce((obj: any, k) => obj && obj[k], this.config) as T
+    return key.split(".").reduce((obj: any, k) => obj && obj[k], this.config) as T
   }
 
   async update(key: string, value: any, global = false): Promise<void> {
     const keys = key.split(".")
     const lastKey = keys.pop()!
-    const target = keys.reduce(
-      (obj: any, k) => (obj[k] = obj[k] || {}),
-      this.config
-    )
+    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this.config)
     target[lastKey] = value
 
     if (global) {
@@ -48,9 +43,7 @@ export class CliConfig implements IConfig {
       }
 
       if (fs.existsSync(USER_CONFIG_PATH)) {
-        const userConfig = JSON.parse(
-          fs.readFileSync(USER_CONFIG_PATH, "utf-8")
-        )
+        const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
         this.config = configSchema.parse(merge({}, defaultConfig, userConfig))
       }
     } catch (error) {

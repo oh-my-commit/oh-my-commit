@@ -10,12 +10,8 @@ import type { ClientMessageEvent } from "@shared/common"
 import { getVSCodeAPI } from "../lib/getVSCodeAPI"
 
 export function clientPush(command: string): void
-export function clientPush(
-  message: ClientMessageEvent & { channel?: string }
-): void
-export function clientPush(
-  messageOrCommand: string | (ClientMessageEvent & { channel?: string })
-): void {
+export function clientPush(message: ClientMessageEvent & { channel?: string }): void
+export function clientPush(messageOrCommand: string | (ClientMessageEvent & { channel?: string })): void {
   const vscode = getVSCodeAPI()
   if (typeof messageOrCommand === "string") {
     vscode.postMessage({

@@ -132,8 +132,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
               },
               body: {
                 type: "string",
-                description:
-                  "Detailed explanation of what changes were made and why",
+                description: "Detailed explanation of what changes were made and why",
               },
               extra: {
                 type: "object",
@@ -183,16 +182,12 @@ class OfficialProvider extends BaseProvider implements IProvider {
   }
 
   private async handleApiResult(response: Message) {
-    this.logger.debug(
-      "Commit message generated (response): ",
-      JSON.stringify(response)
-    )
+    this.logger.debug("Commit message generated (response): ", JSON.stringify(response))
 
     const item = response.content[0]
     if (!item) throw new IError(-101, "Invalid tool response from AI model")
 
-    if (item.type !== "tool_use")
-      throw new IError(-102, "Invalid tool response from AI model")
+    if (item.type !== "tool_use") throw new IError(-102, "Invalid tool response from AI model")
 
     const result = item.input as {
       title: string

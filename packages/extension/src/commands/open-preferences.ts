@@ -22,10 +22,7 @@ export class OpenPreferencesCommand implements BaseCommand {
   async execute(): Promise<void> {
     this.logger.info("Open preferences command triggered")
 
-    await vscode.commands.executeCommand(
-      "workbench.action.openSettings",
-      APP_ID_CAMEL
-    )
+    await vscode.commands.executeCommand("workbench.action.openSettings", APP_ID_CAMEL)
   }
 
   async dispose(): Promise<void> {

@@ -27,9 +27,7 @@ export class VscodeGit extends GitCore implements IVscodeGit {
 
   constructor(@Inject(TOKENS.Logger) protected override logger: VscodeLogger) {
     const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders
-      ? workspaceFolders[0]!.uri.fsPath
-      : ""
+    const workspaceRoot = workspaceFolders ? workspaceFolders[0]!.uri.fsPath : ""
 
     super(workspaceRoot, logger)
 
@@ -48,16 +46,12 @@ export class VscodeGit extends GitCore implements IVscodeGit {
     this.fsWatcher?.dispose()
 
     if (!workspaceRoot) {
-      this.logger.warn(
-        "[VscodeGit] No workspace root, skipping file watcher setup"
-      )
+      this.logger.warn("[VscodeGit] No workspace root, skipping file watcher setup")
       return
     }
 
     // Watch all files in workspace, not just .git directory
-    this.fsWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceRoot, "**/*")
-    )
+    this.fsWatcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(workspaceRoot, "**/*"))
 
     const handleGitChange = async (uri: vscode.Uri) => {
       this.logger.info("[VscodeGit] File changed:", uri.fsPath)
@@ -94,9 +88,6 @@ export class VscodeGit extends GitCore implements IVscodeGit {
     this.fsWatcher.onDidCreate(handleGitChange)
     this.fsWatcher.onDidDelete(handleGitChange)
 
-    this.logger.info(
-      "[VscodeGit] File system watcher setup for:",
-      workspaceRoot
-    )
+    this.logger.info("[VscodeGit] File system watcher setup for:", workspaceRoot)
   }
 }

@@ -14,12 +14,7 @@ interface HighlightTextProps {
   onMatchCount?: (count: number) => void
 }
 
-export const HighlightText: React.FC<HighlightTextProps> = ({
-  text,
-  highlight,
-  className,
-  onMatchCount,
-}) => {
+export const HighlightText: React.FC<HighlightTextProps> = ({ text, highlight, className, onMatchCount }) => {
   React.useEffect(() => {
     if (!highlight?.trim()) {
       onMatchCount?.(0)

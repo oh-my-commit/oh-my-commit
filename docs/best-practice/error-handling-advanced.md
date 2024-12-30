@@ -7,11 +7,7 @@
 ```typescript
 // 日志装饰器
 function logError() {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value
 
     descriptor.value = function (...args: any[]) {
@@ -347,9 +343,8 @@ const createMockError = (type: AppError["type"]): AppError => ({
 jest
   .spyOn(inventoryService, "check")
   .mockImplementation(() =>
-    ResultAsync.fromPromise(
-      Promise.reject(new Error("Inventory check failed")),
-      () => createMockError("INVENTORY_ERROR")
+    ResultAsync.fromPromise(Promise.reject(new Error("Inventory check failed")), () =>
+      createMockError("INVENTORY_ERROR")
     )
   )
 ```

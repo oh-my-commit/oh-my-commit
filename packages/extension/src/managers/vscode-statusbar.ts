@@ -10,11 +10,7 @@ import * as vscode from "vscode"
 
 import { APP_NAME, COMMAND_SELECT_MODEL, type ILogger } from "@shared/common"
 
-import {
-  EventEmitter,
-  IService,
-  type ServiceEvent,
-} from "@/interface/base-service"
+import { EventEmitter, IService, type ServiceEvent } from "@/interface/base-service"
 import { TOKENS } from "@/managers/vscode-tokens"
 
 export type StatusBarEvent = ServiceEvent<{
@@ -31,10 +27,7 @@ export interface IStatusBarManager extends IService {
 }
 
 @Service()
-export class StatusBarManager
-  extends EventEmitter<StatusBarEvent>
-  implements IStatusBarManager
-{
+export class StatusBarManager extends EventEmitter<StatusBarEvent> implements IStatusBarManager {
   private statusBarItem: vscode.StatusBarItem
   private previousState?: {
     text: string
@@ -44,10 +37,7 @@ export class StatusBarManager
 
   constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {
     super()
-    this.statusBarItem = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Left,
-      100
-    )
+    this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
     this.statusBarItem.name = APP_NAME
 
     this.logger.info("Initializing StatusBar...")

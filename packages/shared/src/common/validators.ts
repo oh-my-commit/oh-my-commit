@@ -18,9 +18,7 @@ export interface ValidationResult {
   }[]
 }
 
-export async function validateOpenaiApiKey(
-  config: IConfig
-): Promise<ValidationResult> {
+export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationResult> {
   const apiKey = config.get("apiKeys.openai")
 
   if (!apiKey) {
@@ -53,9 +51,7 @@ export async function validateOpenaiApiKey(
       }
       return {
         valid: false,
-        error:
-          errorData.error?.message ||
-          `API validation failed: ${response.statusText}`,
+        error: errorData.error?.message || `API validation failed: ${response.statusText}`,
       }
     }
 
@@ -64,9 +60,7 @@ export async function validateOpenaiApiKey(
       data: Array<{ id: string }>
     }
 
-    const hasGPT4Access = modelsData.data.some((model) =>
-      model.id.startsWith("gpt-4")
-    )
+    const hasGPT4Access = modelsData.data.some((model) => model.id.startsWith("gpt-4"))
 
     if (!hasGPT4Access) {
       return {
@@ -79,10 +73,7 @@ export async function validateOpenaiApiKey(
   } catch (error) {
     return {
       valid: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Unknown error during validation",
+      error: error instanceof Error ? error.message : "Unknown error during validation",
     }
   }
 }

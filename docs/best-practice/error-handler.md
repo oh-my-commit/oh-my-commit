@@ -44,17 +44,15 @@ const formatError = (e: unknown): string => {
 
 ```typescript
 function processData(): ResultAsync<Data, AppError> {
-  return ResultAsync.fromPromise(fetchData(), handleApiError).andThen(
-    (rawData): Result<Data, AppError> => {
-      if (!isValidData(rawData)) {
-        return err({
-          type: "VALIDATION_ERROR",
-          message: "Invalid data format",
-        })
-      }
-      return ok(rawData)
+  return ResultAsync.fromPromise(fetchData(), handleApiError).andThen((rawData): Result<Data, AppError> => {
+    if (!isValidData(rawData)) {
+      return err({
+        type: "VALIDATION_ERROR",
+        message: "Invalid data format",
+      })
     }
-  )
+    return ok(rawData)
+  })
 }
 ```
 
@@ -196,8 +194,7 @@ const errorHandlers = {
 
 ```typescript
 // 使用类型守卫确保类型安全
-const isApiError = (error: AppError): error is ApiError =>
-  error.type === "API_ERROR"
+const isApiError = (error: AppError): error is ApiError => error.type === "API_ERROR"
 ```
 
 ## 9. 结论

@@ -59,9 +59,7 @@ export const CommitPage = () => {
         <ErrorLayout>
           <div className="flex flex-col items-center justify-center p-4 text-center">
             <h2 className="text-xl font-semibold mb-4">工作区不可用</h2>
-            <p className="mb-4 text-gray-500">
-              {workspaceStatus?.error || "请打开一个有效的工作区以使用完整功能"}
-            </p>
+            <p className="mb-4 text-gray-500">{workspaceStatus?.error || "请打开一个有效的工作区以使用完整功能"}</p>
             <div className="flex flex-col gap-2">
               <VSCodeButton
                 appearance="primary"
@@ -95,9 +93,7 @@ export const CommitPage = () => {
       return (
         <ErrorLayout>
           <div className="my-4">
-            <h2 className="text-[var(--vscode-foreground)] font-normal text-base mb-2">
-              Git Not Initialized
-            </h2>
+            <h2 className="text-[var(--vscode-foreground)] font-normal text-base mb-2">Git Not Initialized</h2>
             <p className="text-[var(--vscode-descriptionForeground)] text-sm max-w-md">
               This workspace is not yet a Git repository.
               <br />

@@ -8,11 +8,7 @@
 import { Container, Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import {
-  COMMAND_OPEN_PREFERENCE,
-  COMMAND_QUICK_COMMIT,
-  COMMAND_SELECT_MODEL,
-} from "@shared/common"
+import { COMMAND_OPEN_PREFERENCE, COMMAND_QUICK_COMMIT, COMMAND_SELECT_MODEL } from "@shared/common"
 
 import { OpenPreferencesCommand } from "@/commands/open-preferences"
 import { QuickCommitCommand } from "@/commands/quick-commit"
@@ -31,20 +27,11 @@ export class CommandManager {
     private readonly logger: VscodeLogger
   ) {
     // Register all commands
-    this.registerCommand(
-      COMMAND_OPEN_PREFERENCE,
-      Container.get(OpenPreferencesCommand)
-    )
+    this.registerCommand(COMMAND_OPEN_PREFERENCE, Container.get(OpenPreferencesCommand))
 
-    this.registerCommand(
-      COMMAND_QUICK_COMMIT,
-      Container.get(QuickCommitCommand)
-    )
+    this.registerCommand(COMMAND_QUICK_COMMIT, Container.get(QuickCommitCommand))
 
-    this.registerCommand(
-      COMMAND_SELECT_MODEL,
-      Container.get(SelectModelCommand)
-    )
+    this.registerCommand(COMMAND_SELECT_MODEL, Container.get(SelectModelCommand))
   }
 
   private registerCommand(id: string, command: VscodeCommand): void {
@@ -55,8 +42,7 @@ export class CommandManager {
       try {
         await command.execute()
       } catch (error: unknown) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error occurred"
+        const message = error instanceof Error ? error.message : "Unknown error occurred"
         this.logger.error(`Command ${id} failed: ${message}`)
         void vscode.window.showErrorMessage(`Command failed: ${message}`)
       }

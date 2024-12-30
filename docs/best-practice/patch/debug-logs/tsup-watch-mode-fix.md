@@ -16,21 +16,14 @@
 2. 使用绝对路径进行比较：
    ```typescript
    const absoluteOutDir = path.resolve(process.cwd(), options.outDir)
-   const ignored = [
-     "**/node_modules/**",
-     "**/.git/**",
-     absoluteOutDir,
-     ...customIgnores,
-   ]
+   const ignored = ["**/node_modules/**", "**/.git/**", absoluteOutDir, ...customIgnores]
    ```
 3. 实现更可靠的路径比较逻辑：
    ```typescript
    ignored: (p: string) => {
      const absolutePath = path.resolve(process.cwd(), p)
      return ignored.some((ignore) => {
-       const absoluteIgnore = path.isAbsolute(ignore)
-         ? ignore
-         : path.resolve(process.cwd(), ignore)
+       const absoluteIgnore = path.isAbsolute(ignore) ? ignore : path.resolve(process.cwd(), ignore)
        return absolutePath.startsWith(absoluteIgnore)
      })
    }

@@ -55,9 +55,7 @@ export class SelectModelCommand implements BaseCommand {
         await this.gitCommitManager.selectModel(selected.id)
       }
     } catch (error: unknown) {
-      void vscode.window.showErrorMessage(
-        formatError(error, "Failed to manage models")
-      )
+      void vscode.window.showErrorMessage(formatError(error, "Failed to manage models"))
     }
   }
 

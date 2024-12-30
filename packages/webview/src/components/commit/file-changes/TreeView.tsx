@@ -9,12 +9,7 @@ import * as React from "react"
 
 import { useAtom } from "jotai"
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
-import type {
-  DiffResult,
-  DiffResultBinaryFile,
-  DiffResultNameStatusFile,
-  DiffResultTextFile,
-} from "simple-git"
+import type { DiffResult, DiffResultBinaryFile, DiffResultNameStatusFile, DiffResultTextFile } from "simple-git"
 
 import { logger } from "@/lib/vscode-client-logger"
 import { diffResultAtom } from "@/state/atoms/commit.changed-files"
@@ -22,10 +17,7 @@ import { diffResultAtom } from "@/state/atoms/commit.changed-files"
 import { FileItem } from "./FileItem"
 import { StagedSection } from "./StagedSection"
 
-type GitDiffFile =
-  | DiffResultTextFile
-  | DiffResultBinaryFile
-  | DiffResultNameStatusFile
+type GitDiffFile = DiffResultTextFile | DiffResultBinaryFile | DiffResultNameStatusFile
 
 interface TreeNodeProps {
   node: FileTreeNode
@@ -87,13 +79,7 @@ const buildFileTree = (files: DiffResult["files"]): FileTreeNode[] => {
   return tree
 }
 
-const TreeNode: React.FC<TreeNodeProps> = ({
-  node,
-  level,
-  selectedPath,
-  searchQuery,
-  onClick,
-}) => {
+const TreeNode: React.FC<TreeNodeProps> = ({ node, level, selectedPath, searchQuery, onClick }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
 
   const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -138,18 +124,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             setIsExpanded(!isExpanded)
           }}
         >
-          {isExpanded ? (
-            <ChevronDownIcon className="w-3 h-3" />
-          ) : (
-            <ChevronRightIcon className="w-3 h-3" />
-          )}
+          {isExpanded ? <ChevronDownIcon className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
         </button>
         <span className="text-sm">{node.name}</span>
-        {node.children.length > 0 && (
-          <span className="text-xs text-gray-500">
-            ({node.children.length})
-          </span>
-        )}
+        {node.children.length > 0 && <span className="text-xs text-gray-500">({node.children.length})</span>}
       </div>
 
       {isExpanded && (
@@ -177,12 +155,7 @@ interface TreeViewProps {
   className?: string
 }
 
-export const TreeView: React.FC<TreeViewProps> = ({
-  selectedPath,
-  searchQuery,
-  onClick,
-  className,
-}) => {
+export const TreeView: React.FC<TreeViewProps> = ({ selectedPath, searchQuery, onClick, className }) => {
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
   const tree = React.useMemo(() => buildFileTree(files), [files])

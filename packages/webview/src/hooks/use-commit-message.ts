@@ -12,16 +12,8 @@ import { useSetAtom } from "jotai"
 import type { ServerMessageEvent } from "@shared/common"
 
 import { logger } from "@/lib/vscode-client-logger"
-import {
-  diffDetailAtom,
-  diffResultAtom,
-} from "@/state/atoms/commit.changed-files"
-import {
-  commitBodyAtom,
-  commitTitleAtom,
-  isCommittingAtom,
-  isGeneratingAtom,
-} from "@/state/atoms/commit.message"
+import { diffDetailAtom, diffResultAtom } from "@/state/atoms/commit.changed-files"
+import { commitBodyAtom, commitTitleAtom, isCommittingAtom, isGeneratingAtom } from "@/state/atoms/commit.message"
 import { workspaceStatusAtom } from "@/state/atoms/workspace"
 
 import { useMessage } from "./use-message"
@@ -76,15 +68,7 @@ export const useCommitMessage = () => {
           break
       }
     },
-    [
-      setTitle,
-      setBody,
-      setDiffResult,
-      setIsGenerating,
-      setIsCommitting,
-      setDiffDetail,
-      setWorkspaceStatus,
-    ]
+    [setTitle, setBody, setDiffResult, setIsGenerating, setIsCommitting, setDiffDetail, setWorkspaceStatus]
   )
 
   useMessage(handleCommitMessage)

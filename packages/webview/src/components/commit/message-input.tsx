@@ -7,10 +7,7 @@
  */
 import * as React from "react"
 
-import {
-  VSCodeTextArea,
-  VSCodeTextField,
-} from "@vscode/webview-ui-toolkit/react"
+import { VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 
 import cn from "classnames"
 

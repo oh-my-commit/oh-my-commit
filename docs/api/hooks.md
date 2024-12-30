@@ -324,10 +324,7 @@ module.exports = async (context) => {
 ```javascript
 module.exports = async (context) => {
   // 并行执行多个检查
-  const [lintResult, testResult] = await Promise.all([
-    lint(context.files),
-    test(context.files),
-  ])
+  const [lintResult, testResult] = await Promise.all([lint(context.files), test(context.files)])
 
   if (!lintResult.pass || !testResult.pass) {
     return {

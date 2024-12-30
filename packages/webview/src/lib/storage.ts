@@ -105,10 +105,7 @@ export function atomWithStorageReadOnly<T>(options: VSCodeStorageOptions<T>) {
   return atom((get) => get(baseAtom))
 }
 
-export function createVSCodeAtom<T>({
-  key,
-  defaultValue,
-}: VSCodeStorageOptions<T>) {
+export function createVSCodeAtom<T>({ key, defaultValue }: VSCodeStorageOptions<T>) {
   const baseAtom = atom<T>(defaultValue)
 
   const derivedAtom = atom(

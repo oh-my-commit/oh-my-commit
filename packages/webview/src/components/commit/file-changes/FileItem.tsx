@@ -8,12 +8,7 @@
 import * as React from "react"
 import { useEffect } from "react"
 
-import type {
-  DiffNameStatus,
-  DiffResultBinaryFile,
-  DiffResultNameStatusFile,
-  DiffResultTextFile,
-} from "simple-git"
+import type { DiffNameStatus, DiffResultBinaryFile, DiffResultNameStatusFile, DiffResultTextFile } from "simple-git"
 
 import { HighlightText } from "@/components/common/HighlightText"
 import { cn } from "@/lib/utils"
@@ -36,11 +31,7 @@ export const STATUS_COLORS: Record<DiffNameStatus, string> = {
 function hasStatus(
   file: DiffResultNameStatusFile | DiffResultBinaryFile | DiffResultTextFile
 ): file is DiffResultNameStatusFile {
-  return (
-    "status" in file &&
-    typeof file.status === "string" &&
-    file.status in STATUS_COLORS
-  )
+  return "status" in file && typeof file.status === "string" && file.status in STATUS_COLORS
 }
 
 interface FileItemProps {
@@ -120,9 +111,7 @@ export const FileItem: React.FC<FileItemProps> = ({
       role="button"
       aria-expanded={isOpen}
       aria-label={`File: ${file.file}, Status: ${hasStatus(file) ? file.status : "unknown"}`}
-      style={
-        viewMode === "tree" ? { paddingLeft: `${(level || 0) * 16}px` } : {}
-      }
+      style={viewMode === "tree" ? { paddingLeft: `${(level || 0) * 16}px` } : {}}
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={(e) => e.key === "Enter" && handleClick(e)}
@@ -133,13 +122,9 @@ export const FileItem: React.FC<FileItemProps> = ({
             <span
               className={cn(
                 "inline-flex items-center justify-center w-4 h-4 font-mono font-medium text-xs",
-                hasStatus(file)
-                  ? STATUS_COLORS[file.status as keyof typeof STATUS_COLORS]
-                  : "text-git-unknown-fg"
+                hasStatus(file) ? STATUS_COLORS[file.status as keyof typeof STATUS_COLORS] : "text-git-unknown-fg"
               )}
-              title={
-                hasStatus(file) ? `Status: ${file.status}` : "Unknown status"
-              }
+              title={hasStatus(file) ? `Status: ${file.status}` : "Unknown status"}
             >
               {hasStatus(file) ? file.status : "?"}
             </span>
@@ -156,9 +141,7 @@ export const FileItem: React.FC<FileItemProps> = ({
       </div>
 
       <div
-        className={cn(
-          "flex items-center gap-2 px-3 text-xs font-medium tabular-nums transition-colors duration-150"
-        )}
+        className={cn("flex items-center gap-2 px-3 text-xs font-medium tabular-nums transition-colors duration-150")}
       >
         {searchQuery && (pathMatchCount > 0 || contentMatchCount > 0) && (
           <span
@@ -167,22 +150,14 @@ export const FileItem: React.FC<FileItemProps> = ({
             )}
           >
             {pathMatchCount > 0 && (
-              <span
-                className="flex items-center gap-1"
-                title="Matches in filename"
-              >
+              <span className="flex items-center gap-1" title="Matches in filename">
                 <span className="opacity-60">名称</span>
                 {pathMatchCount}
               </span>
             )}
-            {pathMatchCount > 0 && contentMatchCount > 0 && (
-              <span className="opacity-40">·</span>
-            )}
+            {pathMatchCount > 0 && contentMatchCount > 0 && <span className="opacity-40">·</span>}
             {contentMatchCount > 0 && (
-              <span
-                className="flex items-center gap-1"
-                title="Matches in content"
-              >
+              <span className="flex items-center gap-1" title="Matches in content">
                 <span className="opacity-60">内容</span>
                 {contentMatchCount}
               </span>
@@ -192,17 +167,13 @@ export const FileItem: React.FC<FileItemProps> = ({
         {!file.binary && (file.insertions > 0 || file.deletions > 0) && (
           <div className="flex items-center gap-2">
             {file.insertions > 0 && (
-              <span
-                className={cn("text-git-added-fg flex items-center gap-0.5")}
-              >
+              <span className={cn("text-git-added-fg flex items-center gap-0.5")}>
                 <span className="opacity-60">+</span>
                 {file.insertions}
               </span>
             )}
             {file.deletions > 0 && (
-              <span
-                className={cn("text-git-deleted-fg flex items-center gap-0.5")}
-              >
+              <span className={cn("text-git-deleted-fg flex items-center gap-0.5")}>
                 <span className="opacity-60">−</span>
                 {file.deletions}
               </span>

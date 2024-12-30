@@ -54,10 +54,7 @@ export const FeedbackButton = ({
       description: "Wrong format or style",
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-          <path
-            d="M3 4h10v1.5H3V4zm0 3h8v1.5H3V7zm0 3h10v1.5H3V10z"
-            fillRule="evenodd"
-          />
+          <path d="M3 4h10v1.5H3V4zm0 3h8v1.5H3V7zm0 3h10v1.5H3V10z" fillRule="evenodd" />
         </svg>
       ),
     },
@@ -94,10 +91,7 @@ export const FeedbackButton = ({
       description: "Grammar, spelling, or language problems",
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-          <path
-            d="M8 3L4.5 11h1.75l.875-2h2.75l.875 2H12.5L9 3H8zm-.875 4.5L8 4.5l.875 3h-1.75z"
-            fillRule="evenodd"
-          />
+          <path d="M8 3L4.5 11h1.75l.875-2h2.75l.875 2H12.5L9 3H8zm-.875 4.5L8 4.5l.875 3h-1.75z" fillRule="evenodd" />
           <path d="M4.5 12h7v1h-7z" />
         </svg>
       ),
@@ -127,20 +121,14 @@ export const FeedbackButton = ({
             : "hover:bg-[var(--vscode-toolbar-hoverBackground)] text-[var(--vscode-descriptionForeground)]"
         }`}
         disabled={disabled || hasFeedback}
-        title={
-          hasFeedback
-            ? "Feedback already submitted"
-            : "Provide feedback on this commit message"
-        }
+        title={hasFeedback ? "Feedback already submitted" : "Provide feedback on this commit message"}
         onClick={() => !disabled && !hasFeedback && setShowMenu(!showMenu)}
       >
         <span className="block sm:hidden">
           <i className="codicon codicon-feedback" />
         </span>
 
-        <span className="hidden sm:block text-sm">
-          {hasFeedback ? "Thanks for your feedback" : "Improve"}
-        </span>
+        <span className="hidden sm:block text-sm">{hasFeedback ? "Thanks for your feedback" : "Improve"}</span>
 
         {hasFeedback && (
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
@@ -161,9 +149,7 @@ export const FeedbackButton = ({
           }}
         >
           <div className="px-3 py-2 border-b border-[var(--vscode-input-border)]">
-            <div className="text-sm font-medium text-[var(--vscode-foreground)]">
-              Feedback Type
-            </div>
+            <div className="text-sm font-medium text-[var(--vscode-foreground)]">Feedback Type</div>
             <div className="text-xs opacity-80 mt-0.5 text-[var(--vscode-foreground)]">
               What would you like to improve?
             </div>

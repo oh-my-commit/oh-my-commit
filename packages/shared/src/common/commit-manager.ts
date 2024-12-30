@@ -30,10 +30,7 @@ export interface ICommitManager {
     loadingProviders: Status
   }
   selectModel(modelId: string): void
-  generateCommitWithDiff(
-    diff: DiffResult,
-    options: IInputOptions
-  ): Promise<ResultDTO<IResult>>
+  generateCommitWithDiff(diff: DiffResult, options: IInputOptions): Promise<ResultDTO<IResult>>
 }
 
 @Service()
@@ -71,14 +68,9 @@ export class CommitManager implements ICommitManager {
     void this.config.update(SETTING_MODEL_ID, modelId)
   }
 
-  async generateCommitWithDiff(
-    diff: DiffResult,
-    options: IInputOptions
-  ): Promise<ResultDTO<IResult>> {
+  async generateCommitWithDiff(diff: DiffResult, options: IInputOptions): Promise<ResultDTO<IResult>> {
     try {
-      const modelId =
-        this.config.get<string>(SETTING_MODEL_ID) ??
-        this.providers[0]?.models[0]?.id
+      const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
       if (!modelId) {
         return {
           ok: false,
@@ -87,9 +79,7 @@ export class CommitManager implements ICommitManager {
         }
       }
 
-      const provider = this.providers.find((p) =>
-        p.models.some((model) => model.id === modelId)
-      )
+      const provider = this.providers.find((p) => p.models.some((model) => model.id === modelId))
       if (!provider) {
         return {
           ok: false,

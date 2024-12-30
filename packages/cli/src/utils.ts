@@ -19,10 +19,5 @@ export const displayBanner = () => {
       })
     )
   )
-  console.log(
-    chalk.gray(
-      "✨ AI-powered commit message generator\n" +
-        `📦 Version ${packageJson.version}\n`
-    )
-  )
+  console.log(chalk.gray("✨ AI-powered commit message generator\n" + `📦 Version ${packageJson.version}\n`))
 }

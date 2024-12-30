@@ -14,13 +14,7 @@ import { useSettings } from "@/hooks/use-settings"
 import type { CommitLanguage } from "@/state/atoms/settings"
 import { clientPush } from "@/utils/clientPush"
 
-export function CommitSettingsDialog({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean
-  onClose: () => void
-}) {
+export function CommitSettingsDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { commitLanguage, updateCommitLanguage } = useSettings()
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -90,9 +84,7 @@ export function CommitSettingsDialog({
       <div className="h-full flex flex-col">
         <div className="flex-none p-3 border-b border-[var(--vscode-panel-border)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-[var(--vscode-editor-foreground)] text-base font-medium">
-              Commit Settings
-            </h2>
+            <h2 className="text-[var(--vscode-editor-foreground)] text-base font-medium">Commit Settings</h2>
             <VSCodeButton appearance="secondary" onClick={onClose}>
               Close
             </VSCodeButton>
@@ -108,9 +100,7 @@ export function CommitSettingsDialog({
               <select
                 className="w-full p-2 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)] border border-[var(--vscode-input-border)] rounded text-sm"
                 value={commitLanguage}
-                onChange={(e) =>
-                  handleLanguageChange(e.target.value as CommitLanguage)
-                }
+                onChange={(e) => handleLanguageChange(e.target.value as CommitLanguage)}
               >
                 <option value="system">System Default</option>
                 <option value="zh_CN">中文</option>

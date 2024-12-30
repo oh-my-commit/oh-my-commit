@@ -21,9 +21,7 @@ export const configSchema = z.object({
     commitLanguage: z.enum(["system", "zh_CN", "en_US"]).default("system"),
   }),
   ui: z.object({
-    mode: z
-      .enum(["silent", "notification", "window", "panel"])
-      .default("window"),
+    mode: z.enum(["silent", "notification", "window", "panel"]).default("window"),
   }),
   proxy: z.string().optional(),
   apiKeys: z.object({

@@ -36,10 +36,8 @@ module.exports = (env, argv) => {
       allowedHosts: "all",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, content-type, Authorization",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
       },
       hot: true,
       client: {
@@ -64,11 +62,7 @@ module.exports = (env, argv) => {
             {
               loader: "babel-loader",
               options: {
-                presets: [
-                  "@babel/preset-env",
-                  "@babel/preset-react",
-                  "@babel/preset-typescript",
-                ],
+                presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
                 plugins: [
                   isDevelopment && ReactRefreshBabel,
                   ["@babel/plugin-proposal-decorators", { legacy: true }],

@@ -90,12 +90,10 @@ class YourProvider extends Provider {
 
   要求： 1. 使用中文 2. 简洁明了 3. 符合约定式提交规范
 {{else}}
-  Please generate a conventional commit message based on the following Git diff:
-  Diff content:
+  Please generate a conventional commit message based on the following Git diff: Diff content:
   {{diff}}
 
-  Requirements: 1. Use English 2. Be concise 3. Follow conventional commit
-  format
+  Requirements: 1. Use English 2. Be concise 3. Follow conventional commit format
 {{/if}}
 ```
 

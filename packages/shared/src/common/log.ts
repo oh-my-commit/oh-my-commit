@@ -25,8 +25,7 @@ const DEFAULT_LOG_LEVEL: LogLevel = "debug"
 export const normalizeLogLevel = (s?: string): LogLevel => {
   if (s) {
     const level = s.toLowerCase()
-    if (Object.keys(LOG_LEVEL_PRIORITY).includes(level))
-      return level as LogLevel
+    if (Object.keys(LOG_LEVEL_PRIORITY).includes(level)) return level as LogLevel
   }
   return DEFAULT_LOG_LEVEL
 }
@@ -90,8 +89,6 @@ export class ConsoleLogger extends BaseLogger implements ILogger {
     const loggerName = this.name || "unknown"
     const formattedMsg = formatMessage(...args)
 
-    console.log(
-      `${timestamp} ${levelStr}` + ` | [${loggerName}] ` + formattedMsg
-    )
+    console.log(`${timestamp} ${levelStr}` + ` | [${loggerName}] ` + formattedMsg)
   }
 }

@@ -105,7 +105,7 @@ module.exports = {
         "@typescript-eslint/ no-var-requires": "off",
         "@typescript-eslint/no-redundant-type-constituents": "off",
         "@typescript-eslint/no-misused-promises": "off",
-        "@typescript-eslint/require-await": "off"
+        "@typescript-eslint/require-await": "off",
       },
     },
 
@@ -152,11 +152,7 @@ module.exports = {
     // web 项目特定规则
     {
       files: ["packages/webview/**/*.{ts,tsx,js,jsx}"],
-      extends: [
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:jsx-a11y/recommended",
-      ],
+      extends: ["plugin:react/recommended", "plugin:react-hooks/recommended", "plugin:jsx-a11y/recommended"],
       plugins: ["react", "react-hooks", "jsx-a11y"],
       rules: {
         "react/react-in-jsx-scope": "off",

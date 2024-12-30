@@ -19,12 +19,7 @@ interface StagedSectionProps {
   className?: string
 }
 
-export const StagedSection: React.FC<StagedSectionProps> = ({
-  title = "Staged",
-  count,
-  children,
-  className,
-}) => {
+export const StagedSection: React.FC<StagedSectionProps> = ({ title = "Staged", count, children, className }) => {
   const [isExpanded, setIsExpanded] = React.useState(true)
 
   const handleToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -60,16 +55,10 @@ export const StagedSection: React.FC<StagedSectionProps> = ({
                 setIsExpanded(!isExpanded)
               }}
             >
-              {isExpanded ? (
-                <ChevronDownIcon className="w-3 h-3" />
-              ) : (
-                <ChevronRightIcon className="w-3 h-3" />
-              )}
+              {isExpanded ? <ChevronDownIcon className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
             </button>
             <span className="font-medium">{title}</span>
-            {count !== undefined && count > 0 && (
-              <span className="text-xs text-gray-500">({count})</span>
-            )}
+            {count !== undefined && count > 0 && <span className="text-xs text-gray-500">({count})</span>}
           </div>
         </div>
       </div>

@@ -18,12 +18,7 @@ export const InitAnimation: React.FC<InitAnimationProps> = ({ onEnter }) => {
     <div className="init-animation-container">
       <div className="init-animation">
         <div className="logo-container">
-          <svg
-            className="oh-my-commit-logo"
-            height="64"
-            viewBox="0 0 200 100"
-            width="128"
-          >
+          <svg className="oh-my-commit-logo" height="64" viewBox="0 0 200 100" width="128">
             {/* 背景线条 */}
             {/* <path
               className="bg-line"

@@ -58,9 +58,7 @@ export class ProviderRegistry implements IProviderManager {
               this.registerProvider(provider)
             }
           } catch (error) {
-            this.logger.error(
-              `Failed to load provider from ${filePath}: ${error}`
-            )
+            this.logger.error(`Failed to load provider from ${filePath}: ${error}`)
           }
         }
       }
@@ -75,26 +73,18 @@ export class ProviderRegistry implements IProviderManager {
   registerProvider(provider: BaseProvider): void {
     this.logger.debug(`Registering provider: ${provider.id}`)
     if (this.providers.some((p) => p.id === provider.id)) {
-      this.logger.warn(
-        `Provider with id ${provider.id} already exists. Skipping registration.`
-      )
+      this.logger.warn(`Provider with id ${provider.id} already exists. Skipping registration.`)
       return
     }
     this.providers.push(provider)
     this.logger.debug(`Successfully registered provider: ${provider.id}`)
   }
 
-  private async loadProviderFromFile(
-    filePath: string
-  ): Promise<BaseProvider | null> {
+  private async loadProviderFromFile(filePath: string): Promise<BaseProvider | null> {
     try {
       const module = await jiti(filePath)
       const Provider =
-        module.default ||
-        (module as new (context: {
-          logger: BaseLogger
-          config: IConfig
-        }) => BaseProvider)
+        module.default || (module as new (context: { logger: BaseLogger; config: IConfig }) => BaseProvider)
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)
@@ -110,9 +100,7 @@ export class ProviderRegistry implements IProviderManager {
       ProviderSchema.parse(provider)
       return provider
     } catch (error) {
-      this.logger.error(
-        formatError(error, `Error loading provider from ${filePath}`)
-      )
+      this.logger.error(formatError(error, `Error loading provider from ${filePath}`))
       return null
     }
   }

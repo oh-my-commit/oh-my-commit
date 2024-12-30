@@ -12,10 +12,7 @@ interface EmptyStateProps {
   onClearSearch?: () => void
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
-  searchQuery,
-  onClearSearch,
-}) => {
+export const EmptyState: React.FC<EmptyStateProps> = ({ searchQuery, onClearSearch }) => {
   if (searchQuery) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center text-[var(--vscode-descriptionForeground)]">

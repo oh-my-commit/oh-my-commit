@@ -25,11 +25,7 @@ export const Progress = () => {
           }}
         />
       </div>
-      {message && (
-        <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">
-          {message}
-        </div>
-      )}
+      {message && <div className="px-4 py-1 text-xs text-[var(--vscode-foreground)]">{message}</div>}
     </div>
   )
 }

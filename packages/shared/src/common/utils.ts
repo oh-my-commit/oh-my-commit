@@ -14,39 +14,26 @@ export function formatError(error: unknown, prefix = ""): string {
   } else if (typeof error === "string") {
     s = error
   } else if (error && typeof error === "object") {
-    s =
-      "message" in error
-        ? String(error.message)
-        : JSON.stringify(error, null, 2)
+    s = "message" in error ? String(error.message) : JSON.stringify(error, null, 2)
   } else s = String(error)
   return prefix ? `[${prefix}] ${s}` : s
 }
 
 export function formatMessage(...args: any[]): string {
-  return args
-    .map((arg) =>
-      typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)
-    )
-    .join(" ")
+  return args.map((arg) => (typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg))).join(" ")
 }
 
-export type ResultDTO<T> =
-  | { ok: true; data: T }
-  | { ok: false; code: number; message: string }
+export type ResultDTO<T> = { ok: true; data: T } | { ok: false; code: number; message: string }
 
 /**
  * Simple implementation of outdent without caching
  * @see: https://github.com/oh-my-commit/oh-my-commit/issues/5
  */
 export function outdent(strings: TemplateStringsArray, ...values: any[]) {
-  const indent =
-    strings[0]?.match(/(?:\r\n|\r|\n)([ \t]*)(?:[^ \t\r\n]|$)/)?.[1]?.length ||
-    0
+  const indent = strings[0]?.match(/(?:\r\n|\r|\n)([ \t]*)(?:[^ \t\r\n]|$)/)?.[1]?.length || 0
   const reMatchIndent = new RegExp(`(\\r\\n|\\r|\\n).{0,${indent}}`, "g")
 
-  const outdentedStrings = strings.map((str) =>
-    str.replace(reMatchIndent, "$1")
-  )
+  const outdentedStrings = strings.map((str) => str.replace(reMatchIndent, "$1"))
   let result = ""
   for (let i = 0; i < outdentedStrings.length; i++) {
     result += outdentedStrings[i]
@@ -63,10 +50,7 @@ export function outdent(strings: TemplateStringsArray, ...values: any[]) {
  * @param value The value or service constructor to inject
  * @returns The injected instance
  */
-export const Inject = <T>(
-  token: Token<T>,
-  value: T | (abstract new (...args: any[]) => T)
-): T => {
+export const Inject = <T>(token: Token<T>, value: T | (abstract new (...args: any[]) => T)): T => {
   let instance: T
   if (typeof value === "function") {
     // handle class constructors

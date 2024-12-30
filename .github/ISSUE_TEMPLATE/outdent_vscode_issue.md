@@ -70,13 +70,10 @@ A simple implementation without using WeakMap for caching works correctly:
 
 ```typescript
 function myOutdent(strings: TemplateStringsArray, ...values: any[]) {
-  const indent =
-    strings[0].match(/(?:\r\n|\r|\n)([ \t]*)(?:[^ \t\r\n]|$)/)?.[1]?.length || 0
+  const indent = strings[0].match(/(?:\r\n|\r|\n)([ \t]*)(?:[^ \t\r\n]|$)/)?.[1]?.length || 0
   const reMatchIndent = new RegExp(`(\\r\\n|\\r|\\n).{0,${indent}}`, "g")
 
-  const outdentedStrings = strings.map((str) =>
-    str.replace(reMatchIndent, "$1")
-  )
+  const outdentedStrings = strings.map((str) => str.replace(reMatchIndent, "$1"))
   let result = ""
   for (let i = 0; i < outdentedStrings.length; i++) {
     result += outdentedStrings[i]
@@ -95,10 +92,7 @@ The issue appears to be related to how `outdent` uses `WeakMap` for caching proc
 1. `outdent` uses `WeakMap` to cache processed template literals:
 
 ```typescript
-const arrayAutoIndentCache = createWeakMap<
-  TemplateStringsArray,
-  Array<string>
->()
+const arrayAutoIndentCache = createWeakMap<TemplateStringsArray, Array<string>>()
 ```
 
 2. In the VSCode Extension Host environment, this caching mechanism seems to cause issues, possibly due to:

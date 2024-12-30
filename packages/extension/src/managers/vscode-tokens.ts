@@ -24,18 +24,14 @@ export const TOKENS = {
   ...TOKENS_BASE,
   Context: new Token<vscode.ExtensionContext>("Context"),
   WebviewManager: new Token<IWebviewManager>("Webview"),
-  WebviewMessageHandler: new Token<IWebviewMessageHandler>(
-    "WebviewMessageHandler"
-  ),
+  WebviewMessageHandler: new Token<IWebviewMessageHandler>("WebviewMessageHandler"),
   PreferenceMonitor: new Token<IPreferenceMonitor>("PreferenceMonitor"),
   CommitMessageStore: new Token<unknown>("CommitMessageStore"),
   StatusBar: new Token<IStatusBarManager>("StatusBar"),
   Orchestrator: new Token<IOrchestrator>("Orchestrator"),
 
   QuickCommitCommand: new Token<QuickCommitCommand>("QuickCommitCommand"),
-  OpenPreferencesCommand: new Token<OpenPreferencesCommand>(
-    "OpenPreferencesCommand"
-  ),
+  OpenPreferencesCommand: new Token<OpenPreferencesCommand>("OpenPreferencesCommand"),
   SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
   CommandManager: new Token<CommandManager>("CommandManager"),
 } as const

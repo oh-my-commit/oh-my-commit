@@ -21,12 +21,7 @@ export interface FlatViewProps {
   className?: string
 }
 
-export const FlatView: React.FC<FlatViewProps> = ({
-  selectedPath,
-  searchQuery,
-  onClick,
-  className,
-}) => {
+export const FlatView: React.FC<FlatViewProps> = ({ selectedPath, searchQuery, onClick, className }) => {
   const [diffResult] = useAtom(diffResultAtom)
   const files = diffResult?.files || []
 

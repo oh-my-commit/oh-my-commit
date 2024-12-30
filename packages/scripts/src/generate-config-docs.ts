@@ -34,9 +34,7 @@ type PackageJson = {
 // 从 package.json 读取配置描述
 function loadPackageConfig() {
   const packagePath = path.join(__dirname, "..", "package.json")
-  const packageJson = JSON.parse(
-    fs.readFileSync(packagePath, "utf8")
-  ) as PackageJson
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8")) as PackageJson
   return packageJson.contributes.configuration.properties
 }
 
@@ -47,9 +45,7 @@ function generateConfigTable() {
   table += "| --- | --- | --- | --- | --- |\n"
 
   // 按 order 排序
-  const sortedEntries = Object.entries(properties).sort(
-    (a, b) => (a[1].order ?? Infinity) - (b[1].order ?? Infinity)
-  )
+  const sortedEntries = Object.entries(properties).sort((a, b) => (a[1].order ?? Infinity) - (b[1].order ?? Infinity))
 
   for (const [key, value] of sortedEntries) {
     const description = value.markdownDescription || value.description || ""
@@ -64,10 +60,7 @@ function generateConfigTable() {
     let options = ""
     if (value.enum && value.enumDescriptions) {
       options = value.enum
-        .map(
-          (enumValue, index) =>
-            `• \`${enumValue}\`: ${value.enumDescriptions![index]}`
-        )
+        .map((enumValue, index) => `• \`${enumValue}\`: ${value.enumDescriptions![index]}`)
         .join("<br>")
     } else if (value.enum) {
       options = value.enum.map((enumValue) => `• \`${enumValue}\``).join("<br>")
@@ -90,9 +83,7 @@ const argsSchema = z
   .transform((args) => ({
     ...args,
     // 如果提供了路径，转换为绝对路径
-    outputPath: args.outputPath
-      ? path.resolve(process.cwd(), args.outputPath)
-      : undefined,
+    outputPath: args.outputPath ? path.resolve(process.cwd(), args.outputPath) : undefined,
   }))
 
 type Args = z.infer<typeof argsSchema>
@@ -138,14 +129,12 @@ function main() {
         if (configStart !== -1) {
           const before = content.slice(0, configStart)
           const after = configEnd !== -1 ? content.slice(configEnd) : ""
-          content =
-            before + `## ${args.sectionTitle}\n\n` + table + "\n" + after
+          content = before + `## ${args.sectionTitle}\n\n` + table + "\n" + after
         } else {
           content += `\n## ${args.sectionTitle}\n\n` + table
         }
       } else {
-        content =
-          `# Yet Another Auto Commit\n\n## ${args.sectionTitle}\n\n` + table
+        content = `# Yet Another Auto Commit\n\n## ${args.sectionTitle}\n\n` + table
       }
       fs.writeFileSync(args.outputPath, content)
       console.log(`配置表格已写入：${args.outputPath}`)

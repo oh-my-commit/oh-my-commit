@@ -9,10 +9,7 @@ import * as React from "react"
 import { createRoot } from "react-dom/client"
 
 import "@vscode/codicons/dist/codicon.css"
-import {
-  provideVSCodeDesignSystem,
-  vsCodeProgressRing,
-} from "@vscode/webview-ui-toolkit"
+import { provideVSCodeDesignSystem, vsCodeProgressRing } from "@vscode/webview-ui-toolkit"
 
 import { Provider } from "jotai"
 

@@ -34,17 +34,14 @@ export default defineConfig({
   onSuccess: async () => {
     // Generate TypeScript declaration files
     await new Promise((resolve, reject) => {
-      exec(
-        "tsc --emitDeclarationOnly --declaration",
-        (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error generating declarations: ${error}`)
-            reject(error)
-            return
-          }
-          resolve(stdout)
+      exec("tsc --emitDeclarationOnly --declaration", (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error generating declarations: ${error}`)
+          reject(error)
+          return
         }
-      )
+        resolve(stdout)
+      })
     })
 
     // Copy prompts to output directory

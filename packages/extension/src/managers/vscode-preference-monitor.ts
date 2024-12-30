@@ -32,9 +32,7 @@ export class PreferenceMonitor implements IPreferenceMonitor {
         if (e.affectsConfiguration("ohMyCommit.git.commitLanguage")) {
           const config = vscode.workspace.getConfiguration("ohMyCommit")
           const value = config.get("git.commitLanguage")
-          this.configChangeHandlers.forEach((handler) =>
-            handler("git.commitLanguage", value)
-          )
+          this.configChangeHandlers.forEach((handler) => handler("git.commitLanguage", value))
         }
       })
     )

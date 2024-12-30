@@ -11,10 +11,7 @@ import { useAtom } from "jotai"
 
 import { Section } from "@/components/layout/Section"
 import { logger } from "@/lib/vscode-client-logger"
-import {
-  lastOpenedFilePathAtom,
-  viewModeAtom,
-} from "@/state/atoms/commit.changed-files"
+import { lastOpenedFilePathAtom, viewModeAtom } from "@/state/atoms/commit.changed-files"
 import { searchQueryAtom } from "@/state/atoms/search"
 import { clientPush } from "@/utils/clientPush"
 
@@ -22,9 +19,7 @@ import { FileChangesView } from "./FileChangesView"
 import { ViewToggle } from "./ViewToggle"
 
 export const FileChanges: FC = () => {
-  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(
-    lastOpenedFilePathAtom
-  )
+  const [lastOpenedFilePath, setLastOpenedFilePath] = useAtom(lastOpenedFilePathAtom)
   const [searchQuery] = useAtom(searchQueryAtom)
   const [viewMode, setViewMode] = useAtom(viewModeAtom)
 
@@ -40,10 +35,7 @@ export const FileChanges: FC = () => {
   )
 
   return (
-    <Section
-      actions={<ViewToggle view={viewMode} onChange={setViewMode} />}
-      title="Changed Files"
-    >
+    <Section actions={<ViewToggle view={viewMode} onChange={setViewMode} />} title="Changed Files">
       <div className="flex flex-col sm:flex-row relative gap-2 h-full">
         <div className="w-full sm:max-w-[300px] flex flex-col shrink-0 overflow-auto scrollbar-custom">
           <FileChangesView

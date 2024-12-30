@@ -18,9 +18,5 @@ export const getAllFiles = (node: TreeNode): string[] => {
   return (node.children || [])
     .filter((child) => child.type === "file" && child.fileInfo?.path)
     .map((child) => child.fileInfo!.path)
-    .concat(
-      (node.children || [])
-        .filter((child) => child.type === "directory")
-        .flatMap((child) => getAllFiles(child))
-    )
+    .concat((node.children || []).filter((child) => child.type === "directory").flatMap((child) => getAllFiles(child)))
 }
