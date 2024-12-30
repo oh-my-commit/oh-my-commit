@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.22.2
+
+### Patch Changes
+
+- bda655e: .
+
 ## 0.22.1
 
 ### Patch Changes
