@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.21.5
+
+### Patch Changes
+
+- 22823c7: version
+
 ## 0.21.4
 
 ### Patch Changes
