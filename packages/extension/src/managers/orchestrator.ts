@@ -5,7 +5,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
@@ -35,19 +34,7 @@ export interface IOrchestrator {
   readonly workspaceSettings: IPreferenceMonitor
 
   // Git 相关操作
-  getDiff(): Promise<DiffResult>
   commit(message: string): Promise<void>
-
-  // UI 相关操作
-  showMessage(
-    message: string,
-    type?: "info" | "warning" | "error"
-  ): Promise<void>
-  updateStatusBar(message: string): Promise<void>
-
-  // Webview 相关操作
-  updateWebview(data: any): Promise<void>
-  // handleWebviewMessage(message: any): Promise<void>
 
   // 业务流程
   generateCommit(): Promise<void>
@@ -100,96 +87,64 @@ export class Orchestrator implements IOrchestrator {
     this.logger.info("Orchestrator initialized")
   }
 
-  async getDiff(): Promise<DiffResult> {
-    return this.gitService.getDiffResult()
-  }
-
   async commit(message: string): Promise<void> {
-    await this.gitService.commit(message)
-    await this.updateStatusBar("Committed successfully")
-  }
-
-  async showMessage(
-    message: string,
-    type: "info" | "warning" | "error" = "info"
-  ): Promise<void> {
-    switch (type) {
-      case "warning":
-        void vscode.window.showWarningMessage(message)
-        break
-      case "error":
-        void vscode.window.showErrorMessage(message)
-        break
-      default:
-        void vscode.window.showInformationMessage(message)
-    }
-  }
-
-  async updateStatusBar(message: string): Promise<void> {
-    await this.statusBar.setText(message)
-  }
-
-  async updateWebview(data: any): Promise<void> {
-    // todo
-    // await this.webviewManager.postMessage({
-    //   type: "update",
-    //   data,
-    // })
-  }
-
-  async handleSimpleGen() {
-    const uiMode = this.config.get<UiMode>("ohMyCommit.ui.mode")!
-    const result = this.commitMessageStore.getResult()
-    if (!result || uiMode !== "notification") return
-
-    if (result.ok) {
-      const selection = await vscode.window.showInformationMessage(
-        result.data.title,
-        { modal: false },
-        "Commit",
-        "Edit"
-      )
-
-      if (selection === "Commit") {
-        await this.commit(result.data.title)
-        await vscode.window.showInformationMessage("Successfully commited")
-      } else if (selection === "Edit") {
-        this.webviewManager.show()
-      }
-    } else {
-      await this.showMessage(
-        `Failed to generate message, reason: ${result.message}`,
-        "error"
-      )
-    }
-  }
-
-  async handleWebviewGen() {
-    const result = this.commitMessageStore.getResult()
-    if (!result) return
-    this.webviewManager.postMessage({
-      type: "generate-result",
-      data: result,
-    })
-  }
-
-  async generateCommit(): Promise<void> {
     try {
-      this.statusBar.setWaiting("Generating commit...")
-      const result = await this.gitCommitManager.generateCommit()
-      this.commitMessageStore.setResult(result)
-      await Promise.all([this.handleSimpleGen(), this.handleWebviewGen()])
+      this.statusBar.setWaiting("Committing...")
+      await this.gitService.commit(message)
     } finally {
       this.statusBar.clearWaiting()
     }
   }
 
-  async syncFiles(): Promise<void> {
-    const diffResult = await this.getDiff()
-    void this.webviewManager.postMessage({
-      type: "diff-result",
-      data: diffResult,
-    })
+  async generateCommit(): Promise<void> {
+    const postGenerateCommit = async (uiMode: UiMode) => {
+      const result = this.commitMessageStore.getResult()
+      if (!result) return
+      switch (uiMode) {
+        case "notification":
+          if (result.ok) {
+            const selection = await vscode.window.showInformationMessage(
+              result.data.title,
+              { modal: false },
+              "Commit",
+              "Edit"
+            )
+
+            if (selection === "Commit") {
+              await this.commit(result.data.title)
+              await vscode.window.showInformationMessage(
+                "Successfully commited"
+              )
+            } else if (selection === "Edit") {
+              this.webviewManager.show()
+            }
+          } else {
+            await vscode.window.showErrorMessage(
+              `Failed to generate message, reason: ${result.message}`
+            )
+          }
+          break
+
+        case "panel":
+          this.webviewManager.postMessage({
+            type: "generate-result",
+            data: result,
+          })
+          break
+      }
+    }
+
+    try {
+      this.statusBar.setWaiting("Generating commit...")
+      const result = await this.gitCommitManager.generateCommit()
+      this.commitMessageStore.setResult(result)
+      await Promise.all([
+        postGenerateCommit("notification"),
+        postGenerateCommit("panel"),
+      ])
+    } finally {
+      this.statusBar.clearWaiting()
+    }
   }
 
   async dispose(): Promise<void> {
