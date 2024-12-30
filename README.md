@@ -94,6 +94,12 @@ A VSCode extension redefining Git commits with a focus on user experience, makin
 | `oh-my-commit.telemetry.shareLevel`    | string  | "basic"             | Data collection level                          | • `minimal`: Basic error info only<br>• `basic`: Feature usage stats and performance data<br>• `full`: Additional AI generation quality feedback      |
 | `oh-my-commit.feedback.enabled`        | boolean | true                | Enable user feedback (one-click GitHub Issues) | `true / false`                                                                                                                                        |
 
+## Documentation
+
+- [使用文档](./README.zh-CN.md)
+- [发布指南](./docs/publish-guide.md)
+- [更新日志](./CHANGELOG.md)
+
 ## Contributing
 
 Contributions are welcome! Please check our [Contributing Guide](CONTRIBUTING.md) for details.
