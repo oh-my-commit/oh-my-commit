@@ -7,10 +7,19 @@
  */
 import chalk from "chalk"
 import figlet from "figlet"
+import { readFileSync } from "fs"
+import path, { resolve } from "path"
 
 import packageJson from "../package.json"
 
 export const displayBanner = () => {
+  // 解析并加载字体
+  const fontName = "Big"
+  const fontDir = resolve(require.resolve("figlet/package.json"), "../fonts")
+  const fontPath = path.join(fontDir, `${fontName}.flf`)
+  const fontData = readFileSync(fontPath, "utf8")
+  figlet.parseFont(fontName, fontData)
+
   // 使用默认字体，避免复杂的字体加载逻辑
   console.log(
     chalk.cyan(
@@ -19,10 +28,5 @@ export const displayBanner = () => {
       })
     )
   )
-  console.log(
-    chalk.gray(
-      "✨ AI-powered commit message generator\n" +
-        `📦 Version ${packageJson.version}\n`
-    )
-  )
+  console.log(chalk.gray("✨ AI-powered commit message generator\n" + `📦 Version ${packageJson.version}\n`))
 }
