@@ -10,6 +10,7 @@
 - `@typescript-eslint/no-unsafe-argument`
 
 这些警告通常出现在：
+
 1. 使用模板字符串时
 2. 跨包引用时
 3. 使用第三方库时
@@ -30,6 +31,7 @@ rules: {
 ## 待优化方向
 
 1. 使用 TypeScript 的类型系统来更好地定义和约束类型：
+
    - 使用 `satisfies` 操作符
    - 使用 const enum
    - 定义明确的类型接口

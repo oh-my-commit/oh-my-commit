@@ -7,6 +7,7 @@ assignees: []
 ## Issue Description
 
 Currently, we're encountering numerous TypeScript ESLint warnings related to unsafe type operations, particularly:
+
 - `@typescript-eslint/no-unsafe-assignment`
 - `@typescript-eslint/no-unsafe-member-access`
 - `@typescript-eslint/no-unsafe-return`
@@ -17,6 +18,7 @@ We've temporarily disabled these rules in `.eslintrc.js`, but this reduces type 
 ## Current Situation
 
 1. These warnings appear frequently when:
+
    - Using template strings for command IDs
    - Cross-package references
    - Using third-party libraries
@@ -34,6 +36,7 @@ We've temporarily disabled these rules in `.eslintrc.js`, but this reduces type 
 ## Desired Outcome
 
 We need a solution that:
+
 1. Maintains type safety
 2. Reduces false positive warnings
 3. Improves developer experience
@@ -41,15 +44,17 @@ We need a solution that:
 ## Possible Solutions
 
 1. Define strict types for command IDs:
+
    ```typescript
    type CommandId = `${string}.${string}`
    const COMMAND_QUICK_COMMIT: CommandId = `${APP_ID_CAMEL}.quickCommit`
    ```
 
 2. Use const enums or satisfies operator:
+
    ```typescript
    const enum Commands {
-     QuickCommit = "ohMyCommit.quickCommit"
+     QuickCommit = "ohMyCommit.quickCommit",
    }
    ```
 

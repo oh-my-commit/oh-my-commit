@@ -42,7 +42,7 @@ import { something } from "./module.ts"
 ```json
 {
   "compilerOptions": {
-    "moduleResolution": "node",  // 或者 "bundler"，取决于你的构建工具
+    "moduleResolution": "node", // 或者 "bundler"，取决于你的构建工具
     "module": "ESNext"
   }
 }
