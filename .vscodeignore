@@ -1,5 +1,6 @@
 !dist/main
 !dist/webview
+!dist/providers
 !CHANGELOG.md
 !README.md
 !LICENSE
