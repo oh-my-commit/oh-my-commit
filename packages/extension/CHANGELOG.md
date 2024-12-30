@@ -1,5 +1,16 @@
 # @oh-my-commit/extension
 
+## 0.20.0
+
+### Minor Changes
+
+- 068a5aa: refactor: cleaner codes with Inject
+
+### Patch Changes
+
+- Updated dependencies [068a5aa]
+  - @oh-my-commit/shared@0.20.0
+
 ## 0.19.0
 
 ### Minor Changes
