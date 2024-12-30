@@ -7,18 +7,9 @@
  */
 import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
-import { aw } from "vitest/dist/chunks/reporters.C4ZHgdxQ"
 import vscode from "vscode"
 
-import type {
-  ICommitManager,
-  IConfig,
-  IInputOptions,
-  ILogger,
-  IResult,
-  ResultDTO,
-  UiMode,
-} from "@shared/common"
+import type { ICommitManager, IConfig, ILogger, UiMode } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IWebviewManager } from "@/core/webview/vscode-webview"
@@ -27,6 +18,8 @@ import type { IVscodeGit } from "@/managers/vscode-git"
 import type { IPreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import type { IStatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
+
+import type { ICommitMessageStore } from "./commit-message-store"
 
 export interface IOrchestrator {
   // 基础服务
@@ -79,10 +72,10 @@ export class Orchestrator implements IOrchestrator {
     @Inject(TOKENS.WebviewManager)
     public readonly webviewManager: IWebviewManager,
     @Inject(TOKENS.PreferenceMonitor)
-    public readonly workspaceSettings: IPreferenceMonitor
+    public readonly workspaceSettings: IPreferenceMonitor,
+    @Inject(TOKENS.CommitMessageStore)
+    private readonly commitMessageStore: ICommitMessageStore
   ) {}
-
-  result: ResultDTO<IResult> | null = null
 
   async initialize(): Promise<void> {
     this.logger.info("Initializing Orchestrator...")
@@ -146,42 +139,45 @@ export class Orchestrator implements IOrchestrator {
 
   async handleSimpleGen() {
     const uiMode = this.config.get<UiMode>("ohMyCommit.ui.mode")!
-    if (!this.result || uiMode !== "notification") return
+    const result = this.commitMessageStore.getResult()
+    if (!result || uiMode !== "notification") return
 
-    if (this.result.ok) {
+    if (result.ok) {
       const selection = await vscode.window.showInformationMessage(
-        this.result.data.title,
+        result.data.title,
         { modal: false },
         "Commit",
         "Edit"
       )
 
       if (selection === "Commit") {
-        await this.commit(this.result.data.title)
+        await this.commit(result.data.title)
         await vscode.window.showInformationMessage("Successfully commited")
       } else if (selection === "Edit") {
         this.webviewManager.show()
       }
     } else {
       await this.showMessage(
-        `Failed to generate message, reason: ${this.result.message}`,
+        `Failed to generate message, reason: ${result.message}`,
         "error"
       )
     }
   }
 
   async handleWebviewGen() {
-    if (!this.result) return
+    const result = this.commitMessageStore.getResult()
+    if (!result) return
     this.webviewManager.postMessage({
       type: "generate-result",
-      data: this.result,
+      data: result,
     })
   }
 
   async generateCommit(): Promise<void> {
     try {
       this.statusBar.setWaiting("Generating commit...")
-      this.result = await this.gitCommitManager.generateCommit()
+      const result = await this.gitCommitManager.generateCommit()
+      this.commitMessageStore.setResult(result)
       await Promise.all([this.handleSimpleGen(), this.handleWebviewGen()])
     } finally {
       this.statusBar.clearWaiting()

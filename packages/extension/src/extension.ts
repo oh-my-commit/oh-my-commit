@@ -24,6 +24,8 @@ import { PreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import { StatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
 
+import { CommitMessageStore } from "./managers/commit-message-store"
+
 export function activate(context: vscode.ExtensionContext) {
   const logger = Container.get(VscodeLogger)
   try {
@@ -43,6 +45,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
+
+    Container.set(TOKENS.CommitMessageStore, Container.get(CommitMessageStore))
 
     logger.info("setting commit manager...")
     Container.set(TOKENS.GitCommitManager, Container.get(GitCommitManager))

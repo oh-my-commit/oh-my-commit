@@ -15,6 +15,7 @@ import { ClientMessageEvent, formatError } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server/git-commit-manager"
 
 import type { IWebviewManager } from "@/core/webview/vscode-webview"
+import type { ICommitMessageStore } from "@/managers/commit-message-store"
 import type { VscodeGit } from "@/managers/vscode-git"
 import type { VscodeLogger } from "@/managers/vscode-logger"
 import type { IStatusBarManager } from "@/managers/vscode-statusbar"
@@ -33,7 +34,9 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
     private readonly gitCommitManager: IGitCommitManager,
     @Inject(TOKENS.WebviewManager)
     private readonly webviewManager: IWebviewManager,
-    @Inject(TOKENS.StatusBar) private readonly statusBar: IStatusBarManager
+    @Inject(TOKENS.StatusBar) private readonly statusBar: IStatusBarManager,
+    @Inject(TOKENS.CommitMessageStore)
+    private readonly commitMessageStore: ICommitMessageStore
   ) {}
 
   async handleMessage(message: ClientMessageEvent): Promise<void> {
@@ -92,7 +95,18 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
   private async handleInit() {
     await this.syncWorkspaceStatus()
+    await this.syncCommitMessage()
     await this.syncFiles()
+  }
+
+  private async syncCommitMessage() {
+    const result = this.commitMessageStore.getResult()
+    if (result) {
+      this.webviewManager.postMessage({
+        type: "generate-result",
+        data: result,
+      })
+    }
   }
 
   private async handleGetSettings(message: ClientMessageEvent) {
@@ -101,7 +115,7 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
     try {
       const config = vscode.workspace.getConfiguration("ohMyCommit")
       const value = config.get(message.data.section)
-      await this.webviewManager.postMessage({
+      this.webviewManager.postMessage({
         type: "settings-value",
         data: {
           section: message.data.section,
@@ -129,7 +143,7 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         .getConfiguration()
         .update(section, message.data.value, vscode.ConfigurationTarget.Global)
 
-      await this.webviewManager.postMessage({
+      this.webviewManager.postMessage({
         type: "settings-updated",
         data: {
           section: message.data.section,
@@ -163,7 +177,7 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
       await this.gitService.commit(commitMessage)
 
-      await this.webviewManager.postMessage({
+      this.webviewManager.postMessage({
         type: "commit-result",
         data: {
           ok: true,
@@ -181,7 +195,7 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         error
       )
 
-      await this.webviewManager.postMessage({
+      this.webviewManager.postMessage({
         type: "commit-result",
         data: {
           ok: false,
@@ -250,7 +264,7 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
   private async syncFiles() {
     const diffResult = await this.getDiffResult()
-    await this.webviewManager.postMessage({
+    this.webviewManager.postMessage({
       type: "diff-result",
       data: diffResult,
     })

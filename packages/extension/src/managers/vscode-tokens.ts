@@ -37,4 +37,6 @@ export const TOKENS = {
     "OpenPreferencesCommand"
   ),
   SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
+
+  CommitMessageStore: new Token<unknown>("CommitMessageStore"),
 } as const
