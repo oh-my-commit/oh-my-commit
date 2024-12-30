@@ -25,7 +25,7 @@
 </p>
 
 
-English | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
+English | [中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
 
 </div>
 

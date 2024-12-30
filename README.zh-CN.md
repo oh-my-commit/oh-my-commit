@@ -20,14 +20,14 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/@oh-my-commit/core?style=flat-square&color=00a8f0" alt="npm version" />
-  <img src="https://img.shields.io/npm/dm/@oh-my-commit/core.svg?style=flat-square&color=00a8f0" alt="downloads" />
+  <img src="https://img.shields.io/npm/v/@oh-my-commit/cli?style=flat-square&color=00a8f0" alt="npm version" />
+  <img src="https://img.shields.io/npm/dm/@oh-my-commit/cli.svg?style=flat-square&color=00a8f0" alt="downloads" />
   <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=00a8f0" alt="License" />
 </p>
 
 
 
-[English](./README.md) | 简体中文 | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
+[English](./README.md) | 中文 | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=ohmycommit.ohmycommit)
 
 </div>
 
