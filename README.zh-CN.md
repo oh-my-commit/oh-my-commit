@@ -13,7 +13,7 @@
                                                      __/ |                                        
                                                     |___/                                         
                             
-                            ✨Your AI-powered Commit Generator Solution ✨      
+                            ✨Your Next-gen AI-powered Commit Solution ✨      
                                                                             
 ```
 
