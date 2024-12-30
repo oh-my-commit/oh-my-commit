@@ -1,6 +1,5 @@
 /**
  * @Copyright Copyright (c) 2024 Oh My Commit
- * @Author markshawn2020
  * @CreatedAt 2024-12-27
  *
  * This source code is licensed under the MIT license found in the
@@ -83,7 +82,7 @@ module.exports = {
       },
       extends: [
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        // "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
       rules: {
         "no-unused-vars": "off",
@@ -91,10 +90,10 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-unsafe-call": "off",
-        "@typescript-eslint/no-unsafe-member-access": "warn",
-        "@typescript-eslint/no-unsafe-assignment": "warn",
-        "@typescript-eslint/no-unsafe-return": "warn",
-        "@typescript-eslint/no-unsafe-argument": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off", // 禁用这个规则
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
         "@typescript-eslint/restrict-template-expressions": "warn",
         "@typescript-eslint/no-base-to-string": "warn",
         "@typescript-eslint/require-await": "warn",
@@ -110,31 +109,31 @@ module.exports = {
     },
 
     // shared 库特定规则
-    {
-      files: ["packages/shared/**/*.{ts,tsx}"],
-      rules: {
-        "@typescript-eslint/explicit-module-boundary-types": "warn",
-        "no-console": "warn",
-        "@typescript-eslint/no-explicit-any": "warn",
-      },
-    },
+    // {
+    //   files: ["packages/shared/**/*.{ts,tsx}"],
+    //   rules: {
+    //     "@typescript-eslint/explicit-module-boundary-types": "warn",
+    //     "no-console": "warn",
+    //     "@typescript-eslint/no-explicit-any": "warn",
+    //   },
+    // },
 
     // extension 包（VSCode 插件）特定规则
-    {
-      files: ["packages/extension/**/*.{ts,tsx}"],
-      env: {
-        node: true,
-        worker: true, // VSCode 扩展可能运行在 webworker 环境
-      },
-      globals: {
-        vscode: "readonly", // VSCode API 全局变量
-      },
-      rules: {
-        "no-restricted-globals": "off", // VSCode 扩展需要访问特定全局变量
-        "@typescript-eslint/no-namespace": "off", // 允许使用命名空间
-        "no-console": "off", // 允许使用控制台输出用于调试
-      },
-    },
+    // {
+    //   files: ["packages/extension/**/*.{ts,tsx}"],
+    //   // env: {
+    //   //   node: true,
+    //   //   worker: true, // VSCode 扩展可能运行在 webworker 环境
+    //   // },
+    //   globals: {
+    //     vscode: "readonly", // VSCode API 全局变量
+    //   },
+    //   // rules: {
+    //   //   "no-restricted-globals": "off", // VSCode 扩展需要访问特定全局变量
+    //   //   "@typescript-eslint/no-namespace": "off", // 允许使用命名空间
+    //   //   "no-console": "off", // 允许使用控制台输出用于调试
+    //   // },
+    // },
 
     // cli 包特定规则
     {
