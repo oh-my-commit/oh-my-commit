@@ -55,15 +55,6 @@ class OfficialProvider extends BaseProvider implements IProvider {
 
   constructor(context: ProviderContext) {
     super(context)
-
-    this.logger.debug("Initializing Anthropic API...")
-    const proxy = this.config.get<string | undefined>("ohMyCommit.proxy")
-    const apiKey = this.config.get<string | undefined>("ohMyCommit.ai.apiKeys.anthropic")
-
-    this.logger.info("Initializing Anthropic config: ", { proxy, apiKey })
-    const config: Record<string, any> = { apiKey }
-    if (proxy) config["httpAgent"] = new HttpsProxyAgent(proxy)
-    this.anthropic = new Anthropic(config)
   }
 
   async generateCommit(input: IInput): Promise<IResultDTO> {
@@ -98,13 +89,24 @@ class OfficialProvider extends BaseProvider implements IProvider {
       return {
         ok: false,
         code: -999,
-        message: formatError(error, "Failed to generate commit"),
+        message: formatError(error),
       }
     }
   }
 
   private callApi(prompt: string) {
     this.logger.debug("Generating commit message using Anthropic...")
+
+    this.logger.debug("Initializing Anthropic API...")
+    const proxyEnabled = this.config.get<boolean>("ohMyCommit.proxy.enabled")
+    const proxyUrl = this.config.get<string | undefined>("ohMyCommit.proxy.url")
+    const apiKey = this.config.get<string | undefined>("ohMyCommit.ai.apiKeys.anthropic")
+
+    this.logger.info("Initializing Anthropic config: ", { proxyEnabled, proxyUrl, apiKey })
+    const config: Record<string, any> = { apiKey }
+    if (proxyEnabled && proxyUrl) config["httpAgent"] = new HttpsProxyAgent(proxyUrl)
+    this.anthropic = new Anthropic(config)
+
     const modelName = "claude-3-sonnet-20240229"
     if (!this.anthropic) throw new Error("Anthropic API key not configured")
 

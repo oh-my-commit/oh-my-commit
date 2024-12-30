@@ -171,6 +171,22 @@
           "markdownDescription": "提交界面显示模式",
           "order": 1
         },
+        "ohMyCommit.basic.uiLanguage": {
+          "type": "string",
+          "enum": [
+            "system",
+            "zh_CN",
+            "en_US"
+          ],
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文",
+            "English"
+          ],
+          "default": "system",
+          "markdownDescription": "界面显示语言",
+          "order": 2
+        },
         "ohMyCommit.git.commitLanguage": {
           "type": "string",
           "enum": [
@@ -217,6 +233,22 @@
             }
           },
           "order": 30
+        },
+        "ohMyCommit.telemetry.shareLevel": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "basic",
+            "full"
+          ],
+          "enumDescriptions": [
+            "仅收集基本错误信息",
+            "包含功能使用统计和性能数据",
+            "额外包含 AI 生成结果的质量反馈"
+          ],
+          "default": "basic",
+          "markdownDescription": "数据收集级别",
+          "order": 51
         },
         "ohMyCommit.proxy.enabled": {
           "type": "boolean",

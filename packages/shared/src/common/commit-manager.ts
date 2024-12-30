@@ -111,7 +111,7 @@ export class CommitManager implements ICommitManager {
       return {
         ok: false,
         code: -999,
-        message: formatError(error, "Failed to generate commit"),
+        message: formatError(error),
       }
     }
   }
