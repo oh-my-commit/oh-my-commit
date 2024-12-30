@@ -62,28 +62,6 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
       localResourceRoots: [vscode.Uri.file(this.webviewPath)],
     }
 
-    const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders
-      ? workspaceFolders[0]?.uri.fsPath
-      : undefined
-    const isWorkspaceValid = !!(
-      workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
-    )
-
-    void this.postMessage({
-      type: "workspace-status",
-      data: {
-        workspaceRoot,
-        isWorkspaceValid,
-        isGitRepository: await this.gitService.isGitRepository(),
-        error: !workspaceRoot
-          ? "请打开一个工作区文件夹"
-          : !isWorkspaceValid
-            ? "工作区文件夹不存在或已被删除"
-            : undefined,
-      },
-    })
-
     webviewView.webview.html = this.getWebviewContent()
 
     if (this.messageHandler) {

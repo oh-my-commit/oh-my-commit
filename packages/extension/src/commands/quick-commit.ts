@@ -81,6 +81,7 @@ export class QuickCommitCommand implements BaseCommand {
         switch (message.type) {
           case "init":
             this.isWebviewInitialized = true
+            await this.syncWorkspaceStatus()
             await this.syncCommitMessage()
             await this.syncFiles()
             break
@@ -412,6 +413,30 @@ export class QuickCommitCommand implements BaseCommand {
     await this.webviewManager?.postMessage({
       type: "diff-result",
       data: await this.getLatestDiff(),
+    })
+  }
+
+  private async syncWorkspaceStatus() {
+    const workspaceFolders = vscode.workspace.workspaceFolders
+    const workspaceRoot = workspaceFolders
+      ? workspaceFolders[0]?.uri.fsPath
+      : undefined
+    const isWorkspaceValid = !!(
+      workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
+    )
+
+    void this.webviewManager.postMessage({
+      type: "workspace-status",
+      data: {
+        workspaceRoot,
+        isWorkspaceValid,
+        isGitRepository: await this.gitService.isGitRepository(),
+        error: !workspaceRoot
+          ? "请打开一个工作区文件夹"
+          : !isWorkspaceValid
+            ? "工作区文件夹不存在或已被删除"
+            : undefined,
+      },
     })
   }
 }
