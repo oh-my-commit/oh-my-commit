@@ -12,6 +12,7 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
+import { WebviewMessageHandler } from "./WebviewMessageHandler"
 import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git.js"
 import { TOKENS } from "./vscode-token"
@@ -19,7 +20,7 @@ import { TOKENS } from "./vscode-token"
 @Service()
 export class VscodeWebview implements vscode.WebviewViewProvider {
   private webview?: vscode.Webview
-  private messageHandler?: (message: ClientMessageEvent) => Promise<void>
+  private messageHandler?: WebviewMessageHandler
   private readonly title: string = `Commit Assistant`
   private readonly webviewPath: string
   private view?: vscode.WebviewView
@@ -61,14 +62,13 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [vscode.Uri.file(this.webviewPath)],
     }
-
     webviewView.webview.html = this.getWebviewContent()
 
     if (this.messageHandler) {
       webviewView.webview.onDidReceiveMessage(async (message: any) => {
         this.logger.info("[Host << Webview] ", message)
         if (this.messageHandler) {
-          await this.messageHandler(message)
+          await this.messageHandler.handleMessage(message)
         }
       })
     }
@@ -76,12 +76,15 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     webviewView.title = this.title
   }
 
-  public setMessageHandler(
-    handler: (message: ClientMessageEvent) => Promise<void>
-  ) {
+  public setMessageHandler(handler: WebviewMessageHandler) {
     this.messageHandler = handler
     if (this.webview) {
-      this.webview.onDidReceiveMessage(handler)
+      this.webview.onDidReceiveMessage(async (message: ClientMessageEvent) => {
+        this.logger.info("[Host << Webview] ", message)
+        if (this.messageHandler) {
+          await this.messageHandler.handleMessage(message)
+        }
+      })
     }
   }
 
@@ -130,7 +133,7 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
       return htmlContent
     }
 
-    const template = `
+    const template = outdent`
       <!doctype html>
       <html lang="en">
         <head>

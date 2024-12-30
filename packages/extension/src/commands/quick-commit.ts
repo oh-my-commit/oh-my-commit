@@ -5,21 +5,19 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import * as path from "path"
 import type { DiffResult } from "simple-git"
-import { Inject, Service } from "typedi"
+import Container, { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
 import {
   COMMAND_QUICK_COMMIT,
-  ClientMessageEvent,
   type CommitManager,
   IInputOptions,
   IResult,
   ResultDTO,
-  formatError,
 } from "@shared/common"
 
+import { WebviewMessageHandler } from "@/WebviewMessageHandler"
 import type { BaseCommand } from "@/vscode-command"
 import { VscodeConfig, VscodeLogger } from "@/vscode-commit-adapter"
 import { VscodeGit } from "@/vscode-git"
@@ -76,205 +74,7 @@ export class QuickCommitCommand implements BaseCommand {
     })
 
     // 设置 webview 的消息处理
-    this.webviewManager.setMessageHandler(
-      async (message: ClientMessageEvent) => {
-        switch (message.type) {
-          case "init":
-            this.isWebviewInitialized = true
-            await this.syncWorkspaceStatus()
-            await this.syncCommitMessage()
-            await this.syncFiles()
-            break
-
-          case "show-info":
-            void vscode.window.showInformationMessage(message.data.message)
-            break
-
-          case "open-external":
-            void vscode.env.openExternal(vscode.Uri.parse(message.data.url))
-            break
-
-          case "generate":
-            await this.execute()
-            break
-
-          case "get-settings":
-            try {
-              const config = vscode.workspace.getConfiguration("ohMyCommit")
-              const value = config.get(message.data.section)
-              await this.webviewManager?.postMessage({
-                type: "settings-value",
-                data: {
-                  section: message.data.section,
-                  value,
-                },
-              })
-            } catch (error) {
-              this.logger.error(
-                "[VscodeWebview] Failed to get settings:",
-                error
-              )
-            }
-            break
-
-          case "update-settings":
-            try {
-              const config = vscode.workspace.getConfiguration("ohMyCommit")
-              // 对于 git.commitLanguage，需要更新完整的配置路径
-              const section = message.data.section.startsWith("ohMyCommit.")
-                ? message.data.section
-                : `ohMyCommit.${message.data.section}`
-
-              await vscode.workspace
-                .getConfiguration()
-                .update(
-                  section,
-                  message.data.value,
-                  vscode.ConfigurationTarget.Global
-                )
-
-              // 通知 webview 更新成功
-              await this.webviewManager?.postMessage({
-                type: "settings-updated",
-                data: {
-                  section: message.data.section,
-                  value: message.data.value,
-                },
-              })
-            } catch (error) {
-              this.logger.error(
-                "[VscodeWebview] Failed to update settings:",
-                error
-              )
-            }
-            break
-
-          case "commit":
-            this.logger.info(
-              "[VscodeWebview] Committing changes with message:",
-              message.data
-            )
-            try {
-              const { title, body } = message.data
-              const commitMessage = body ? `${title}\n\n${body}` : title
-
-              // Ensure changes are staged
-              await this.gitService.stageAll()
-
-              // Check if there are changes to commit
-              if (!(await this.gitService.hasChanges())) {
-                throw new Error("No changes to commit")
-              }
-
-              // Perform the commit
-              await this.gitService.commit(commitMessage)
-
-              // Send success response
-              await this.webviewManager?.postMessage({
-                type: "commit-result",
-                data: {
-                  ok: true,
-                  data: { message: "Changes committed successfully" },
-                },
-              })
-
-              // Show success message
-              void vscode.window.showInformationMessage(
-                "Changes committed successfully"
-              )
-
-              // Refresh git status
-              await this.syncFiles()
-            } catch (error) {
-              this.logger.error(
-                "[VscodeWebview] Failed to commit changes:",
-                error
-              )
-
-              // Send error response
-              await this.webviewManager?.postMessage({
-                type: "commit-result",
-                data: {
-                  ok: false,
-                  code: 500,
-                  message: formatError(error, "Failed to commit changes"),
-                },
-              })
-
-              // Show error message
-              void vscode.window.showErrorMessage(
-                formatError(error, "Failed to commit changes")
-              )
-            }
-            break
-
-          case "diff-file":
-            this.logger.info(
-              "[VscodeWebview] Getting file diff for:",
-              message.data.filePath
-            )
-            try {
-              const workspaceRoot = this.gitService.workspaceRoot
-              if (!workspaceRoot) return
-
-              const filePath = message.data.filePath
-              const absolutePath = path.isAbsolute(filePath)
-                ? filePath
-                : path.join(workspaceRoot, filePath)
-
-              const uri = vscode.Uri.file(absolutePath)
-              this.logger.info(
-                "[VscodeWebview] Resolved file path:",
-                uri.fsPath
-              )
-
-              // 获取 git 扩展
-              const gitExtension =
-                vscode.extensions.getExtension<any>("vscode.git")?.exports
-              if (!gitExtension) return
-
-              const git = gitExtension.getAPI(1)
-              const repository = git.repositories[0]
-              if (!repository) return
-
-              // 打开差异视图
-              await vscode.commands.executeCommand("git.openChange", uri)
-
-              this.logger.info("[VscodeWebview] Opened file diff")
-            } catch (error) {
-              this.logger.error(
-                formatError(error, "[VscodeWebview] Failed to get file diff")
-              )
-            }
-            break
-
-          case "execute-command":
-            if (message.command) {
-              try {
-                await vscode.commands.executeCommand(message.command)
-                this.logger.info(
-                  "[VscodeWebview] Executed command:",
-                  message.command
-                )
-
-                // Auto refresh after git init
-                if (message.command === "git.init") {
-                  // Wait a bit for git to initialize
-                  setTimeout(() => {
-                    void this.syncFiles()
-                  }, 500)
-                }
-              } catch (error) {
-                this.logger.error(
-                  "[VscodeWebview] Failed to execute command:",
-                  error
-                )
-              }
-            }
-            break
-        }
-      }
-    )
+    this.webviewManager.setMessageHandler(Container.get(WebviewMessageHandler))
 
     // Clean up file watcher when extension is deactivated
     this.context.subscriptions.push(this)
@@ -413,30 +213,6 @@ export class QuickCommitCommand implements BaseCommand {
     await this.webviewManager?.postMessage({
       type: "diff-result",
       data: await this.getLatestDiff(),
-    })
-  }
-
-  private async syncWorkspaceStatus() {
-    const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders
-      ? workspaceFolders[0]?.uri.fsPath
-      : undefined
-    const isWorkspaceValid = !!(
-      workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
-    )
-
-    void this.webviewManager.postMessage({
-      type: "workspace-status",
-      data: {
-        workspaceRoot,
-        isWorkspaceValid,
-        isGitRepository: await this.gitService.isGitRepository(),
-        error: !workspaceRoot
-          ? "请打开一个工作区文件夹"
-          : !isWorkspaceValid
-            ? "工作区文件夹不存在或已被删除"
-            : undefined,
-      },
     })
   }
 }
