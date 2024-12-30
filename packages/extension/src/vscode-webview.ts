@@ -54,14 +54,24 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
 
   private setupWorkspaceMonitoring() {
     // Monitor workspace folder changes
-    vscode.workspace.onDidChangeWorkspaceFolders(() => {
+    const workspaceWatcher = vscode.workspace.onDidChangeWorkspaceFolders(
+      (event) => {
+        this.logger.info("[VscodeWebview] Workspace folders changed:", {
+          added: event.added.length,
+          removed: event.removed.length,
+        })
+        this.updateWorkspaceStatus()
+      }
+    )
+
+    // Monitor git status changes
+    const gitWatcher = this.gitService.onGitStatusChanged(() => {
+      this.logger.info("[VscodeWebview] Git status changed")
       this.updateWorkspaceStatus()
     })
 
-    // Monitor git status changes
-    this.gitService.onGitStatusChanged(() => {
-      this.updateWorkspaceStatus()
-    })
+    // Cleanup watchers when extension is deactivated
+    this.context.subscriptions.push(workspaceWatcher, gitWatcher)
 
     // Initial status update
     this.updateWorkspaceStatus()
@@ -75,24 +85,48 @@ export class VscodeWebview implements vscode.WebviewViewProvider {
     const workspaceFolders = vscode.workspace.workspaceFolders
     const workspaceRoot = workspaceFolders?.[0]?.uri.fsPath
 
+    // Check if workspace directory actually exists
+    let isWorkspaceValid = false
+    if (workspaceRoot) {
+      try {
+        await vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
+        isWorkspaceValid = true
+      } catch (e) {
+        this.logger.warn(
+          "[VscodeWebview] Workspace directory does not exist:",
+          workspaceRoot
+        )
+        isWorkspaceValid = false
+      }
+    }
+
     try {
       const isGitRepository = await this.gitService.isGitRepository()
+      this.logger.info("[VscodeWebview] Workspace status:", {
+        isGitRepository,
+        workspaceRoot,
+        isWorkspaceValid,
+      })
 
       await this.postMessage({
         type: "workspace-status",
         data: {
           isGitRepository,
           workspaceRoot,
-          isWorkspaceValid: !!workspaceRoot,
+          isWorkspaceValid,
         },
       })
     } catch (error) {
+      this.logger.error(
+        "[VscodeWebview] Error updating workspace status:",
+        error
+      )
       await this.postMessage({
         type: "workspace-status",
         data: {
           isGitRepository: false,
           workspaceRoot,
-          isWorkspaceValid: !!workspaceRoot,
+          isWorkspaceValid,
           error: error instanceof Error ? error.message : String(error),
         },
       })
