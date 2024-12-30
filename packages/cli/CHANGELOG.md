@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.21.7
+
+### Patch Changes
+
+- 85a39a2: fix
+- Updated dependencies [85a39a2]
+  - @oh-my-commit/shared@0.21.7
+
 ## 0.21.6
 
 ### Patch Changes
