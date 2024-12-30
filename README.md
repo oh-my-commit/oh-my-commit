@@ -1,6 +1,5 @@
 <div align="center">
 
-# Oh My Commit
 
 ```shell
                                ____  _       __  __          _____                          _ _   
@@ -13,8 +12,10 @@
                                                     |___/                                         
                             
                             ✨Your Next-gen AI-powered Commit Solution ✨      
-                                                                            
+   
 ```
+
+# Oh My Commit
 
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
 
