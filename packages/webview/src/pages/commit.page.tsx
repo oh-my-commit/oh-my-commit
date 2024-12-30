@@ -18,7 +18,7 @@ import { Progress } from "@/components/progress/Progress"
 import { useBasicMessage } from "@/hooks/use-basic-message"
 import { useCloseWindow } from "@/hooks/use-close-window"
 import { useCommitMessage } from "@/hooks/use-commit-message"
-import { gitStatusAtom } from "@/state/atoms/git"
+import { logger } from "@/lib/vscode-client-logger"
 import { workspaceStatusAtom } from "@/state/atoms/workspace"
 import { clientPush } from "@/utils/clientPush"
 
@@ -31,7 +31,6 @@ export const CommitPage = () => {
 
   useCloseWindow()
 
-  const [gitStatus] = useAtom(gitStatusAtom)
   const [workspaceStatus] = useAtom(workspaceStatusAtom)
   const [isInitializing, setIsInitializing] = useState(false)
 
@@ -60,7 +59,9 @@ export const CommitPage = () => {
 
   // Render different states
   const renderContent = () => {
-    if (!workspaceStatus?.isValid) {
+    logger.info("workspaceStatus:", workspaceStatus)
+
+    if (!workspaceStatus?.isWorkspaceValid) {
       return (
         <ErrorLayout>
           <div className="flex flex-col items-center justify-center p-4 text-center">
@@ -97,7 +98,7 @@ export const CommitPage = () => {
       )
     }
 
-    if (!gitStatus?.isGitRepository) {
+    if (!workspaceStatus?.isGitRepository) {
       return (
         <ErrorLayout>
           <div className="my-4">

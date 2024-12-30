@@ -137,25 +137,12 @@ export type ServerMessageEvent =
     }
   | {
       type: "workspace-status"
-      data: {
-        isGitRepository: boolean
-        workspaceRoot: string | undefined
-        isWorkspaceValid: boolean
-        error?: string
-      }
+      data: WorkspaceStatus
     }
 
 export interface WorkspaceStatus {
-  isValid?: boolean
-  isGitRepository?: boolean
+  isGitRepository: boolean
+  workspaceRoot: string | undefined
+  isWorkspaceValid: boolean
   error?: string
-}
-
-export interface BasicMessage {
-  type: "init" | "git-status" | "workspace-status"
-  channel?: string
-  data?: {
-    gitStatus?: any
-    workspaceStatus?: WorkspaceStatus
-  }
 }
