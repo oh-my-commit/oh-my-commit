@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.0
+
+### Minor Changes
+
+- b381eab: better providers config
+
 ## 0.21.7
 
 ### Patch Changes

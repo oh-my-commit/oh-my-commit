@@ -1,5 +1,16 @@
 # @oh-my-commit/cli
 
+## 0.22.0
+
+### Minor Changes
+
+- b381eab: better providers config
+
+### Patch Changes
+
+- Updated dependencies [b381eab]
+  - @oh-my-commit/shared@0.22.0
+
 ## 0.21.7
 
 ### Patch Changes
