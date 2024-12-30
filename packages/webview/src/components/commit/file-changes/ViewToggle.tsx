@@ -35,7 +35,7 @@ export const ViewToggle: React.FC<ViewToggleProps> = ({
         className={cn(
           "p-1 rounded transition-colors",
           view === "flat"
-            ? "bg-white dark:bg-gray-700"
+            ? "bg-white dark:bg-gray-700 shadow-sm ring-1 ring-gray-200 dark:ring-gray-600"
             : "hover:bg-gray-200 dark:hover:bg-gray-600"
         )}
         title="Flat View"
@@ -47,7 +47,7 @@ export const ViewToggle: React.FC<ViewToggleProps> = ({
         className={cn(
           "p-1 rounded transition-colors",
           view === "tree"
-            ? "bg-white dark:bg-gray-700"
+            ? "bg-white dark:bg-gray-700 shadow-sm ring-1 ring-gray-200 dark:ring-gray-600"
             : "hover:bg-gray-200 dark:hover:bg-gray-600"
         )}
         title="Tree View"
