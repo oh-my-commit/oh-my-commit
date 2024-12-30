@@ -5,7 +5,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import path from "path"
+// import type { DiffResult } from "simple-git"
+import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
@@ -68,6 +69,8 @@ export class WebviewMessageHandler {
   }
 
   private async handleGetSettings(message: ClientMessageEvent) {
+    if (message.type !== "get-settings") return
+
     try {
       const config = vscode.workspace.getConfiguration("ohMyCommit")
       const value = config.get(message.data.section)
@@ -87,6 +90,8 @@ export class WebviewMessageHandler {
   }
 
   private async handleUpdateSettings(message: ClientMessageEvent) {
+    if (message.type !== "update-settings") return
+
     try {
       const config = vscode.workspace.getConfiguration("ohMyCommit")
       const section = message.data.section.startsWith("ohMyCommit.")
@@ -113,6 +118,8 @@ export class WebviewMessageHandler {
   }
 
   private async handleCommit(message: ClientMessageEvent) {
+    if (message.type !== "commit") return
+
     this.logger.info(
       "[WebviewMessageHandler] Committing changes with message:",
       message.data
@@ -163,56 +170,39 @@ export class WebviewMessageHandler {
   }
 
   private async handleDiffFile(message: ClientMessageEvent) {
-    this.logger.info(
-      "[WebviewMessageHandler] Getting file diff for:",
-      message.data.filePath
-    )
+    if (message.type !== "diff-file") return
+
     try {
-      const workspaceRoot = this.gitService.workspaceRoot
-      if (!workspaceRoot) return
-
-      const filePath = message.data.filePath
-      const absolutePath = path.isAbsolute(filePath)
-        ? filePath
-        : path.join(workspaceRoot, filePath)
-
-      const uri = vscode.Uri.file(absolutePath)
-      this.logger.info(
-        "[WebviewMessageHandler] Resolved file path:",
-        uri.fsPath
+      const diffResult = await this.gitService.getFileDiffDetail(
+        message.data.filePath
       )
-
-      const gitExtension =
-        vscode.extensions.getExtension<any>("vscode.git")?.exports
-      if (!gitExtension) return
-
-      const git = gitExtension.getAPI(1)
-      const repository = git.repositories[0]
-      if (!repository) return
-
-      await vscode.commands.executeCommand("git.openChange", uri)
-      this.logger.info("[WebviewMessageHandler] Opened file diff")
+      await this.webview.postMessage({
+        type: "diff-file-result",
+        data: {
+          ok: true,
+          data: {
+            diff: diffResult,
+          },
+        },
+      })
     } catch (error) {
-      this.logger.error(
-        formatError(error, "[WebviewMessageHandler] Failed to get file diff")
-      )
+      this.logger.error("[WebviewMessageHandler] Failed to get diff:", error)
+      await this.webview.postMessage({
+        type: "diff-file-result",
+        data: {
+          ok: false,
+          code: 500,
+          message: formatError(error, "Failed to get diff"),
+        },
+      })
     }
   }
 
   private async handleExecuteCommand(message: ClientMessageEvent) {
-    if (!("command" in message)) return
-    try {
-      await vscode.commands.executeCommand(message.command)
-      this.logger.info(
-        "[WebviewMessageHandler] Executed command:",
-        message.command
-      )
+    if (message.type !== "execute-command") return
 
-      if (message.command === "git.init") {
-        setTimeout(() => {
-          void this.syncFiles()
-        }, 500)
-      }
+    try {
+      await vscode.commands.executeCommand(message.command, message.data)
     } catch (error) {
       this.logger.error(
         "[WebviewMessageHandler] Failed to execute command:",
