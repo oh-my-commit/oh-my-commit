@@ -15,12 +15,14 @@ import { TOKENS } from "@/managers/vscode-tokens"
 
 export interface IPreferenceMonitor extends vscode.Disposable {
   onPreferenceChange(callback: (section: string, value: any) => void): void
+  onDisplayModeChange(callback: (mode: string) => void): void
 }
 
 @Service()
 export class PreferenceMonitor implements IPreferenceMonitor {
   private disposables: vscode.Disposable[] = []
   private configChangeHandlers: ((section: string, value: any) => void)[] = []
+  private displayModeHandlers: ((mode: string) => void)[] = []
 
   constructor(
     @Inject(TOKENS.Logger) private readonly logger: ILogger,
@@ -34,6 +36,19 @@ export class PreferenceMonitor implements IPreferenceMonitor {
           const value = config.get("git.commitLanguage")
           this.configChangeHandlers.forEach((handler) => handler("git.commitLanguage", value))
         }
+
+        if (e.affectsConfiguration("ohMyCommit.ui.mode")) {
+          const config = vscode.workspace.getConfiguration("ohMyCommit")
+          const mode = config.get<string>("ui.mode", "panel")
+          this.displayModeHandlers.forEach((handler) => handler(mode))
+
+          void vscode.window.showInformationMessage(`Oh My Commit 已切换到 ${mode === "panel" ? "面板" : "通知"} 模式`)
+
+          // 当模式为 panel 时自动打开面板
+          if (mode === "panel") {
+            void vscode.commands.executeCommand("ohMyCommit.view.focus")
+          }
+        }
       })
     )
   }
@@ -42,8 +57,13 @@ export class PreferenceMonitor implements IPreferenceMonitor {
     this.configChangeHandlers.push(callback)
   }
 
+  onDisplayModeChange(callback: (mode: string) => void): void {
+    this.displayModeHandlers.push(callback)
+  }
+
   dispose(): void {
     this.disposables.forEach((d) => d.dispose())
     this.configChangeHandlers = []
+    this.displayModeHandlers = []
   }
 }

@@ -45,8 +45,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
-    logger.error(formatError(error, `Failed to initialize Oh My Commit: ${error as string}`))
-    void vscode.window.showErrorMessage(formatError(error, `Failed to initialize Oh My Commit`))
+    logger.error(
+      formatError(
+        error,
+        `Failed to initialize Oh My Commit: ${error as string}`
+      )
+    )
+    void vscode.window.showErrorMessage(
+      formatError(error, `Failed to initialize Oh My Commit`)
+    )
   }
 }
 

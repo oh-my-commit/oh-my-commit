@@ -123,7 +123,10 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         },
       })
     } catch (error) {
-      this.logger.error("[WebviewMessageHandler] Failed to get settings:", error)
+      this.logger.error(
+        "[WebviewMessageHandler] Failed to get settings:",
+        error
+      )
     }
   }
 
@@ -136,7 +139,9 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         ? message.data.section
         : `ohMyCommit.${message.data.section}`
 
-      await vscode.workspace.getConfiguration().update(section, message.data.value, vscode.ConfigurationTarget.Global)
+      await vscode.workspace
+        .getConfiguration()
+        .update(section, message.data.value, vscode.ConfigurationTarget.Global)
 
       this.webviewManager.postMessage({
         type: "settings-updated",
@@ -146,14 +151,20 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         },
       })
     } catch (error) {
-      this.logger.error("[WebviewMessageHandler] Failed to update settings:", error)
+      this.logger.error(
+        "[WebviewMessageHandler] Failed to update settings:",
+        error
+      )
     }
   }
 
   private async handleCommit(message: ClientMessageEvent) {
     if (message.type !== "commit") return
 
-    this.logger.info("[WebviewMessageHandler] Committing changes with message:", message.data)
+    this.logger.info(
+      "[WebviewMessageHandler] Committing changes with message:",
+      message.data
+    )
     try {
       const { title, body } = message.data
       const commitMessage = body ? `${title}\n\n${body}` : title
@@ -174,10 +185,15 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         },
       })
 
-      void vscode.window.showInformationMessage("Changes committed successfully")
+      void vscode.window.showInformationMessage(
+        "Changes committed successfully"
+      )
       await this.syncFiles()
     } catch (error) {
-      this.logger.error("[WebviewMessageHandler] Failed to commit changes:", error)
+      this.logger.error(
+        "[WebviewMessageHandler] Failed to commit changes:",
+        error
+      )
 
       this.webviewManager.postMessage({
         type: "commit-result",
@@ -188,26 +204,34 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         },
       })
 
-      void vscode.window.showErrorMessage(formatError(error, "Failed to commit changes"))
+      void vscode.window.showErrorMessage(
+        formatError(error, "Failed to commit changes")
+      )
     }
   }
 
   private async handleDiffFile(message: ClientMessageEvent) {
     if (message.type !== "diff-file") return
 
-    this.logger.info("[VscodeWebview] Getting file diff for:", message.data.filePath)
+    this.logger.info(
+      "[VscodeWebview] Getting file diff for:",
+      message.data.filePath
+    )
     try {
       const workspaceRoot = this.gitService.workspaceRoot
       if (!workspaceRoot) return
 
       const filePath = message.data.filePath
-      const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(workspaceRoot, filePath)
+      const absolutePath = path.isAbsolute(filePath)
+        ? filePath
+        : path.join(workspaceRoot, filePath)
 
       const uri = vscode.Uri.file(absolutePath)
       this.logger.info("[VscodeWebview] Resolved file path:", uri.fsPath)
 
       // 获取 git 扩展
-      const gitExtension = vscode.extensions.getExtension<any>("vscode.git")?.exports
+      const gitExtension =
+        vscode.extensions.getExtension<any>("vscode.git")?.exports
       if (!gitExtension) return
 
       const git = gitExtension.getAPI(1)
@@ -219,7 +243,9 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
       this.logger.info("[VscodeWebview] Opened file diff")
     } catch (error) {
-      this.logger.error(formatError(error, "[VscodeWebview] Failed to get file diff"))
+      this.logger.error(
+        formatError(error, "[VscodeWebview] Failed to get file diff")
+      )
     }
   }
 
@@ -229,7 +255,10 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
     try {
       await vscode.commands.executeCommand(message.command, message.data)
     } catch (error) {
-      this.logger.error("[WebviewMessageHandler] Failed to execute command:", error)
+      this.logger.error(
+        "[WebviewMessageHandler] Failed to execute command:",
+        error
+      )
     }
   }
 
@@ -271,8 +300,12 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
   private async syncWorkspaceStatus() {
     const workspaceFolders = vscode.workspace.workspaceFolders
-    const workspaceRoot = workspaceFolders ? workspaceFolders[0]?.uri.fsPath : undefined
-    const isWorkspaceValid = !!(workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot)))
+    const workspaceRoot = workspaceFolders
+      ? workspaceFolders[0]?.uri.fsPath
+      : undefined
+    const isWorkspaceValid = !!(
+      workspaceRoot && vscode.workspace.fs.stat(vscode.Uri.file(workspaceRoot))
+    )
 
     void this.webviewManager.postMessage({
       type: "workspace-status",

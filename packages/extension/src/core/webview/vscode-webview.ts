@@ -24,7 +24,9 @@ export interface IWebviewManager {
 }
 
 @Service()
-export class WebviewManager implements vscode.WebviewViewProvider, IWebviewManager {
+export class WebviewManager
+  implements vscode.WebviewViewProvider, IWebviewManager
+{
   private webview?: vscode.Webview
   private messageHandler?: IWebviewMessageHandler
   private readonly title: string = `Commit Assistant`
@@ -38,11 +40,15 @@ export class WebviewManager implements vscode.WebviewViewProvider, IWebviewManag
     this.webviewPath = path.join(this.context.extensionPath, "dist", "webview")
 
     // Register the webview provider with options to keep it alive
-    const registration = vscode.window.registerWebviewViewProvider("ohMyCommit.view", this, {
-      webviewOptions: {
-        retainContextWhenHidden: true,
-      },
-    })
+    const registration = vscode.window.registerWebviewViewProvider(
+      "ohMyCommit.view",
+      this,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      }
+    )
 
     this.context.subscriptions.push(registration)
 
