@@ -12,12 +12,12 @@ import vscode from "vscode"
 import type { ICommitManager, IConfig, ILogger, UiMode } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
-import type { IWebviewManager } from "@/core/webview/vscode-webview"
-import type { IWebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
 import type { IVscodeGit } from "@/managers/vscode-git"
 import type { IPreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import type { IStatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
+import type { IWebviewManager } from "@/webview/vscode-webview"
+import type { IWebviewMessageHandler } from "@/webview/vscode-webview-message-handler"
 
 import type { ICommitMessageStore } from "./commit-message-store"
 

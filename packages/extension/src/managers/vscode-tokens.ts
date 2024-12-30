@@ -13,12 +13,12 @@ import { TOKENS as TOKENS_BASE } from "@shared/server"
 import type { OpenPreferencesCommand } from "@/commands/open-preferences"
 import type { QuickCommitCommand } from "@/commands/quick-commit"
 import type { SelectModelCommand } from "@/commands/select-model"
-import type { IWebviewManager } from "@/core/webview/vscode-webview"
-import type { IWebviewMessageHandler } from "@/core/webview/vscode-webview-message-handler"
-import type { CommandManager } from "@/managers/command-manager"
 import type { IOrchestrator } from "@/managers/orchestrator"
+import type { CommandManager } from "@/managers/vscode-command-manager"
 import type { IPreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import type { IStatusBarManager } from "@/managers/vscode-statusbar"
+import type { IWebviewManager } from "@/webview/vscode-webview"
+import type { IWebviewMessageHandler } from "@/webview/vscode-webview-message-handler"
 
 export const TOKENS = {
   ...TOKENS_BASE,
