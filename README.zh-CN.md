@@ -42,7 +42,15 @@ Oh My Commit 是一套模块化的智能提交解决方案：
 
 ## 使用方法
 
-> Cli 和 Vscode 可独立使用，但配置共享同步
+> ⚠️ 您需要配置一定参数条件，具体视各算法要求
+>
+> 以我们官方提供的算法 `@oh-my-commit/provider-official` 为例，
+>
+> 您需要在命令行里配置 ANTHROPIC_API_KEY / HTTP_PROXY 环境变量，
+>
+> 或者在 VSCode 用户设置里配置 `oh-my-commit.ai.apiKeys.anthropic` / `ohMyCommit.proxy.url`
+>
+> 并启用 `ohMyCommit.proxy.enabled` （如果需要的话）
 
 ### CLI 使用
 
@@ -66,6 +74,14 @@ omc gen # AI 自动生成 commit
    - 快捷键：`cmd+shift+p` 搜索 "OMC: Quick Commit"
    - 状态栏：点击状态栏的 Commit 图标
    - 源代码管理：使用 VSCode 内置的 Git 面板
+
+## 产品对比
+
+### 功能
+
+
+
+### UI
 
 ![panel comparison](assets/panel-comparison.png)
 
