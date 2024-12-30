@@ -50,7 +50,7 @@ export function CommitSettingsDialog({ isOpen, onClose }: { isOpen: boolean; onC
       clientPush({
         type: "get-settings",
         data: {
-          section: "git.commitLanguage",
+          section: "git.lang",
         },
       })
     }
@@ -61,7 +61,7 @@ export function CommitSettingsDialog({ isOpen, onClose }: { isOpen: boolean; onC
     clientPush({
       type: "update-settings",
       data: {
-        section: "git.commitLanguage",
+        section: "git.lang",
         value,
       },
     })

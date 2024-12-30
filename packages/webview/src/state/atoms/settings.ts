@@ -10,7 +10,7 @@ import { atomWithStorage } from "@/lib/storage"
 export type CommitLanguage = "system" | "zh_CN" | "en_US"
 
 export const commitLanguageAtom = atomWithStorage<CommitLanguage>({
-  key: "ohMyCommit.git.commitLanguage",
+  key: "ohMyCommit.git.lang",
   defaultValue: "system",
   storageType: "vscode", // Store in both VSCode and localStorage
 })

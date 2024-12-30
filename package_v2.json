@@ -187,7 +187,7 @@
           "markdownDescription": "界面显示语言",
           "order": 2
         },
-        "ohMyCommit.git.commitLanguage": {
+        "ohMyCommit.git.lang": {
           "type": "string",
           "enum": [
             "system",

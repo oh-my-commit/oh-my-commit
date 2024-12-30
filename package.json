@@ -157,21 +157,16 @@
     "configuration": {
       "title": "Oh My Commit",
       "properties": {
-        "ohMyCommit.ui.mode": {
+        "ohMyCommit.model.id": {
           "type": "string",
           "enum": [
-            "notification",
-            "panel"
+            "ohMyCommit.standard"
           ],
-          "enumDescriptions": [
-            "弹出通知，支持修改按钮",
-            "在面板中显示完整提交界面"
-          ],
-          "default": "panel",
-          "markdownDescription": "提交界面显示模式",
+          "default": "ohMyCommit.standard",
+          "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 1
         },
-        "ohMyCommit.git.commitLanguage": {
+        "ohMyCommit.git.lang": {
           "type": "string",
           "enum": [
             "system",
@@ -185,16 +180,21 @@
           ],
           "default": "system",
           "markdownDescription": "Commit 信息语言",
-          "order": 3
+          "order": 10
         },
-        "ohMyCommit.model.id": {
+        "ohMyCommit.ui.mode": {
           "type": "string",
           "enum": [
-            "ohMyCommit.standard"
+            "notification",
+            "panel"
           ],
-          "default": "ohMyCommit.standard",
-          "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
-          "order": 4
+          "enumDescriptions": [
+            "弹出通知，支持修改按钮",
+            "在面板中显示完整提交界面"
+          ],
+          "default": "panel",
+          "markdownDescription": "提交界面显示模式",
+          "order": 20
         },
         "ohMyCommit.ai.apiKeys": {
           "type": "object",
@@ -221,12 +221,14 @@
         "ohMyCommit.proxy.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Enable proxy for API requests"
+          "description": "Enable proxy for API requests",
+          "order": 31
         },
         "ohMyCommit.proxy.url": {
           "type": "string",
           "default": "http://localhost:7890",
-          "description": "Proxy server URL"
+          "description": "Proxy server URL",
+          "order": 32
         }
       }
     }

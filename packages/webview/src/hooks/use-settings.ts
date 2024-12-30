@@ -23,7 +23,7 @@ export const useSettings = () => {
       switch (message.type) {
         case "settings-value":
         case "settings-updated":
-          if (message.data.section === "git.commitLanguage") {
+          if (message.data.section === "git.lang") {
             setCommitLanguage(message.data.value as CommitLanguage)
           }
           break

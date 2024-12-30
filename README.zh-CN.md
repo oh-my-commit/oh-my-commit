@@ -2,97 +2,81 @@
 
 # Oh My Commit
 
-一款专注用户体验、重新定义 Git Commit 的 VSCode 插件，助力你的每一次提交，优雅而专业。
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+```shell
+   ____  _       __  __          _____                          _ _   
+  / __ \| |     |  \/  |        / ____|                        (_) |  
+ | |  | | |__   | \  / |_   _  | |     ___  _ __ ___  _ __ ___  _| |_ 
+ | |  | | '_ \  | |\/| | | | | | |    / _ \| '_ ` _ \| '_ ` _ \| | __|
+ | |__| | | | | | |  | | |_| | | |___| (_) | | | | | | | | | | | | |_ 
+  \____/|_| |_| |_|  |_|\__, |  \_____\___/|_| |_| |_|_| |_| |_|_|\__|
+                         __/ |                                        
+                        |___/                                         
 
-<!-- toc -->
+✨Your AI-powered Commit Generator Solution ✨
 
-[产品亮点](#产品亮点) • [AI 能力](#ai-能力) • [使用方法](#使用方法) • [用户配置](#用户配置) • [贡献指南](#贡献指南) • [支持](#支持) • [许可证](#许可证)
+```
 
-<!-- tocstop -->
+[English](./README.md) | [简体中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io)
 
 </div>
 
-## 产品亮点
+## 系统架构
 
-- **极致用户体验**
+Oh My Commit 是一套模块化的智能提交解决方案：
 
-  - 精心设计的现代化界面，支持亮暗主题
-  - 流畅的动画过渡，零延迟响应
-  - 智能的上下文感知，自动适应你的工作流
-  - 键盘优先的操作设计，提升效率
-  - 多样化的文件变更视图，提升浏览体验：
-    - 树状视图：清晰展示文件层级结构
-    - 平铺视图：快速查看所有变更文件
-    - 自动暂存：智能处理所有文件变更
-  - 多样化的界面模式，适应不同场景：
-    - 静默模式：仅在状态栏显示提交信息
-    - 通知模式：弹出通知，支持快速修改
-    - 窗口模式：浮动窗口，简洁高效
-    - 面板模式：完整功能，专业体验
+- **多端支持**
+  - CLI 工具：独立的命令行程序，支持在任何终端中使用
+  - VSCode 插件：提供图形化界面，支持静默与交互模式
+  - 未来计划：支持更多 IDE 与平台
 
-- **高效工作流**
-  - 一键式智能提交，告别繁琐操作
-  - 实时预览和编辑，所见即所得
-  - 快速切换提交方案，灵活应对不同场景
-  - 团队配置共享，统一提交风格
+- **核心组件**
+  - 共享配置：跨端统一的用户配置与团队规范
+  - 算法市场：支持自定义 AI 提交算法，可扩展的提供者系统
+  - 数据分析：提交记录分析与团队协作洞察（规划中）
 
-## AI 能力
-
-- **多模型支持**
-
-  - 内置 Oh My Commit 专业模型，为代码提交优化
-  - 支持 OpenAI GPT-3.5/4，Claude 等主流模型
-  - 可自定义 AI 服务端点，灵活扩展
-
-- **提供者安装**
-
-  - 通过 npm 安装官方提供者：
-    ```bash
-    # 全局安装
-    npm install -g @oh-my-commit/provider-official
-    
-    # 或在项目中本地安装
-    npm install @oh-my-commit/provider-official
-    ```
-  - 提供者文件将自动安装到 `~/.oh-my-commit/providers/official/` 目录
-  - 自定义提供者可以安装到相同的目录结构中
-
-- **智能分析**
-
-  - 深度理解代码变更上下文
-  - 自动识别重构、bugfix、feature 等类型
-  - 生成符合团队风格的提交信息
-
-- **持续优化**
-  - 基于用户反馈不断改进
-  - 定期更新模型能力
-  - 支持自定义训练微调
+- **技术特点**
+  - Monorepo 架构：基于 pnpm 的多包管理
+  - 模块解耦：核心逻辑、UI、算法提供者分离
+  - 插件化设计：支持第三方扩展与自定义
 
 ## 使用方法
 
+> Cli 和 Vscode 可独立使用，但配置共享同步
+
+### CLI 使用
+
+```bash
+# 全局安装命令行工具
+npm install -g oh-my-commit
+
+# 全局安装官方 AI Commit 算法实现
+# 第三方目录：`~/.oh-my-commit/providers/`
+npm install -g @oh-my-commit/provider-official
+
+# 在 git 仓库中使用
+omc  # 查看帮助
+omc gen # AI 自动生成 commit
+```
+
+### VSCode 插件
+
 1. 在 VSCode 扩展商店安装 "Oh My Commit"
-2. 当你完成代码修改后，按 `cmd+shift+p` 打开命令面板，搜索 "Oh My Commit: Quick Commit"
-3. 插件会自动分析你的更改并生成合适的提交信息，你可以回车确认或者修改
+2. 使用方式：
+   - 快捷键：`cmd+shift+p` 搜索 "OMC: Quick Commit"
+   - 状态栏：点击状态栏的 Commit 图标
+   - 源代码管理：使用 VSCode 内置的 Git 面板
 
 ## 用户配置
 
-| 配置项                                 | 类型    | 默认值              | 说明                                              | 可选值                                                                                                                                                |
-| -------------------------------------- | ------- | ------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `oh-my-commit.basic.enabled`           | boolean | true                | 是否启用 Oh My Commit                             | `true / false`                                                                                                                                        |
-| `oh-my-commit.basic.uiLanguage`        | string  | "system"            | 界面显示语言                                      | • `system`: 跟随系统语言<br>• `zh_CN`: 中文<br>• `en_US`: English                                                                                     |
-| `oh-my-commit.ac.model`                | string  | "oh-my-commit.test" | 选择自动提交（AC）服务的供应商与模型              | • `oh-my-commit.test`<br>• `oh-my-commit.balanced`<br>• `oh-my-commit.professional`<br>• `cgop.openai.chatgpt-3.5`<br>• `cgop.openai.chatgpt-4`       |
-| `oh-my-commit.git.emptyChangeBehavior` | string  | "skip"              | 当工作区没有文件变更时的行为                      | • `skip`: 跳过空更改，不执行任何操作<br>• `amend`: 修改最��一次提交（git commit --amend）                                                             |
-| `oh-my-commit.git.autoStage`           | boolean | true                | 是否自动暂存所有更改                              | `true / false`                                                                                                                                        |
-| `oh-my-commit.git.commitLanguage`      | string  | "system"            | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages                                                             |
-| `oh-my-commit.ai.apiKeys`              | object  | -                   | AI 服务提供商的 API 密钥配置                      |                                                                                                                                                       |
-| `oh-my-commit.ui.mode`                 | string  | "webview"           | 提交界面模式选择                                  | • `quickInput`: 快速简单：单行输入框快速提交<br>• `webview`: 专业模式：带预览和格式化的完整编辑器                                                     |
+| 配置项                                 | 类型     | 默认值              | 说明                                              | 可选值                                                                                                                                                |
+| -------------------------------------- |--------| ------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `oh-my-commit.model.id`                | string | "omc-standard-claude-3.5" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard-claude-3.5`<br>• `omc-standard-gpt-4o`      |
+| `oh-my-commit.git.lang`      | string | "system"            | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages                                                             |
+| `oh-my-commit.ai.apiKeys`              | object | -                   | AI 服务提供商的 API 密钥配置                      |                                                                                                                                                       |
+| `oh-my-commit.ui.mode`                 | string | "webview"           | 提交界面模式选择                                  | • `quickInput`: 快速简单：单行输入框快速提交<br>• `webview`: 专业模式：带预览和格式化的完整编辑器                                                     |
 | `ohMyCommit.proxy.enabled`             | boolean | false               | 是否启用代理                                      | `true / false`                                                                                                                                        |
-| `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890" | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                                                                                       |
-| `oh-my-commit.telemetry.enabled`       | boolean | true                | 是否启用使用数据收集（匿名）                      | `true / false`                                                                                                                                        |
-| `oh-my-commit.telemetry.shareLevel`    | string  | "basic"             | 数据收集级别                                      | • `minimal`: 仅收集基本错误信息<br>• `basic`: 包含功能使用统计和性能数据<br>• `full`: 额外包含 AI 生成结果的质量反馈                                  |
-| `oh-my-commit.feedback.enabled`        | boolean | true                | 是否启用用户反馈功能（支持一键创建 GitHub Issue） | `true / false`                                                                                                                                        |
+| `ohMyCommit.proxy.url`                 | string | "http://localhost:7890" | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                                                                                       |
 
 ## 贡献指南
 
