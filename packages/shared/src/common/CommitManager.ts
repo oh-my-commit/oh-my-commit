@@ -21,8 +21,15 @@ import {
 } from "./provider.interface"
 import { type ResultDTO, formatError } from "./utils"
 
+export interface ICommitManager {
+  generateCommit(
+    diff: DiffResult,
+    options: IInputOptions
+  ): Promise<ResultDTO<IResult>>
+}
+
 @Service()
-export class CommitManager {
+export class CommitManager implements ICommitManager {
   public status: {
     loadingProviders: Status
   } = {

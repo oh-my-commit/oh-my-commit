@@ -12,8 +12,21 @@ import { Inject, Service } from "typedi"
 
 import { BaseLogger, TOKENS, formatError } from "../common"
 
+export interface IGitCore {
+  git: SimpleGit
+  workspaceRoot: string
+  getDiffResult(findRenames?: boolean): Promise<DiffResult>
+  stageAll(): Promise<void>
+  isGitRepository(): Promise<boolean>
+  commit(message: string): Promise<void>
+  hasChanges(): Promise<boolean>
+  getLastCommitMessage(): Promise<string>
+  amendCommit(message: string): Promise<void>
+  getFileDiffDetail(filePath: string): Promise<string>
+}
+
 @Service()
-export class GitCore {
+export class GitCore implements IGitCore {
   public git: SimpleGit
   public workspaceRoot: string
 

@@ -13,12 +13,16 @@ import * as vscode from "vscode"
 import { APP_NAME, CommitManager, formatError } from "@shared/common"
 import { ProviderRegistry } from "@shared/server"
 
+import { Orchestrator } from "@/orchestrator"
+import { VscodeConfig } from "@/vscode-config"
+import { VscodeLogger } from "@/vscode-logger"
+import { VscodeWorkspaceMonitor } from "@/vscode-workspace-monitor"
+
 import { CommandManager } from "./command-manager"
-import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git"
 import { StatusBarManager } from "./vscode-statusbar"
 import { TOKENS } from "./vscode-token"
-import { VscodeWebview } from "./vscode-webview"
+import { WebviewManager } from "./vscode-webview"
 
 export function activate(context: vscode.ExtensionContext) {
   const logger = Container.get(VscodeLogger)
@@ -33,9 +37,15 @@ export function activate(context: vscode.ExtensionContext) {
     logger.info("setting git manager...")
     Container.set(TOKENS.GitManager, Container.get(VscodeGit))
 
+    logger.info("setting workspace monitor...")
+    Container.set(
+      TOKENS.WorkspaceMonitor,
+      Container.get(VscodeWorkspaceMonitor)
+    )
+
     // Always set up webview first
     logger.info("setting webview...")
-    Container.set(TOKENS.Webview, Container.get(VscodeWebview)) // git
+    Container.set(TOKENS.Webview, Container.get(WebviewManager)) // git
 
     logger.info("setting provider manager...")
     Container.set(TOKENS.ProviderManager, Container.get(ProviderRegistry))
@@ -44,6 +54,8 @@ export function activate(context: vscode.ExtensionContext) {
     Container.set(TOKENS.CommitManager, Container.get(CommitManager)) // provider
     logger.info("setting status bar...")
     Container.set(TOKENS.StatusBar, Container.get(StatusBarManager)) // commit, git
+
+    Container.set(TOKENS.CommitOrchestrator, Container.get(Orchestrator))
 
     logger.info("Initializing providers...")
     // Initialize providers asynchronously

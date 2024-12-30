@@ -9,12 +9,17 @@ import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
 import { TOKENS, formatError } from "@shared/common"
-import { GitCore } from "@shared/server"
+import { GitCore, IGitCore } from "@shared/server"
 
-import { VscodeLogger } from "./vscode-commit-adapter"
+import { VscodeLogger } from "@/vscode-logger"
+
+export interface IVscodeGit extends IGitCore {
+  onGitStatusChanged: vscode.Event<boolean>
+  dispose(): void
+}
 
 @Service()
-export class VscodeGit extends GitCore {
+export class VscodeGit extends GitCore implements IVscodeGit {
   private _onGitStatusChanged: vscode.EventEmitter<boolean>
   readonly onGitStatusChanged: vscode.Event<boolean>
   private fsWatcher: vscode.FileSystemWatcher | undefined
@@ -92,17 +97,5 @@ export class VscodeGit extends GitCore {
   dispose() {
     this.fsWatcher?.dispose()
     this._onGitStatusChanged.dispose()
-  }
-
-  public async getRecentCommits(count: number = 5) {
-    try {
-      const logs = await this.git.log({ maxCount: count })
-      this.logger.info("recent commits: ", logs)
-
-      return logs.all
-    } catch (error) {
-      this.logger.error(formatError(error, "Failed to get recent commits"))
-      return []
-    }
   }
 }

@@ -19,8 +19,14 @@ import {
 import { VscodeGit } from "./vscode-git"
 import { TOKENS } from "./vscode-token"
 
+export interface IStatusBarManager extends vscode.Disposable {
+  setWaiting(message?: string): void
+  clearWaiting(): void
+  update(): Promise<void>
+}
+
 @Service()
-export class StatusBarManager implements vscode.Disposable {
+export class StatusBarManager implements vscode.Disposable, IStatusBarManager {
   private disposables: vscode.Disposable[] = []
   private statusBarItem: vscode.StatusBarItem
   private previousState?: {

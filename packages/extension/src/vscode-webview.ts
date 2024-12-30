@@ -12,13 +12,23 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, ServerMessageEvent, outdent } from "@shared/common"
 
+import { VscodeConfig } from "@/vscode-config"
+import { VscodeLogger } from "@/vscode-logger"
+
 import { WebviewMessageHandler } from "./WebviewMessageHandler"
-import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
 import { VscodeGit } from "./vscode-git.js"
 import { TOKENS } from "./vscode-token"
 
+export interface IWebviewManager {
+  show(): void
+  // hide(): void
+  postMessage(message: ServerMessageEvent): void
+}
+
 @Service()
-export class VscodeWebview implements vscode.WebviewViewProvider {
+export class WebviewManager
+  implements vscode.WebviewViewProvider, IWebviewManager
+{
   private webview?: vscode.Webview
   private messageHandler?: WebviewMessageHandler
   private readonly title: string = `Commit Assistant`

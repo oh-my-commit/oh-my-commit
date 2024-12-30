@@ -15,7 +15,7 @@ import {
 } from "@shared/common"
 
 import type { VscodeCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VscodeLogger } from "@/vscode-logger"
 import { TOKENS } from "@/vscode-token"
 
 import { OpenPreferencesCommand } from "./commands/open-preferences"

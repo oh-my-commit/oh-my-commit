@@ -13,10 +13,13 @@ import * as vscode from "vscode"
 
 import { ClientMessageEvent, CommitManager, formatError } from "@shared/common"
 
-import { VscodeConfig, VscodeLogger } from "./vscode-commit-adapter"
+import { IOrchestrator } from "@/orchestrator"
+import { VscodeConfig } from "@/vscode-config"
+import { VscodeLogger } from "@/vscode-logger"
+
 import { VscodeGit } from "./vscode-git.js"
 import { TOKENS } from "./vscode-token"
-import { VscodeWebview } from "./vscode-webview"
+import { WebviewManager } from "./vscode-webview"
 
 @Service()
 export class WebviewMessageHandler {
@@ -25,7 +28,9 @@ export class WebviewMessageHandler {
     @Inject(TOKENS.Config) private readonly config: VscodeConfig,
     @Inject(TOKENS.GitManager) private readonly gitService: VscodeGit,
     @Inject(TOKENS.CommitManager) private readonly commitManager: CommitManager,
-    private readonly webview: VscodeWebview
+    @Inject(TOKENS.CommitOrchestrator)
+    private readonly commitOrchestrator: IOrchestrator,
+    private readonly webview: WebviewManager
   ) {}
 
   async handleMessage(message: ClientMessageEvent): Promise<void> {
@@ -50,6 +55,10 @@ export class WebviewMessageHandler {
         await this.handleUpdateSettings(message)
         break
 
+      case "generate":
+        await this.commitOrchestrator.diffAndCommit()
+        break
+
       case "commit":
         await this.handleCommit(message)
         break
@@ -61,6 +70,9 @@ export class WebviewMessageHandler {
       case "execute-command":
         await this.handleExecuteCommand(message)
         break
+
+      default:
+        this.logger.error(`Unknown message type: ${message.type}`)
     }
   }
 

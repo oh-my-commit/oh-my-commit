@@ -16,7 +16,7 @@ import {
 } from "@shared/common"
 
 import type { BaseCommand } from "@/vscode-command"
-import { VscodeLogger } from "@/vscode-commit-adapter"
+import { VscodeLogger } from "@/vscode-logger"
 
 @Service()
 export class SelectModelCommand implements BaseCommand {

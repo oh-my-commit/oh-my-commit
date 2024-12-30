@@ -10,19 +10,22 @@ import type * as vscode from "vscode"
 
 import { TOKENS as TOKENS_BASE } from "@shared/common"
 
+import { IOrchestrator } from "@/orchestrator"
+import type { IVscodeWorkspaceMonitor } from "@/vscode-workspace-monitor"
+
 import type { CommandManager } from "./command-manager"
 import type { OpenPreferencesCommand } from "./commands/open-preferences"
 import type { QuickCommitCommand } from "./commands/quick-commit"
 import type { SelectModelCommand } from "./commands/select-model"
 import type { VscodeGit } from "./vscode-git"
 import type { StatusBarManager } from "./vscode-statusbar"
-import type { VscodeWebview } from "./vscode-webview"
+import type { WebviewManager } from "./vscode-webview"
 
 export const TOKENS = {
   ...TOKENS_BASE,
   Context: new Token<vscode.ExtensionContext>("Context"),
   GitManager: new Token<VscodeGit>("GitManager"),
-  Webview: new Token<VscodeWebview>("Webview"),
+  Webview: new Token<WebviewManager>("Webview"),
   StatusBar: new Token<StatusBarManager>("StatusBar"),
   CommandManager: new Token<CommandManager>("CommandManager"),
   QuickCommitCommand: new Token<QuickCommitCommand>("QuickCommitCommand"),
@@ -30,4 +33,6 @@ export const TOKENS = {
     "OpenPreferencesCommand"
   ),
   SelectModelCommand: new Token<SelectModelCommand>("SelectModelCommand"),
+  WorkspaceMonitor: new Token<IVscodeWorkspaceMonitor>("WorkspaceMonitor"),
+  CommitOrchestrator: new Token<IOrchestrator>("CommitOrchestrator"),
 } as const
