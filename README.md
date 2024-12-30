@@ -12,7 +12,7 @@
                                                      __/ |                                        
                                                     |___/                                         
                             
-                            ✨Your AI-powered Commit Generator Solution ✨      
+                            ✨Your Next-gen AI-powered Commit Solution ✨      
                                                                             
 ```
 
@@ -49,6 +49,41 @@
   - Real-time preview and editing, WYSIWYG
   - Quick switching between commit schemes
   - Team configuration sharing, unified commit style
+
+## Product Comparison
+
+<div align="center">
+✅ Full Support &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ Partial Support &nbsp;&nbsp;|&nbsp;&nbsp; 🚧 In Development &nbsp;&nbsp;|&nbsp;&nbsp; ➖ Not Supported
+</div>
+
+&nbsp;
+
+| Features | Oh My Commit | VSCode VCS | JetBrains VCS | Other AI Commit Plugins | AI Commit CLI |
+|---------------|---------|------------|--------------|-------------------|---------------|
+| **Basic Features** |
+| Git Integration | ✅ | ✅ | ✅ | ⚠️ | ➖ |
+| Diff Preview | ✅ | ✅ | ✅ | ➖ | ➖ |
+| Multi-file Commits | ✅ | ✅ | ✅ | ⚠️ | ⚠️ |
+| **AI Features** |
+| Smart Message Generation | ✅ | ➖ | ➖ | ✅ | ✅ |
+| Multi-language Support | ✅ | ➖ | ➖ | ⚠️ | ⚠️ |
+| Custom Algorithm Implementation | ✅ | ➖ | ➖ | ➖ | ➖ |
+| **User Experience** |
+| CLI Support | ✅ | ➖ | ➖ | ➖ | ✅ |
+| GUI Interface | ✅ | ✅ | ✅ | ⚠️ | ➖ |
+| Shortcut Support | 🚧 | ✅ | ✅ | ⚠️ | ➖ |
+| **Advanced Features** |
+| Team Standards Config | 🚧 | ➖ | ⚠️ | ➖ | ➖ |
+| Changesets Integration | 🚧 | ➖ | ➖️ | ➖ | ➖ |
+| Commit Templates | 🚧 | ⚠️ | ✅ | ➖ | ➖ |
+| Commit History Analysis | 🚧 | ✅ | ✅ | ➖ | ➖ |
+| **Extensibility** |
+| Plugin Architecture | ✅ | ✅ | ✅ | ➖ | ➖ |
+| Custom Workflows | 🚧 | ⚠️ | ✅ | ➖ | ➖ |
+
+## UI Comparison
+
+![panel comparison](assets/panel-comparison.png)
 
 ## System Architecture
 
@@ -102,6 +137,14 @@ Oh My Commit is a modular intelligent commit solution:
   - Support for custom training fine-tuning
 
 ## Usage
+
+> ⚠️ **Pre-usage Configuration**
+> 
+> Taking the official algorithm `@oh-my-commit/provider-official` as an example, you need to:
+> 1. Configure AI service key: `ANTHROPIC_API_KEY` or VSCode setting `oh-my-commit.ai.apiKeys.anthropic`
+> 2. (Optional) Configure proxy:
+>    - CLI: `HTTP_PROXY` environment variable
+>    - VSCode: `ohMyCommit.proxy.url` and `ohMyCommit.proxy.enabled`
 
 > CLI and VSCode can be used independently with shared synchronized configuration
 
