@@ -6,6 +6,7 @@
   "version": "0.8.3",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "markshawn2020",
+  "icon": "assets/assets/oh-my-commit_256.logo.png",
   "main": "./dist/main/extension.js",
   "repository": {
     "type": "git",
