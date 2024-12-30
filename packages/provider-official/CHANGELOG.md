@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.21.8
+
+### Patch Changes
+
+- 7b9e18a: fix install
+
 ## 0.21.7
 
 ### Patch Changes
