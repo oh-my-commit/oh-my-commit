@@ -23,8 +23,6 @@
 
 ## 产品对比
 
-### 功能
-
 <div align="center">
 ✅ 完整支持 &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ 部分支持 &nbsp;&nbsp;|&nbsp;&nbsp; 🚧 开发中 &nbsp;&nbsp;|&nbsp;&nbsp; ➖ 不支持
 </div>
@@ -54,7 +52,7 @@
 | 插件化架构         | ✅ | ✅ | ✅ | ➖ | ➖ |
 | 自定义工作流        | 🚧 | ⚠️ | ✅ | ➖ | ➖ |
 
-### UI
+## UI 对比
 
 ![panel comparison](assets/panel-comparison.png)
 
@@ -70,7 +68,7 @@
 >
 > 并启用 `ohMyCommit.proxy.enabled` （如果需要的话）
 
-### CLI 使用
+### Using CLI
 
 ```bash
 # 全局安装命令行工具
@@ -85,13 +83,17 @@ omc  # 查看帮助
 omc gen # AI 自动生成 commit
 ```
 
-### VSCode 插件
+### Using VSCode
 
 1. 在 VSCode 扩展商店安装 "Oh My Commit"
 2. 使用方式：
    - 快捷键：`cmd+shift+p` 搜索 "OMC: Quick Commit"
    - 状态栏：点击状态栏的 Commit 图标
    - 源代码管理：使用 VSCode 内置的 Git 面板
+
+### Using JetBrains
+
+Waiting for release !
 
 ## 用户配置
 
