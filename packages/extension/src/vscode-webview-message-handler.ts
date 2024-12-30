@@ -11,11 +11,7 @@ import { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import {
-  ClientMessageEvent,
-  clientMessageTips,
-  formatError,
-} from "@shared/common"
+import { ClientMessageEvent, formatError } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server/git-commit-manager"
 
 import type { VscodeLogger } from "@/vscode-logger"
@@ -43,7 +39,6 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
 
   async handleMessage(message: ClientMessageEvent): Promise<void> {
     try {
-      this.statusBar.setWaiting(clientMessageTips[message.type])
       switch (message.type) {
         case "init":
           await this.handleInit()
@@ -66,15 +61,18 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
           break
 
         case "generate":
+          this.statusBar.setWaiting("Generating commit message...")
           this.webviewManager.postMessage({
             type: "generate-result",
             data: await this.gitCommitManager.generateCommit(),
           })
-
+          this.statusBar.clearWaiting()
           break
 
         case "commit":
+          this.statusBar.setWaiting("Committing changes...")
           await this.handleCommit(message)
+          this.statusBar.clearWaiting()
           break
 
         case "diff-file":
@@ -88,8 +86,8 @@ export class WebviewMessageHandler implements IWebviewMessageHandler {
         default:
           this.logger.error(`Unknown message type: ${message.type}`)
       }
-    } finally {
-      this.statusBar.clearWaiting()
+    } catch (error) {
+      this.logger.error(formatError(error, "Failed to handle message"))
     }
   }
 
