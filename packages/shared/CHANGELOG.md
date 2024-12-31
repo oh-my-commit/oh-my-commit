@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.15
+
+### Patch Changes
+
+- 77d4b39: .
+
 ## 0.22.14
 
 ### Patch Changes
