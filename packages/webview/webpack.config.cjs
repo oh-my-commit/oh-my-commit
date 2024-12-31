@@ -9,11 +9,17 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const path = require("path")
 const webpack = require("webpack")
 const CopyPlugin = require("copy-webpack-plugin")
+const fs = require("fs")
 
 // Local dist directory
 const localDistDir = path.resolve(__dirname, "dist")
 // Final target directory
 const targetDistDir = path.resolve(__dirname, "../../dist/webview")
+
+// Ensure local dist directory exists
+if (!fs.existsSync(localDistDir)) {
+  fs.mkdirSync(localDistDir, { recursive: true })
+}
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
@@ -45,8 +51,10 @@ const config = (env, argv) => {
         new CopyPlugin({
           patterns: [
             {
-              from: localDistDir,
+              from: "**/*",
               to: targetDistDir,
+              context: localDistDir,
+              noErrorOnMissing: true,
             },
           ],
         }),
