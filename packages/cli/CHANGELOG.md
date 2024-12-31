@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.22.3
+
+### Patch Changes
+
+- d052305: fix config get key
+
 ## 0.22.2
 
 ### Patch Changes
