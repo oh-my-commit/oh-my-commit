@@ -3,7 +3,7 @@
   "displayName": "Oh My Commit",
   "publisher": "oh-my-commit",
   "private": false,
-  "version": "0.8.15",
+  "version": "0.9.0",
   "description": "An elegant AI-powered commit message generator for VSCode",
   "author": "markshawn2020",
   "icon": "assets/oh-my-commit_256.logo.png",
