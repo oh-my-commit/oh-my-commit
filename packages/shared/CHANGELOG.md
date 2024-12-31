@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.18
+
+### Patch Changes
+
+- ff1f35f: fix log
+
 ## 0.22.17
 
 ### Patch Changes

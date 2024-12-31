@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.22.18
+
+### Patch Changes
+
+- ff1f35f: fix log
+- Updated dependencies [ff1f35f]
+  - @oh-my-commit/shared@0.22.18
+
 ## 0.22.17
 
 ### Patch Changes
