@@ -3,10 +3,10 @@ layout: home
 
 hero:
   name: "Oh My Commit"
-  text: "让 Git 提交变得优雅而智能"
+  text: "让 Git 提交优雅而智能"
   tagline: 一款基于 AI 的 Git 提交助手
   image:
-    src: /logo.svg
+    src: /oh-my-commit_256.logo.png
     alt: Oh My Commit
   actions:
     - theme: brand

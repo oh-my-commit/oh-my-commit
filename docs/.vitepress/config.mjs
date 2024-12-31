@@ -17,12 +17,11 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: "/logo.svg",
+    logo: "/oh-my-commit_256.logo.png",
     nav: [
       { text: "指南", link: "/guide/introduction" },
       { text: "产品", link: "/product/prd" },
       { text: "开发", link: "/development/todo" },
-      { text: "API", link: "/api/" },
       { text: "即将推出", link: "/guide/coming-soon" },
       {
         text: "GitHub",
@@ -67,8 +66,8 @@ export default defineConfig({
           text: "产品",
           items: [
             { text: "产品需求文档", link: "/product/prd" },
-            { text: "设计理念", link: "/product/design" },
-            { text: "路线图", link: "/product/roadmap" },
+            // { text: "设计理念", link: "/product/design" },
+            // { text: "路线图", link: "/product/roadmap" },
           ],
         },
       ],
@@ -77,18 +76,45 @@ export default defineConfig({
           text: "开发",
           items: [
             { text: "开发计划", link: "/development/todo" },
-            { text: "架构设计", link: "/development/architecture" },
-            { text: "最佳实践", link: "/development/best-practices" },
-          ],
-        },
-      ],
-      "/api/": [
-        {
-          text: "API 参考",
-          items: [
-            { text: "配置项", link: "/api/configuration" },
-            { text: "命令列表", link: "/api/commands" },
-            { text: "事件钩子", link: "/api/hooks" },
+            {text: "插件开发", link: "/development/extension-development" },
+            // { text: "架构设计", link: "/development/architecture" },
+            // { text: "最佳实践", link: "/development/best-practices" },
+            
+              {link: "/development/best-practice/commit-specification", text: "Commit 规范"},
+              {link: "/development/best-practice/state-management", text: "状态管理"},
+              {link: "/development/best-practice/css-management", text: "CSS 管理"},
+              {link: "/development/best-practice/error-handler", text: "Error 处理"},
+              {link: "/development/best-practice/error-handling-advanced", text: "高级 Error 处理"},
+              {
+                text: "API",
+                link: "/development/api",
+                items: [
+                  { text: "规范", link: "/development/api/api.spec" },
+                  { text: "配置项", link: "/development/api/configuration" },
+                  { text: "命令列表", link: "/development/api/commands" },
+                  { text: "事件钩子", link: "/development/api/hooks" },
+                ],
+              },
+              {
+                text: "调试",
+                items: [
+                  
+                  {text: "VSCode 调试", link: "/development/debug/vscode-debugging" },
+                  {link: "/development/debug/vscode-webview-hmr", text: "VSCode Webview HMR"},
+            ]
+          },
+          {
+            text: "Trouble Shooting",
+            items: [
+              {link: "/development/trouble-shooting/typescript-import-extensions", text: "TS 导入扩展名问题"},
+              {link: '/development/trouble-shooting/patch/pnpm-patch', text: "pnpm patch 最佳实践"},
+            ]
+          }, {
+            "text": "Publish",
+            items: [
+              {link: "/development/publish-guide", text: "Publish Guide"},
+            ]
+          }
           ],
         },
       ],
