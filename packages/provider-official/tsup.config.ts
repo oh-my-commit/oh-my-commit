@@ -5,16 +5,24 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { promises } from "fs"
+import { resolve } from "path"
 import { defineConfig } from "tsup"
 
 import baseConfig from "../__base__/tsup.config"
+
+const distDir = resolve(__dirname, "dist")
 
 export default defineConfig({
   ...baseConfig,
   entry: {
     index: "src/index.ts",
   },
-  outDir: "../../dist/providers/official",
+  outDir: distDir,
   format: ["cjs", "esm"],
   noExternal: [/.*/], // 打包所有依赖
+  onSuccess: async () => {
+    const targetExtensionDir = resolve(__dirname, "../../dist/providers/official")
+    await promises.cp(distDir, targetExtensionDir, { recursive: true })
+  },
 })

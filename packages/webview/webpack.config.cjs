@@ -8,7 +8,12 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const webpack = require("webpack")
-const distDir = path.resolve(__dirname, "../../dist/webview")
+const CopyPlugin = require("copy-webpack-plugin")
+
+// Local dist directory
+const localDistDir = path.resolve(__dirname, "dist")
+// Final target directory
+const targetDistDir = path.resolve(__dirname, "../../dist/webview")
 
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
@@ -24,7 +29,7 @@ const config = (env, argv) => {
       main: "./src/main.tsx",
     },
     output: {
-      path: distDir,
+      path: localDistDir,
       filename: "[name].js",
       clean: isProd,
     },
@@ -35,6 +40,16 @@ const config = (env, argv) => {
       }),
       isDev && new webpack.HotModuleReplacementPlugin(),
       isDev && new ReactRefreshWebpackPlugin(),
+      // Copy from local dist to target dist
+      isProd &&
+        new CopyPlugin({
+          patterns: [
+            {
+              from: localDistDir,
+              to: targetDistDir,
+            },
+          ],
+        }),
     ].filter(Boolean),
     devServer: {
       static: {

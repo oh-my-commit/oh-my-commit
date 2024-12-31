@@ -7,10 +7,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "type": "module",
-  "main": "../../dist/webview/main.js",
+  "main": "dist/webview/main.js",
   "exports": {
-    ".": "../../dist/webview/main.js",
-    "./config": "../../dist/webview/config.js"
+    ".": "dist/webview/main.js",
+    "./config": "dist/webview/config.js"
   },
   "scripts": {
     "build": "webpack --mode production ",

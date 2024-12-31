@@ -241,8 +241,8 @@ importers:
   packages/extension:
     dependencies:
       '@oh-my-commit/provider-official':
-        specifier: ^0.22.4
-        version: 0.22.4
+        specifier: ^0.22.6
+        version: 0.22.6
       '@oh-my-commit/shared':
         specifier: workspace:^
         version: link:../shared
@@ -2378,8 +2378,8 @@ packages:
   '@nx/workspace@19.8.4':
     resolution: {integrity: sha512-ub4nD2klOj00onF1KrNXIlLB9hXN9ybHs7XSP9YW+52qz79KaJWJm46ebTqeLnDZApYbAcB0vSCp2+kaEV24Ew==}
 
-  '@oh-my-commit/provider-official@0.22.4':
-    resolution: {integrity: sha512-LxlOqnz15icgO83kNuryB0fiNoxlbQyXyXyZV2vwYMZJXmolHfhCr36q1/u/g819s0i7xYkT0ATmdvm7/wAZuw==}
+  '@oh-my-commit/provider-official@0.22.6':
+    resolution: {integrity: sha512-alF2z4pdOvJkmaJ/vy2/8Z+UuF8CTC05w7qXL8kUGlfe1TfCitEJkNJhB7ybFC7MgxpngAjiY14MC7BS11Uh3A==}
 
   '@oh-my-commit/shared@0.22.0':
     resolution: {integrity: sha512-rMHZHQ79NkcJqCPiknHRnkMXC1xhPEK2PMaU92r0/jgulxQ09X4lhRzu7XUICcduOiwch/n/ZQmKKqQqr3HOiA==}
@@ -10384,7 +10384,7 @@ snapshots:
       - '@swc/core'
       - debug
 
-  '@oh-my-commit/provider-official@0.22.4':
+  '@oh-my-commit/provider-official@0.22.6':
     dependencies:
       '@anthropic-ai/sdk': 0.32.1
       '@oh-my-commit/shared': 0.22.0
