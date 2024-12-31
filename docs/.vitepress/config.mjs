@@ -112,7 +112,7 @@ export default defineConfig({
           }, {
             "text": "Publish",
             items: [
-              {link: "/development/publish-guide", text: "Publish Guide"},
+              {link: "/development/publish/publish-guide", text: "Publish Guide"},
             ]
           }
           ],
