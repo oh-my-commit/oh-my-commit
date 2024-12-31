@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.10
+
+### Patch Changes
+
+- df19312: fix proxy enabled
+
 ## 0.22.9
 
 ### Patch Changes

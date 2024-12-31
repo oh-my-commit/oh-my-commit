@@ -1,5 +1,13 @@
 # @oh-my-commit/extension
 
+## 0.22.10
+
+### Patch Changes
+
+- Updated dependencies [df19312]
+  - @oh-my-commit/shared@0.22.10
+  - @oh-my-commit/provider-official@0.22.10
+
 ## 0.22.9
 
 ### Patch Changes
