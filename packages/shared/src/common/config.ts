@@ -16,7 +16,7 @@ export const preferenceSchema = z.object({
     uiLanguage: z.enum(["system", "zh_CN", "en_US"]).default("system"),
   }),
   model: z.object({
-    id: z.enum(["ohMyCommit.standard"]).default("ohMyCommit.standard"),
+    id: z.string().default("ohMyCommit.standard"),
   }),
   git: z.object({
     emptyChangeBehavior: z.enum(["skip", "amend"]).default("skip"),

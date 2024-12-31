@@ -29,8 +29,9 @@ import { CommitMessageStore } from "./managers/commit-message-store"
 import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
-  Inject(TOKENS.Preference, VscodePreference)
+  console.log(`Activating ${APP_NAME} extension...`)
   const logger = Inject(TOKENS.Logger, VscodeLogger)
+  Inject(TOKENS.Preference, VscodePreference)
   logger.info(`Initializing ${APP_NAME} extension...`)
 
   try {
@@ -61,6 +62,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push({ dispose: () => {} })
   } catch (error: unknown) {
+    // @ts-expect-error ...
+    logger.error({ error })
     logger.error(formatError(error, `Failed to initialize Oh My Commit: ${error as string}`))
     void vscode.window.showErrorMessage(formatError(error, `Failed to initialize Oh My Commit`))
   }
