@@ -39,6 +39,7 @@ export abstract class BasePreference implements IPreference {
     this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
     // then log
     this.logger.debug(`loaded config: `, this._preference)
+    this.savePreference()
   }
 
   abstract getPreference<T>(key: string): T | undefined
