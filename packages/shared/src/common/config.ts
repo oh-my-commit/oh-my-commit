@@ -23,7 +23,10 @@ export const configSchema = z.object({
   ui: z.object({
     mode: z.enum(["silent", "notification", "window", "panel"]).default("window"),
   }),
-  proxy: z.string().optional(),
+  proxy: z.object({
+    url: z.string().optional(),
+    enabled: z.boolean().default(false),
+  }),
   apiKeys: z.object({
     anthropic: z.string().optional(),
     openai: z.string().optional(),
@@ -44,6 +47,8 @@ export const configSchema = z.object({
   }),
 })
 
+export type ConfigSchema = z.infer<typeof configSchema>
+
 // 安全地获取环境变量
 const getEnvVar = (key: string): string | undefined => {
   if (typeof process !== "undefined" && process.env) {
@@ -52,7 +57,7 @@ const getEnvVar = (key: string): string | undefined => {
   return undefined
 }
 
-export const defaultConfig = {
+export const defaultConfig: ConfigSchema = {
   basic: {
     enabled: true,
     uiLanguage: "system",
@@ -68,7 +73,10 @@ export const defaultConfig = {
   ui: {
     mode: "window",
   },
-  proxy: getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY"),
+  proxy: {
+    url: getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY"),
+    enabled: false,
+  },
   apiKeys: {
     anthropic: getEnvVar("ANTHROPIC_API_KEY"),
     openai: getEnvVar("OPENAI_API_KEY"),

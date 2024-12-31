@@ -13,29 +13,6 @@ import type { Config, IConfig } from "@shared/common"
 import { configSchema, defaultConfig } from "@shared/common"
 import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 
-/**
- * Transform environment variables to config object
- * - Convert OHMYCOMMIT_ prefix to ohMyCommit.
- * - Convert uppercase to camelCase
- * - Convert underscore to dot
- */
-function transformEnvToConfig(env: NodeJS.ProcessEnv = process.env): Record<string, any> {
-  const config: Record<string, any> = {}
-
-  // eslint-disable-next-line prefer-const
-  for (let [key, value] of Object.entries(env)) {
-    if (key.endsWith("_API_KEY")) {
-      key = key.split("_API_KEY")[0]!.toLowerCase()
-      key = `ohMyCommit.apiKeys.${key}`
-    } else {
-      key = _.camelCase(key)
-    }
-    config[key] = value
-  }
-
-  return config
-}
-
 @Service()
 export class CliConfig implements IConfig {
   private config: Config = defaultConfig
@@ -71,8 +48,7 @@ export class CliConfig implements IConfig {
 
       if (fs.existsSync(USER_CONFIG_PATH)) {
         const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
-        const envConfig = transformEnvToConfig()
-        this.config = configSchema.parse(merge({}, defaultConfig, userConfig, envConfig))
+        this.config = configSchema.parse(merge({}, defaultConfig, userConfig))
       }
     } catch (error) {
       console.error("Failed to load config:", error)
