@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.12
+
+### Patch Changes
+
+- 9cb4c9e: fix log level
+
 ## 0.22.11
 
 ### Patch Changes

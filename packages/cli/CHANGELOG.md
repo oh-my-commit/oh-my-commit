@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.22.12
+
+### Patch Changes
+
+- 9cb4c9e: fix log level
+- Updated dependencies [9cb4c9e]
+  - @oh-my-commit/shared@0.22.12
+
 ## 0.22.11
 
 ### Patch Changes
