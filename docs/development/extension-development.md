@@ -17,7 +17,7 @@ dist/
 
 #### Build Configuration
 
-1. Provider Build (`packages/provider-official/tsup.config.ts`):
+1. Provider Build (`packages/provider-official/tsup.path.map.ts`):
 ```typescript
 export default defineConfig({
   ...baseConfig,

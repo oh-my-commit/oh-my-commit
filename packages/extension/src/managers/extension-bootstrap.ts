@@ -13,9 +13,9 @@ import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
 import { CommitMessageStore } from "@/managers/commit-message-store"
 import { Orchestrator } from "@/managers/orchestrator"
-import { VscodeConfig } from "@/managers/vscode-config"
 import { VscodeGit } from "@/managers/vscode-git"
 import { VscodeLogger } from "@/managers/vscode-logger"
+import { VscodePreference } from "@/managers/vscode-preference"
 import { PreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import { StatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
@@ -27,7 +27,7 @@ export class ExtensionBootstrap {
   constructor(
     @Inject(TOKENS.Context) private context: vscode.ExtensionContext,
     private logger: VscodeLogger,
-    private config: VscodeConfig,
+    private config: VscodePreference,
     private statusBar: StatusBarManager,
     private git: VscodeGit,
     private providerRegistry: ProviderRegistry,

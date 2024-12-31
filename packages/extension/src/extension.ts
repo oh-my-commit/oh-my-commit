@@ -16,9 +16,9 @@ import { APP_NAME, Inject, formatError } from "@shared/common"
 import { GitCommitManager, ProviderRegistry } from "@shared/server"
 
 import { Orchestrator } from "@/managers/orchestrator"
-import { VscodeConfig } from "@/managers/vscode-config"
 import { VscodeGit } from "@/managers/vscode-git"
 import { VscodeLogger } from "@/managers/vscode-logger"
+import { VscodePreference } from "@/managers/vscode-preference"
 import { PreferenceMonitor } from "@/managers/vscode-preference-monitor"
 import { StatusBarManager } from "@/managers/vscode-statusbar"
 import { TOKENS } from "@/managers/vscode-tokens"
@@ -29,7 +29,7 @@ import { CommitMessageStore } from "./managers/commit-message-store"
 import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
-  Inject(TOKENS.Config, VscodeConfig)
+  Inject(TOKENS.Config, VscodePreference)
   const logger = Inject(TOKENS.Logger, VscodeLogger)
   logger.info(`Initializing ${APP_NAME} extension...`)
 

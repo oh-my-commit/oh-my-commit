@@ -7,13 +7,13 @@
  */
 import { Token } from "typedi"
 
-import type { CommitManager } from "./commit-manager"
-import type { IConfig, ILogger, IProviderManager, IUIProvider } from "./core"
+import type { ICommitManager } from "./commit-manager"
+import type { ILogger, IPreference, IProviderManager, IUIProvider } from "./core"
 
 export const TOKENS = {
-  Config: new Token<IConfig>("Config"),
+  Config: new Token<IPreference>("Config"),
   Logger: new Token<ILogger>("Logger"),
   ProviderManager: new Token<IProviderManager>("ProviderManager"),
-  CommitManager: new Token<CommitManager>("CommitManager"),
+  CommitManager: new Token<ICommitManager>("CommitManager"),
   UIProvider: new Token<IUIProvider>("UIProvider"),
 } as const

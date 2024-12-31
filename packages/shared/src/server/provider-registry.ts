@@ -10,9 +10,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { Container, Inject, Service } from "typedi"
 
-import type { BaseProvider, IConfig, IProviderManager } from "../common"
+import type { BaseProvider, ILogger, IPreference, IProvider, IProviderManager } from "../common"
 import { BaseLogger, ProviderSchema, TOKENS, formatError } from "../common"
-import { PROVIDERS_DIR } from "./config"
+import { PROVIDERS_DIR } from "./path.map"
 
 const jiti = createJiti(__filename, {
   requireCache: false,
@@ -26,10 +26,10 @@ const jiti = createJiti(__filename, {
 @Service()
 export class ProviderRegistry implements IProviderManager {
   initialized = false
-  providers: BaseProvider[] = []
+  providers: IProvider[] = []
   private providersDir = PROVIDERS_DIR
 
-  constructor(@Inject(TOKENS.Logger) public readonly logger: BaseLogger) {}
+  constructor(@Inject(TOKENS.Logger) public readonly logger: ILogger) {}
 
   /** Load all providers from user directory */
   public async initialize(): Promise<void> {
@@ -84,7 +84,7 @@ export class ProviderRegistry implements IProviderManager {
     try {
       const module = await jiti(filePath)
       const Provider =
-        module.default || (module as new (context: { logger: BaseLogger; config: IConfig }) => BaseProvider)
+        module.default || (module as new (context: { logger: BaseLogger; config: IPreference }) => BaseProvider)
 
       if (!Provider || typeof Provider !== "function") {
         this.logger.warn(`No default export found in ${filePath}`)

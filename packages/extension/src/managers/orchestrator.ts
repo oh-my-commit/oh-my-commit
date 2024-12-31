@@ -8,7 +8,7 @@
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
-import type { ICommitManager, IConfig, ILogger, IProviderManager, UiMode } from "@shared/common"
+import type { ICommitManager, ILogger, IPreference, IProviderManager, UiMode } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/managers/vscode-git"
@@ -25,7 +25,7 @@ export interface IOrchestrator {
   // 基础服务
   readonly context: vscode.ExtensionContext
   readonly logger: ILogger
-  readonly config: IConfig
+  readonly config: IPreference
 
   // 管理的服务
   readonly gitService: IVscodeGit
@@ -50,7 +50,7 @@ export class Orchestrator implements IOrchestrator {
   constructor(
     @Inject(TOKENS.Context) public readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
-    @Inject(TOKENS.Config) public readonly config: IConfig,
+    @Inject(TOKENS.Config) public readonly config: IPreference,
     @Inject(TOKENS.GitCommitManager)
     public readonly gitCommitManager: IGitCommitManager,
     @Inject(TOKENS.StatusBar) public readonly statusBar: IStatusBarManager,

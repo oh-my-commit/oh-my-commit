@@ -7,7 +7,7 @@
  */
 import { Inject, Service } from "typedi"
 
-import type { IConfig, ILogger } from "./core"
+import type { ILogger, IPreference } from "./core"
 import { TOKENS } from "./tokens"
 import { formatMessage } from "./utils"
 
@@ -32,11 +32,10 @@ export const normalizeLogLevel = (s?: string): LogLevel => {
 @Service()
 export abstract class BaseLogger implements ILogger {
   public name?: string
+  protected minLevel: LogLevel = "info"
 
-  constructor(@Inject(TOKENS.Config) protected config: IConfig) {}
-
-  get minLevel(): LogLevel {
-    return normalizeLogLevel(this.config.get("log.level"))
+  setLevel(level: LogLevel): void {
+    this.minLevel = level
   }
 
   info(...args: unknown[]): void {

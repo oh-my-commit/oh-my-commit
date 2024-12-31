@@ -5,7 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import type { IConfig } from "./core"
+import type { IPreference } from "./core"
 
 export interface ValidationResult {
   valid: boolean
@@ -18,7 +18,7 @@ export interface ValidationResult {
   }[]
 }
 
-export async function validateOpenaiApiKey(config: IConfig): Promise<ValidationResult> {
+export async function validateOpenaiApiKey(config: IPreference): Promise<ValidationResult> {
   const apiKey = config.get("apiKeys.openai")
 
   if (!apiKey) {

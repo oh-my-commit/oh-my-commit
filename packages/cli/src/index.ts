@@ -20,16 +20,15 @@ import {
   Inject,
   SETTING_MODEL_ID,
 } from "@shared/common"
-import { GitCommitManager, GitCore, ProviderRegistry, TOKENS } from "@shared/server"
+import { CliConfig, GitCommitManager, GitCore, ProviderRegistry, TOKENS } from "@shared/server"
 
 import { displayBanner } from "@/utils"
 
 import packageJson from "../package.json"
-import { CliConfig } from "./config"
 
-Inject(TOKENS.Config, CliConfig)
 const logger = Inject(TOKENS.Logger, ConsoleLogger)
-Inject(TOKENS.ProviderManager, ProviderRegistry)
+const config = Inject(TOKENS.Config, CliConfig)
+const providerManager = Inject(TOKENS.ProviderManager, ProviderRegistry)
 const git = Inject(TOKENS.GitManager, GitCore)
 const commitManager = Inject(TOKENS.CommitManager, CommitManager)
 const gitCommitManager = Inject(TOKENS.GitCommitManager, GitCommitManager)
@@ -38,7 +37,7 @@ const gitCommitManager = Inject(TOKENS.GitCommitManager, GitCommitManager)
 const listModels = async () => {
   try {
     logger.info(chalk.blue("Listing models..."))
-    await commitManager.providerManager.initialize()
+    await providerManager.initialize()
     const models = commitManager.models
     logger.info(chalk.blue("Available models:"))
     for (const model of models) {
@@ -68,7 +67,7 @@ const selectModel = async (modelId: string) => {
   logger.info(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
-    await commitManager.providerManager.initialize()
+    await providerManager.initialize()
 
     const availableModels: IModel[] = commitManager.models
     const selectedModel = availableModels.find((m) => m.id === modelId)
@@ -78,7 +77,7 @@ const selectModel = async (modelId: string) => {
     }
 
     // Set the selected model in config
-    await commitManager.config.update(SETTING_MODEL_ID, modelId)
+    await config.update(SETTING_MODEL_ID, modelId)
     logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
     logger.error(chalk.red("Failed to select model:"), error)
@@ -90,15 +89,14 @@ const generateAndCommit = async (options: IInputOptions & { yes?: boolean }) => 
   logger.info(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
-    if (commitManager.providers.length === 0) {
-      await commitManager.providerManager.initialize()
+    if (providerManager.providers.length === 0) {
+      await providerManager.initialize()
     }
     // todo: init lang
     const result = await gitCommitManager.generateCommit()
 
     if (!result.ok) {
-      logger.error(chalk.red("Failed to generate commit message:"))
-      logger.error(result.message)
+      logger.error(chalk.red(`Failed to generate commit message, reason: ${result.message}`))
       process.exit(1)
     }
 
@@ -112,8 +110,9 @@ const generateAndCommit = async (options: IInputOptions & { yes?: boolean }) => 
       logger.info(chalk.green("Changes committed successfully!"))
     } else {
       // Ask for confirmation
-      logger.info(chalk.yellow("\nUse -y flag to commit automatically"))
-      logger.info(chalk.yellow("Or run git commit manually with the message above"))
+      logger.info(
+        chalk.yellow("\nUse -y flag to commit automatically, or run git commit manually with the message above")
+      )
     }
   } catch (error) {
     logger.error(chalk.red("Failed to generate commit message:"), error)

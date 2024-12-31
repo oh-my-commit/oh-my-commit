@@ -10,7 +10,7 @@ import Handlebars, { type TemplateDelegate } from "handlebars"
 import { memoize } from "lodash"
 import { join } from "path"
 
-import { TEMPLATES_DIR } from "./config"
+import { TEMPLATES_DIR } from "./path.map"
 
 interface IFillPrompt {
   lang: string

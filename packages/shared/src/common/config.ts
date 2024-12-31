@@ -7,7 +7,7 @@
  */
 import { z } from "zod"
 
-export const configSchema = z.object({
+export const preferenceSchema = z.object({
   log: z.object({
     level: z.enum(["debug", "info", "warn", "error"]).default("info").optional(),
   }),
@@ -50,61 +50,9 @@ export const configSchema = z.object({
   }),
 })
 
-export type ConfigSchema = z.infer<typeof configSchema>
+export type PreferenceSchema = z.infer<typeof preferenceSchema>
 
-// 安全地获取环境变量
-const getEnvVar = (key: string): string | undefined => {
-  if (typeof process !== "undefined" && process.env) {
-    return process.env[key]
-  }
-  return undefined
-}
-
-const proxyUrl = getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY")
-export const envConfig = configSchema.parse({
-  log: {
-    level: getEnvVar("LOG_LEVEL") ?? "info",
-  },
-  basic: {
-    enabled: getEnvVar("OMC_BASIC_ENABLED") === "true",
-    uiLanguage: getEnvVar("OMC_BASIC_UI_LANGUAGE") ?? "system",
-  },
-  model: {
-    id: getEnvVar("OMC_MODEL_ID") ?? "ohMyCommit.standard",
-  },
-  git: {
-    emptyChangeBehavior: getEnvVar("OMC_GIT_EMPTY_CHANGE_BEHAVIOR") ?? "skip",
-    autoStage: getEnvVar("OMC_GIT_AUTO_STAGE") === "true",
-    commitLanguage: getEnvVar("OMC_GIT_COMMIT_LANGUAGE") ?? "system",
-  },
-  ui: {
-    mode: getEnvVar("OMC_UI_MODE") ?? "window",
-  },
-  proxy: {
-    url: proxyUrl,
-    enabled: !!proxyUrl,
-  },
-  apiKeys: {
-    anthropic: getEnvVar("ANTHROPIC_API_KEY"),
-    openai: getEnvVar("OPENAI_API_KEY"),
-    cohere: getEnvVar("COHERE_API_KEY"),
-    huggingface: getEnvVar("HUGGINGFACE_API_KEY"),
-    google: getEnvVar("GOOGLE_API_KEY"),
-    zhipu: getEnvVar("ZHIPU_API_KEY"),
-    deepseek: getEnvVar("DEEPSEEK_API_KEY"),
-    groq: getEnvVar("GROQ_API_KEY"),
-    baichuan: getEnvVar("BAICHUAN_API_KEY"),
-  },
-  telemetry: {
-    enabled: getEnvVar("OMC_TELEMETRY_ENABLED") === "true",
-    shareLevel: getEnvVar("OMC_TELEMETRY_SHARE_LEVEL") ?? "basic",
-  },
-  feedback: {
-    enabled: getEnvVar("OMC_FEEDBACK_ENABLED") === "true",
-  },
-})
-
-export const defaultConfig: ConfigSchema = {
+export const defaultPreference: PreferenceSchema = {
   log: {},
   basic: {
     enabled: true,
@@ -132,4 +80,4 @@ export const defaultConfig: ConfigSchema = {
   },
 } as const
 
-export type Config = z.infer<typeof configSchema>
+export type Config = z.infer<typeof preferenceSchema>

@@ -11,7 +11,7 @@ import { resolve } from "path"
 import { defineConfig } from "tsup"
 
 import baseConfig from "../__base__/tsup.config"
-import { TEMPLATES_DIR } from "./src/server/config"
+import { TEMPLATES_DIR } from "./src/server/path.map"
 
 export default defineConfig({
   ...baseConfig,

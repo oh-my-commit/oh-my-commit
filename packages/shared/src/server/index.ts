@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export * from "./config"
+export * from "./path.map"
 export * from "./git"
 export * from "./prompt-template"
 export * from "./tokens"
 export * from "./git-commit-manager"
-export { ProviderRegistry } from "./provider-registry.js"
+export { ProviderRegistry } from "./provider-registry"
+export * from "./preference"

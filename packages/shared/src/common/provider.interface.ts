@@ -7,7 +7,7 @@
  */
 import { z } from "zod"
 
-import type { IConfig, ILogger } from "./core"
+import type { ILogger, IPreference } from "./core"
 import { formatMessage } from "./utils"
 
 export type Status = "pending" | "running" | "success" | "error"
@@ -135,7 +135,7 @@ export type IResultDTO = z.infer<typeof ResultDTOSchema>
 
 export interface ProviderContext {
   logger: ILogger
-  config: IConfig
+  config: IPreference
 }
 
 export abstract class BaseProvider implements IProvider {

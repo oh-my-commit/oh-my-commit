@@ -84,7 +84,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
           message: error.message,
         }
       }
-      this.logger.error("Failed to generate commit:", error)
+      // this.logger.error("Failed to generate commit:", error)
       return {
         ok: false,
         code: -999,
@@ -101,7 +101,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
     const proxyUrl = this.config.get<string | undefined>("ohMyCommit.proxy.url")
     const apiKey = this.config.get<string | undefined>("ohMyCommit.apiKeys.anthropic")
 
-    this.logger.info("Initializing Anthropic config: ", { proxyEnabled, proxyUrl, apiKey })
+    this.logger.debug("Initializing Anthropic config: ", { proxyEnabled, proxyUrl, apiKey })
     const config: Record<string, any> = { apiKey }
     if (proxyEnabled && proxyUrl) config["httpAgent"] = new HttpsProxyAgent(proxyUrl)
     this.anthropic = new Anthropic(config)

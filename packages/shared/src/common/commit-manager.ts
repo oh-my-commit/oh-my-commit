@@ -9,11 +9,11 @@ import type { DiffResult } from "simple-git"
 import { Inject, Service } from "typedi"
 
 import { SETTING_MODEL_ID } from "./app"
-import { type IConfig, type ILogger, type IProviderManager } from "./core"
+import { type ILogger, type IPreference, type IProviderManager } from "./core"
 import {
-  BaseProvider,
   type IInputOptions,
   type IModel,
+  type IProvider,
   type IResult,
   ResultDTOSchema,
   type Status,
@@ -22,7 +22,7 @@ import { TOKENS } from "./tokens"
 import { type ResultDTO, formatError } from "./utils"
 
 export interface ICommitManager {
-  providers: BaseProvider[]
+  providers: IProvider[]
   models: IModel[]
   modelId?: string
   model?: IModel
@@ -31,6 +31,7 @@ export interface ICommitManager {
   }
   selectModel(modelId: string): void
   generateCommitWithDiff(diff: DiffResult, options: IInputOptions): Promise<ResultDTO<IResult>>
+  providerManager: IProviderManager
 }
 
 @Service()
@@ -43,12 +44,12 @@ export class CommitManager implements ICommitManager {
 
   constructor(
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
-    @Inject(TOKENS.Config) public readonly config: IConfig,
+    @Inject(TOKENS.Config) public readonly config: IPreference,
     @Inject(TOKENS.ProviderManager)
     public readonly providerManager: IProviderManager
   ) {}
 
-  get providers(): BaseProvider[] {
+  get providers(): IProvider[] {
     return this.providerManager.providers
   }
 
@@ -107,7 +108,7 @@ export class CommitManager implements ICommitManager {
 
       return parsed.data as ResultDTO<IResult>
     } catch (error: unknown) {
-      this.logger.error("Failed to generate commit:", error)
+      this.logger.error(formatError(error, "Failed to generate commit:"))
       return {
         ok: false,
         code: -999,
