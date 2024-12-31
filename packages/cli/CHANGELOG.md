@@ -1,5 +1,16 @@
 # @oh-my-commit/cli
 
+## 0.23.0
+
+### Minor Changes
+
+- 17f6f5a: fix log level
+
+### Patch Changes
+
+- Updated dependencies [17f6f5a]
+  - @oh-my-commit/shared@0.23.0
+
 ## 0.22.18
 
 ### Patch Changes

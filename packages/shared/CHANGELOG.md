@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.23.0
+
+### Minor Changes
+
+- 17f6f5a: fix log level
+
 ## 0.22.18
 
 ### Patch Changes
