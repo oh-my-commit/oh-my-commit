@@ -12,7 +12,6 @@ import { Inject, Service } from "typedi"
 import {
   type ILogger,
   IPreference,
-  type Preference,
   PreferenceSchema,
   TOKENS,
   defaultPreference,
@@ -32,20 +31,22 @@ export abstract class BasePreference implements IPreference {
     const storedUserPreference = fs.existsSync(USER_PREFERENCE_PATH)
       ? JSON.parse(fs.readFileSync(USER_PREFERENCE_PATH, "utf-8"))
       : {}
-    this.loadPreference().then((platformConfig) => {
-      this._preference = preferenceSchema.parse(merge({}, defaultPreference, storedUserPreference, platformConfig))
-      // set level after config
-      this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
-      // then log
-      this.logger.debug(`loaded config: `, this._preference)
-      this.savePreference()
-    })
+    this.logger.debug("loading preference...")
+    const newPreference = this.loadPreference()
+    this._preference = preferenceSchema.parse(merge({}, defaultPreference, storedUserPreference, newPreference))
+    // set level after config
+    this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
+    // then log
+    this.logger.debug(`loaded preference: `, this._preference)
+    this.savePreference()
   }
 
   abstract getPreference<T>(key: string): T | undefined
 
   get<T>(key: string): T | undefined {
-    return this.getPreference(key)
+    const value = this.getPreference(key) as T
+    // console.log("got from preference: ", { key, value })
+    return value
   }
 
   async update(key: string, value: unknown, global?: boolean): Promise<void> {
@@ -56,7 +57,7 @@ export abstract class BasePreference implements IPreference {
 
   abstract updatePreference(key: string, value: unknown, global?: boolean): Promise<void>
 
-  abstract loadPreference(): Promise<PreferenceSchema>
+  abstract loadPreference(): PreferenceSchema
 
   // todo: save preference before exit
   private savePreference() {
@@ -121,24 +122,22 @@ export const envPreference = preferenceSchema.parse({
 
 @Service()
 export class CliPreference extends BasePreference implements IPreference {
-  private preference: Preference = defaultPreference
-
   override getPreference<T>(key: string): T | undefined {
     const PREFIX = "ohMyCommit."
     if (key.startsWith(PREFIX)) {
       key = key.slice(PREFIX.length)
     }
-    return key.split(".").reduce((obj: any, k) => obj && obj[k], this.preference) as T
+    return key.split(".").reduce((obj: any, k) => obj && obj[k], this._preference) as T
   }
 
   override async updatePreference(key: string, value: any, global = false): Promise<void> {
     const keys = key.split(".")
     const lastKey = keys.pop()!
-    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this.preference)
+    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this._preference)
     target[lastKey] = value
   }
 
-  override async loadPreference() {
+  override loadPreference() {
     // override order: default <-- user (file) <-- env (terminal)
     return preferenceSchema.parse(merge({}, defaultPreference, envPreference))
   }

@@ -34,6 +34,7 @@ export abstract class BaseLogger implements ILogger {
   protected minLevel: LogLevel = "info"
 
   setLevel(level: LogLevel): void {
+    // console.log(`setting level: ${this.minLevel} --> ${level}`)
     this.minLevel = level
   }
 
@@ -58,6 +59,10 @@ export abstract class BaseLogger implements ILogger {
   }
 
   protected shouldLog(level: LogLevel): boolean {
+    console.log({
+      minLevel: this.minLevel,
+      level,
+    })
     return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.minLevel]
   }
 

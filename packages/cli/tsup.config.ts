@@ -24,8 +24,6 @@ import baseConfig from "../__base__/tsup.config"
  * - turbo issue: https://github.com/vercel/turbo/issues/986
  */
 export default defineConfig((options) => {
-  console.log("tsup options:", options)
-
   return {
     ...baseConfig,
     entry: ["src/index.ts"],
@@ -36,8 +34,5 @@ export default defineConfig((options) => {
     platform: "node",
     target: "node18",
     noExternal: ["@oh-my-commit/shared"],
-    onSuccess: () => {
-      console.log("Build successful!")
-    },
   }
 })

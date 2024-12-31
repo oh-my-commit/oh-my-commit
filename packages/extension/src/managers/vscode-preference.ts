@@ -17,8 +17,8 @@ export class VscodePreference extends BasePreference implements IPreference {
     return vscode.workspace.getConfiguration().get<T>(key)
   }
 
-  override async loadPreference() {
-    return preferenceSchema.parseAsync(vscode.workspace.getConfiguration().get(APP_ID_CAMEL))
+  override loadPreference() {
+    return preferenceSchema.parse(vscode.workspace.getConfiguration().get(APP_ID_CAMEL))
   }
 
   override async updatePreference(key: string, value: unknown, global?: boolean): Promise<void> {
