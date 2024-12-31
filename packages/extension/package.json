@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/extension",
-  "version": "0.22.6",
+  "version": "0.22.7",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
   "publishConfig": {
     "access": "public",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@oh-my-commit/shared": "workspace:^",
-    "@oh-my-commit/provider-official": "^0.22.6",
+    "@oh-my-commit/provider-official": "^0.22.7",
     "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
     "outdent": "^0.8.0",

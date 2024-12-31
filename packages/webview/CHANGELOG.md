@@ -1,5 +1,11 @@
 # @oh-my-commit/webview
 
+## 0.22.7
+
+### Patch Changes
+
+- da8a451: fix build copy
+
 ## 0.22.0
 
 ### Minor Changes
