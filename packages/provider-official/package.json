@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/provider-official",
-  "version": "0.22.5",
+  "version": "0.22.6",
   "description": "Official AI providers for Oh My Commit - intelligent commit message generation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -15,7 +15,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp ../../dist/providers/official/* package.json CHANGELOG.md $DIR",
+    "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp dist/* package.json CHANGELOG.md $DIR",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"

@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.22.6
+
+### Patch Changes
+
+- 2159bc2: fix cp
+
 ## 0.22.5
 
 ### Patch Changes
