@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/shared",
-  "version": "0.22.13",
+  "version": "0.22.14",
   "description": "Shared utilities and types for Oh My Commit packages",
   "type": "module",
   "publishConfig": {

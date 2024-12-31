@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.22.14
+
+### Patch Changes
+
+- f4ff965: fix config override
+- Updated dependencies [f4ff965]
+  - @oh-my-commit/shared@0.22.14
+  - @oh-my-commit/provider-official@0.22.14
+
 ## 0.22.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.14
+
+### Patch Changes
+
+- f4ff965: fix config override
+
 ## 0.22.13
 
 ### Patch Changes

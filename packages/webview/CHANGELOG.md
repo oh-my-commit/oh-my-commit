@@ -1,5 +1,12 @@
 # @oh-my-commit/webview
 
+## 0.22.14
+
+### Patch Changes
+
+- Updated dependencies [f4ff965]
+  - @oh-my-commit/shared@0.22.14
+
 ## 0.22.13
 
 ### Patch Changes
