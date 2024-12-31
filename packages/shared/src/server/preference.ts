@@ -34,12 +34,12 @@ export abstract class BasePreference implements IPreference {
       : {}
     this.loadPreference().then((platformConfig) => {
       this._preference = preferenceSchema.parse(merge({}, defaultPreference, storedUserPreference, platformConfig))
+      // set level after config
+      this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
+      // then log
+      this.logger.debug(`loaded config: `, this._preference)
+      this.savePreference()
     })
-    // set level after config
-    this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
-    // then log
-    this.logger.debug(`loaded config: `, this._preference)
-    this.savePreference()
   }
 
   abstract getPreference<T>(key: string): T | undefined

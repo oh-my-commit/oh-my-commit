@@ -27,7 +27,7 @@ import { displayBanner } from "@/utils"
 import packageJson from "../package.json"
 
 const logger = Inject(TOKENS.Logger, ConsoleLogger)
-const config = Inject(TOKENS.Preference, CliPreference)
+const preference = Inject(TOKENS.Preference, CliPreference)
 const providerManager = Inject(TOKENS.ProviderManager, ProviderRegistry)
 const git = Inject(TOKENS.GitManager, GitCore)
 const commitManager = Inject(TOKENS.CommitManager, CommitManager)
@@ -77,7 +77,7 @@ const selectModel = async (modelId: string) => {
     }
 
     // Set the selected model in config
-    await config.update(SETTING_MODEL_ID, modelId)
+    await preference.update(SETTING_MODEL_ID, modelId)
     logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
     logger.error(chalk.red("Failed to select model:"), error)
