@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.22.17
+
+### Patch Changes
+
+- b159e1c: fix log location
+- Updated dependencies [b159e1c]
+  - @oh-my-commit/shared@0.22.17
+
 ## 0.22.16
 
 ### Patch Changes
