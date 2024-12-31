@@ -26,7 +26,7 @@ export class VscodePreference extends BasePreference implements IPreference {
       // @ts-expect-error ...
       this.logger.error(error)
 
-      return preferenceSchema.parse(vscode.workspace.getConfiguration().get(APP_ID_CAMEL))
+      return defaultPreference
     }
   }
 

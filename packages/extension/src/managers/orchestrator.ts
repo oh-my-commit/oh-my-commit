@@ -72,6 +72,10 @@ export class Orchestrator implements IOrchestrator {
   async initialize(): Promise<void> {
     this.logger.info("Initializing Orchestrator...")
 
+    this.logger.debug("Initializing Providers in Orchestrator...")
+    await this.providerManager.initialize()
+    this.logger.debug("Provider initialization complete")
+
     // 注册所有事件监听
     this.webviewManager.setMessageHandler(this.webviewMessageHandler)
 
@@ -83,24 +87,10 @@ export class Orchestrator implements IOrchestrator {
       })
     })
 
-    // 初始化状态栏
-    const model = this.gitCommitManager.model
-    if (model) {
-      this.statusBar.setModel({ name: model.name })
-    }
-
-    this.providerManager
-      .initialize()
-      .then(() => {
-        this.logger.debug("Provider initialization complete")
-        // Notify StatusBar to update if needed
-        void this.statusBar.setModel({
-          name: this.gitCommitManager.model!.name,
-        })
-      })
-      .catch((error) => {
-        this.logger.error("Failed to initialize providers:", error)
-      })
+    // Notify StatusBar to update if needed
+    void this.statusBar.setModel({
+      name: this.gitCommitManager.model!.name,
+    })
 
     this.logger.info("Orchestrator initialized")
   }

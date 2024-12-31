@@ -29,10 +29,13 @@ export class ProviderRegistry implements IProviderManager {
   providers: IProvider[] = []
   private providersDir = PROVIDERS_DIR
 
-  constructor(@Inject(TOKENS.Logger) public readonly logger: ILogger) {}
+  constructor(@Inject(TOKENS.Logger) public readonly logger: ILogger) {
+    // void this.initialize()
+  }
 
   /** Load all providers from user directory */
   public async initialize(): Promise<void> {
+    this.logger.info("Initializing Provider Registry...", { initialized: this.initialized })
     if (this.initialized) return
 
     try {

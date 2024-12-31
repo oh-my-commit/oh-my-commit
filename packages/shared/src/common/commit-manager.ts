@@ -57,12 +57,23 @@ export class CommitManager implements ICommitManager {
     return this.providers.flatMap((provider) => provider.models)
   }
 
-  get modelId(): string | undefined {
-    return this.config.get<string>(SETTING_MODEL_ID)
+  get modelId(): string {
+    return this.config.get<string>(SETTING_MODEL_ID)!
   }
 
-  get model(): IModel | undefined {
-    return this.models.find((model) => model.id === this.modelId)
+  get model(): IModel {
+    let model = this.models.find((model) => model.id === this.modelId)
+    if (!model) {
+      this.logger.warn(`Model ${this.modelId} not found`)
+      this.logger.info(`current models: ${JSON.stringify(this.models.map((m) => m.id))}`)
+      // discard invalid model
+      model = this.models[0]
+      // ensure one model
+      if (!model) throw new Error("No model available")
+      this.logger.info(`Using default model: ${model.id}`)
+      void this.config.update(SETTING_MODEL_ID, model.id)
+    }
+    return model
   }
 
   selectModel(modelId: string): void {
