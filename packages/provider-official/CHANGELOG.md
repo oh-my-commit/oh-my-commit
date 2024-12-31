@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.22.4
+
+### Patch Changes
+
+- 259f71d: fix id
+
 ## 0.22.0
 
 ### Minor Changes
