@@ -44,7 +44,7 @@ export class CommitManager implements ICommitManager {
 
   constructor(
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
-    @Inject(TOKENS.Config) public readonly config: IPreference,
+    @Inject(TOKENS.Preference) public readonly config: IPreference,
     @Inject(TOKENS.ProviderManager)
     public readonly providerManager: IProviderManager
   ) {}

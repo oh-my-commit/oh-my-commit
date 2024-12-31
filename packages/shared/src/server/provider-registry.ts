@@ -93,7 +93,7 @@ export class ProviderRegistry implements IProviderManager {
 
       const provider = new Provider({
         logger: Container.get(TOKENS.Logger),
-        config: Container.get(TOKENS.Config),
+        config: Container.get(TOKENS.Preference),
       })
       this.logger.debug(`Successfully instantiated provider: `, provider)
 

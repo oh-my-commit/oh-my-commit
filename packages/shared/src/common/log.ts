@@ -5,10 +5,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Inject, Service } from "typedi"
+import { Service } from "typedi"
 
-import type { ILogger, IPreference } from "./core"
-import { TOKENS } from "./tokens"
+import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
 export type LogLevel = "debug" | "trace" | "info" | "warn" | "error"

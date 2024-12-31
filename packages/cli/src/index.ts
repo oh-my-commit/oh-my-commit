@@ -20,14 +20,14 @@ import {
   Inject,
   SETTING_MODEL_ID,
 } from "@shared/common"
-import { CliConfig, GitCommitManager, GitCore, ProviderRegistry, TOKENS } from "@shared/server"
+import { CliPreference, GitCommitManager, GitCore, ProviderRegistry, TOKENS } from "@shared/server"
 
 import { displayBanner } from "@/utils"
 
 import packageJson from "../package.json"
 
 const logger = Inject(TOKENS.Logger, ConsoleLogger)
-const config = Inject(TOKENS.Config, CliConfig)
+const config = Inject(TOKENS.Preference, CliPreference)
 const providerManager = Inject(TOKENS.ProviderManager, ProviderRegistry)
 const git = Inject(TOKENS.GitManager, GitCore)
 const commitManager = Inject(TOKENS.CommitManager, CommitManager)

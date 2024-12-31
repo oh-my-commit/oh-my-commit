@@ -29,7 +29,7 @@ import { CommitMessageStore } from "./managers/commit-message-store"
 import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
-  Inject(TOKENS.Config, VscodePreference)
+  Inject(TOKENS.Preference, VscodePreference)
   const logger = Inject(TOKENS.Logger, VscodeLogger)
   logger.info(`Initializing ${APP_NAME} extension...`)
 

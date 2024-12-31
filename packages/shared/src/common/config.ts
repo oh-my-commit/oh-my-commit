@@ -80,4 +80,4 @@ export const defaultPreference: PreferenceSchema = {
   },
 } as const
 
-export type Config = z.infer<typeof preferenceSchema>
+export type Preference = z.infer<typeof preferenceSchema>

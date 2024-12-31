@@ -50,7 +50,7 @@ export class Orchestrator implements IOrchestrator {
   constructor(
     @Inject(TOKENS.Context) public readonly context: vscode.ExtensionContext,
     @Inject(TOKENS.Logger) public readonly logger: ILogger,
-    @Inject(TOKENS.Config) public readonly config: IPreference,
+    @Inject(TOKENS.Preference) public readonly config: IPreference,
     @Inject(TOKENS.GitCommitManager)
     public readonly gitCommitManager: IGitCommitManager,
     @Inject(TOKENS.StatusBar) public readonly statusBar: IStatusBarManager,

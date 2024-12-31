@@ -28,7 +28,7 @@ export interface IGitCommitManager extends ICommitManager {
 export class GitCommitManager extends CommitManager {
   constructor(
     @Inject(TOKENS.Logger) logger: ILogger,
-    @Inject(TOKENS.Config) config: IPreference,
+    @Inject(TOKENS.Preference) config: IPreference,
     @Inject(TOKENS.ProviderManager) providerManager: IProviderManager,
     @Inject(TOKENS.GitManager) public readonly gitService: IGitCore
   ) {

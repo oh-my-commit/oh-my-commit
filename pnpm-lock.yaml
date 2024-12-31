@@ -241,8 +241,8 @@ importers:
   packages/extension:
     dependencies:
       '@oh-my-commit/provider-official':
-        specifier: ^0.22.12
-        version: 0.22.12
+        specifier: ^0.22.13
+        version: 0.22.13
       '@oh-my-commit/shared':
         specifier: workspace:^
         version: link:../shared
@@ -2378,11 +2378,11 @@ packages:
   '@nx/workspace@19.8.4':
     resolution: {integrity: sha512-ub4nD2klOj00onF1KrNXIlLB9hXN9ybHs7XSP9YW+52qz79KaJWJm46ebTqeLnDZApYbAcB0vSCp2+kaEV24Ew==}
 
-  '@oh-my-commit/provider-official@0.22.12':
-    resolution: {integrity: sha512-RGqG2ybZdAvY8NVD2uZlnGJzyKajch4O4wRpiXVslUerdmeNMuDVcoRLdDqvO+6xRC1veajILLhIcXu60Wdmvw==}
+  '@oh-my-commit/provider-official@0.22.13':
+    resolution: {integrity: sha512-AtQ2aBAS1qd2pFA3Y4D26CGdeuwScBbg3+OyheE7bbCS7EP/9UZ6jnG16tnICNUAZA8eU0W2FZqSM7OXlg1qYg==}
 
-  '@oh-my-commit/shared@0.22.12':
-    resolution: {integrity: sha512-91qaWc+gfWTNpE7+m769UvpaeWLwJj2r3tLfzM35gKw7E2WBmSzKgAFhIYby9vamNkqxQZHU6clLBfVDuqgsKA==}
+  '@oh-my-commit/shared@0.22.13':
+    resolution: {integrity: sha512-qa+Ujw306EJtQgJt3yFiHW8vio4eDYd4Utqd0xnv4esroNh/F1o3TJ4RaNFJ3s1A5Z/77p+I9Lz1I9tabI48Ew==}
 
   '@parcel/watcher-android-arm64@2.5.0':
     resolution: {integrity: sha512-qlX4eS28bUcQCdribHkg/herLe+0A9RyYC+mm2PXpncit8z5b3nSqGVzMNR3CmtAOgRutiZ02eIJJgP/b1iEFQ==}
@@ -10384,10 +10384,10 @@ snapshots:
       - '@swc/core'
       - debug
 
-  '@oh-my-commit/provider-official@0.22.12':
+  '@oh-my-commit/provider-official@0.22.13':
     dependencies:
       '@anthropic-ai/sdk': 0.32.1
-      '@oh-my-commit/shared': 0.22.12
+      '@oh-my-commit/shared': 0.22.13
       handlebars: 4.7.8
       https-proxy-agent: 7.0.6
       lodash-es: 4.17.21
@@ -10398,7 +10398,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@oh-my-commit/shared@0.22.12':
+  '@oh-my-commit/shared@0.22.13':
     dependencies:
       '@anthropic-ai/sdk': 0.32.1
       chalk: 5.4.1

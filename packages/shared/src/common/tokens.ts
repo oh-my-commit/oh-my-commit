@@ -11,7 +11,7 @@ import type { ICommitManager } from "./commit-manager"
 import type { ILogger, IPreference, IProviderManager, IUIProvider } from "./core"
 
 export const TOKENS = {
-  Config: new Token<IPreference>("Config"),
+  Preference: new Token<IPreference>("Preference"),
   Logger: new Token<ILogger>("Logger"),
   ProviderManager: new Token<IProviderManager>("ProviderManager"),
   CommitManager: new Token<ICommitManager>("CommitManager"),

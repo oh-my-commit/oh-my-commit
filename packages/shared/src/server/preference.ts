@@ -10,16 +10,16 @@ import fs from "node:fs"
 import { Inject, Service } from "typedi"
 
 import {
-  type Config,
   type ILogger,
   IPreference,
+  type Preference,
   PreferenceSchema,
   TOKENS,
   defaultPreference,
   normalizeLogLevel,
   preferenceSchema,
 } from "../common"
-import { USERS_DIR, USER_CONFIG_PATH } from "./path.map"
+import { USERS_DIR, USER_PREFERENCE_PATH } from "./path.map"
 
 @Service()
 export abstract class BasePreference implements IPreference {
@@ -29,8 +29,11 @@ export abstract class BasePreference implements IPreference {
     if (!fs.existsSync(USERS_DIR)) {
       fs.mkdirSync(USERS_DIR, { recursive: true })
     }
-    this.loadPreference().then((userConfig) => {
-      this._preference = preferenceSchema.parse(merge({}, defaultPreference, userConfig))
+    const storedUserPreference = fs.existsSync(USER_PREFERENCE_PATH)
+      ? JSON.parse(fs.readFileSync(USER_PREFERENCE_PATH, "utf-8"))
+      : {}
+    this.loadPreference().then((platformConfig) => {
+      this._preference = preferenceSchema.parse(merge({}, defaultPreference, storedUserPreference, platformConfig))
     })
     // set level after config
     this.logger.setLevel(normalizeLogLevel(this.get("log.level")))
@@ -57,7 +60,7 @@ export abstract class BasePreference implements IPreference {
   // todo: save preference before exit
   private savePreference() {
     try {
-      fs.writeFileSync(USER_CONFIG_PATH, JSON.stringify(this._preference, null, 2))
+      fs.writeFileSync(USER_PREFERENCE_PATH, JSON.stringify(this._preference, null, 2))
     } catch (error) {
       console.error("Failed to save config:", error)
     }
@@ -72,7 +75,7 @@ const getEnvVar = (key: string): string | undefined => {
   return undefined
 }
 const proxyUrl = getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY")
-export const envConfig = preferenceSchema.parse({
+export const envPreference = preferenceSchema.parse({
   log: {
     level: normalizeLogLevel(getEnvVar("LOG_LEVEL")),
   },
@@ -116,36 +119,26 @@ export const envConfig = preferenceSchema.parse({
 })
 
 @Service()
-export class CliConfig extends BasePreference implements IPreference {
-  private config: Config = defaultPreference
+export class CliPreference extends BasePreference implements IPreference {
+  private preference: Preference = defaultPreference
 
   override getPreference<T>(key: string): T | undefined {
     const PREFIX = "ohMyCommit."
     if (key.startsWith(PREFIX)) {
       key = key.slice(PREFIX.length)
     }
-    return key.split(".").reduce((obj: any, k) => obj && obj[k], this.config) as T
+    return key.split(".").reduce((obj: any, k) => obj && obj[k], this.preference) as T
   }
 
   override async updatePreference(key: string, value: any, global = false): Promise<void> {
     const keys = key.split(".")
     const lastKey = keys.pop()!
-    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this.config)
+    const target = keys.reduce((obj: any, k) => (obj[k] = obj[k] || {}), this.preference)
     target[lastKey] = value
   }
 
   override async loadPreference() {
-    if (fs.existsSync(USER_CONFIG_PATH)) {
-      const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
-      return preferenceSchema.parse(
-        merge(
-          {}, // override order: default <-- user (file) <-- env (terminal)
-          defaultPreference,
-          userConfig,
-          envConfig
-        )
-      )
-    }
-    return defaultPreference
+    // override order: default <-- user (file) <-- env (terminal)
+    return preferenceSchema.parse(merge({}, defaultPreference, envPreference))
   }
 }
