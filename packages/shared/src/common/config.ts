@@ -25,7 +25,7 @@ export const configSchema = z.object({
   }),
   proxy: z.object({
     url: z.string().optional(),
-    enabled: z.boolean().default(false),
+    enabled: z.boolean().default(false).optional(),
   }),
   apiKeys: z.object({
     anthropic: z.string().optional(),
@@ -58,21 +58,21 @@ const getEnvVar = (key: string): string | undefined => {
 }
 
 const proxyUrl = getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY")
-export const defaultConfig: ConfigSchema = {
+export const envConfig = configSchema.parse({
   basic: {
-    enabled: true,
-    uiLanguage: "system",
+    enabled: getEnvVar("OMC_BASIC_ENABLED") === "true",
+    uiLanguage: getEnvVar("OMC_BASIC_UI_LANGUAGE") ?? "system",
   },
   model: {
-    id: "ohMyCommit.standard",
+    id: getEnvVar("OMC_MODEL_ID") ?? "ohMyCommit.standard",
   },
   git: {
-    emptyChangeBehavior: "skip",
-    autoStage: true,
-    commitLanguage: "system",
+    emptyChangeBehavior: getEnvVar("OMC_GIT_EMPTY_CHANGE_BEHAVIOR") ?? "skip",
+    autoStage: getEnvVar("OMC_GIT_AUTO_STAGE") === "true",
+    commitLanguage: getEnvVar("OMC_GIT_COMMIT_LANGUAGE") ?? "system",
   },
   ui: {
-    mode: "window",
+    mode: getEnvVar("OMC_UI_MODE") ?? "window",
   },
   proxy: {
     url: proxyUrl,
@@ -89,6 +89,33 @@ export const defaultConfig: ConfigSchema = {
     groq: getEnvVar("GROQ_API_KEY"),
     baichuan: getEnvVar("BAICHUAN_API_KEY"),
   },
+  telemetry: {
+    enabled: getEnvVar("OMC_TELEMETRY_ENABLED") === "true",
+    shareLevel: getEnvVar("OMC_TELEMETRY_SHARE_LEVEL") ?? "basic",
+  },
+  feedback: {
+    enabled: getEnvVar("OMC_FEEDBACK_ENABLED") === "true",
+  },
+})
+
+export const defaultConfig: ConfigSchema = {
+  basic: {
+    enabled: true,
+    uiLanguage: "system",
+  },
+  model: {
+    id: "ohMyCommit.standard",
+  },
+  git: {
+    emptyChangeBehavior: "skip",
+    autoStage: true,
+    commitLanguage: "system",
+  },
+  ui: {
+    mode: "window",
+  },
+  proxy: {},
+  apiKeys: {},
   telemetry: {
     enabled: true,
     shareLevel: "basic",

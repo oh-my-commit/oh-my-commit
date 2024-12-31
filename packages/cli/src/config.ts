@@ -10,7 +10,7 @@ import fs from "node:fs"
 import { Service } from "typedi"
 
 import type { Config, IConfig } from "@shared/common"
-import { configSchema, defaultConfig } from "@shared/common"
+import { configSchema, defaultConfig, envConfig } from "@shared/common"
 import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 
 @Service()
@@ -48,7 +48,15 @@ export class CliConfig implements IConfig {
 
       if (fs.existsSync(USER_CONFIG_PATH)) {
         const userConfig = JSON.parse(fs.readFileSync(USER_CONFIG_PATH, "utf-8"))
-        this.config = configSchema.parse(merge({}, defaultConfig, userConfig))
+        this.config = configSchema.parse(
+          merge(
+            {},
+            // override order: default <-- user (file) <-- env (terminal)
+            defaultConfig,
+            userConfig,
+            envConfig
+          )
+        )
       }
     } catch (error) {
       console.error("Failed to load config:", error)
