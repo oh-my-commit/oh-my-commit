@@ -86,7 +86,7 @@ export const envPreference = preferenceSchema.parse({
     uiLanguage: getEnvVar("OMC_BASIC_UI_LANGUAGE") ?? "system",
   },
   model: {
-    id: getEnvVar("OMC_MODEL_ID") ?? "ohMyCommit.standard",
+    id: getEnvVar("OMC_MODEL_ID") ?? "omc-standard-claude-3.5",
   },
   git: {
     emptyChangeBehavior: getEnvVar("OMC_GIT_EMPTY_CHANGE_BEHAVIOR") ?? "skip",

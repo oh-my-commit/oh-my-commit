@@ -25,7 +25,7 @@ import {
 import { PromptTemplate } from "@shared/server"
 
 class StandardModel implements IModel {
-  id = `${APP_ID_CAMEL}.standard`
+  id = `omc-standard-claude-3.5`
   name = `omc-standard-claude-3.5`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
   providerId = APP_ID_CAMEL

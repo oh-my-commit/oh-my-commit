@@ -51,7 +51,7 @@ export function outdent(strings: TemplateStringsArray, ...values: any[]) {
  * @returns The injected instance
  */
 export const Inject = <T>(token: Token<T>, value: T | (abstract new (...args: any[]) => T)): T => {
-  console.log("injecting: ", { token })
+  // console.log("injecting: ", { token })
 
   let instance: T
   if (typeof value === "function") {
