@@ -5,7 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { merge } from "lodash-es"
+import _, { merge } from "lodash-es"
 import fs from "node:fs"
 import { Service } from "typedi"
 
@@ -15,36 +15,22 @@ import { USERS_DIR, USER_CONFIG_PATH } from "@shared/server"
 
 /**
  * Transform environment variables to config object
+ * - Convert OHMYCOMMIT_ prefix to ohMyCommit.
  * - Convert uppercase to camelCase
  * - Convert underscore to dot
  */
 function transformEnvToConfig(env: NodeJS.ProcessEnv = process.env): Record<string, any> {
   const config: Record<string, any> = {}
 
-  for (const [key, value] of Object.entries(env)) {
-    if (!value) continue
-
-    // Convert key to camelCase and dots
-    const transformedKey = key
-      .toLowerCase()
-      .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-      .replace(/_/g, ".")
-
-    // Build nested object structure
-    const parts = transformedKey.split(".")
-    let current = config
-
-    for (let i = 0; i < parts.length - 1; i++) {
-      current[parts[i]!] = current[parts[i]!] || {}
-      current = current[parts[i]!]
+  // eslint-disable-next-line prefer-const
+  for (let [key, value] of Object.entries(env)) {
+    if (key.endsWith("_API_KEY")) {
+      key = key.split("_API_KEY")[0]!.toLowerCase()
+      key = `ohMyCommit.ai.apiKeys.${key}`
+    } else {
+      key = _.camelCase(key)
     }
-
-    // Set the value, converting to appropriate type
-    const lastPart = parts[parts.length - 1]!
-    if (value.toLowerCase() === "true") current[lastPart] = true
-    else if (value.toLowerCase() === "false") current[lastPart] = false
-    else if (!isNaN(Number(value))) current[lastPart] = Number(value)
-    else current[lastPart] = value
+    config[key] = value
   }
 
   return config
@@ -59,6 +45,10 @@ export class CliConfig implements IConfig {
   }
 
   get<T>(key: string): T | undefined {
+    const PREFIX = "ohMyCommit."
+    if (key.startsWith(PREFIX)) {
+      key = key.slice(PREFIX.length)
+    }
     return key.split(".").reduce((obj: any, k) => obj && obj[k], this.config) as T
   }
 
@@ -88,6 +78,7 @@ export class CliConfig implements IConfig {
       console.error("Failed to load config:", error)
       this.config = defaultConfig
     } finally {
+      console.log("Loaded config:", this.config)
       this.saveConfig()
     }
   }
