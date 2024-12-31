@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.13
+
+### Patch Changes
+
+- 5c4b191: perf: better config
+
 ## 0.22.12
 
 ### Patch Changes
