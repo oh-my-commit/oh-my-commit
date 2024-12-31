@@ -1,5 +1,13 @@
 # @oh-my-commit/extension
 
+## 0.22.5
+
+### Patch Changes
+
+- 9842524: fix apikeys read
+- Updated dependencies [9842524]
+  - @oh-my-commit/provider-official@0.22.5
+
 ## 0.22.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.22.5
+
+### Patch Changes
+
+- 9842524: fix apikeys read
+
 ## 0.22.3
 
 ### Patch Changes
