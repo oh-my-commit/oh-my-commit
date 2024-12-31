@@ -1,5 +1,11 @@
 # @oh-my-commit/webview
 
+## 0.22.8
+
+### Patch Changes
+
+- 8869c7e: fix update
+
 ## 0.22.7
 
 ### Patch Changes
