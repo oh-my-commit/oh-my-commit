@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.11
+
+### Patch Changes
+
+- 48dd606: fix terminal override order
+
 ## 0.22.10
 
 ### Patch Changes

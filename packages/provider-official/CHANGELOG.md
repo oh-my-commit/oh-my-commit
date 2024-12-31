@@ -1,5 +1,12 @@
 # @oh-my-commit/provider-official
 
+## 0.22.11
+
+### Patch Changes
+
+- Updated dependencies [48dd606]
+  - @oh-my-commit/shared@0.22.11
+
 ## 0.22.10
 
 ### Patch Changes
