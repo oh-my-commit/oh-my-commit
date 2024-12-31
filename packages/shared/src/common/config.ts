@@ -57,6 +57,7 @@ const getEnvVar = (key: string): string | undefined => {
   return undefined
 }
 
+const proxyUrl = getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY")
 export const defaultConfig: ConfigSchema = {
   basic: {
     enabled: true,
@@ -74,8 +75,8 @@ export const defaultConfig: ConfigSchema = {
     mode: "window",
   },
   proxy: {
-    url: getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY"),
-    enabled: false,
+    url: proxyUrl,
+    enabled: !!proxyUrl,
   },
   apiKeys: {
     anthropic: getEnvVar("ANTHROPIC_API_KEY"),
