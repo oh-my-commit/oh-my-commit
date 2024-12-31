@@ -1,5 +1,13 @@
 # @oh-my-commit/extension
 
+## 0.22.9
+
+### Patch Changes
+
+- Updated dependencies [ecbbfc6]
+  - @oh-my-commit/shared@0.22.9
+  - @oh-my-commit/provider-official@0.22.9
+
 ## 0.22.7
 
 ### Patch Changes

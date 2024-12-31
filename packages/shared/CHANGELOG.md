@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.22.9
+
+### Patch Changes
+
+- ecbbfc6: fix proxy config
+
 ## 0.22.0
 
 ### Minor Changes

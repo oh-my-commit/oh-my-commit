@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.22.9
+
+### Patch Changes
+
+- ecbbfc6: fix proxy config
+- Updated dependencies [ecbbfc6]
+  - @oh-my-commit/shared@0.22.9
+
 ## 0.22.5
 
 ### Patch Changes
