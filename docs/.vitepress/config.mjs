@@ -36,7 +36,7 @@ export default defineConfig({
           items: [
             { text: "介绍", link: "/guide/introduction" },
             { text: "快速开始", link: "/guide/getting-started" },
-            { text: "用户配置", link: "/guide/configuration" },
+            // { text: "用户配置", link: "/guide/configuration" },
             { text: "常见问题", link: "/guide/faq" },
           ],
         },
@@ -76,15 +76,21 @@ export default defineConfig({
           text: "开发",
           items: [
             { text: "开发计划", link: "/development/todo" },
-            {text: "插件开发", link: "/development/extension-development" },
-            // { text: "架构设计", link: "/development/architecture" },
-            // { text: "最佳实践", link: "/development/best-practices" },
-            
-              {link: "/development/best-practice/commit-specification", text: "Commit 规范"},
-              {link: "/development/best-practice/state-management", text: "状态管理"},
-              {link: "/development/best-practice/css-management", text: "CSS 管理"},
-              {link: "/development/best-practice/error-handler", text: "Error 处理"},
-              {link: "/development/best-practice/error-handling-advanced", text: "高级 Error 处理"},
+{
+text: "开发指南",
+items:[
+  {text: "插件开发", link: "/development/extension-development" },
+  // { text: "架构设计", link: "/development/architecture" },
+  // { text: "最佳实践", link: "/development/best-practices" },
+  
+    {link: "/development/best-practice/commit-specification", text: "Commit 规范"},
+    {link: "/development/best-practice/state-management", text: "状态管理"},
+    {link: "/development/best-practice/css-management", text: "CSS 管理"},
+    {link: "/development/best-practice/error-handler", text: "Error 处理"},
+    {link: "/development/best-practice/error-handling-advanced", text: "高级 Error 处理"},
+
+]
+},
               {
                 text: "API",
                 link: "/development/api",
