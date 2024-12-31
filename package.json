@@ -196,7 +196,7 @@
           "markdownDescription": "提交界面显示模式",
           "order": 20
         },
-        "ohMyCommit.ai.apiKeys": {
+        "ohMyCommit.apiKeys": {
           "type": "object",
           "markdownDescription": "AI 服务提供商的 API 密钥配置",
           "additionalProperties": {

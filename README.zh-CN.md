@@ -92,7 +92,7 @@
 > ⚠️ **使用前配置**
 > 
 > 以官方算法 `@oh-my-commit/provider-official` 为例，您需要：
-> 1. 配置 AI 服务密钥：`ANTHROPIC_API_KEY` 或 VSCode 设置 `oh-my-commit.ai.apiKeys.anthropic`
+> 1. 配置 AI 服务密钥：`ANTHROPIC_API_KEY` 或 VSCode 设置 `oh-my-commit.apiKeys.anthropic`
 > 2. （可选）配置代理：
 >    - CLI：`HTTP_PROXY` 环境变量
 >    - VSCode：`ohMyCommit.proxy.url` 与 `ohMyCommit.proxy.enabled`
@@ -130,7 +130,7 @@ Waiting for release !
 | -------------------------------------- |--------|---------------------------| ------------------------------------------------- |-----------------------------------------------------------------------------------------------|
 | `oh-my-commit.model.id`                | string | "omc-standard-claude-3.5" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard-claude-3.5`<br>• （可自定义实现，本地安装 / 源码 PR / npm 发布）                               |
 | `oh-my-commit.git.lang`      | string | "system"                  | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages                 |
-| `oh-my-commit.ai.apiKeys`              | object | -                         | AI 服务提供商的 API 密钥配置                      |                                                                                               |
+| `oh-my-commit.apiKeys`              | object | -                         | AI 服务提供商的 API 密钥配置                      |                                                                                               |
 | `oh-my-commit.ui.mode`                 | string | "panel"                   | 提交界面模式选择                                  | • `notification`: 通知形式生成 Commit 信息，适合个人快速开发<br>• `panel`: 常驻面板：支持编辑标题内容、查看 Diff 等的专业视图，适合专业协同 |
 | `ohMyCommit.proxy.enabled`             | boolean | false                     | 是否启用代理                                      | `true / false`                                                                                |
 | `ohMyCommit.proxy.url`                 | string | "http://localhost:7890"   | 代理服务器地址                                | 任意有效的代理URL（如 "http://localhost:7890"）                                                         |

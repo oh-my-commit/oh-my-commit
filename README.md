@@ -120,7 +120,7 @@ Oh My Commit is a modular intelligent commit solution:
 > ⚠️ **Pre-usage Configuration**
 > 
 > Taking the official algorithm `@oh-my-commit/provider-official` as an example, you need to:
-> 1. Configure AI service key: `ANTHROPIC_API_KEY` or VSCode setting `oh-my-commit.ai.apiKeys.anthropic`
+> 1. Configure AI service key: `ANTHROPIC_API_KEY` or VSCode setting `oh-my-commit.apiKeys.anthropic`
 > 2. (Optional) Configure proxy:
 >    - CLI: `HTTP_PROXY` environment variable
 >    - VSCode: `ohMyCommit.proxy.url` and `ohMyCommit.proxy.enabled`
@@ -156,7 +156,7 @@ omc gen # AI generate commit
 | -------------------------------------- | ------- | ---------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `oh-my-commit.model.id`                | string  | "omc-standard-claude-3.5"    | Select AC service provider and model          | • `omc-standard-claude-3.5`<br>• (Custom implementations via local install / source PR / npm publish)        |
 | `oh-my-commit.git.lang`                | string  | "system"                     | Git commit message language                    | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages |
-| `oh-my-commit.ai.apiKeys`              | object  | -                           | AI service provider API key configuration      |                                                                                                            |
+| `oh-my-commit.apiKeys`              | object  | -                           | AI service provider API key configuration      |                                                                                                            |
 | `oh-my-commit.ui.mode`                 | string  | "panel"                      | Commit interface mode                          | • `notification`: Generate commit messages via notifications, ideal for quick personal development<br>• `panel`: Resident panel with professional view supporting title/content editing and diff viewing, suitable for professional collaboration |
 | `ohMyCommit.proxy.enabled`             | boolean | false                       | Enable proxy for API requests                  | `true / false`                                                                                              |
 | `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890"     | Proxy server URL                              | Any valid proxy URL (e.g. "http://localhost:7890")                                                          |

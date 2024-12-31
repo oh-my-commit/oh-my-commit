@@ -26,7 +26,7 @@ function transformEnvToConfig(env: NodeJS.ProcessEnv = process.env): Record<stri
   for (let [key, value] of Object.entries(env)) {
     if (key.endsWith("_API_KEY")) {
       key = key.split("_API_KEY")[0]!.toLowerCase()
-      key = `ohMyCommit.ai.apiKeys.${key}`
+      key = `ohMyCommit.apiKeys.${key}`
     } else {
       key = _.camelCase(key)
     }

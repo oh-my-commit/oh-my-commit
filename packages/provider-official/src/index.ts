@@ -12,7 +12,6 @@ import { merge } from "lodash-es"
 
 import {
   APP_ID_CAMEL,
-  APP_ID_DASH,
   APP_NAME,
   BaseProvider,
   IError,
@@ -26,7 +25,7 @@ import {
 import { PromptTemplate } from "@shared/server"
 
 class StandardModel implements IModel {
-  id = `${APP_ID_DASH}.standard`
+  id = `${APP_ID_CAMEL}.standard`
   name = `omc-standard-claude-3.5`
   description = "High accuracy commit messages using Claude 3.5 Sonnet"
   providerId = APP_ID_CAMEL
@@ -100,7 +99,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
     this.logger.debug("Initializing Anthropic API...")
     const proxyEnabled = this.config.get<boolean>("ohMyCommit.proxy.enabled")
     const proxyUrl = this.config.get<string | undefined>("ohMyCommit.proxy.url")
-    const apiKey = this.config.get<string | undefined>("ohMyCommit.ai.apiKeys.anthropic")
+    const apiKey = this.config.get<string | undefined>("ohMyCommit.apiKeys.anthropic")
 
     this.logger.info("Initializing Anthropic config: ", { proxyEnabled, proxyUrl, apiKey })
     const config: Record<string, any> = { apiKey }

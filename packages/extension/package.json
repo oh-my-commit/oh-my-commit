@@ -10,8 +10,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist tsconfig.tsbuildinfo .turbo",
-    "type-check": "tsc --noEmit",
-    "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp -r node_modules/@oh-my-commit/provider-official/dist/* $DIR"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@oh-my-commit/shared": "workspace:^",
