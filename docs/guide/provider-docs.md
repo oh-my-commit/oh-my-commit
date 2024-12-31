@@ -7,7 +7,6 @@
 ## 基本示例
 
 ```typescript
-import { ResultAsync } from "neverthrow"
 
 import {
   BaseProvider,
@@ -51,7 +50,7 @@ export class MyProvider extends BaseProvider implements IProvider {
   // and consider about the api_key, proxy, timeout ... by yourself
   // we use ResultAsync to handle errors better
   // it's recommended but not required
-  generateCommit(input: GenerateCommitInput): ResultAsync<GenerateCommitResult, GenerateCommitError> {
+  generateCommit(input: GenerateCommitInput) {
     try {
       this.logger.info("Generating commit", {
         model: input.model.id,
