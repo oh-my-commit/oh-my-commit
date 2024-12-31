@@ -8,18 +8,15 @@
 import { Service } from "typedi"
 import vscode from "vscode"
 
-import { APP_NAME, BaseLogger, type ILogger, type LogLevel, formatMessage, normalizeLogLevel } from "@shared/common"
+import { APP_NAME, BaseLogger, type ILogger, type LogLevel, formatMessage } from "@shared/common"
 
 @Service()
 export class VscodeLogger extends BaseLogger implements ILogger {
+  override name = "host"
+
   private logger = vscode.window.createOutputChannel(APP_NAME, {
     log: true,
   })
-
-  constructor(name = "host") {
-    super(name)
-    this.minLevel = normalizeLogLevel(process.env["LOG_LEVEL"])
-  }
 
   protected log(level: LogLevel, ...args: unknown[]) {
     // todo: better handle with formatMessage

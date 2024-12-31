@@ -29,6 +29,7 @@ import { CommitMessageStore } from "./managers/commit-message-store"
 import { CommandManager } from "./managers/vscode-command-manager"
 
 export function activate(context: vscode.ExtensionContext) {
+  Inject(TOKENS.Config, VscodeConfig)
   const logger = Inject(TOKENS.Logger, VscodeLogger)
   logger.info(`Initializing ${APP_NAME} extension...`)
 
@@ -47,7 +48,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     Inject(TOKENS.Context, context)
-    Inject(TOKENS.Config, VscodeConfig)
     Inject(TOKENS.StatusBar, StatusBarManager)
     Inject(TOKENS.GitManager, VscodeGit)
     Inject(TOKENS.ProviderManager, ProviderRegistry)

@@ -5,9 +5,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Service } from "typedi"
+import { Inject, Service } from "typedi"
 
-import type { ILogger } from "./core"
+import type { IConfig, ILogger } from "./core"
+import { TOKENS } from "./tokens"
 import { formatMessage } from "./utils"
 
 export type LogLevel = "debug" | "trace" | "info" | "warn" | "error"
@@ -20,31 +21,22 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
   error: 50,
 }
 
-const DEFAULT_LOG_LEVEL: LogLevel = "debug"
-
 export const normalizeLogLevel = (s?: string): LogLevel => {
   if (s) {
     const level = s.toLowerCase()
     if (Object.keys(LOG_LEVEL_PRIORITY).includes(level)) return level as LogLevel
   }
-  return DEFAULT_LOG_LEVEL
+  return "info"
 }
 
 @Service()
 export abstract class BaseLogger implements ILogger {
-  protected minLevel: LogLevel = DEFAULT_LOG_LEVEL
-  protected name?: string
+  public name?: string
 
-  constructor(name?: string) {
-    this.name = name
-  }
+  constructor(@Inject(TOKENS.Config) protected config: IConfig) {}
 
-  setName(name: string): void {
-    this.name = name
-  }
-
-  setMinLevel(level: LogLevel): void {
-    this.minLevel = level
+  get minLevel(): LogLevel {
+    return normalizeLogLevel(this.config.get("log.level"))
   }
 
   info(...args: unknown[]): void {
@@ -81,7 +73,7 @@ export abstract class BaseLogger implements ILogger {
 
 @Service()
 export class ConsoleLogger extends BaseLogger implements ILogger {
-  protected override name = "console"
+  override name = "console"
 
   protected log(level: LogLevel, ...args: unknown[]): void {
     const timestamp = `${new Date().toISOString()}`

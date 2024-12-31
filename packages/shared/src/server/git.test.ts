@@ -10,8 +10,9 @@ import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
 import { type DiffResult } from "simple-git"
+import Container from "typedi"
 
-import { ConsoleLogger } from "../common/log"
+import { ConsoleLogger } from "../common"
 import { GitCore } from "./git"
 
 describe("GitCore", () => {
@@ -32,7 +33,7 @@ describe("GitCore", () => {
       })
     })
 
-    mockLogger = new ConsoleLogger()
+    mockLogger = Container.get(ConsoleLogger)
     jest.spyOn(mockLogger, "debug").mockImplementation(jest.fn())
     jest.spyOn(mockLogger, "info").mockImplementation(jest.fn())
     jest.spyOn(mockLogger, "warn").mockImplementation(jest.fn())

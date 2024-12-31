@@ -28,7 +28,7 @@ import packageJson from "../package.json"
 import { CliConfig } from "./config"
 
 Inject(TOKENS.Config, CliConfig)
-Inject(TOKENS.Logger, ConsoleLogger)
+const logger = Inject(TOKENS.Logger, ConsoleLogger)
 Inject(TOKENS.ProviderManager, ProviderRegistry)
 const git = Inject(TOKENS.GitManager, GitCore)
 const commitManager = Inject(TOKENS.CommitManager, CommitManager)
@@ -37,35 +37,35 @@ const gitCommitManager = Inject(TOKENS.GitCommitManager, GitCommitManager)
 // Command handlers
 const listModels = async () => {
   try {
-    commitManager.logger.info(chalk.blue("Listing models..."))
+    logger.info(chalk.blue("Listing models..."))
     await commitManager.providerManager.initialize()
     const models = commitManager.models
-    commitManager.logger.info(chalk.blue("Available models:"))
+    logger.info(chalk.blue("Available models:"))
     for (const model of models) {
-      commitManager.logger.info(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
+      logger.info(chalk.green(`  ✓ ${model.id} - ${model.name} (default)`))
     }
   } catch (error) {
-    console.error(chalk.red("Failed to list models:"), error)
+    logger.error(chalk.red("Failed to list models:"), error)
     process.exit(1)
   }
 }
 
 const initConfig = async () => {
-  commitManager.logger.info(chalk.blue("Initializing Oh My Commit..."))
+  logger.info(chalk.blue("Initializing Oh My Commit..."))
   try {
     // TODO: Add actual initialization logic
     // 1. Create config file if not exists
     // 2. Set up default model
     // 3. Configure git hooks if needed
-    commitManager.logger.info(chalk.green("Initialization completed!"))
+    logger.info(chalk.green("Initialization completed!"))
   } catch (error) {
-    console.error(chalk.red("Failed to initialize:"), error)
+    logger.error(chalk.red("Failed to initialize:"), error)
     process.exit(1)
   }
 }
 
 const selectModel = async (modelId: string) => {
-  commitManager.logger.info(chalk.blue(`Selecting model: ${modelId}`))
+  logger.info(chalk.blue(`Selecting model: ${modelId}`))
   try {
     // Initialize providers if not already done
     await commitManager.providerManager.initialize()
@@ -73,21 +73,21 @@ const selectModel = async (modelId: string) => {
     const availableModels: IModel[] = commitManager.models
     const selectedModel = availableModels.find((m) => m.id === modelId)
     if (!selectedModel) {
-      console.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
+      logger.error(chalk.red(`Model "${modelId}" not found. Use 'list' to see available models.`))
       process.exit(1)
     }
 
     // Set the selected model in config
     await commitManager.config.update(SETTING_MODEL_ID, modelId)
-    commitManager.logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
+    logger.info(chalk.green(`Successfully set default model to: ${modelId}`))
   } catch (error) {
-    console.error(chalk.red("Failed to select model:"), error)
+    logger.error(chalk.red("Failed to select model:"), error)
     process.exit(1)
   }
 }
 
 const generateAndCommit = async (options: IInputOptions & { yes?: boolean }) => {
-  commitManager.logger.info(chalk.blue("Generating commit message..."))
+  logger.info(chalk.blue("Generating commit message..."))
   try {
     // Initialize providers if not already done
     if (commitManager.providers.length === 0) {
@@ -97,28 +97,26 @@ const generateAndCommit = async (options: IInputOptions & { yes?: boolean }) => 
     const result = await gitCommitManager.generateCommit()
 
     if (!result.ok) {
-      commitManager.logger.error(chalk.red("Failed to generate commit message:"))
-      commitManager.logger.error(result.message)
+      logger.error(chalk.red("Failed to generate commit message:"))
+      logger.error(result.message)
       process.exit(1)
     }
 
     const commitData: IResult = result.data
 
-    commitManager.logger.info(
-      chalk.green([`Generated commit message:`, commitData.title, `---`, commitData.body].join("\n"))
-    )
+    logger.info(chalk.green([`Generated commit message:`, commitData.title, `---`, commitData.body].join("\n")))
 
     if (options.yes) {
       // Automatically commit if -y flag is provided
       await git.commit([commitData.title, ...(commitData.body ? [commitData.body] : [])].join("\n"))
-      commitManager.logger.info(chalk.green("Changes committed successfully!"))
+      logger.info(chalk.green("Changes committed successfully!"))
     } else {
       // Ask for confirmation
-      commitManager.logger.info(chalk.yellow("\nUse -y flag to commit automatically"))
-      commitManager.logger.info(chalk.yellow("Or run git commit manually with the message above"))
+      logger.info(chalk.yellow("\nUse -y flag to commit automatically"))
+      logger.info(chalk.yellow("Or run git commit manually with the message above"))
     }
   } catch (error) {
-    console.error(chalk.red("Failed to generate commit message:"), error)
+    logger.error(chalk.red("Failed to generate commit message:"), error)
     process.exit(1)
   }
 }

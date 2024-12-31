@@ -8,6 +8,9 @@
 import { z } from "zod"
 
 export const configSchema = z.object({
+  log: z.object({
+    level: z.enum(["debug", "info", "warn", "error"]).default("info").optional(),
+  }),
   basic: z.object({
     enabled: z.boolean().default(true),
     uiLanguage: z.enum(["system", "zh_CN", "en_US"]).default("system"),
@@ -59,6 +62,9 @@ const getEnvVar = (key: string): string | undefined => {
 
 const proxyUrl = getEnvVar("HTTPS_PROXY") ?? getEnvVar("HTTP_PROXY")
 export const envConfig = configSchema.parse({
+  log: {
+    level: getEnvVar("LOG_LEVEL") ?? "info",
+  },
   basic: {
     enabled: getEnvVar("OMC_BASIC_ENABLED") === "true",
     uiLanguage: getEnvVar("OMC_BASIC_UI_LANGUAGE") ?? "system",
@@ -99,6 +105,7 @@ export const envConfig = configSchema.parse({
 })
 
 export const defaultConfig: ConfigSchema = {
+  log: {},
   basic: {
     enabled: true,
     uiLanguage: "system",
