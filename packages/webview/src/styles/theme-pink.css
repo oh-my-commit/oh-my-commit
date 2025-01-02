@@ -1,0 +1,95 @@
+/* Yating's Elegant Theme */
+:root {
+  --yt-primary: #9d4edd;
+  --yt-secondary: #c77dff;
+  --yt-accent: #7b2cbf;
+  --yt-light: #f8f1ff;
+  --yt-dark: #3c096c;
+  --yt-gradient: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+  --yt-shadow: 0 4px 6px -1px rgba(157, 78, 221, 0.1), 0 2px 4px -1px rgba(157, 78, 221, 0.06);
+  --yt-glow: 0 0 15px rgba(157, 78, 221, 0.3);
+}
+
+.theme-pink {
+  --vscode-editor-background: var(--yt-light);
+  --vscode-foreground: var(--yt-dark);
+  --vscode-input-foreground: var(--yt-dark);
+  --vscode-descriptionForeground: var(--yt-primary);
+  --vscode-panel-border: var(--yt-secondary);
+  --vscode-toolbar-hoverBackground: rgba(157, 78, 221, 0.1);
+  --vscode-inputValidation-errorBorder: #e85d75;
+}
+
+/* Custom styles for commit message component */
+.theme-pink .commit-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(157, 78, 221, 0.2);
+  box-shadow: var(--yt-shadow);
+}
+
+.theme-pink .commit-card:hover {
+  box-shadow: var(--yt-glow);
+  transition: all 0.3s ease;
+}
+
+.theme-pink .commit-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--yt-secondary);
+  transition: all 0.3s ease;
+}
+
+.theme-pink .commit-input:focus {
+  border-color: var(--yt-primary);
+  box-shadow: 0 0 0 2px rgba(157, 78, 221, 0.2);
+}
+
+.theme-pink .commit-button {
+  background: var(--yt-gradient);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.theme-pink .commit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--yt-glow);
+}
+
+.theme-pink .commit-button:disabled {
+  background: var(--yt-secondary);
+  opacity: 0.7;
+}
+
+.theme-pink .icon-button {
+  color: var(--yt-primary);
+  transition: all 0.3s ease;
+}
+
+.theme-pink .icon-button:hover {
+  color: var(--yt-accent);
+  transform: scale(1.05);
+}
+
+/* Yating's special touches */
+.theme-pink .commit-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(157, 78, 221, 0.05) 0%, rgba(199, 125, 255, 0.05) 100%);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.theme-pink .yating-signature {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 10px;
+  color: var(--yt-secondary);
+  opacity: 0.6;
+  font-style: italic;
+}
