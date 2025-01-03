@@ -1,0 +1,46 @@
+name: Reusable Setup Workflow
+
+on:
+  workflow_call:
+    outputs:
+      cache-hit:
+        description: "Whether there was a cache hit for pnpm"
+        value: ${{ jobs.setup.outputs.cache-hit }}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.pnpm-cache.outputs.cache-hit }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.10.0
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Build tsup
+        run: |
+          cd third-parties/tsup
+          pnpm install --no-frozen-lockfile
+          pnpm build
+
+      - name: Install dependencies
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm install --no-frozen-lockfile -w
+
+      - name: Build packages
+        run: pnpm build
