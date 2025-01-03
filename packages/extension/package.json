@@ -13,8 +13,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@oh-my-commit/shared": "workspace:^",
     "@oh-my-commit/provider-official": "^0.23.0",
+    "@oh-my-commit/shared": "workspace:^",
     "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
     "outdent": "^0.8.0",
@@ -29,8 +29,10 @@
     "@types/vscode": "^1.80.0",
     "@types/web": "^0.0.135",
     "@vscode/vsce": "^3.2.1",
+    "dotenv-cli": "^8.0.0",
     "esbuild": "^0.19.11",
     "nodemon": "^2.0.22",
+    "ovsx": "^0.10.1",
     "tsup": "workspace:*",
     "typescript": "5.3.3",
     "vscode": "^1.1.37"

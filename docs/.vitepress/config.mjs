@@ -118,7 +118,8 @@ items:[
           }, {
             "text": "Publish",
             items: [
-              {link: "/development/publish/publish-guide", text: "Publish Guide"},
+              {link: "/development/publish/publish-vscode", text: "Publish to VSCode"},
+              {link: "/development/publish/publish-ovsx", text: "Publish to OVSX"},
             ]
           }
           ],
