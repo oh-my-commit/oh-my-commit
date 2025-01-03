@@ -33,6 +33,21 @@ jobs:
           node-version: 20
           cache: "pnpm"
 
+      - name: Build tsup
+        run: |
+          cd third-parties/tsup
+          pnpm install --no-frozen-lockfile
+          pnpm build
+
+      - name: Install dependencies
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm install --no-frozen-lockfile -w
+
+      # not necessary
+      # - name: Build packages
+      #   run: pnpm build
+
       - name: Build docs
         run: pnpm docs:build
 

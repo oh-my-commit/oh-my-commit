@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -32,7 +33,21 @@ jobs:
           node-version: 20
           cache: "pnpm"
 
-      - name: Build and Package Extension
+      - name: Build tsup
+        run: |
+          cd third-parties/tsup
+          pnpm install --no-frozen-lockfile
+          pnpm build
+
+      - name: Install dependencies
+        run: |
+          pnpm install --no-frozen-lockfile
+          pnpm install --no-frozen-lockfile -w
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Build vscode packages
         run: pnpm vscode:package
 
       - name: Create GitHub Release

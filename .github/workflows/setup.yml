@@ -3,15 +3,13 @@ name: Reusable Setup Workflow
 on:
   workflow_call:
     outputs:
-      cache-hit:
-        description: "Whether there was a cache hit for pnpm"
-        value: ${{ jobs.setup.outputs.cache-hit }}
+      matrix-success:
+        description: "Whether the matrix jobs succeeded"
+        value: ${{ jobs.setup.result == 'success' }}
 
 jobs:
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.pnpm-cache.outputs.cache-hit }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +21,6 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8.10.0
-          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,3 +41,12 @@ jobs:
 
       - name: Build packages
         run: pnpm build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: |
+            dist/
+            packages/*/dist/
+            node_modules/
