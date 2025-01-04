@@ -24,6 +24,12 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
           
+      - name: Build tsup
+        run: |
+          cd third-parties/tsup
+          pnpm install --no-frozen-lockfile
+          pnpm build
+
       - name: Get pnpm store directory
         shell: bash
         run: |
@@ -36,12 +42,6 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-          
-      - name: Build tsup
-        run: |
-          cd third-parties/tsup
-          pnpm install --no-frozen-lockfile
-          pnpm build
 
       - name: Install dependencies
         run: |
