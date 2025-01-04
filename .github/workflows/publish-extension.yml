@@ -8,6 +8,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       
@@ -45,6 +47,24 @@ jobs:
       - name: Package extension
         run: pnpm vscode:package
         
+      - name: Get package info
+        id: package
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.package.outputs.name }} v${{ steps.package.outputs.version }}
+          files: dist/*.vsix
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          
       - name: Publish to VS Code Marketplace
         id: vscode-publish
         continue-on-error: true
