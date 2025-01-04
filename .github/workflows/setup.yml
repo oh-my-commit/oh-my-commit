@@ -1,19 +1,14 @@
-name: Deploy VitePress site to Pages
+name: Reusable Setup Workflow
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: write
+  workflow_call:
+    outputs:
+      matrix-success:
+        description: "Whether the matrix jobs succeeded"
+        value: ${{ jobs.setup.result == 'success' }}
 
 jobs:
   setup:
-    uses: ./.github/workflows/setup.yml
-
-  deploy:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,15 +39,14 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm install --no-frozen-lockfile -w
 
-      # not necessary
-      # - name: Build packages
-      #   run: pnpm build
+      - name: Build packages
+        run: pnpm build
 
-      - name: Build docs
-        run: pnpm docs:build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/.vitepress/dist
+          name: dist
+          path: |
+            dist/
+            packages/*/dist/
+            node_modules/
