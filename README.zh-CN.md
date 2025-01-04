@@ -26,7 +26,7 @@
   <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=00a8f0" alt="License" />
 </p>
 
-[English](./README.md) | 中文 | [在线文档](https://oh-my-commit.github.io) | [VSCode 插件](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit)
+[English](./README.md) | 中文 | [在线文档](https://oh-my-commit.github.io) | [VSCode 插件](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit) | [Open-vsx Extension](https://open-vsx.org/extension/oh-my-commit/oh-my-commit) 
 
 
 </div>
