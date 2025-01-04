@@ -9,11 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-
   deploy:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,11 +22,12 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8.10.0
+          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: "pnpm"
 
       - name: Build tsup
@@ -44,9 +41,8 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm install --no-frozen-lockfile -w
 
-      # not necessary
-      # - name: Build packages
-      #   run: pnpm build
+      - name: Build packages
+        run: pnpm build
 
       - name: Build docs
         run: pnpm docs:build
@@ -54,5 +50,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.GH_TOKEN }}
+          external_repository: oh-my-commit/oh-my-commit.github.io
           publish_dir: docs/.vitepress/dist
+          publish_branch: main
