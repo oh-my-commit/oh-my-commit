@@ -1,0 +1,74 @@
+name: Publish Extension
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.10.0
+          run_install: false
+          
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Build extension
+        run: pnpm build
+        
+      - name: Package extension
+        run: pnpm vscode:package
+        
+      - name: Publish to VS Code Marketplace
+        id: vscode-publish
+        continue-on-error: true
+        run: pnpm vscode:publish
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          
+      - name: Publish to Open VSX Registry
+        id: ovsx-publish
+        continue-on-error: true
+        run: pnpm ovsx:publish
+        env:
+          OVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
+          
+      - name: Check publish results
+        if: always()
+        run: |
+          if [ "${{ steps.vscode-publish.outcome }}" == "failure" ] && [ "${{ steps.ovsx-publish.outcome }}" == "failure" ]; then
+            echo "Both marketplace publishes failed"
+            exit 1
+          elif [ "${{ steps.vscode-publish.outcome }}" == "failure" ]; then
+            echo "VS Code Marketplace publish failed"
+            exit 1
+          elif [ "${{ steps.ovsx-publish.outcome }}" == "failure" ]; then
+            echo "Open VSX Registry publish failed"
+            exit 1
+          fi
