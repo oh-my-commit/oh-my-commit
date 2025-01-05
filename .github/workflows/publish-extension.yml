@@ -3,7 +3,7 @@ name: Publish Extension
 on:
   push:
     tags:
-      - 'oh-my-commit-vscode@*'
+      - 'oh-my-commit-vscode@[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
