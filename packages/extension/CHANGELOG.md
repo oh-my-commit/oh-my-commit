@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.23.3
+
+### Patch Changes
+
+- b526daf: fix figletr
+- Updated dependencies [b526daf]
+  - @oh-my-commit/provider-official@0.23.3
+  - @oh-my-commit/shared@0.23.3
+
 ## 0.23.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.23.3
+
+### Patch Changes
+
+- b526daf: fix figletr
+
 ## 0.23.1
 
 ### Patch Changes
