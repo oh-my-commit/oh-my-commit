@@ -1,19 +1,42 @@
 {
-  "name": "@oh-my-commit/extension",
+  "name": "oh-my-commit-vscode",
   "version": "0.23.3",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
+  "icon": "assets/oh-my-commit_256.logo.png",
+  "main": "./dist/main/extension.js",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oh-my-commit/oh-my-commit"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "vscode",
+    "productivity"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist tsconfig.tsbuildinfo .turbo",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "package": "vsce package --no-dependencies -o dist",
+    "publish:vscode": "vsce publish --no-dependencies",
+    "publish:ovsx": "dotenv -- ovsx publish \"$(ls -t dist/*.vsix | head -n1)\" -p \"$OVSX_TOKEN\""
   },
   "dependencies": {
-    "@oh-my-commit/provider-official": "^0.23.3",
+    "@oh-my-commit/provider-official": "workspace:^",
     "@oh-my-commit/shared": "workspace:^",
     "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
@@ -36,5 +59,121 @@
     "tsup": "workspace:*",
     "typescript": "5.3.3",
     "vscode": "^1.1.37"
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:.git"
+  ],
+  "contributes": {
+    "views": {
+      "ohMyCommit": [
+        {
+          "type": "webview",
+          "id": "ohMyCommit.view",
+          "name": "Oh My Commit"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ohMyCommit",
+          "title": "Oh My Commit",
+          "icon": "$(git-commit)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "ohMyCommit.quickCommit",
+        "title": "Oh My Commit: Quick Commit"
+      },
+      {
+        "command": "ohMyCommit.selectModel",
+        "title": "Oh My Commit: Select Model"
+      },
+      {
+        "command": "ohMyCommit.openPreference",
+        "title": "Oh My Commit: Open Preference"
+      }
+    ],
+    "configuration": {
+      "title": "Oh My Commit",
+      "properties": {
+        "ohMyCommit.model.id": {
+          "type": "string",
+          "enum": [
+            "omc-standard-claude-3.5"
+          ],
+          "default": "omc-standard-claude-3.5",
+          "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
+          "order": 1
+        },
+        "ohMyCommit.git.lang": {
+          "type": "string",
+          "enum": [
+            "system",
+            "zh_CN",
+            "en_US"
+          ],
+          "enumDescriptions": [
+            "跟随系统语言",
+            "中文",
+            "English"
+          ],
+          "default": "system",
+          "markdownDescription": "Commit 信息语言",
+          "order": 10
+        },
+        "ohMyCommit.ui.mode": {
+          "type": "string",
+          "enum": [
+            "notification",
+            "panel"
+          ],
+          "enumDescriptions": [
+            "弹出通知，支持修改按钮",
+            "在面板中显示完整提交界面"
+          ],
+          "default": "panel",
+          "markdownDescription": "提交界面显示模式",
+          "order": 20
+        },
+        "ohMyCommit.apiKeys": {
+          "type": "object",
+          "markdownDescription": "AI 服务提供商的 API 密钥配置",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "properties": {
+            "openai": {
+              "type": "string",
+              "default": "",
+              "markdownDescription": "OpenAI API 密钥",
+              "order": 301
+            },
+            "anthropic": {
+              "type": "string",
+              "default": "",
+              "markdownDescription": "Anthropic API 密钥",
+              "order": 302
+            }
+          },
+          "order": 30
+        },
+        "ohMyCommit.proxy.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable proxy for API requests",
+          "order": 31
+        },
+        "ohMyCommit.proxy.url": {
+          "type": "string",
+          "default": "http://localhost:7890",
+          "description": "Proxy server URL",
+          "order": 32
+        }
+      }
+    }
   }
 }

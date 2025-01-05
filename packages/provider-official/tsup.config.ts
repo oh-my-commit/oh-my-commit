@@ -12,6 +12,7 @@ import { defineConfig } from "tsup"
 import baseConfig from "../__base__/tsup.config"
 
 const distDir = resolve(__dirname, "dist")
+const targetExtensionDir = resolve(__dirname, "../extension/dist/providers/official")
 
 export default defineConfig({
   ...baseConfig,
@@ -22,7 +23,6 @@ export default defineConfig({
   format: ["cjs", "esm"],
   noExternal: [/.*/], // 打包所有依赖
   onSuccess: async () => {
-    const targetExtensionDir = resolve(__dirname, "../../dist/providers/official")
     await promises.cp(distDir, targetExtensionDir, { recursive: true })
   },
 })

@@ -56,7 +56,7 @@ jobs:
         run: pnpm build
         
       - name: Package extension
-        run: pnpm vscode:package
+        run: pnpm ext:package
         
       - name: Get package info
         id: package
@@ -79,14 +79,14 @@ jobs:
       - name: Publish to VS Code Marketplace
         id: vscode-publish
         continue-on-error: true
-        run: pnpm vscode:publish
+        run: pnpm ext:publish:vscode
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           
       - name: Publish to Open VSX Registry
         id: ovsx-publish
         continue-on-error: true
-        run: pnpm ovsx:publish
+        run: pnpm ext:publish:ovsx
         env:
           OVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
           

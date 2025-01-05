@@ -3,32 +3,12 @@
   "displayName": "Oh My Commit",
   "publisher": "oh-my-commit",
   "private": false,
-  "version": "0.9.14",
-  "description": "An elegant AI-powered commit message generator for VSCode",
+  "version": "0.0.0",
   "author": "markshawn2020",
-  "icon": "assets/oh-my-commit_256.logo.png",
-  "main": "./dist/main/extension.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/oh-my-commit/oh-my-commit"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "engines": {
-    "node": ">=20.0.0",
-    "vscode": "^1.80.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "git",
-    "commit",
-    "ai",
-    "vscode",
-    "productivity"
-  ],
   "packageManager": "pnpm@8.10.0",
   "pnpm": {
     "overrides": {
@@ -55,9 +35,9 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "vscode:package": "pnpm build && vsce package --no-dependencies -o dist",
-    "vscode:publish": "vsce publish --no-dependencies",
-    "ovsx:publish": "dotenv -- ovsx publish \"$(ls -t dist/*.vsix | head -n1)\" -p \"$OVSX_TOKEN\""
+    "ext:package": "pnpm -F oh-my-commit-vscode package",
+    "ext:publish:vscode": "pnpm -F oh-my-commit-vscode publish",
+    "ext:publish:ovsx": "pnpm -F oh-my-commit-vscode publish:ovsx"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
@@ -121,121 +101,5 @@
     "vitest": "2.1.3",
     "webpack": "^5.74.0",
     "zod": "^3.24.1"
-  },
-  "activationEvents": [
-    "onStartupFinished",
-    "workspaceContains:.git"
-  ],
-  "contributes": {
-    "views": {
-      "ohMyCommit": [
-        {
-          "type": "webview",
-          "id": "ohMyCommit.view",
-          "name": "Oh My Commit"
-        }
-      ]
-    },
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "ohMyCommit",
-          "title": "Oh My Commit",
-          "icon": "$(git-commit)"
-        }
-      ]
-    },
-    "commands": [
-      {
-        "command": "ohMyCommit.quickCommit",
-        "title": "Oh My Commit: Quick Commit"
-      },
-      {
-        "command": "ohMyCommit.selectModel",
-        "title": "Oh My Commit: Select Model"
-      },
-      {
-        "command": "ohMyCommit.openPreference",
-        "title": "Oh My Commit: Open Preference"
-      }
-    ],
-    "configuration": {
-      "title": "Oh My Commit",
-      "properties": {
-        "ohMyCommit.model.id": {
-          "type": "string",
-          "enum": [
-            "omc-standard-claude-3.5"
-          ],
-          "default": "omc-standard-claude-3.5",
-          "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
-          "order": 1
-        },
-        "ohMyCommit.git.lang": {
-          "type": "string",
-          "enum": [
-            "system",
-            "zh_CN",
-            "en_US"
-          ],
-          "enumDescriptions": [
-            "跟随系统语言",
-            "中文",
-            "English"
-          ],
-          "default": "system",
-          "markdownDescription": "Commit 信息语言",
-          "order": 10
-        },
-        "ohMyCommit.ui.mode": {
-          "type": "string",
-          "enum": [
-            "notification",
-            "panel"
-          ],
-          "enumDescriptions": [
-            "弹出通知，支持修改按钮",
-            "在面板中显示完整提交界面"
-          ],
-          "default": "panel",
-          "markdownDescription": "提交界面显示模式",
-          "order": 20
-        },
-        "ohMyCommit.apiKeys": {
-          "type": "object",
-          "markdownDescription": "AI 服务提供商的 API 密钥配置",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "properties": {
-            "openai": {
-              "type": "string",
-              "default": "",
-              "markdownDescription": "OpenAI API 密钥",
-              "order": 301
-            },
-            "anthropic": {
-              "type": "string",
-              "default": "",
-              "markdownDescription": "Anthropic API 密钥",
-              "order": 302
-            }
-          },
-          "order": 30
-        },
-        "ohMyCommit.proxy.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable proxy for API requests",
-          "order": 31
-        },
-        "ohMyCommit.proxy.url": {
-          "type": "string",
-          "default": "http://localhost:7890",
-          "description": "Proxy server URL",
-          "order": 32
-        }
-      }
-    }
   }
 }

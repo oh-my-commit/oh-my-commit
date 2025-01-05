@@ -206,6 +206,9 @@ importers:
       commander:
         specifier: ^12.0.0
         version: 12.1.0
+      figlet:
+        specifier: ^1.8.0
+        version: 1.8.0
       inquirer:
         specifier: ^9.2.12
         version: 9.3.7
@@ -234,9 +237,6 @@ importers:
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
-      figlet:
-        specifier: ^1.8.0
-        version: 1.8.0
       tsconfig:
         specifier: '*'
         version: 0.0.1
@@ -250,8 +250,8 @@ importers:
   packages/extension:
     dependencies:
       '@oh-my-commit/provider-official':
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: workspace:^
+        version: link:../provider-official
       '@oh-my-commit/shared':
         specifier: workspace:^
         version: link:../shared
@@ -2392,12 +2392,6 @@ packages:
 
   '@nx/workspace@19.8.4':
     resolution: {integrity: sha512-ub4nD2klOj00onF1KrNXIlLB9hXN9ybHs7XSP9YW+52qz79KaJWJm46ebTqeLnDZApYbAcB0vSCp2+kaEV24Ew==}
-
-  '@oh-my-commit/provider-official@0.23.0':
-    resolution: {integrity: sha512-c83r5CvkWlmFoN2l7IHJPgxMrQLRCLwFCMzYbnrWSBCKfZhlfUW1u9aHnzrjKeXftxL5anhL8TKoYTt4SOoQaQ==}
-
-  '@oh-my-commit/shared@0.23.0':
-    resolution: {integrity: sha512-2ozj+v9XxgZzAR5LvzQcBIQjtmA6ytBQCu2UP8pR3WS/H/RH2YSPa6qDgZ9ojc2Of62QISbbXkX7r3LADXdNlg==}
 
   '@parcel/watcher-android-arm64@2.5.0':
     resolution: {integrity: sha512-qlX4eS28bUcQCdribHkg/herLe+0A9RyYC+mm2PXpncit8z5b3nSqGVzMNR3CmtAOgRutiZ02eIJJgP/b1iEFQ==}
@@ -10422,38 +10416,6 @@ snapshots:
       - '@swc-node/register'
       - '@swc/core'
       - debug
-
-  '@oh-my-commit/provider-official@0.23.0':
-    dependencies:
-      '@anthropic-ai/sdk': 0.32.1
-      '@oh-my-commit/shared': 0.23.0
-      handlebars: 4.7.8
-      https-proxy-agent: 7.0.6
-      lodash-es: 4.17.21
-      neverthrow: 8.1.1
-      reflect-metadata: 0.2.2
-      typedi: 0.10.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
-  '@oh-my-commit/shared@0.23.0':
-    dependencies:
-      '@anthropic-ai/sdk': 0.32.1
-      chalk: 5.4.1
-      handlebars: 4.7.8
-      jiti: 2.4.2
-      lodash: 4.17.21
-      lodash-es: 4.17.21
-      neverthrow: 8.1.1
-      reflect-metadata: 0.2.2
-      simple-git: 3.27.0
-      typedi: 0.10.0
-      yaml: 2.6.1
-      zod: 3.24.1
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
 
   '@parcel/watcher-android-arm64@2.5.0':
     optional: true

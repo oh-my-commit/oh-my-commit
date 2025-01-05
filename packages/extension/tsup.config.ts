@@ -17,7 +17,7 @@ export default defineConfig(() => {
     entry: ["src/extension.ts"],
     external: ["vscode"],
     noExternal: Object.keys(pkg.dependencies),
-    outDir: "../../dist/main",
+    outDir: "dist/main",
     format: ["cjs"],
     platform: "node",
     target: "node16",
