@@ -33,6 +33,6 @@ export default defineConfig((options) => {
     },
     platform: "node",
     target: "node18",
-    noExternal: ["@oh-my-commit/shared"],
+    noExternal: ["@oh-my-commit/shared", "figlet"],
   }
 })
