@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.23.2
+
+### Patch Changes
+
+- c7b0b00: fix figlet
+
 ## 0.23.1
 
 ### Patch Changes
