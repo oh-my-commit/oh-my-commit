@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.23.1
+
+### Patch Changes
+
+- f88a8b7: fix figlet
+
 ## 0.23.0
 
 ### Minor Changes

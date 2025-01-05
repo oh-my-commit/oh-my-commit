@@ -1,5 +1,13 @@
 # @oh-my-commit/webview
 
+## 0.23.1
+
+### Patch Changes
+
+- f88a8b7: fix figlet
+- Updated dependencies [f88a8b7]
+  - @oh-my-commit/shared@0.23.1
+
 ## 0.23.0
 
 ### Minor Changes

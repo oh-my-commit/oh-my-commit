@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.23.1
+
+### Patch Changes
+
+- f88a8b7: fix figlet
+- Updated dependencies [f88a8b7]
+  - @oh-my-commit/provider-official@0.23.1
+  - @oh-my-commit/shared@0.23.1
+
 ## 0.23.0
 
 ### Minor Changes
