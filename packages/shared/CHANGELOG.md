@@ -1,5 +1,13 @@
 # @oh-my-commit/shared
 
+## 0.23.4
+
+### Patch Changes
+
+- a3a2777: chore: innner package
+- a8d0fc6: oh-my-commit-vscode
+- 5fe1924: test version hook
+
 ## 0.23.3
 
 ### Patch Changes
