@@ -90,22 +90,7 @@ jobs:
       - name: Publish to Open VSX Registry
         id: ovsx-publish
         continue-on-error: true
-        run: |
-          # 添加重试逻辑
-          max_attempts=3
-          attempt=1
-          while [ $attempt -le $max_attempts ]; do
-            echo "Attempt $attempt of $max_attempts"
-            if pnpm ext:publish:ovsx; then
-              echo "Successfully published to Open VSX Registry"
-              exit 0
-            fi
-            echo "Publish attempt failed, waiting before retry..."
-            sleep 30
-            attempt=$((attempt + 1))
-          done
-          echo "Failed to publish after $max_attempts attempts"
-          exit 1
+        run: pnpm ext:publish:ovsx
         env:
           OVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
           
