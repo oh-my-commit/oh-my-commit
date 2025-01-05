@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.9
+
+### Patch Changes
+
+- 3f4ca25: .
+
 ## 0.23.8
 
 ### Patch Changes
