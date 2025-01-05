@@ -1,15 +1,18 @@
 name: Publish Extension
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*oh-my-commit-vscode@*'
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
