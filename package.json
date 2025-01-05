@@ -33,9 +33,9 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "ext:package": "pnpm -F oh-my-commit-vscode package",
-    "ext:publish:vscode": "pnpm -F oh-my-commit-vscode publish:vscode",
-    "ext:publish:ovsx": "pnpm -F oh-my-commit-vscode publish:ovsx"
+    "ext:package": "pnpm -F oh-my-commit package",
+    "ext:publish:vscode": "pnpm -F oh-my-commit publish:vscode",
+    "ext:publish:ovsx": "pnpm -F oh-my-commit publish:ovsx"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
