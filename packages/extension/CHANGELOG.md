@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.5
+
+### Patch Changes
+
+- 2f67576: renaming
+
 ## 0.23.4
 
 ### Patch Changes
