@@ -28,7 +28,6 @@
     "@types/node": "^20.0.0",
     "chokidar": "^4.0.3",
     "eslint": "^8.0.0",
-    "figlet": "^1.8.0",
     "tsconfig": "*",
     "tsup": "workspace:*",
     "typescript": "5.3.3"
@@ -37,6 +36,7 @@
     "@oh-my-commit/shared": "workspace:^",
     "chalk": "^4.x",
     "commander": "^12.0.0",
+    "figlet": "^1.8.0",
     "inquirer": "^9.2.12",
     "neverthrow": "^8.1.1",
     "read-package-up": "^11.0.0",
