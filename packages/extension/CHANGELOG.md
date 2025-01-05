@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.8
+
+### Patch Changes
+
+- 1047056: fix workflow trigger
+
 ## 0.23.7
 
 ### Patch Changes
