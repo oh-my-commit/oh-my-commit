@@ -3,7 +3,7 @@ name: Publish Extension
 on:
   push:
     tags:
-      - "v*"
+      - 'oh-my-commit-vscode@*'
 
 jobs:
   publish:
@@ -71,6 +71,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.package.outputs.name }} v${{ steps.package.outputs.version }}
+          tag_name: v${{ steps.package.outputs.version }}
           files: dist/*.vsix
           draft: false
           prerelease: false
