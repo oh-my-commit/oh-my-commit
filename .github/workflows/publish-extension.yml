@@ -64,8 +64,8 @@ jobs:
       - name: Get package info
         id: package
         run: |
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./packages/extension/package.json').version")
+          PACKAGE_NAME=$(node -p "require('./packages/extension/package.json').name")
           echo "version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
 
@@ -75,7 +75,7 @@ jobs:
         with:
           name: ${{ steps.package.outputs.name }} v${{ steps.package.outputs.version }}
           tag_name: v${{ steps.package.outputs.version }}
-          files: dist/*.vsix
+          files: packages/extension/dist/*.vsix
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -90,7 +90,22 @@ jobs:
       - name: Publish to Open VSX Registry
         id: ovsx-publish
         continue-on-error: true
-        run: pnpm ext:publish:ovsx
+        run: |
+          # 添加重试逻辑
+          max_attempts=3
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts"
+            if pnpm ext:publish:ovsx; then
+              echo "Successfully published to Open VSX Registry"
+              exit 0
+            fi
+            echo "Publish attempt failed, waiting before retry..."
+            sleep 30
+            attempt=$((attempt + 1))
+          done
+          echo "Failed to publish after $max_attempts attempts"
+          exit 1
         env:
           OVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
           
