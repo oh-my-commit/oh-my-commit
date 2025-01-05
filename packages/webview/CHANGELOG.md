@@ -1,5 +1,13 @@
 # @oh-my-commit/webview
 
+## 0.23.6
+
+### Patch Changes
+
+- e3e8aac: .
+- Updated dependencies [e3e8aac]
+  - @oh-my-commit/shared@0.23.6
+
 ## 0.23.4
 
 ### Patch Changes

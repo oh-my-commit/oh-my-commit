@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.23.6
+
+### Patch Changes
+
+- e3e8aac: .
+- Updated dependencies [e3e8aac]
+  - @oh-my-commit/provider-official@0.23.6
+  - @oh-my-commit/shared@0.23.6
+
 ## 0.23.5
 
 ### Patch Changes
