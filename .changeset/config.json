@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": true,
   "fixed": [],
-  "linked": [["@oh-my-commit/*", "oh-my-commit-vscode"]],
+  "linked": [["@oh-my-commit/*", "oh-my-commit"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
