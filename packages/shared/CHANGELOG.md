@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.23.10
+
+### Patch Changes
+
+- cd5dd97: fix extension root
+
 ## 0.23.6
 
 ### Patch Changes

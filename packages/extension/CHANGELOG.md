@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.23.10
+
+### Patch Changes
+
+- cd5dd97: fix extension root
+- Updated dependencies [cd5dd97]
+  - @oh-my-commit/provider-official@0.23.10
+  - @oh-my-commit/shared@0.23.10
+
 ## 0.23.9
 
 ### Patch Changes

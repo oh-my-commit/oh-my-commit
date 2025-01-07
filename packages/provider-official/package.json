@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-commit/provider-official",
-  "version": "0.23.6",
+  "version": "0.23.10",
   "description": "Official AI providers for Oh My Commit - intelligent commit message generation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
