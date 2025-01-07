@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.13
+
+### Patch Changes
+
+- 509724e: better command on statusbar
+
 ## 0.23.12
 
 ### Patch Changes
