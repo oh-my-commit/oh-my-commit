@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.20
+
+### Patch Changes
+
+- ed8057e: .
+
 ## 0.23.19
 
 ### Patch Changes
