@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.19
+
+### Patch Changes
+
+- d27c543: .
+
 ## 0.23.18
 
 ### Patch Changes
