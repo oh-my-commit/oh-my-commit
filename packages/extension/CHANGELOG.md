@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.11
+
+### Patch Changes
+
+- 737085b: fix readme
+
 ## 0.23.10
 
 ### Patch Changes
