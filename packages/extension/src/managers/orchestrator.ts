@@ -8,14 +8,7 @@
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
-import {
-  COMMAND_QUICK_COMMIT,
-  type ICommitManager,
-  type ILogger,
-  type IPreference,
-  type IProviderManager,
-  type UiMode,
-} from "@shared/common"
+import { type ICommitManager, type ILogger, type IPreference, type IProviderManager, type UiMode } from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/managers/vscode-git"
@@ -26,7 +19,6 @@ import type { IWebviewManager } from "@/webview/vscode-webview"
 import type { IWebviewMessageHandler } from "@/webview/vscode-webview-message-handler"
 
 import type { ICommitMessageStore } from "./commit-message-store"
-import { CommandManager } from "./vscode-command-manager"
 
 export interface IOrchestrator {
   // 基础服务
@@ -93,8 +85,6 @@ export class Orchestrator implements IOrchestrator {
         data: { section, value },
       })
     })
-
-    this.statusBar.setClickCommand(COMMAND_QUICK_COMMIT)
 
     this.logger.info("Orchestrator initialized")
   }
