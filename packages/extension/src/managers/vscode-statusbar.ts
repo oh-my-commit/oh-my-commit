@@ -8,7 +8,7 @@
 import { Inject, Service } from "typedi"
 import * as vscode from "vscode"
 
-import { APP_NAME, COMMAND_SELECT_MODEL, type ILogger } from "@shared/common"
+import { APP_NAME, COMMAND_QUICK_COMMIT, COMMAND_SELECT_MODEL, type ILogger } from "@shared/common"
 
 import { EventEmitter, IService, type ServiceEvent } from "@/interface/base-service"
 import { TOKENS } from "@/managers/vscode-tokens"
@@ -24,6 +24,7 @@ export interface IStatusBarManager extends IService {
   clearWaiting(): void
   setText(text: string): void
   setModel(model: { name: string }): void
+  setClickCommand(command: string): void
 }
 
 @Service()
@@ -98,7 +99,15 @@ export class StatusBarManager extends EventEmitter<StatusBarEvent> implements IS
       data: {
         text: `$(git-commit) ${model.name}`,
         tooltip: `${APP_NAME}\nCurrent Model: ${model.name}`,
-        command: COMMAND_SELECT_MODEL,
+      },
+    })
+  }
+
+  setClickCommand(command: string): void {
+    this.emit("status.update", {
+      type: "status.update",
+      data: {
+        command,
       },
     })
   }

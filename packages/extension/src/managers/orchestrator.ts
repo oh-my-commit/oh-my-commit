@@ -8,7 +8,14 @@
 import { Inject, Service } from "typedi"
 import vscode from "vscode"
 
-import type { ICommitManager, ILogger, IPreference, IProviderManager, UiMode } from "@shared/common"
+import {
+  COMMAND_QUICK_COMMIT,
+  type ICommitManager,
+  type ILogger,
+  type IPreference,
+  type IProviderManager,
+  type UiMode,
+} from "@shared/common"
 import type { IGitCommitManager } from "@shared/server"
 
 import type { IVscodeGit } from "@/managers/vscode-git"
@@ -87,10 +94,7 @@ export class Orchestrator implements IOrchestrator {
       })
     })
 
-    // Notify StatusBar to update if needed
-    void this.statusBar.setModel({
-      name: this.gitCommitManager.model!.name,
-    })
+    this.statusBar.setClickCommand(COMMAND_QUICK_COMMIT)
 
     this.logger.info("Orchestrator initialized")
   }
