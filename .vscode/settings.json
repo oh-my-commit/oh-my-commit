@@ -20,5 +20,6 @@
   "debug.openDebug": "neverOpen",
   "debug.internalConsoleOptions": "neverOpen",
   "debug.showInStatusBar": "never",
-  "explorer.autoReveal": false
+  "explorer.autoReveal": false,
+  "ohMyCommit.model.id": "omc-standard-claude-3.5"
 }

@@ -1,7 +1,8 @@
 {
   "name": "oh-my-commit",
   "displayName": "Oh My Commit",
-  "private": false,
+  "version": "0.0.0",
+  "private": true,
   "author": "markshawn2020",
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@
       "label": "Dev Services",
       "type": "shell",
       "command": "concurrently",
-      "args": ["pnpm --filter @oh-my-commit/extension dev", "pnpm --filter @oh-my-commit/webview dev"],
+      "args": ["pnpm --filter oh-my-commit dev", "pnpm --filter @oh-my-commit/webview dev"],
       "isBackground": true,
       "problemMatcher": [
         {
