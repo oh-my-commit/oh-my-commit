@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.24.0
+
+### Minor Changes
+
+- b14afc9: fix workflow
+
 ## 0.23.21
 
 ### Patch Changes
