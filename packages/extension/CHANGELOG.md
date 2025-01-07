@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.23.12
+
+### Patch Changes
+
+- d69823e: feat(statusbar): click to generate
+
 ## 0.23.11
 
 ### Patch Changes
