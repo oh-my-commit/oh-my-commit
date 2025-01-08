@@ -16,6 +16,8 @@ const localDistDir = path.resolve(__dirname, "dist")
 // Final target directory
 const targetDistDir = path.resolve(__dirname, "../extension/dist/webview")
 
+console.log({ targetDistDir })
+
 // Ensure local dist directory exists
 if (!fs.existsSync(localDistDir)) {
   fs.mkdirSync(localDistDir, { recursive: true })
