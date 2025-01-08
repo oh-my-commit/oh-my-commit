@@ -8,27 +8,20 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const webpack = require("webpack")
-const CopyPlugin = require("copy-webpack-plugin")
-const fs = require("fs")
+// const CopyPlugin = require("copy-webpack-plugin")
+const FileManagerPlugin = require("filemanager-webpack-plugin")
 
 // Local dist directory
 const localDistDir = path.resolve(__dirname, "dist")
 // Final target directory
 const targetDistDir = path.resolve(__dirname, "../extension/dist/webview")
 
-console.log({ targetDistDir })
-
-// Ensure local dist directory exists
-if (!fs.existsSync(localDistDir)) {
-  fs.mkdirSync(localDistDir, { recursive: true })
-}
-
 /** @type {import('webpack').Configuration} */
 const config = (env, argv) => {
   const isDev = argv.mode === "development"
   const isProd = !isDev
 
-  console.log("-- init webpack config -- ", { isDev })
+  console.log("-- init webpack config -- ", { isDev, localDistDir, targetDistDir })
 
   return {
     target: "web",
@@ -50,15 +43,18 @@ const config = (env, argv) => {
       isDev && new ReactRefreshWebpackPlugin(),
       // Copy from local dist to target dist
       isProd &&
-        new CopyPlugin({
-          patterns: [
-            {
-              from: "**/*",
-              to: targetDistDir,
-              context: localDistDir,
-              noErrorOnMissing: true,
+        // see: https://stackoverflow.com/a/55846177/9422455
+        new FileManagerPlugin({
+          events: {
+            onEnd: {
+              copy: [
+                {
+                  source: localDistDir,
+                  destination: targetDistDir,
+                },
+              ],
             },
-          ],
+          },
         }),
     ].filter(Boolean),
     devServer: {
