@@ -75,6 +75,11 @@ export class Orchestrator implements IOrchestrator {
     await this.providerManager.initialize()
     this.logger.debug("Provider initialization complete")
 
+    // Notify StatusBar to update if needed
+    void this.statusBar.setModel({
+      name: this.gitCommitManager.model!.name,
+    })
+
     // 注册所有事件监听
     this.webviewManager.setMessageHandler(this.webviewMessageHandler)
 
