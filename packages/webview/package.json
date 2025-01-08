@@ -40,6 +40,7 @@
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@oh-my-commit/extension": "workspace:^",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@swc/core": "^1.10.1",
     "@types/node": "^22.10.2",
