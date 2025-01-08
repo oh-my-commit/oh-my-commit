@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.25.1
+
+### Patch Changes
+
+- 5436c80: .
+
 ## 0.25.0
 
 ### Minor Changes
