@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.25.3
+
+### Patch Changes
+
+- e57d5f0: fix status bar
+
 ## 0.25.2
 
 ### Patch Changes
