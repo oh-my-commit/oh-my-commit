@@ -1,5 +1,16 @@
 # @oh-my-commit/provider-official
 
+## 0.25.0
+
+### Minor Changes
+
+- b1714e8: use git diff
+
+### Patch Changes
+
+- Updated dependencies [b1714e8]
+  - @oh-my-commit/shared@0.25.0
+
 ## 0.23.10
 
 ### Patch Changes

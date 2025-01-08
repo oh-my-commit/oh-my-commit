@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.25.0
+
+### Minor Changes
+
+- b1714e8: use git diff
+
 ## 0.23.10
 
 ### Patch Changes
