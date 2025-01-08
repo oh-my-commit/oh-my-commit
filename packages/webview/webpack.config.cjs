@@ -14,7 +14,7 @@ const fs = require("fs")
 // Local dist directory
 const localDistDir = path.resolve(__dirname, "dist")
 // Final target directory
-const targetDistDir = path.resolve(__dirname, "../../dist/webview")
+const targetDistDir = path.resolve(__dirname, "../extension/dist/webview")
 
 // Ensure local dist directory exists
 if (!fs.existsSync(localDistDir)) {
