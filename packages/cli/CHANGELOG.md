@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.25.10
+
+### Patch Changes
+
+- 041cea3: .
+- Updated dependencies [041cea3]
+  - @oh-my-commit/shared@0.25.10
+
 ## 0.25.9
 
 ### Patch Changes
