@@ -1,5 +1,11 @@
 # @oh-my-commit/webview
 
+## 0.25.4
+
+### Patch Changes
+
+- 6941699: fix webview build
+
 ## 0.25.0
 
 ### Patch Changes
