@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.25.9
+
+### Patch Changes
+
+- 79bc5c0: fix build
+
 ## 0.25.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.25.9
+
+### Patch Changes
+
+- 79bc5c0: fix build
+- Updated dependencies [79bc5c0]
+  - @oh-my-commit/provider-official@0.25.9
+  - @oh-my-commit/shared@0.25.9
+
 ## 0.25.6
 
 ### Patch Changes
