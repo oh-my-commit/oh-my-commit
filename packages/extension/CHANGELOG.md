@@ -1,5 +1,14 @@
 # @oh-my-commit/extension
 
+## 0.26.1
+
+### Patch Changes
+
+- eaae1c6: stage before commit
+- Updated dependencies [eaae1c6]
+  - @oh-my-commit/shared@0.26.1
+  - @oh-my-commit/provider-official@0.26.1
+
 ## 0.26.0
 
 ### Minor Changes

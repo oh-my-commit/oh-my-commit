@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.1
+
+### Patch Changes
+
+- eaae1c6: stage before commit
+
 ## 0.26.0
 
 ### Minor Changes
