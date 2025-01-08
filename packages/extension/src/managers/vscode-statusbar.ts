@@ -29,11 +29,14 @@ export interface IStatusBarManager extends IService {
 @Service()
 export class StatusBarManager extends EventEmitter<StatusBarEvent> implements IStatusBarManager {
   private statusBarItem: vscode.StatusBarItem
-  private previousState?: {
-    text: string
-    tooltip?: string
-    command?: string
-  }
+  private waitingStack: Array<{
+    message: string
+    previousState: {
+      text: string
+      tooltip?: string
+      command?: string
+    }
+  }> = []
 
   constructor(@Inject(TOKENS.Logger) private readonly logger: ILogger) {
     super()
@@ -53,15 +56,21 @@ export class StatusBarManager extends EventEmitter<StatusBarEvent> implements IS
       if (event.data.tooltip) {
         this.statusBarItem.tooltip = event.data.tooltip
       }
+      if (event.data.command) {
+        this.statusBarItem.command = event.data.command
+      }
     })
   }
 
   setWaiting(message = "Working..."): void {
-    this.previousState = {
+    const previousState = {
       text: this.statusBarItem.text,
       tooltip: this.statusBarItem.tooltip,
       command: this.statusBarItem.command,
     }
+
+    this.waitingStack.push({ message, previousState })
+
     this.emit("status.update", {
       type: "status.update",
       data: {
@@ -73,13 +82,28 @@ export class StatusBarManager extends EventEmitter<StatusBarEvent> implements IS
   }
 
   clearWaiting(): void {
-    this.logger.info("Clearing waiting status...", this.previousState)
-    if (this.previousState) {
-      this.emit("status.update", {
-        type: "status.update",
-        data: this.previousState,
-      })
-      this.previousState = undefined
+    this.logger.info("Clearing waiting status...", this.waitingStack)
+    if (this.waitingStack.length > 0) {
+      const poppedState = this.waitingStack.pop()
+
+      if (this.waitingStack.length > 0) {
+        // If there are more waiting states, show the next one
+        const currentState = this.waitingStack[this.waitingStack.length - 1]
+        this.emit("status.update", {
+          type: "status.update",
+          data: {
+            text: `$(sync~spin) ${currentState?.message}`,
+            tooltip: undefined,
+            command: undefined,
+          },
+        })
+      } else {
+        // If no more waiting states, restore the previous state
+        this.emit("status.update", {
+          type: "status.update",
+          data: poppedState!.previousState,
+        })
+      }
     }
   }
 

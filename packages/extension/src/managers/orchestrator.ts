@@ -96,10 +96,10 @@ export class Orchestrator implements IOrchestrator {
 
   async commit(message: string): Promise<void> {
     try {
-      this.statusBar.setWaiting("Committing...")
+      // this.statusBar.setWaiting("Committing...")
       await this.gitService.commit(message)
     } finally {
-      this.statusBar.clearWaiting()
+      // this.statusBar.clearWaiting()
     }
   }
 
@@ -109,6 +109,7 @@ export class Orchestrator implements IOrchestrator {
       if (!result) return
       switch (uiMode) {
         case "notification":
+          this.statusBar.clearWaiting()
           if (result.ok) {
             const selection = await vscode.window.showInformationMessage(
               result.data.title,
@@ -119,6 +120,7 @@ export class Orchestrator implements IOrchestrator {
 
             if (selection === "Commit") {
               await this.commit(result.data.title)
+              // await this.gitService.commit(result.data.title)
               await vscode.window.showInformationMessage("Successfully commited")
             } else if (selection === "Edit") {
               this.webviewManager.show()
