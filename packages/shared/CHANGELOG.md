@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.0
+
+### Minor Changes
+
+- a677871: real git diff
+
 ## 0.25.12
 
 ### Patch Changes
