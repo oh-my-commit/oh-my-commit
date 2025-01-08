@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.25.6
+
+### Patch Changes
+
+- 40e5067: fix code not sync
+
 ## 0.25.5
 
 ### Patch Changes
