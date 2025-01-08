@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.25.5
+
+### Patch Changes
+
+- bf2f588: .
+
 ## 0.25.3
 
 ### Patch Changes
