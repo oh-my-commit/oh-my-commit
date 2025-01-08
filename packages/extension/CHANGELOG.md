@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.25.2
+
+### Patch Changes
+
+- 8b8b234: fix status bar init
+
 ## 0.25.1
 
 ### Patch Changes
