@@ -36,6 +36,12 @@ export class GitCommitManager extends CommitManager {
   }
 
   async generateCommit(): Promise<ResultDTO<IResult>> {
+    try {
+      await this.gitService.stageAll()
+    } catch (error) {
+      console.error("Failed to stage changes:", error)
+    }
+
     const diff = await this.gitService.getDiff()
     const options: IInputOptions = {
       lang: this.config.get<string>("ohMyCommit.git.lang"),
