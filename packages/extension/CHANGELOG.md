@@ -1,5 +1,11 @@
 # @oh-my-commit/extension
 
+## 0.26.2
+
+### Patch Changes
+
+- 43998b0: fix statusbar generating
+
 ## 0.26.1
 
 ### Patch Changes
