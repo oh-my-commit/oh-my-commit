@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.25.12
+
+### Patch Changes
+
+- 5d64c23: fix webview build
+
 ## 0.25.10
 
 ### Patch Changes

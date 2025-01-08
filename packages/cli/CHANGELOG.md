@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.25.12
+
+### Patch Changes
+
+- 5d64c23: fix webview build
+- Updated dependencies [5d64c23]
+  - @oh-my-commit/shared@0.25.12
+
 ## 0.25.11
 
 ### Patch Changes
