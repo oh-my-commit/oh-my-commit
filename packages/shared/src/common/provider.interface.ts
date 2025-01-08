@@ -49,7 +49,7 @@ export const InputSchema = z.object({
   model: z.string().describe("选择的模型"),
 
   /** Git diff 信息，包含文件变更的详细内容 */
-  diff: z.any().describe("Git diff 信息，包含文件变更的详细内容"), // DiffResult 类型较复杂，这里简化处理
+  diff: z.string().describe("Git diff 信息，包含文件变更的详细内容"),
 
   /** 生成选项配置 */
   options: z

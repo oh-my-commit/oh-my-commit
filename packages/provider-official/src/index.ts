@@ -58,11 +58,11 @@ class OfficialProvider extends BaseProvider implements IProvider {
 
   async generateCommit(input: IInput): Promise<IResultDTO> {
     this.logger.debug("Generating commit message using OMC Provider...")
-    const diff = JSON.stringify(input.diff, null, 2)
+    const diff = input.diff
     const lang = input.options?.lang || "en"
 
     try {
-      const prompt = await this.templateProcessor.fill({ diff, lang })
+      const prompt = this.templateProcessor.fill({ diff, lang })
       const response = await this.callApi(prompt)
       const result = await this.handleApiResult(response)
 

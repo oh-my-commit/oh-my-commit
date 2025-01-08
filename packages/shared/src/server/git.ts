@@ -16,6 +16,7 @@ export interface IGitCore {
   git: SimpleGit
   workspaceRoot: string
   getDiffResult(findRenames?: boolean): Promise<DiffResult>
+  getDiff(): Promise<string>
   stageAll(): Promise<void>
   isGitRepository(): Promise<boolean>
   commit(message: string): Promise<void>
@@ -48,6 +49,10 @@ export class GitCore implements IGitCore {
       options.push("--name-status")
     }
     return this.git.diffSummary(options)
+  }
+
+  public async getDiff(): Promise<string> {
+    return this.git.diff(["--staged"])
   }
 
   /**
