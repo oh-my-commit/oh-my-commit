@@ -1,5 +1,11 @@
 # @oh-my-commit/cli
 
+## 0.25.11
+
+### Patch Changes
+
+- 5cd5d40: .
+
 ## 0.25.10
 
 ### Patch Changes
