@@ -101,12 +101,14 @@ class OfficialProvider extends BaseProvider implements IProvider {
     const proxyUrl = this.config.get<string | undefined>("ohMyCommit.proxy.url")
     const apiKey = this.config.get<string | undefined>("ohMyCommit.apiKeys.anthropic")
 
-    this.logger.debug("Initializing Anthropic config: ", { proxyEnabled, proxyUrl, apiKey })
     const config: Record<string, any> = { apiKey }
     if (proxyEnabled && proxyUrl) config["httpAgent"] = new HttpsProxyAgent(proxyUrl)
     this.anthropic = new Anthropic(config)
 
-    const modelName = "claude-3-sonnet-20240229"
+    // comparison table: [Models - Anthropic](https://docs.anthropic.com/en/docs/about-claude/models)
+    // const modelName = "claude-3-sonnet-20240229"
+    const modelName = "claude-3-haiku-20240307"
+    this.logger.debug("calling anthropic: ", { proxyEnabled, proxyUrl, apiKey, modelName })
     if (!this.anthropic) throw new Error("Anthropic API key not configured")
 
     return this.anthropic.messages.create({

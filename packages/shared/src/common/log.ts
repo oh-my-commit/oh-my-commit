@@ -10,9 +10,10 @@ import { Service } from "typedi"
 import type { ILogger } from "./core"
 import { formatMessage } from "./utils"
 
-export type LogLevel = "debug" | "trace" | "info" | "warn" | "error"
+export type LogLevel = "off" | "debug" | "trace" | "info" | "warn" | "error"
 
 const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
+  off: 0,
   debug: 10,
   trace: 20,
   info: 30,
