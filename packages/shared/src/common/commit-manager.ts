@@ -82,6 +82,14 @@ export class CommitManager implements ICommitManager {
 
   async generateCommitWithDiff(diff: string, options: IInputOptions): Promise<ResultDTO<IResult>> {
     try {
+      if (!diff.trim()) {
+        return {
+          ok: false,
+          code: -101,
+          message: "No changes to commit",
+        }
+      }
+
       const modelId = this.config.get<string>(SETTING_MODEL_ID) ?? this.providers[0]?.models[0]?.id
       if (!modelId) {
         return {

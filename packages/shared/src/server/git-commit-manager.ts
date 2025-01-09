@@ -43,9 +43,11 @@ export class GitCommitManager extends CommitManager {
     }
 
     const diff = await this.gitService.getDiff()
+
     const options: IInputOptions = {
       lang: this.config.get<string>("ohMyCommit.git.lang"),
     }
+
     return this.generateCommitWithDiff(diff, options)
   }
 }
