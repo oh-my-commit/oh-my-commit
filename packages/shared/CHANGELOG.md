@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.3
+
+### Patch Changes
+
+- bb167a4: avoid commit if no diff
+
 ## 0.26.1
 
 ### Patch Changes

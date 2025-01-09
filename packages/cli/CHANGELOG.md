@@ -1,5 +1,13 @@
 # @oh-my-commit/cli
 
+## 0.26.3
+
+### Patch Changes
+
+- bb167a4: avoid commit if no diff
+- Updated dependencies [bb167a4]
+  - @oh-my-commit/shared@0.26.3
+
 ## 0.26.1
 
 ### Patch Changes
