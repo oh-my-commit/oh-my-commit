@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.4
+
+### Patch Changes
+
+- 708f7e3: fix loglevel change in vscode logger
+
 ## 0.26.3
 
 ### Patch Changes

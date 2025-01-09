@@ -1,7 +1,7 @@
 {
   "name": "oh-my-commit",
   "publisher": "oh-my-commit",
-  "version": "0.26.3",
+  "version": "0.26.4",
   "description": "VSCode extension for AI-powered commit message generation with customizable providers",
   "icon": "assets/oh-my-commit_256.logo.png",
   "main": "./dist/main/extension.js",

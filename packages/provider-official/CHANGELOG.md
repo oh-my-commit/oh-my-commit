@@ -1,5 +1,13 @@
 # @oh-my-commit/provider-official
 
+## 0.26.4
+
+### Patch Changes
+
+- 708f7e3: fix loglevel change in vscode logger
+- Updated dependencies [708f7e3]
+  - @oh-my-commit/shared@0.26.4
+
 ## 0.26.3
 
 ### Patch Changes
