@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.5
+
+### Patch Changes
+
+- a05a883: better export
+
 ## 0.26.4
 
 ### Patch Changes
