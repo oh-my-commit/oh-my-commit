@@ -25,7 +25,7 @@ export default defineConfig({
     },
   },
 
-  entry: ["src/common/index.ts", "src/server/index.ts", "src/server/config.ts"],
+  entry: ["src/index.ts", "src/common/index.ts", "src/server/index.ts", "src/server/config.ts"],
 
   loader: {
     ".hbs": "copy",
