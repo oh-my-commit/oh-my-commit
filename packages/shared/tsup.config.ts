@@ -16,6 +16,10 @@ import { TEMPLATES_DIR } from "./src/server/path.map"
 export default defineConfig({
   ...baseConfig,
   // shared 必须要 dts 以生成 .d.ts，但无法开 composite
+
+  splitting: true,
+  external: ["@anthropic-ai/sdk", "handlebars"],
+
   dts: {
     compilerOptions: {
       composite: false,
