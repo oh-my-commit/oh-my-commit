@@ -7,7 +7,7 @@
  */
 import { readFileSync } from "fs"
 import Handlebars, { type TemplateDelegate } from "handlebars"
-import { memoize } from "lodash"
+import { memoize } from "lodash-es"
 import { join } from "path"
 
 import { TEMPLATES_DIR } from "./path.map"
