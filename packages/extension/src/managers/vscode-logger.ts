@@ -39,6 +39,9 @@ export class VscodeLogger extends BaseLogger implements ILogger {
     // todo: better handle with formatMessage
     const rawMessage = formatMessage(...args)
     const prefix = `omc.${this.name}`
-    this.logger[level]?.(`${prefix} ${rawMessage}`)
+    if (level === "off") {
+      return
+    }
+    this.logger[level](`${prefix} ${rawMessage}`)
   }
 }
