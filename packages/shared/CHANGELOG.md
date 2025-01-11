@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.8
+
+### Patch Changes
+
+- 79f4a37: drop lodash
+
 ## 0.26.7
 
 ### Patch Changes
