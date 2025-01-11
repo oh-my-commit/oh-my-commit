@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.7
+
+### Patch Changes
+
+- e36cc27: decrease size
+
 ## 0.26.6
 
 ### Patch Changes
