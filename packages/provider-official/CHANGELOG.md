@@ -1,5 +1,13 @@
 # @oh-my-commit/provider-official
 
+## 0.26.6
+
+### Patch Changes
+
+- 4b91cb9: better display of name
+- Updated dependencies [4b91cb9]
+  - @oh-my-commit/shared@0.26.6
+
 ## 0.26.5
 
 ### Patch Changes

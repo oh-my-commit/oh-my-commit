@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.26.6
+
+### Patch Changes
+
+- 4b91cb9: better display of name
+
 ## 0.26.5
 
 ### Patch Changes
