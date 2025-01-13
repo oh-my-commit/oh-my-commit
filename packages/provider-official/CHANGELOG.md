@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.26.13
+
+### Patch Changes
+
+- b4aa801: fix undefined
+
 ## 0.26.12
 
 ### Patch Changes
