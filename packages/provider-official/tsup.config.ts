@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { promises } from "fs"
+import { homedir } from "os"
 import { join, resolve } from "path"
 import { defineConfig } from "tsup"
 
@@ -13,7 +14,7 @@ import baseConfig from "../__base__/tsup.config"
 
 const distDir = resolve(__dirname, "dist")
 const targetExtensionDir = resolve(__dirname, "../extension/dist/providers/official")
-const targetCliDir = resolve("~/.neurora/oh-my-commit/providers/official")
+const targetCliDir = resolve(homedir(), ".neurora/oh-my-commit/providers/official")
 
 export default defineConfig({
   ...baseConfig,
