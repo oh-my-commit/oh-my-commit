@@ -25,8 +25,9 @@
 </p>
 
 
-English | [中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode Extension](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit) | [Open Visx Extension](https://open-vsx.org/extension/oh-my-commit/oh-my-commit) | [Releases](https://github.com/oh-my-commit/oh-my-commit/releases)
+English | [中文](./README.zh-CN.md) | [Website Docs](https://oh-my-commit.github.io) | [VScode](https://marketplace.visualstudio.com/items?itemName=oh-my-commit.oh-my-commit) | [Open Visx](https://open-vsx.org/extension/oh-my-commit/oh-my-commit) | [Releases](https://github.com/oh-my-commit/oh-my-commit/releases)
 
+![Demo](assets/demo.gif)
 
 </div>
 
