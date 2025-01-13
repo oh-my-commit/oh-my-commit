@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.26.9
+
+### Patch Changes
+
+- d9bf577: fix hbs copy
+
 ## 0.26.8
 
 ### Patch Changes
