@@ -1,5 +1,12 @@
 # @oh-my-commit/extension
 
+## 0.26.10
+
+### Patch Changes
+
+- Updated dependencies [14332e1]
+  - @oh-my-commit/provider-official@0.26.10
+
 ## 0.26.9
 
 ### Patch Changes

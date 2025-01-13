@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.26.10
+
+### Patch Changes
+
+- 14332e1: fix path join
+
 ## 0.26.9
 
 ### Patch Changes
