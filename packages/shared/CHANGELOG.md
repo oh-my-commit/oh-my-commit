@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.2
+
+### Patch Changes
+
+- ec1c528: fix homedir
+
 ## 0.27.1
 
 ### Patch Changes
