@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.26.11
+
+### Patch Changes
+
+- 1daf826: fix build
+
 ## 0.26.10
 
 ### Patch Changes
