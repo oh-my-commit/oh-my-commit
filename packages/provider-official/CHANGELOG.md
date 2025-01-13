@@ -1,5 +1,11 @@
 # @oh-my-commit/provider-official
 
+## 0.26.12
+
+### Patch Changes
+
+- 2aa1b62: fix import
+
 ## 0.26.11
 
 ### Patch Changes
