@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.0
+
+### Minor Changes
+
+- 2d1b60f: fix provider handlerbar problem
+
 ## 0.26.8
 
 ### Patch Changes

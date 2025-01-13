@@ -1,5 +1,16 @@
 # @oh-my-commit/cli
 
+## 0.27.0
+
+### Minor Changes
+
+- 2d1b60f: fix provider handlerbar problem
+
+### Patch Changes
+
+- Updated dependencies [2d1b60f]
+  - @oh-my-commit/shared@0.27.0
+
 ## 0.26.8
 
 ### Patch Changes

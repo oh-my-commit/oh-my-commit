@@ -1,5 +1,17 @@
 # @oh-my-commit/extension
 
+## 0.27.0
+
+### Minor Changes
+
+- 2d1b60f: fix provider handlerbar problem
+
+### Patch Changes
+
+- Updated dependencies [2d1b60f]
+  - @oh-my-commit/provider-official@0.27.0
+  - @oh-my-commit/shared@0.27.0
+
 ## 0.26.13
 
 ### Patch Changes
