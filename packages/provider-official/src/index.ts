@@ -7,8 +7,11 @@
  */
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
+import fs from "fs"
+import { TemplateDelegate } from "handlebars"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
+import path from "path"
 
 import {
   APP_ID_CAMEL,
@@ -22,7 +25,6 @@ import {
   type ProviderContext,
   formatError,
 } from "@shared/common"
-import { PromptTemplate } from "@shared/server"
 
 class StandardModel implements IModel {
   id = `omc-standard`
@@ -50,10 +52,13 @@ class OfficialProvider extends BaseProvider implements IProvider {
   }
 
   private anthropic: Anthropic | null = null
-  private templateProcessor = new PromptTemplate("provider-official/standard")
+  private template: TemplateDelegate
 
   constructor(context: ProviderContext) {
     super(context)
+
+    const prompt = fs.readFileSync(path.join(__dirname, "standard.hbs"), "utf-8")
+    this.template = Handlebars.compile(prompt)
   }
 
   async generateCommit(input: IInput): Promise<IResultDTO> {
@@ -62,7 +67,7 @@ class OfficialProvider extends BaseProvider implements IProvider {
     const lang = input.options?.lang || "en"
 
     try {
-      const prompt = this.templateProcessor.fill({ diff, lang })
+      const prompt = this.template({ diff, lang })
       const response = await this.callApi(prompt)
       const result = await this.handleApiResult(response)
 

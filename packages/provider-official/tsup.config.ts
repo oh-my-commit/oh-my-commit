@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { promises } from "fs"
-import { resolve } from "path"
+import path, { resolve } from "path"
 import { defineConfig } from "tsup"
 
 import baseConfig from "../__base__/tsup.config"
@@ -23,6 +23,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   noExternal: [/.*/], // 打包所有依赖
   onSuccess: async () => {
+    await promises.copyFile("./src/standard.hbs", path.join(distDir, "standard.hbs"))
     await promises.cp(distDir, targetExtensionDir, { recursive: true })
   },
 })
