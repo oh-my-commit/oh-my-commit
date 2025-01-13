@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.1
+
+### Patch Changes
+
+- 042c310: new dir
+
 ## 0.27.0
 
 ### Minor Changes
