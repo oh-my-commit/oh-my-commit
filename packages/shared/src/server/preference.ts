@@ -86,7 +86,7 @@ export const envPreference = preferenceSchema.parse({
     uiLanguage: getEnvVar("OMC_BASIC_UI_LANGUAGE") ?? "system",
   },
   model: {
-    id: getEnvVar("OMC_MODEL_ID"),
+    id: getEnvVar("OMC_MODEL_ID") ?? null,
   },
   git: {
     emptyChangeBehavior: getEnvVar("OMC_GIT_EMPTY_CHANGE_BEHAVIOR") ?? "skip",
