@@ -155,14 +155,14 @@ omc gen # AI generate commit
 
 | Setting                                | Type    | Default                      | Description                                   | Options                                                                                                    |
 | -------------------------------------- | ------- | ---------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `oh-my-commit.model.id`                | string  | "omc-standard-claude-3.5"    | Select AC service provider and model          | • `omc-standard-claude-3.5`<br>• (Custom implementations via local install / source PR / npm publish)        |
+| `oh-my-commit.model.id`                | string  | "omc-standard"    | Select AC service provider and model          | • `omc-standard`<br>• (Custom implementations via local install / source PR / npm publish)        |
 | `oh-my-commit.git.lang`                | string  | "system"                     | Git commit message language                    | • `system`: Follow system language<br>• `zh_CN`: Chinese commit messages<br>• `en_US`: English commit messages |
 | `oh-my-commit.apiKeys`              | object  | -                           | AI service provider API key configuration      |                                                                                                            |
 | `oh-my-commit.ui.mode`                 | string  | "panel"                      | Commit interface mode                          | • `notification`: Generate commit messages via notifications, ideal for quick personal development<br>• `panel`: Resident panel with professional view supporting title/content editing and diff viewing, suitable for professional collaboration |
 | `ohMyCommit.proxy.enabled`             | boolean | false                       | Enable proxy for API requests                  | `true / false`                                                                                              |
 | `ohMyCommit.proxy.url`                 | string  | "http://localhost:7890"     | Proxy server URL                              | Any valid proxy URL (e.g. "http://localhost:7890")                                                          |
 
-Note: Our omc-standard-claude-3.5 requires users to configure their own ANTHROPIC_API_KEY and proxy (if necessary), which can be set in user settings.
+Note: Our omc-standard requires users to configure their own ANTHROPIC_API_KEY and proxy (if necessary), which can be set in user settings.
 
 ## Acknowledgments
 

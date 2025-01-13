@@ -125,7 +125,7 @@ Waiting for release !
 
 | 配置项                                 | 类型     | 默认值                       | 说明                                              | 可选值                                                                                           |
 | -------------------------------------- |--------|---------------------------| ------------------------------------------------- |-----------------------------------------------------------------------------------------------|
-| `oh-my-commit.model.id`                | string | "omc-standard-claude-3.5" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard-claude-3.5`<br>• （可自定义实现，本地安装 / 源码 PR / npm 发布）                               |
+| `oh-my-commit.model.id`                | string | "omc-standard" | 选择自动提交（AC）服务的供应商与模型              | • `omc-standard`<br>• （可自定义实现，本地安装 / 源码 PR / npm 发布）                               |
 | `oh-my-commit.git.lang`      | string | "system"                  | Git 提交信息的语言                                | • `system`: 跟随系统语言<br>• `zh_CN`: 中文提交信息<br>• `en_US`: English commit messages                 |
 | `oh-my-commit.apiKeys`              | object | -                         | AI 服务提供商的 API 密钥配置                      |                                                                                               |
 | `oh-my-commit.ui.mode`                 | string | "panel"                   | 提交界面模式选择                                  | • `notification`: 通知形式生成 Commit 信息，适合个人快速开发<br>• `panel`: 常驻面板：支持编辑标题内容、查看 Diff 等的专业视图，适合专业协同 |

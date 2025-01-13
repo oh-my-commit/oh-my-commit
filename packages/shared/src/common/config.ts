@@ -16,7 +16,7 @@ export const preferenceSchema = z.object({
     uiLanguage: z.enum(["system", "zh_CN", "en_US"]).default("system"),
   }),
   model: z.object({
-    id: z.string().default("omc-standard-claude-3.5"),
+    id: z.string().nullable(),
   }),
   git: z.object({
     emptyChangeBehavior: z.enum(["skip", "amend"]).default("skip"),
@@ -59,7 +59,7 @@ export const defaultPreference: PreferenceSchema = {
     uiLanguage: "system",
   },
   model: {
-    id: "omc-standard-claude-3.5",
+    id: null,
   },
   git: {
     emptyChangeBehavior: "skip",

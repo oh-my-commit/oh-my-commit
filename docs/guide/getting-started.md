@@ -72,7 +72,7 @@ Commands:
 ✗ omc list-models
 2024-12-31T08:23:02.749Z INFO  | [console] Listing models...
 2024-12-31T08:23:05.938Z INFO  | [console] Available models:
-2024-12-31T08:23:05.938Z INFO  | [console]   ✓ ohMyCommit.standard - omc-standard-claude-3.5 (default)
+2024-12-31T08:23:05.938Z INFO  | [console]   ✓ ohMyCommit.standard - omc-standard (default)
 
 
 # 配置代理与自己的 API_KEY，基于当前的 git 环境自动生成 commit

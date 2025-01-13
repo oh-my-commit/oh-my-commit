@@ -104,9 +104,9 @@
         "ohMyCommit.model.id": {
           "type": "string",
           "enum": [
-            "omc-standard-claude-3.5"
+            "omc-standard"
           ],
-          "default": "omc-standard-claude-3.5",
+          "default": "omc-standard",
           "markdownDescription": "选择自动提交（AC）服务的供应商与模型",
           "order": 1
         },
