@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.3
+
+### Patch Changes
+
+- 787cd34: chore
+
 ## 0.27.2
 
 ### Patch Changes

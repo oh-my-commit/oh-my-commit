@@ -1,5 +1,13 @@
 # @oh-my-commit/extension
 
+## 0.27.3
+
+### Patch Changes
+
+- Updated dependencies [787cd34]
+  - @oh-my-commit/shared@0.27.3
+  - @oh-my-commit/provider-official@0.27.3
+
 ## 0.27.2
 
 ### Patch Changes
