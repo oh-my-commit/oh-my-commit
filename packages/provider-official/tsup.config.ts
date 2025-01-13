@@ -13,6 +13,7 @@ import baseConfig from "../__base__/tsup.config"
 
 const distDir = resolve(__dirname, "dist")
 const targetExtensionDir = resolve(__dirname, "../extension/dist/providers/official")
+const targetCliDir = resolve("~/.neurora/oh-my-commit/providers/official")
 
 export default defineConfig({
   ...baseConfig,
@@ -25,5 +26,6 @@ export default defineConfig({
   onSuccess: async () => {
     await promises.copyFile("./src/standard.hbs", join(distDir, "standard.hbs"))
     await promises.cp(distDir, targetExtensionDir, { recursive: true })
+    await promises.cp(distDir, targetCliDir, { recursive: true })
   },
 })

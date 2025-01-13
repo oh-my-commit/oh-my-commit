@@ -15,7 +15,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "postinstall": "DIR=~/.oh-my-commit/providers/official && mkdir -p $DIR && cp dist/* package.json CHANGELOG.md $DIR",
+    "postinstall": "DIR=~/.neurora/oh-my-commit/providers/official && mkdir -p $DIR && cp dist/* $DIR || exit 0",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist tsconfig.tsbuildinfo .turbo"
