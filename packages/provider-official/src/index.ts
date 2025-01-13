@@ -8,7 +8,7 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import type { Message } from "@anthropic-ai/sdk/resources"
 import fs from "fs"
-import { TemplateDelegate } from "handlebars"
+import Handlebars, { TemplateDelegate } from "handlebars"
 import { HttpsProxyAgent } from "https-proxy-agent"
 import { merge } from "lodash-es"
 import path from "path"
