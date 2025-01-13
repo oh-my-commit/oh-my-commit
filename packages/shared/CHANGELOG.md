@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.5
+
+### Patch Changes
+
+- a83f253: fix null
+
 ## 0.27.4
 
 ### Patch Changes
