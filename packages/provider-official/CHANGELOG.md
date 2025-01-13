@@ -1,5 +1,12 @@
 # @oh-my-commit/provider-official
 
+## 0.27.4
+
+### Patch Changes
+
+- Updated dependencies [9301377]
+  - @oh-my-commit/shared@0.27.4
+
 ## 0.27.3
 
 ### Patch Changes

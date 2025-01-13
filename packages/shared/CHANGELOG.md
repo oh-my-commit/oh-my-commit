@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.4
+
+### Patch Changes
+
+- 9301377: fix omc model
+
 ## 0.27.3
 
 ### Patch Changes
