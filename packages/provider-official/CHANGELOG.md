@@ -1,5 +1,13 @@
 # @oh-my-commit/provider-official
 
+## 0.27.6
+
+### Patch Changes
+
+- d6f4849: add a log for extension debug
+- Updated dependencies [d6f4849]
+  - @oh-my-commit/shared@0.27.6
+
 ## 0.27.5
 
 ### Patch Changes

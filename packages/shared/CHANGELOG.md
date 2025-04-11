@@ -1,5 +1,11 @@
 # @oh-my-commit/shared
 
+## 0.27.6
+
+### Patch Changes
+
+- d6f4849: add a log for extension debug
+
 ## 0.27.5
 
 ### Patch Changes
