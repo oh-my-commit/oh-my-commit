@@ -39,9 +39,9 @@ export class ProviderRegistry implements IProviderManager {
     if (this.initialized) return
 
     try {
-      this.logger.debug(`Loading user providers from ${this.providersDir}`)
+      this.logger.info(`Loading user providers from ${this.providersDir}`)
       if (!fs.existsSync(this.providersDir)) {
-        this.logger.debug(`Creating providers directory: ${this.providersDir}`)
+        this.logger.info(`Creating providers directory: ${this.providersDir}`)
         fs.mkdirSync(this.providersDir, { recursive: true })
         return
       }
@@ -52,7 +52,7 @@ export class ProviderRegistry implements IProviderManager {
       const providerDirs = directories.filter((dir) => dir.isDirectory())
 
       for (const dir of providerDirs) {
-        this.logger.debug(`Loading provider from directory: ${dir.name}`)
+        this.logger.info(`Loading provider from directory: ${dir.name}`)
         const filePath = path.join(this.providersDir, dir.name, "index.js")
         if (fs.existsSync(filePath)) {
           try {

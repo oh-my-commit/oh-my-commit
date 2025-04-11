@@ -50,12 +50,14 @@ export class CommitManager implements ICommitManager {
   ) {}
 
   get providers(): IProvider[] {
-    return this.providerManager.providers
+    const providers = this.providerManager.providers
+    this.logger.info(`providers: `, providers)
+    return providers
   }
 
   get models(): IModel[] {
     const models = this.providers.flatMap((provider) => provider.models)
-    this.logger.debug(`models: ${models}`)
+    this.logger.info(`models: `, models)
     return models
   }
 

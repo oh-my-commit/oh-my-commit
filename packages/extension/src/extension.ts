@@ -36,16 +36,24 @@ export function activate(context: vscode.ExtensionContext) {
 
   try {
     // 确保 provider 目录存在
-    const providerDir = path.join(os.homedir(), ".oh-my-commit/providers/official")
+    const providerDir = path.join(os.homedir(), ".neurora/oh-my-commit/providers/official")
+    logger.info(`providers dir: `, providerDir)
     if (!fs.existsSync(providerDir)) {
+      logger.info(`providers dir not exists, create it`)
       fs.mkdirSync(providerDir, { recursive: true })
+      logger.info(`providers dir created: `, fs.existsSync(providerDir))
     }
 
     // 复制内置的 provider 文件到用户目录
     const builtinProviderPath = path.join(context.extensionPath, "dist/providers/official")
+    logger.info(`builtin provider path: ${builtinProviderPath}`)
+
     if (fs.existsSync(builtinProviderPath)) {
+      logger.info("installing official provider")
       fs.cpSync(builtinProviderPath, providerDir, { recursive: true })
       logger.info("Successfully installed official provider")
+    } else {
+      logger.warn(`no builtin providers`)
     }
 
     Inject(TOKENS.Context, context)
