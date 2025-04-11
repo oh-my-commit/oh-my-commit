@@ -3,9 +3,9 @@
 # 设置输入输出文件
 input_image="demo.gif"
 output_image="demo2.gif"
-text1="Oh My Prompt"
-text2="AI IDE 多 prompt 插件"
-current_date="2025-01-12"
+text1="Oh My Commit"
+text2="全平台 AI 自动 Commit 插件"
+current_date="2024-12-31"
 
 date_font_size=24
 date_padding=10
